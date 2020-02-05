@@ -1,0 +1,61 @@
+.thankyou-container {
+    text-align: center;
+    .header {
+        font-size: 24px;
+        font-family: 'Gotham Book';
+        line-height: 24px;
+        margin-top: 60px;
+        margin-bottom: 24px;
+        color: #101820;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .email-sending-message {
+        font-size: 16px;
+        line-height: 24px;
+        color: #101820;
+        font-family: 'Gotham Book';
+    }
+    .order-actions {
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 36px;
+        justify-content: space-around;
+        max-width: 576px;
+        flex-wrap: wrap;
+        > div {
+            height: 48px;
+            max-width: 262px;
+            padding: 16px 40px;
+            font-size: 16px;
+            color: #fff;
+            font-family: 'Gotham Book';
+            line-height: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        margin-bottom: 260px;
+    }
+
+    @media (max-width: 1023px) {
+        .header {
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .email-sending-message {
+            font-size: 14px;
+        }
+
+        .order-actions {
+            margin-top: 18px;
+            justify-content: center;
+            margin-bottom: 70px;
+            > div {
+                margin-top: 12px;
+            }
+        }
+    }
+}

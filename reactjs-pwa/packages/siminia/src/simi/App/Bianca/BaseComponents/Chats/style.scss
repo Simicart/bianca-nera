@@ -1,0 +1,438 @@
+$color1: #101820;
+.chats-block{
+    .icons-inner{
+        .chat-icons{
+            background-color: $color1;
+            width: 50px;
+            height: 50px;
+            -webkit-border-radius: 50px;
+            -moz-border-radius: 50px;
+            border-radius: 50px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -moz-box-shadow: 0 2px 4px 0 #BDBDBD;
+            -webkit-box-shadow: 0 2px 4px 0 #BDBDBD;
+            box-shadow: 0 2px 4px 0 #BDBDBD;
+            position: fixed;
+            bottom: 30px;
+            z-index: 9999;
+            cursor: pointer;
+            &.chats-menu{
+                bottom: 30px;
+                right: 35px;
+                width: 65px;
+                height: 65px;
+                .cross-icon{
+                    display: none!important;
+                }
+                &.open{
+                    .bubble-icon{
+                        display: none!important;
+                    }
+                    .cross-icon{
+                        display: inline-block!important;
+                    }
+                }
+            }
+        }
+        .contact,.whatsapp,.livechat{
+            right: 42.5px;
+        }
+        .chats-group{
+            &.open{
+                .contact{
+                    bottom: 270px;
+                }
+                .whatsapp{
+                    bottom: 195px;
+                }
+                .livechat{
+                    bottom: 120px;
+                }
+                .chat-icons{
+                    @keyframes bubbleIcons {
+                        0%,10%,25%,35%,50%,65%,75%,90%,to {
+                            -webkit-animation-timing-function: cubic-bezier(.2,.6,.3,1);
+                            animation-timing-function: cubic-bezier(.2,.6,.3,1);
+                        }
+                        0% {
+                            transform: translateY(0px);
+                        }
+                        10% {
+                            transform: translateY(-3px);
+                        }
+                        25% {
+                            transform: translateY(-5px);
+                        }
+                        35% {
+                            transform: translateY(-3px);
+                        }
+                        50% {
+                            transform: translateY(0px);
+                        }
+                        65% {
+                            transform: translateY(3px);
+                        }
+                        75% {
+                            transform: translateY(5px);
+                        }
+                        90% {
+                            transform: translateY(3px);
+                        }
+                        to {
+                            transform: translateY(0px);
+                        }
+                    }
+                    &.bubbleIcons{
+                        -webkit-animation-duration: .6s;
+                        animation-duration: .6s;
+                        -webkit-animation-name: bubbleIcons;
+                        animation-name: bubbleIcons;
+                        &.d1{
+                            animation-delay: .2s;
+                        }
+                        &.d2{
+                            animation-delay: .4s;
+                        }
+                        &.d3{
+                            animation-delay: .6s;
+                        }
+                    }
+                }
+            }
+            .chat-icons{
+                &.bubbleIcons{
+                    &.d1{
+                        transition: bottom .2s ease-in-out;
+                    }
+                    &.d2{
+                        transition: bottom .4s ease-in-out;
+                    }
+                    &.d3{
+                        transition: bottom .6s ease-in-out;
+                    }
+                }
+            }
+        }
+    }
+    &.mobile{
+        .icons-inner{
+            .chat-icons{
+                width: 40px;
+                height: 40px;
+                bottom: 60px;
+                svg{
+                    width: 18px!important;
+                    height: 18px!important;
+                }
+                &.contact{
+                    right: 26px;
+                }
+                &.whatsapp{
+                    right: 26px;
+                    svg{
+                        width: 19px!important;
+                        height: 22px!important;
+                    }
+                }
+                &.livechat{
+                    right: 26px;
+                    svg{
+                        width: 18px!important;
+                        height: 20px!important;
+                    }
+                }
+                &.chats-menu{
+                    bottom: 50px;
+                    right: 16px;
+                    width: 60px;
+                    height: 60px;
+                }
+            }
+            .chats-group{
+                &.open{
+                    .contact{
+                        bottom: 235px;
+                    }
+                    .whatsapp{
+                        bottom: 180px;
+                    }
+                    .livechat{
+                        bottom: 125px;
+                    }
+                }
+            }
+        }
+    }
+}
+#chat-widget-container{visibility: hidden;}
+#contact-modal-overlay{
+    @media screen and (max-width: 375px){
+        padding: 16px;
+    }
+    #contact-modal{
+        width: 100%;
+        max-width: 604px;
+        min-height: 494px;
+        padding: 24px 32px 32px 32px;
+        @media screen and (max-width: 1023px){
+            padding: 15px 20px 32px 20px;
+        }
+        @media screen and (max-width: 375px){
+            margin-top: 20%;
+        }
+        #contact-modal-close{
+            top: 24px;
+            right: 32px;
+            @media screen and (max-width: 375px){
+                top: 15px;
+                right: 21.17px;
+            }
+        }
+        .contact-wrap{
+            h3.title{
+                margin-top: 8px;
+                font-size: 24px;
+                line-height: 24px;
+                font-weight: 600;
+                color: $color1;
+                text-transform: uppercase;
+                text-align: center;
+                font-family: 'Gotham Book';
+            }
+            .header-text{
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                color: $color1;
+                font-family: 'Gotham Book';
+                font-size: 18px;
+                line-height: 18px;
+                margin: 0 auto;
+                margin-top: 20px;
+                max-width: 407px;
+            }
+            .contact-form{
+                select{cursor: pointer;}
+                .form-row{
+                    max-width: 376px;
+                    margin: 0 auto;
+                    margin-top: 20px;
+                    &:first-child{
+                        margin-top: 32px;
+                    }
+                    >label{
+                        font-size: 10px;
+                        line-height: 10px;
+                        text-transform: uppercase;
+                        color: #101820;
+                        font-weight: 600;
+                        margin-bottom: 8px;
+                    }
+                    &.time{
+                        .contact-input{
+                            position: relative;
+                            display: flex;
+                            align-items: center;
+                            &:before{
+                                position: absolute;
+                                right: 16px;
+                                color: $color1;
+                                content: "\e93a";
+                                font-size: 14px;
+                                font-family: 'Linearicons', 'Simple Linearicons';
+                                font-style: normal;
+                                font-weight: normal;
+                                font-variant: normal;
+                                text-transform: none;
+                                font-feature-settings: "liga";
+                                z-index: 9;
+                            }
+                            select{
+                                width: 100%;
+                                -webkit-appearance: none;
+                                -webkit-border-radius: unset;
+                                -moz-border-radius: unset;
+                                border-radius: unset;
+                                color: $color1;
+                                border: none;
+                                background: transparent;
+                                z-index: 99;
+                            }
+                            .input-display{
+                                padding: 10px 16px;
+                                width: 100%;
+                            }
+                        }
+                    }
+                    input.contact-input, select.contact-input{
+                        padding: 10px 16px;
+                    }
+                }
+                .contact-input{
+                    background-color: #f2f2f2;
+                    color: #727272;
+                    font-size: 14px;
+                    font-weight: 500;
+                    height: 48px;
+                    max-width: 376px;
+                    display: flex;
+                    flex-direction: row;
+                    position: relative;
+                    width: 100%;
+                    border: none;
+                    &.invalid{
+                        border: 1px solid #b91c1c;
+                    }
+                    &.phone-input{
+                        display: flex;
+                        flex-direction: row;
+                        position: relative;
+                        .arrow-down{
+                            width: 52px;
+                            height: 100%;
+                            display: inline-flex;
+                            justify-content: center;
+                            align-items: center;
+                            position: absolute;
+                            z-index: 9;
+                            // left: 18px;
+                            top: 0;
+                            margin: 0;
+                            &:before{
+                                color: $color1;
+                                content: "\e93a";
+                                font-size: 14px;
+                                font-family: 'Linearicons', 'Simple Linearicons';
+                                font-style: normal;
+                                font-weight: normal;
+                                font-variant: normal;
+                                text-transform: none;
+                                font-feature-settings: "liga";
+                            }
+                        }
+                        input{
+                            border: none;
+                            margin: 0px;
+                            padding: 0px;
+                            padding-left: 52px;
+                            width: 100%;
+                            background: transparent;
+                        }
+                        .input-select{
+                            position: absolute;
+                            background: #fff;
+                            z-index: 999;
+                            top: 48px;
+                            display: flex;
+                            flex-direction: column;
+                            width: 100%;
+                            overflow-y: auto;
+                            max-height: 200px;
+                            box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+                            .input-option{
+                                padding: 5px 17px;
+                                background-color: #f2f2f2;
+                                color: $color1;
+                                &:hover{
+                                    background-color: #e4e4e4;
+                                }
+                                &.selected{
+                                    background-color: #bdbdbd;
+                                }
+                            }
+                        }
+                    }
+                }
+                .form-btn{
+                    text-align: center;
+                    margin-top: 32px;
+                    .btn{
+                        background-color: #101820;
+                        color: #fff;
+                        font-size: 16px;
+                        font-family: 'Gotham Medium';
+                        text-transform: uppercase;
+                        border-radius: 0px;
+                        max-width: 180px;
+                        min-height: 48px;
+                        width: 100%;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+            }
+            .message{
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                color: $color1;
+                font-family: 'Gotham Book';
+                font-size: 18px;
+                line-height: 18px;
+                margin: 0 auto;
+                margin-top: 20px;
+                max-width: 407px;
+            }
+            &.mobile{
+                h3.title{
+                    font-size: 16px;
+                    line-height: 16px;
+                    margin-top: 41px;
+                    padding-top: 0px;
+                    margin-bottom: 0px;
+                }
+                .header-text{
+                    max-width: 250.54px;
+                    font-size: 14px;
+                    line-height: 14px;
+                }
+                .contact-form{
+                    .form-row{
+                        &:first-child{
+                            margin-top: 40px;
+                        }
+                        >label{
+                            font-size: 14px;
+                            line-height: 14px;
+                            padding-top: 0px;
+                            margin-bottom: 0px;
+                        }
+                        .contact-input{
+                            height: 40px;
+                            margin-top: 8px;
+                            font-family: 'Gotham Book';
+                        }
+                    }
+                    .form-btn{
+                        margin-top: 60px;
+                        .btn{
+                            max-width: 190.56px;
+                            min-height: 40px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &.rtl-root{
+        #contact-modal{
+            #contact-modal-close{
+                right: unset;
+                left: 32px;
+            }
+            .contact-wrap .contact-form{
+                .contact-input.phone-input .arrow-down{
+                    left: 0;
+                }
+                .form-row.time .contact-input:before{
+                    right: unset;
+                    left: 16px;
+                }
+            }
+        }
+    }
+}

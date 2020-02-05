@@ -1,0 +1,22 @@
+/**
+ * Bread crumb
+ * */
+.siminia-breadcrumb {
+    margin-top: 32px;
+    padding-top: 8px;
+    padding-bottom: 25px;
+    font-size: 12px;
+    font-family: 'Gotham Book';
+    .breadcrumb-item {
+        cursor: pointer;
+        line-height: 20px;
+        display: inline-block;
+    }
+    // .breadcrumb-item:hover {
+    //     color: #d7272e;
+    // }
+    // .breadcrumb-item:last-of-type {
+    //     color: #d7272e;
+    //     cursor: unset;
+    // }
+}

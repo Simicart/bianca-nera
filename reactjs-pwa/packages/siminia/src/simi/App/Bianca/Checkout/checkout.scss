@@ -1,0 +1,261 @@
+.checkout-bg {
+    padding-top: 32px;
+    min-height: 100vh;
+    font-family: 'Gotham Book';
+    font-weight: 600;
+    color: #101820;
+
+    .checkout-page-title {
+        font-size: 24px;
+        line-height: 24px;
+        font-weight: bold;
+        margin: 0;
+        text-transform: uppercase;
+        text-align: start;
+        margin-bottom: 32px;
+    }
+    .checkout-column {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 75px;
+    }
+    .checkout-column .checkout-col-1,
+    .checkout-column .checkout-col-2,
+    .checkout-column .checkout-col-3 {
+        width: 33.33%;
+        margin: 0 8px;
+    }
+    .checkout-column .checkout-col-1 {
+        margin-left: 0;
+    }
+    .checkout-column .checkout-col-3 {
+        max-width: 376px;
+        margin-right: 0;
+    }
+    .empty-cart-checkout a {
+        color: #d7272e;
+    }
+    .empty-cart-checkout span a {
+        margin: 0 4px;
+    }
+    .checkout-panel {
+        background-color: white;
+        border: 1px solid #101820;
+        margin-bottom: 16px;
+        padding: 22px 24px 32px !important;
+        .panel-icon button{
+            padding: 0;
+        }
+        .panel-content {
+            padding-top: 24px !important;
+        }
+    }
+    .checkout-section-title {
+        font-size: 18px;
+        line-height: 18px;
+        padding-top: 10px;
+        text-transform: uppercase;
+        font-family: 'Gotham Book';
+        font-weight: 600;
+    }
+    .btn-place-order {
+        margin-top: 48px;
+        div {
+            font-size: 16px;
+            max-width: 252px;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: 'Gotham Book';
+            font-weight: 600;
+            padding: 13px;
+        }
+    }
+    .coupon-code {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-top: 0px;
+        .coupon-code-area-tablet{
+            display: flex;
+            justify-content: space-between;
+            font-family: "Gotham Book";
+            flex-wrap: nowrap;
+            width: 100%;
+            position: relative;
+            font-weight: 400;
+            input{
+                width: 59%;
+                border: none;
+                border-radius: 0px;
+                font-size: 14px;
+                padding: 10px 16px 0px 16px;
+                background-color: #F2F2F2;
+                font-family: "Gotham Book";
+                padding: 2px 16px 0px 16px;
+                color: #101820;
+            }  
+            .submit-coupon {
+                width: 39%;
+                margin-top: 0px;
+                min-width: 106px;
+                height: 48px;
+                font-family: 'Gotham Book';
+                text-transform: uppercase;
+                font-size: 16px;
+                padding-top: 14px;
+            }
+        }
+        .coupon-code-title{
+            display: none;
+        }
+    }
+
+    .form-fields-body {
+        .address-field-label {
+            margin-top: 0px;
+            font-size: 10px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .address-field-label.req::after {
+            content: " *";
+            color: #101820;
+        }
+        .country, .region_code {
+            min-height: 89px;
+        }
+        .country > span, .region_code > span {
+            margin-bottom: 20px;
+        }
+        
+        input[type=text], input[type=email], input[type=tel], input[type=password] {
+            background-color: #F2F2F2;
+            padding: 17px 16px !important;
+            border: unset;
+            margin-bottom: 20px;
+            color: #727272;
+            font-size: 14px;
+            line-height: 14px;
+            font-family: 'Gotham Book';
+            font-weight: 400;
+        }
+        select {
+            background-color: #F2F2F2;
+            padding: 17px 16px !important;
+            border: unset;
+            color: #727272;
+            font-size: 14px;
+            line-height: 14px;
+            height: unset;
+            font-family: 'Gotham Book';
+            font-weight: 400;
+        }
+        .existed-account-label {
+            display: block;
+            font-weight: 400;
+            font-size: 12px;
+        }
+        .btn_login_exist {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            .address-signin-button{
+                padding: 12px 30px;
+                height: 36px;
+                font-size: 14px;
+            }
+            .address-forgot-pw-link {
+                padding-top: 12px;
+            }
+        }
+        .save_in_address_book, .billing-same {
+            input[type=checkbox] {
+                border-radius: 0;
+                width: 24px;
+                height: 24px;
+            }
+            input[type=checkbox]:checked {
+                background-color: #101820;
+            }
+            .save_in_address_book_label, .addresses_same_label {
+                font-size: 12px;
+                line-height: 12px;
+                padding-top: 4px;
+                font-family: 'Gotham Book';
+            }
+            .save_in_address_book_icon, .addresses_same_icon {
+                grid-column: 1 / span 1;
+                grid-row: 1 / span 1;
+                height: 20px;
+                padding-top: 3px;
+                svg {
+                    color: white;
+                    z-index: 1;
+                }
+            }
+        }
+        .billing-same {
+            margin-bottom: 15px;
+        }
+    }
+    .footer button[type=submit] {
+        border-radius: 0;
+        background-color: #101820;
+        margin-bottom: 16px;
+        font-family: 'Gotham Book';
+        span {
+            padding-top: 2px;
+            text-transform: uppercase;
+        }
+    }
+    .footer button[type=submit]:hover {
+        background-color: #101820;
+    }
+    
+    @media (max-width: 1023px) {
+        .checkout-column {
+            display: block;
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+        .checkout-column .checkout-col-1,
+        .checkout-column .checkout-col-2,
+        .checkout-column .checkout-col-3 {
+            width: 100%;
+            float: none;
+            margin: 0;
+        }
+        .checkout-column .checkout-col-3{
+            max-width: none;
+        }
+        .checkout-col-2 .coupon-code{
+            .coupon-code-area-tablet{
+                background-color: #E9E9E9;
+            }
+            #submit-coupon{
+                width: 41%;
+            }
+        }
+        .checkout-panel {
+            margin-top: 35px;
+            background-color: #F8F8F8;
+            border: none;
+        }
+    }
+
+}
+
+.rtl-root {
+    .checkout-column .checkout-col-1,
+    .checkout-column .checkout-col-2,
+    .checkout-column .checkout-col-3 {
+        width: 33.33%;
+        margin: 0 8px;
+    }
+    .checkout-column .checkout-col-3 {
+        margin-left: 0px;
+    }
+    .checkout-column .checkout-col-1 {
+        margin-right: 0px;
+    }
+}

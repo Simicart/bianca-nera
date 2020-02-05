@@ -1,0 +1,1088 @@
+.customer-dashboard {
+    padding-top: 93px;
+    padding-bottom: 86px;
+}
+.dashboard-layout {
+    display: flex;
+}
+.dashboard-menu {
+    min-width: 278px;
+}
+.welcome-customer {
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: bold;
+    color: #101820;
+    font-family: 'Gotham Book';
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+.menu-header .menu-logout {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: bold;
+    color: #d7282f;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.list-menu-item .customer-menu-item {
+    font-size: 14px;
+    line-height: 14px;
+    background: #F2F2F2;
+    color: #101820;
+    font-weight: 500;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    text-transform: uppercase;
+    font-family: Gotham Book;
+    height: 48px;
+}
+.customer-menu-item.active {
+    background: #101820;
+    color: #fff;
+}
+
+.list-menu-item .customer-menu-item:last-child{
+    background-color: #BDBDBD;
+}
+
+.list-menu-item-content {
+    padding: 0;
+}
+.dashboard-content {
+    width: 100%;
+    margin-right: 40px;
+    margin-left: 114px;
+    max-width: 970px;
+    max-width: unset;
+    margin-right: 0;
+    .config-page{
+        width: 100%;
+        margin-top: 60px;
+        display: inline-flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        .pagination-info{
+            font-family: 'Gotham Book';
+            font-weight: 500;
+            font-size: 18px;
+            *{
+                font-family: unset;
+                font-size: unset;
+                font-weight: unset;
+            }
+        }
+        #page-numbers{
+            li{
+                background-color: #FFFFFF;
+                color: #101820;
+                width: auto;
+                height: 18px;
+                text-align: center;
+                cursor: pointer;
+                font-family: "Gotham Book";
+                font-weight: 500;
+                font-size: 18px;
+                line-height: 22px;
+                margin: 0 3px;
+                padding: 0px 6px;
+                &.page-nums{
+                    &.active {
+                        color: #BDBDBD;
+                        text-decoration: underline;
+                    }
+                }
+                &.icon-page-number{
+                    &.disabled{
+                        color: #BDBDBD;
+                        svg{
+                            fill: #BDBDBD!important;
+                        }
+                    }
+                    &.next,&.prev{
+                        margin-left: 0px;
+                        margin-right: 0px;
+                        padding-left: 0px;
+                        padding-right: 0px;
+                    }
+                    &.start,&.end{
+                        padding-left: 0px;
+                        padding-right: 0px;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+/* Right to left */
+.rtl-root .dashboard-content{
+    margin-left: 0px;
+    margin-right: 114px;
+}
+.sidebar-item .sidebar-title {
+    font-size: 28px;
+    line-height: 36px;
+    color: #fff;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+.sidebar-item .sidebar-action {
+    cursor: pointer;
+    background: #dcdcdc;
+    font-size: 16px;
+    padding: 10px 16px;
+    white-space: nowrap;
+}
+.sidebar-item.trade-sv {
+    background: #0f7d37;
+}
+.sidebar-item.branch-sv {
+    background: #333132;
+}
+.promo-content {
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    align-items: center;
+    margin-top: 8px;
+}
+.promo-content .promo-item {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+}
+.promo-item .promo-text {
+    margin: 0 8px;
+}
+#promo-item-2 {
+    margin: 0 195px;
+}
+.menu-toggle {
+    display: none;
+}
+.body-customer-dashboard .footer-app {
+    margin: 0;
+}
+.body-customer-dashboard #data-breadcrumb {
+    display: none;
+}
+.customer-page-title {
+    color: #101820;
+    font-family: 'Gotham Medium';
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 24px;
+    text-transform: uppercase;
+    .view-all{
+        color: #101820;
+        font-size: 14px;
+        line-height: 14px;
+        font-weight: normal;
+        margin-top: 2.5px;
+        float: right;
+        cursor: pointer;
+        font-weight: 500;
+    }
+}
+.customer-page-content {
+    padding: 24px;
+    font-size: 16px;
+    line-height: 24px;
+    background: #fff;
+}
+
+/* profile */
+.account-information-area {
+    font-size: 16px;
+    line-height: 24px;
+    color: #101820;
+}
+.account-information-area .row-edit-profile{
+    display: flex;
+    margin-top: 40px;
+    .verify-opt-area{
+        .react-tel-input input {
+            min-width: unset !important;
+        }
+        .login-otp{
+            width: 151px !important;
+        }
+    }
+}
+.row-edit-profile .main__edit-column,
+.row-edit-profile .alternative__edit-column{
+    flex-basis: 328px;
+}
+.row-edit-profile .alternative__edit-column{
+    margin-left: 64px;
+    // max-width: 328px;
+}
+.account-information-area .title {
+    color: #101820;
+    font-family: 'Gotham Medium';
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 20px;
+    margin-bottom: 10px;
+}
+.account-information-area .form-group {
+    margin-bottom: 12px;
+    label {
+        font-family: 'Gotham Medium';
+        font-weight: 500;
+        margin-bottom: 8px;
+        font-size: 10px;
+        line-height: 10px;
+        text-transform: uppercase;
+    }
+    input{
+        border: 1px solid #E0E0E0;
+        width: 100%;
+        height: 48px;
+        font-size: 14px;
+        line-height: 14px;
+        font-weight: 500;
+        color: #101820;
+        padding: 12px 16px;
+        border-radius: 0px;
+        box-shadow: none;
+    }
+}
+.group-password-strong{
+    margin-bottom: 15px;
+}
+.group-password-strong .new_password{
+    margin-bottom: 0
+}
+.group-password-strong .password-strength{
+    background: #F3F3F3;
+    height: 25px;
+    font-size: 14px;
+    padding-left: 8px;
+}
+.account-information-area .checkbox-item {
+    align-items: center;
+    margin-top: 25px;
+}
+.account-information-area .checkbox-item span{
+    font-family: Gotham;
+  font-size: 16px !important;
+  font-weight: 500;
+  line-height: 16px !important;
+}
+.account-information-area .checkbox-item.first {
+    margin-top: 25px;
+}
+.account-information-area .checkbox-item .checkbox-item-icon,
+.account-information-area .checkbox-item.selected .checkbox-item-icon {
+    margin-top: 0;
+    width: 24px;
+    height: 24px;
+}
+.account-information-area .checkbox-item.selected .checkbox-item-icon{
+    color: #fff;
+    background-color: black;
+    .checkbox-item-icon-inside{
+        color: #fff;
+        background-color: black;
+    }
+}
+
+.account-information-area button.save-profile {
+    margin: 60px 0 16px;
+    padding: 16px 68px;
+    width: 180px;
+    color: #FFFFFF;
+    background: #101820;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    span{
+        font-family: Gotham;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 16px;
+        text-transform: uppercase;
+    }
+}
+
+.account-information-area #readOnlyInput{
+    font-family: "Gotham Book";
+    font-size: 14px;
+    line-height: 14px;
+    border: 1px solid #E0E0E0;
+    background-color: #fff;
+}
+.account-information-area #real-input-register{
+    font-family: "Gotham Book";
+    font-size: 14px;
+    line-height: 14px;
+    background-color: #fff;
+}
+
+/* book addresses */
+.customer-dashboard.address-book {
+    padding-bottom: 80px;
+}
+.account-address-book {
+    font-size: 16px;
+    line-height: 24px;
+    color: #333132;
+}
+.account-address-book .acc-book-title {
+    margin: 0 0 16px;
+    font-weight: bold;
+    font-size: 16px;
+}
+.address-book__container {
+    display: flex;
+}
+.default-address {
+    margin-bottom: 24px;
+}
+.default-address .address-book__container .col-address-book {
+    max-width: 207px;
+
+}
+.default-address .address-book__container .col-address-book:not(:first-child) {
+    margin-left: 100px;
+}
+.edit-address-book {
+    margin-bottom: 16px;
+    width: 184px;
+}
+.edit-address-book:hover{
+    text-decoration: none;
+    color: #333132;
+}
+.book-title {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+.col-address-book p {
+    margin: 0;
+}
+.additional-address-entries {
+    margin-top: 16px;
+    clear: both;
+    display: inline-block;
+    width: 100%;
+}
+.additional-address-entries .address-book__container {
+    flex-direction: column;
+    margin-bottom: 56px;
+}
+.additional-address-entries
+    .address-book__container
+    .col-address-book:not(.first-item) {
+    margin-top: 40px;
+}
+.book-actions {
+    margin-top: 16px;
+}
+.book-actions .edit-item {
+    color: #0f7d37;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.book-actions .del-item {
+    margin-left: 24px;
+    color: #0f7d37;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* dashboard */
+.customer-recent-orders{
+    font-size: 16px;
+    line-height: 24px;
+    color: #333132;
+    .text-center{
+        font-weight: 500;
+    }
+}
+.table-siminia {
+    font-size: 16px;
+    border: 1px solid #101820;
+    tr{
+        border: 1px solid #101820;
+        td{
+            &.action{
+                text-decoration: underline;
+                cursor: pointer;
+                &.disabled{
+                    color: #BDBDBD;
+                }
+            }
+        }
+    }
+    > thead > tr,
+    > thead > tr > th {
+        background: #E4E4E4;
+        color: #101820;
+        font-family: 'Gotham Book';
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 16px;
+        height: 48px;
+    }
+    > tbody > tr > td,
+    > tbody > tr > th,
+    > tfoot > tr > td,
+    > thead > tr > td {
+        padding: 4px 24px;
+        line-height: 14px;
+        font-family: 'Gotham Book';
+        .view-order{
+            text-decoration: underline;
+        }
+    }
+    > thead > tr > th{
+        padding: 0px 24px;
+    }
+    > tbody > tr > td.order-status{
+        text-transform: capitalize;
+    }
+    > tbody > tr{
+        font-size: 14px;
+        font-weight: 500;
+        color: #101820;
+        height: 48px;
+    }
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background: #fff;
+    }
+}
+.rtl-root .table-siminia{
+    > thead > tr > th {
+        text-align: right;
+    }
+}
+.view-order {
+    color: #101820;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.dashboard-acc-information {
+    clear: both;
+    margin-top: 32px;
+    display: inline-block;
+    width: 100%;
+}
+.acc-information {
+    display: flex;
+    font-size: 16px;
+    line-height: 24px;
+    color: #333132;
+}
+.dash-column-box {
+    background-color: #ffffff;
+    padding: 24px 24px 27px;
+    flex-basis: 376px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border: 1px solid #727272;
+}
+.acc-information .dash-column-box:not(:first-of-type),
+.dashboard-address-book .dash-column-box:not(:first-of-type) {
+    margin-left: 16px;
+}
+.dash-column-box .box-title {
+    font-weight: bold;
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 16px;
+    font-family: Gotham Medium;
+}
+.dash-column-box .desc {
+    margin-bottom: 8px;
+    font-family: Gotham Book;
+    font-size: 14px;
+    line-height: 14px;
+}
+.dash-column-box .edit-link {
+    color: #101820;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 218px;
+    width: 100%;
+    height: 44px;
+    background-color: #F2F2F2;
+    font-size: 14px;
+    text-align: center;
+    line-height: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+
+    a{
+        font-size: 14px;
+        font-family: Gotham Medium;
+        line-height: 14px;
+        height: 0px;
+    }
+}
+.dash-column-box .edit-information{
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    line-height: 12px;
+    align-items: center;
+    font-family: 'Gotham Book';
+    font-weight: 600;
+    font-size: 12px;
+    padding: 0px 24px;
+    >svg{
+        width: 32px!important;
+        padding: 0px 8px;
+    }
+    div{
+        // margin-left: 8px;
+        color: #101820;
+    }
+    &.remove{
+        top: 32px;
+    }
+}
+
+.dashboard-address-book {
+    margin-top: 40px;
+    .address-book__container{
+        .col-address-book{
+            font-weight: 500;
+            font-size: 14px;
+            font-family: Gotham Book;
+            line-height: 24px;
+        }
+    }
+
+    .customer-page-title{
+        max-width: 768px;
+    }
+}
+.dashboard-address-book .customer-page-title .view-all {
+    float: none;
+    margin-left: 24px;
+    float: right;
+    font-weight: 500;
+    font-family: Gotham Medium;
+    font-size: 14px;
+    line-height: 14px;
+}
+.dashboard-address-book .dash-column-box {
+    min-height: auto;
+    justify-content: unset;
+}
+.dash-column-box .edit-item {
+    margin: 8px 0 0;
+    color: #0f7d37;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.view-recent-orders{
+    background: transparent;
+}
+.product-code{
+    vertical-align: middle
+}
+/* newsletter */
+.customer-dashboard.newsletter .customer-page-content{
+    min-height: 455px;
+}
+.account-newsletter .title{
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: bold;
+    margin: 0 0 20px;
+}
+.account-newsletter .checkbox-item{
+    align-items: center;
+}
+.account-newsletter .checkbox-item .checkbox-item-icon,
+.account-newsletter .checkbox-item.selected .checkbox-item-icon{
+    margin-top: 0;
+}
+.account-newsletter .save-newsletter{
+    padding: 10px 18px;
+    width: 100px;
+    margin-top: 24px;
+}
+
+/* new address */
+.form-address-row{
+    display: flex;
+    font-size: 16px;
+    line-height: 24px;
+}
+.form-address-row .col-edit-address{
+    flex-basis: 328px;
+}
+.form-address-row .col-edit-address:not(:first-child){
+    margin-left: 80px;
+}
+.form-address-row .acc-book-title{
+    font-size: 16px;
+    line-height: 24px;
+    margin: 0 0 23px;
+    font-weight: bold;
+}
+.form-address-row .form-group{
+    margin-bottom: 23px;
+}
+.form-address-row .form-group label{
+    font-weight: normal;
+    margin-bottom: 1px;
+}
+.form-address-row .form-group.address2{
+    margin-top: -15px;
+}
+.form-address-row .list-country-and-state{
+    margin-bottom: 21px;
+}
+.form-address-row .list-country-and-state label{
+    margin-bottom: 1px;
+    font-weight: normal;
+}
+.form-address-row .region-view{
+    margin-top: 23px;
+}
+.form-address-row .region-view input{
+    display: block;
+}
+.form-address-row .region-view .form-field-item{
+    flex-direction: column;
+    align-items: flex-start !important;
+}
+.addnew-address-form .save-address-book{
+    width: 184px;
+    margin-top: 16px;
+    padding: 10px 18px;
+}
+.form-address-row .checkbox-item{
+    align-items: center;
+    white-space: nowrap;
+}
+.form-address-row .checkbox-item .checkbox-item-icon,
+.form-address-row .checkbox-item.selected .checkbox-item-icon{
+    margin-top: 0;
+}
+.form-address-row .checkbox-item .checkbox-item-text{
+    flex: 1;
+}
+.form-address-row .form-group.is_default_billing{
+    display: flex;
+}
+.form-address-row .form-group.is_default_billing .input-group-field{
+    display: none;
+}
+
+.is-invalid {
+    border-color: #d7282f;
+}
+.email-not-edit {
+    color: #d7282f;
+    text-align: center;
+    margin-top: 10px;
+}
+/*
+Order history
+*/
+.my-order{
+    .table-siminia > tbody > tr{
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
+
+
+.product-grid .siminia-product-list-item{
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    margin-top: 16px;
+    vertical-align: top;
+    width: 48%;
+}
+
+@media (min-width: 1920px) {
+    .product-grid .siminia-product-list-item{
+        padding: 0;
+        margin-left: 75px;
+        width: 240px;
+    }
+
+    .product-grid .no-product{
+        margin-left: 40px;
+    }
+
+    .product-grid .siminia-product-list-item.first{
+        margin-left: 40px;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1919px) {
+    .product-grid .no-product{
+        margin-left: 22px;
+    }
+}
+@media (max-width: 1023px) {
+    .account-information-area .form-group {
+        input{
+            font-family: "Gotham Book";
+            font-size: 14px;
+            line-height: 14px;
+        }
+    }
+    .customer-dashboard .container {
+        padding: 0;
+    }
+    .menu-header {
+        display: flex;
+        align-items: center;
+        background: #0f7d37;
+        padding-right: 16px;
+    }
+    .menu-header .menu-logout svg {
+        fill: #fff !important;
+    }
+    .menu-toggle {
+        display: block;
+        height: 32px;
+        margin-left: 8px;
+        cursor: pointer;
+    }
+    .dashboard-menu .list-menu-item {
+        margin-top: 16px;
+        margin-bottom: 24px;
+        margin-left: 16px;
+        margin-right: 16px;
+        display: none;
+    }
+    .body-customer-dashboard #data-breadcrumb {
+        display: block;
+    }
+
+    /* profile */
+    .customer-dashboard.edit .customer-page-content {
+        padding: 16px 24px 24px;
+    }
+    .account-information-area .row-edit-profile{
+        display: block;
+        margin-top: 18px;
+    }
+    .row-edit-profile .alternative__edit-column{
+        margin-left: 0;
+        margin-top: 25px;
+        width: 100%;
+    }
+    .row-edit-profile .alternative__edit-column.active{
+        margin-top: 40px;
+    }
+    .account-information-area .title {
+        margin-bottom: 15px;
+        font-size: 16px;
+        line-height: 16px;
+        margin-bottom: 0px;
+    }
+    .account-information-area .checkbox-item {
+        margin-top: 15px;
+        .checkbox-item-icon{
+            width: 24px;
+            height: 24px;
+        }
+    }
+    .account-information-area button.save-profile {
+        margin-top: 7px;
+        margin-bottom: 0;
+        background: #101820;
+        color: #FFFFFF;
+    }
+    .account-information-area .alternative__edit-column.active .form-group:last-child{
+        margin-bottom: 32px;
+    }
+
+    /* address book */
+    .customer-dashboard.address-book {
+        padding-bottom: 24px;
+    }
+    .customer-dashboard.address-book .customer-page-content {
+        padding: 0px 24px 24px;
+    }
+    .account-address-book .additional-address-entries .acc-book-title {
+        margin: 0px -24px;
+        padding: 24px 0 16px;
+        background: #f3f3f3;
+        font-size: 21px;
+        line-height: 29px;
+    }
+    .additional-address-entries .address-book__container {
+        margin-top: 24px;
+        margin-bottom: 0;
+    }
+    .default-address {
+        margin-bottom: 8px;
+        padding-top: 16px
+    }
+    .default-address .address-book__container {
+        flex-direction: column;
+    }
+    .default-address
+        .address-book__container
+        .col-address-book:not(:first-child) {
+        margin-top: 16px;
+        margin-left: 0;
+    }
+    .additional-address-entries{
+        margin-top: 0;
+    }
+    .additional-address-entries
+        .address-book__container
+        .col-address-book:not(.first-item) {
+        margin-top: 24px;
+    }
+    .addnew-address-form{
+        padding-top: 16px;
+    }
+
+    /* dashboard */
+    .customer-dashboard.dashboard{
+        padding-bottom: 24px;
+    }
+    .table-siminia table,
+    .table-siminia thead,
+    .table-siminia tbody,
+    .table-siminia th,
+    .table-siminia td,
+    .table-siminia tr {
+        display: block;
+    }
+    .table-siminia thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    .table-siminia > tbody > tr > td {
+        /* Behave  like a "row" */
+        border: none;
+        position: relative;
+        padding-left: 50% !important;
+        white-space: normal;
+        text-align: right;
+    }
+    .table-siminia td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        left: 24px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
+    .table-siminia td:before {
+        content: attr(data-title);
+    }
+    .table-siminia > tbody > tr > td,
+    .table-siminia > tbody > tr > th,
+    .table-siminia > tfoot > tr > td,
+    .table-siminia > tfoot > tr > th,
+    .table-siminia > thead > tr > td,
+    .table-siminia > thead > tr > th {
+        padding: 2px 24px;
+    }
+
+    .table-siminia > tbody > tr > td:first-child{
+        padding-top: 16px;
+    }
+    .table-siminia > tbody > tr > td:last-child{
+        padding-bottom: 16px;
+    }
+    .dashboard-acc-information, .dashboard-address-book{
+        margin-top: 16px;
+    }
+    .customer-dashboard.dashboard .customer-page-title{
+        margin-bottom: 20px;
+    }
+    .acc-information,
+    .address-book__container{
+        flex-direction: column;
+    }
+    .dash-column-box{
+        flex-basis: auto;
+    }
+    .acc-information .dash-column-box:not(:first-of-type), .dashboard-address-book .dash-column-box:not(:first-of-type){
+        margin-left: 0;
+        margin-top: 8px;
+    }
+    .dashboard-address-book .customer-page-title .view-all{
+        float: right;
+    }
+    .customer-dashboard.edit{
+        padding-bottom: 24px;
+    }
+    /* newsletter */
+    .customer-dashboard.newsletter{
+        padding-bottom: 17px;
+    }
+    .customer-dashboard.newsletter .customer-page-content{
+        padding: 16px 24px 24px;
+        min-height: auto;
+    }
+    .account-newsletter .title{
+        margin-bottom: 16px;
+    }
+    .account-newsletter .save-newsletter{
+        margin: 19px 0 10px;
+    }
+
+    .customer-dashboard.edit-address .customer-page-content{
+        padding-top: 16px;
+    }
+    .form-address-row{
+        display: block;
+    }
+    .form-address-row .col-edit-address{
+        flex-basis: unset;
+    }
+    .form-address-row .col-edit-address:not(:first-child){
+        margin-left: 0;
+        margin-top: 17px;
+        display: inline-block;
+        width: 100%;
+    }
+    .form-address-row .form-group.address2{
+        margin-top: -13px;
+    }
+    .form-address-row .list-country-and-state .fake-input-select{
+        max-width: unset;
+    }
+    .form-address-row .list-country-and-state{
+        margin-bottom: 24px;
+    }
+    .addnew-address-form .save-address-book{
+        width: 100%;
+        margin-top: 40px;
+    }
+    .form-address-row .checkbox-item .checkbox-item-icon{
+        margin-right: 8px;
+    }
+}
+@media(max-width: 500px){
+    .account-information-area .checkbox-item span{
+        font-size: 14px !important;
+        line-height: 14px !important;
+    }
+}
+.customer-dashboard {
+    &.mobile{
+        padding-top: 0;
+        padding-bottom: 50px;
+        .welcome-customer {
+            display: none;
+            background: unset;
+            margin-right: auto;
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 14px 16px 18px 16px;
+            margin-bottom: 0px;
+            font-size: 18px;
+        }
+        .dashboard-layout {
+            margin-top: 14px;
+            display: block;
+            .dashboard-menu {
+                display: none;
+            }
+            .dashboard-content {
+                width: auto;
+                margin: 0;
+                margin-right: 0px;
+                margin-left: 0px;
+                padding: 0px 16px;
+                .customer-page-title {
+                    margin-bottom: 16px;
+                    font-family: 'Gotham Medium';
+                    font-weight: 500;
+                    font-size: 18px;
+                    margin-bottom: 0px;
+                    text-transform: capitalize;
+                    line-height: 18px;
+                }
+                .table-group{
+                    padding: 0px;
+                    font-family: 'Gotham Book';
+                    font-size: 14px;
+                    line-height: 14px;
+                    font-weight: 500;
+                    // border: 1px solid #e0e0e0;
+                    border: none;
+                    .item{
+                        padding-top: 20px;
+                        padding-bottom: 20px;
+                        border-bottom: 1px solid #e0e0e0;
+                        &:first-child{
+                            padding-top: 0px;
+                        }
+                        &:last-child{
+                            padding-bottom: 0px;
+                            border-bottom: none;
+                        }
+                        .row-item{
+                            display: grid;
+                            grid-template-columns: auto auto;
+                            padding-top: 6px;
+                            padding-bottom: 6px;
+                            &:first-child{
+                                padding-top: 0px;
+                            }
+                            &:last-child{
+                                padding-bottom: 0px;
+                            }
+                            .item-label{
+                                font-weight: 700;
+                            }
+                            .item-value{
+                                display: flex;
+                                justify-content: flex-end;
+                                a{
+                                    text-decoration: underline;
+                                }
+                                .action{
+                                    text-decoration: underline;
+                                }
+                                .disabled{
+                                    color: #BDBDBD;
+                                }
+                            }
+                        }
+                    }
+                }
+                .config-page{
+                    margin-top: 40px;
+                }
+            }
+            /* Right to left */
+            .rtl-root .dashboard-content{
+                margin-left: 0px;
+                margin-right: 0px;
+            }
+        }
+    }
+}

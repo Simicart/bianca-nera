@@ -1,0 +1,381 @@
+.address-book{
+    font-family: 'Gotham Book';
+    font-weight: 500;
+}
+.address-book h1 {
+    font-size: 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.address-book .default-address {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+.address-book .address-label {
+    font-size: 20px;
+    line-height: normal;
+    font-weight: 600;
+}
+.address-book .address-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    .address-box{
+        width: 100%;
+        .box-content{
+            address{
+                margin-bottom: 0px;
+            }
+        }
+    }
+    .billing-address{
+        margin-inline-end: 16px;
+    }
+    .additional-address{
+        &:nth-child(2n+1){
+            margin-inline-end: 16px;
+        }
+        .white-box-content{
+            display: flex;
+            justify-content: space-between;
+            .box-content{
+                address{
+                    margin: 0px;
+                }
+            }
+            .box-action{
+                width: 100%;
+                max-width: 78px;
+                .address-action{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                    cursor: pointer;
+                    font-weight: 600;
+                    font-size: 12px;
+                    svg{
+                        margin-inline-end: 8px;
+                    }
+                }
+                .address-remove{
+                    margin-top: 16px;
+                }
+            }
+        }
+    }
+}
+.address-book .box-title {
+    color: #2d2d2d;
+    font-weight: 500;
+    font-size: 16px;
+}
+.address-book .box-content > address {
+    font-size: 14px;
+    line-height: 24px;
+    margin: 10px 0px;
+}
+.address-book .box-action > a > span {
+    color: #101820;
+    text-decoration: underline;
+}
+.address-book .additional-address .table-wrap {
+    padding: 10px 0px;
+    margin-top: 10px;
+}
+.address-book .additional-address .table-wrap table {
+    font-size: 14px;
+    color: #101820;
+    background-color: #fafafa;
+    width: 100%;
+}
+.address-book .additional-address .table-wrap table > thead {
+    background-color: #dcdcdc;
+}
+.address-book .additional-address .table-wrap table tr:nth-child(2n) {
+    background-color: #eaeaea;
+}
+.address-book .additional-address .table-wrap table tr th {
+    padding: 5px;
+    font-size: 14px;
+}
+.address-book .additional-address .table-wrap table tr td {
+    padding: 5px;
+}
+.address-book .additional-address .table-wrap a {
+    padding: 5px;
+    color: #2335c5;
+}
+.address-book .additional-address .table-wrap a.edit {
+    color: #101820;
+}
+.address-book .additional-address .table-wrap a.delete {
+    color: #101820;
+}
+.address-book .additional-address .pagination {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.address-book .additional-address .pagination > ul {
+    display: inline-block;
+    width: 55%;
+    text-align: right;
+}
+.address-book .additional-address .pagination > ul li {
+    min-width: 30px;
+    height: 22px;
+    margin: 5px;
+    display: inline-block;
+    background-color: #ffffff;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 22px;
+}
+.address-book .additional-address .pagination > ul li:hover {
+    background-color: #fbc96a;
+}
+.address-book .additional-address .pagination > ul li.active {
+    background-color: #fbc96a;
+}
+.address-book .additional-address .pagination > ul li.disabled {
+    background-color: #eaeaea;
+    color: #b5b5b5;
+}
+.address-book .additional-address .pagination > ul li.disabled > a {
+    color: #b5b5b5;
+    cursor: auto;
+}
+.address-book .additional-address .pagination > ul li > a {
+    text-decoration: none;
+    user-select: none;
+    display: block;
+    line-height: 22px;
+    padding: 0px;
+}
+.address-book .additional-address .pagination > ul li > a:visited,
+.address-book .additional-address .pagination > ul li > a:visited {
+    text-decoration: none;
+    user-select: none;
+}
+.address-book .additional-address .pagination .info {
+    min-width: 150px;
+    line-height: 32px;
+}
+.address-book .additional-address .pagination .options-size {
+    min-width: 150px;
+    line-height: 32px;
+}
+.address-book .additional-address .pagination .options-size > select {
+    border: 1px solid #eaeaea;
+    margin: 0px 5px;
+}
+.address-book .btn {
+    background-color: #101820;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 0;
+    max-width: 278px;
+    min-height: 48px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button{
+        text-transform: uppercase;
+        font-family: 'Gotham Book';
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 34px;
+    }
+    &.add-new-address {
+        margin-top: 60px;
+    }
+    &:hover {
+        opacity: 0.8;
+    }
+}
+.address-book .edit-address .col-left {
+    margin-top: 0px;
+    margin-bottom: 30px;
+}
+.address-book .edit-address .col-right {
+    margin-top: 0px;
+    margin-bottom: 30px;
+}
+.address-book .edit-address .col-label {
+    font-size: 30px;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+.address-book .edit-address .form-row {
+    min-height: 34px;
+    padding: 2px 0px;
+    margin: 5px 0px;
+}
+.address-book .edit-address .form-row label {
+    font-family: 'Gotham Book';
+    font-weight: 600;
+    // margin-right: 10px;
+    margin-inline-end: 10px;
+    margin-bottom: 8px;
+    font-size: 10px;
+    line-height: 10px;
+    text-transform: uppercase;
+}
+.address-book .edit-address .form-row input {
+    width: 100%;
+    height: 48px;
+    line-height: 30px;
+    margin: 2px 0px;
+    padding: 2px 10px;
+    user-select: none;
+    outline: none;
+}
+.address-book .edit-address .form-row select {
+    user-select: none;
+    outline: none;
+    height: 32px;
+}
+.address-book .edit-address .form-row .checkbox {
+    padding: 5px 10px;
+    margin: 0px;
+}
+.address-book .edit-address .form-row .checkbox input {
+    width: auto;
+    height: 22px;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.address-book .edit-address .form-row .checkbox label {
+    margin-bottom: 0px;
+    vertical-align: middle;
+}
+
+.form-row.state-province .state-option {
+    display: flex;
+    flex-wrap: wrap;
+    label{
+        margin-bottom: 0px;
+        display: flex;
+        align-items: center;
+    }
+    select{
+        height: 32px;
+    }
+}
+.form-row.state-province .state-option > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 1444px) {
+    .address-book .additional-address {
+        .col.phone,
+        .row.phone,
+        .col.zip,
+        .row.zip,
+        .col.lastname,
+        .row.lastname,
+        .col.state,
+        .row.state {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .address-book .additional-address .table-wrap table > thead {
+        display: none;
+    }
+    .address-book .additional-address tr {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 16px;
+        flex-direction: column;
+    }
+}
+@media (max-width: 768px) {
+    .address-book .billing-address {
+        margin-right: 0px;
+    }
+    .address-book .shipping-address {
+        margin-right: 0px;
+    }
+}
+.mobile{
+    .customer-dashboard{
+        &.address-book{
+            min-height: 536px!important;
+        }
+    }
+    .address-book{
+        h1{
+            font-size: 18px;
+        }
+        .default-address{
+            margin-top: 18px;
+            margin-bottom: 15px;
+            padding-top: 0px;
+        }
+        .address-content{
+            .billing-address{
+                margin-inline-end: 0px;
+                margin-bottom: 10px;
+            }
+            .additional-address:nth-child(2n+1) {
+                margin-inline-end: 0px;
+                margin-bottom: 10px;
+            }
+        }
+        .add-new-address{
+            margin-top: 30px;
+        }
+        .edit-address .form-row{
+            input{
+                height: 38px;
+                border: 1px solid #e0e0e0;
+            }
+            select{
+                width: 100%;
+                height: 38px;
+                border: 1px solid #e0e0e0;
+                border-radius: 0px;
+            }
+            .checkbox{
+                height: 38px;
+                display: flex;
+                flex-direction: row;
+                input{
+                    height: 28px;
+                    margin-right: 0px;
+                    margin-inline-end: 5px;
+                    position: relative;
+                }
+                label{
+                    display: flex;
+                    align-items: center;
+                    height: 28px;
+                }
+            }
+            .state-option{
+                label{
+                    margin-bottom: 8px;
+                }
+                >div{
+                    width: 100%;
+                }
+            }
+        }
+    } 
+}

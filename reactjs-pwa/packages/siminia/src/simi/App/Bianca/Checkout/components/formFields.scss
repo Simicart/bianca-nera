@@ -1,0 +1,67 @@
+.form-fields-body {
+
+    .shipping_address {
+        > span {
+            width: 100%;
+        }
+    }
+    .selectSavedAddress {
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-template-areas: 'before input after';
+        grid-template-columns: auto 1fr auto;
+        height: 2.25rem;
+        margin-bottom: 30px;
+        
+        .selectSavedAddressInput {
+            align-items: center;
+            display: flex;
+            grid-column: before-start / after-end;
+            grid-row: input-start / input-end;
+        }
+        .selectSavedAddressAfter{
+            grid-area: after;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+            width: 2.25rem;
+        }
+        select[name="selected_address_field"]{
+            border: unset;
+            display: inline-flex;
+            flex: 0 0 100%;
+            margin: 0;
+            width: 100%;
+            -webkit-appearance: none;
+            border-radius: 0px;
+        }
+    }
+}
+.btn_login_exist{
+    margin: 6px 0 10px;
+}
+.form-fields-body .address-field-label {
+    margin-top: 5px;
+    font-size: 1rem;
+    margin-bottom: 3px;
+}
+.form-fields-body .address-field-label.req::after {
+    color: #ee0000;
+    content: " *";
+}
+.form-fields-body input[type=text], .form-fields-body input[type=email], .form-fields-body input[type=tel] {
+    font-size: 1rem;
+    padding: 3px 15px;
+    width: 100%;
+    margin-bottom: 5px;
+    border: 1px solid #999;
+}
+
+.form-fields-body input.warning, .form-fields-body select.warning {
+   box-shadow: 0 0 5px -2px #ee0000;
+}
+.form-fields-body .country > span,
+.form-fields-body .region_code > span {
+    width: 100%;
+}

@@ -1,0 +1,69 @@
+.cart-gift-voucher {
+    margin-top: 20px;
+    .gift-voucher-title {
+        font-family: 'Gotham Book';
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 16px;
+        svg{
+            vertical-align: middle
+        }
+    }
+
+    .gift-voucher-area-tablet {
+        width: 100%;
+        margin-top: 8px;
+        display: inline-block;
+        position: relative;
+        vertical-align: bottom;
+        input {
+            
+        }
+        .btn-clear-voucher {
+            position: absolute;
+            right: 10px;
+            top: 12px;
+            z-index: 9;
+            cursor: pointer;
+            max-height: 15px;
+        }
+    }
+
+    .voucher-close{
+        display: none;
+    }
+
+    #submit-voucher, #remove-voucher {
+        background-color: #101820;
+        color: #FFF
+    }
+
+    @media (min-width: 1024px) {
+        #submit-voucher, #remove-voucher {
+            display: inline-block;
+            margin-left: 8px;
+            width: 100px;
+
+        }
+        .submit-voucher-rtl, .remove-voucher-rtl{
+            margin-left: 0 !important;
+            margin-right: 8px;
+        }
+    }
+
+
+    @media (max-width: 1023px) {
+        .gift-voucher-area-tablet {
+            width: 100%;
+        }
+        .gift-voucher-area-tablet input {
+            width: 100%;
+        }
+        #remove-voucher, #submit-voucher {
+            width: 100%;
+            margin-top: 8px;
+        }
+    }
+}

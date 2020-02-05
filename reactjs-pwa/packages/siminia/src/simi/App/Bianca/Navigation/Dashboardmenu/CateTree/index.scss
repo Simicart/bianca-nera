@@ -1,0 +1,53 @@
+.left-all-cats{
+    font-size: 14px;
+    padding-left: 33px;
+    font-family: Gotham;
+    font-weight: 500;
+}
+
+.left-cats-menu{
+    margin-top: 54px;
+    margin-bottom: 5.5px;
+    .MuiListItem-button{
+        padding-left: unset;
+        padding-right: 19px;
+        margin-bottom: 5px;
+        height: 38px;
+    }
+    .icons{
+        font-size: 12px;
+    }
+
+    .menu-item-wrap{
+        margin-left: -5px;
+        padding-left: 33px;
+        padding-top: 13px;
+        padding-bottom: 13px;
+        &:last-child{
+            padding-bottom: 5px;
+        }
+    }
+}
+
+
+.menu-content{
+    display: flex;
+    align-items: center;
+    color: #727272;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.rtl-root {
+    .left-cats-menu {
+        .MuiListItem-button {
+            padding-left: 33px;
+            padding-right: 19px;
+        }
+
+        .menu-item-wrap{
+            margin-right: -5px;
+            padding-right: 33px;
+        }
+    }
+}

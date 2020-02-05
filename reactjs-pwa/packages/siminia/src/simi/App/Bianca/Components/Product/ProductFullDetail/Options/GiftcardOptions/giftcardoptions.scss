@@ -1,0 +1,220 @@
+$color1: #101820;
+$color2: #727272;
+$borderColor: #f2f2f2;
+$bgColor: #f2f2f2;
+.product-detail-root{
+    .detail-top{
+        .col-right{
+            flex: 1 0;
+            .product-options{
+                max-width: 474px;
+            }
+        }
+    }
+}
+.giftcard-option{
+    padding: 0px;
+    color: $color1;
+    /* Base for label styling */
+    [type="checkbox"]:not(:checked),
+    [type="checkbox"]:checked {
+        position: absolute;
+        left: -9999px;
+    }
+    [type="checkbox"]:not(:checked) + label,
+    [type="checkbox"]:checked + label {
+        position: relative;
+        padding-left: 33px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+    /* checkbox aspect */
+    [type="checkbox"]:not(:checked) + label:before,
+    [type="checkbox"]:checked + label:before {
+        content: '';
+        width: 24px;
+        height: 24px;
+        border: 1px solid $color1;
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+    }
+    [type="checkbox"]:checked + label:before {
+        content: '';
+        width: 24px;
+        height: 24px;
+        background-color: $color1;
+        border: 1px solid $color1;
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+    }
+    /* checked mark aspect */
+    [type="checkbox"]:checked + label:after {
+        content: '';
+        transform: rotateX(0deg) rotateY(180deg) rotateZ(-45deg);
+        color: #fff;
+        border: 1px solid #fff;
+        border-top: none;
+        border-right: none;
+        background: transparent;
+        position: absolute;
+        top: -4px;
+        left: 8px;
+        width: 7px;
+        height: 17px;
+        font-size: 14px;
+        font-weight: 400;
+        transition: all .2s;
+    }
+    /* disabled checkbox */
+    [type="checkbox"]:disabled:not(:checked) + label:before,
+    [type="checkbox"]:disabled:checked + label:before {
+        box-shadow: none;
+        border-color: #bbb;
+        background-color: #ddd;
+    }
+    /* reset css Mui select */
+    .MuiInput-underline,.Mui-focused{
+        &:before{
+            display: none;
+        }
+        &:after{
+            border: none;
+            border-bottom: none;
+        }
+    }
+    .option-row{
+        font-family: 'Gotham Book';
+        margin-top: 24px;
+        label{
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 14px;
+            margin-bottom: 0px;
+            display: block;
+        }
+        [type="checkbox"]+label{
+            text-transform: unset;
+            font-size: 14px;
+            line-height: 14px;
+            font-weight: 500;
+            color: $color1;
+        }
+        .MuiInputBase-root{
+            margin-top: 8px;
+            width: 100%;
+            min-height: 48px;
+            border: none;
+            border-radius: unset;
+            background-color: $bgColor;
+            font-size: 14px;
+            line-height: 14px;
+            font-family: 'Gotham Book';
+            color: $color1;
+            .MuiSelect-selectMenu{
+                line-height: 14px;
+                padding: 17px;
+            }
+            .MuiSelect-icon{
+                fill: $color1!important;
+                position: absolute;
+                top: 16px;
+                right: 16px;
+            }
+            &:not(.Mui-disabled):before{
+                border-bottom: unset;
+            }
+            &:hover:not(.Mui-disabled):before{
+                border-bottom: unset;
+            }
+        }
+        input, select, .date-picker{
+            margin-top: 8px;
+            min-height: 48px;
+            line-height: 14px;
+            padding-top: 17px;
+            padding-bottom: 17px;
+            padding-left: 17px;
+            width: 100%;
+            border: none;
+            border-radius: unset;
+            background-color: $bgColor;
+            color: $color1;
+            font-size: 14px;
+            font-family: 'Gotham Book';
+        }
+        ul{
+            margin-top: 8px;
+        }
+        .date-picker {
+            position: relative;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            padding-right: 16px;
+            >div > div{
+                font-size: inherit!important;
+                line-height: inherit!important;
+                width: 100%!important;
+                height: unset!important;
+                background-color: $bgColor!important;
+                hr{
+                    display: none!important;
+                }
+            }
+            [role="presentation"]{
+                position: absolute;
+                right: 10px;
+                top: 11px;
+            }
+            input{
+                margin: 0px;
+            }
+        }
+        .clear-date{
+            top: calc(50% - 5px);
+        }
+        .date-picker-ctn{
+            margin-top: 8px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            .clear-date{
+                position: absolute;
+                right: 16px;
+                width: 16px;
+                height: 16px;
+                text-align: center;
+                svg{
+                    fill: $color1!important;
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
+        &.option-templates{
+            ul {
+                display: flex;
+                > li {
+                    width: 48px;
+                    height: 48px;
+                    margin-right: 16px;
+                    background-color: $bgColor;
+                    &.selected {
+                        outline: none;
+                    }
+                    &:last-child{
+                        margin-right: 0px;
+                    }
+                    img{
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,48 @@
+$colorTitle : #101820;
+$colorSubTitle : #727272;
+
+.left-account-menu div[class ~= "MuiListItem-gutters"]{
+    margin-top: 27px;
+    padding-left: 33px;
+    padding-right: 19px;
+}
+
+.left-account-menu .MuiListItem-button{
+    padding-left: unset;
+}
+.left-account-menu .left-menu-account-title{
+    text-transform: uppercase;
+    font-family: Gotham;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+    color: $colorTitle;
+}
+.left-account-menu .icons{
+    font-size: 12px;
+    line-height: 12px;
+    color: $colorTitle;
+}
+
+.left-account-menu .menu-item{
+    margin-left: -5px;
+    padding-left: 33px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+.left-account-menu .menu-content{
+    font-family: Gotham;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 12px;
+    color: $colorSubTitle;
+    text-transform: uppercase;
+}
+
+.rtl-root {
+    .left-account-menu .menu-item{
+        margin-right: -5px;
+        padding-right: 33px;
+    }
+}

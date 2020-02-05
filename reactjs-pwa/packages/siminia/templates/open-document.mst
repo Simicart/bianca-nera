@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6334">
+    <link rel="manifest" href="/manifest.json">
+
+    {{!
+        Apple Specific Tags
+
+        To be included until Safari supports WebAppManifest
+        See Docs:
+        - https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html
+        - https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html
+    }}
+    {{!
+        Apple Icons for Homescreen
+        Sizes: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/app-icon/
+    }}
+    <link rel="apple-touch-icon" href="/icons/favicon512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/favicon180.png">
+    <link rel="stylesheet" href="/simistatic/bootstrap.min.css">
+    <link async id="rtl-stylesheet" rel="stylesheet" href="/simistatic/rtl.css">
+    <script src="/simistatic/config.js"></script>
+    <script src="https://www.simicart.com/appdashboard/rest/app_configs?bear_token=daFTRsQRPorHZYAADSoXkYaJlXfzbnBoyhipJ8h&pwa=1&js=1"></script>
+    <script src="/simistatic/jquery.min.js"></script>
+    <link rel="stylesheet" href="/simistatic/owlcarousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/simistatic/style.css" />
+    {{> templates/default-font-include}}
+    <link href="https://fonts.googleapis.com/css?family=Muli:300" rel="stylesheet">
+
+    <link rel="preconnect" href="{{env.MAGENTO_BACKEND_URL}}">
+
+    <script type="text/javascript">
+        window.addEventListener('error', function(e) {
+            if (
+                e && e.target &&
+                (
+                    (e.target.src && (typeof e.target.src === 'string') && e.target.src.indexOf('vendor~client') !== -1) ||
+                    (e.message && e.message=='Script error.')
+                )
+             ) {
+                console.log(e)
+                //version is outdated - old client file not found
+                sessionStorage.clear();
+                localStorage.setItem("CLIENT_VER", null);
+                window.location.reload();
+            }
+        }, true);
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KTRTPPQ');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100231407-1', 'auto');
+    </script>
+    <!-- End Google Analytics -->
+
+    <!-- OneSignal Notification -->
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+    var OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+        OneSignal.init({
+        appId: "4a66382f-2d4a-4830-bb22-20eeb6511772",
+        });
+    });
+    </script>
+    <!-- End OneSignal Notification -->
+
+    {{#bundles.prefetch}}
+    <link rel="prefetch script" href="/{{.}}">
+    {{/bundles.prefetch}}
