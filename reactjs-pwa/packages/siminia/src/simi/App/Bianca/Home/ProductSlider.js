@@ -9,7 +9,6 @@ import ItemsCarousel from 'react-items-carousel';
 import ChevronLeft from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronLeft';
 import ChevronRight from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronRight';
 import useWindowSize from 'src/simi/App/Bianca/Hooks';
-import { analyticImpressionsGTM } from 'src/simi/Helper/Analytics';
 
 const responsive = {
     superLargeDesktop: {
@@ -151,7 +150,6 @@ const ProductSlider = props => {
 
     if(data.simiproducts.hasOwnProperty('items') && data.simiproducts.total_count > 0) {
         const productItem = applySimiProductListItemExtraField(data.simiproducts);
-        analyticImpressionsGTM(productItem.items, null, 'Home page');
         return (
             <div className="product-list">
                 <div className="product-horizotal" style={Identify.isRtl()?{direction:'ltr'}:{}}>
