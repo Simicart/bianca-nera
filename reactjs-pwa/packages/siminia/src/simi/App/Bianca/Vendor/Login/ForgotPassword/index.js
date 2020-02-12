@@ -45,7 +45,7 @@ class ForgotPassword extends Component {
             data.errors.map(value => {
                 messages +=  value.message
             })
-            showToastMessage(messages)
+            showToastMessage(Identify.__(messages))
             this.setState({ resetSubmited: false})
         }
     }

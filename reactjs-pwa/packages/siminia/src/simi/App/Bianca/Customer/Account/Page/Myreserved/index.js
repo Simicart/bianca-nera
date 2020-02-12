@@ -148,6 +148,7 @@ const Myreserved = props => {
                         key={Identify.randomString(3)}
                         currentPage={parseInt(curPage)}
                         changedPage={(id) => setCurPage(id)}
+                        limit={5}
                     /> :
                     <PaginationTable
                         renderItem={renderItem}
@@ -156,6 +157,7 @@ const Myreserved = props => {
                         key={Identify.randomString(3)}
                         currentPage={parseInt(curPage)}
                         changedPage={(id) => setCurPage(id)}
+                        limit={10}
                     />
                 }
                 </div>

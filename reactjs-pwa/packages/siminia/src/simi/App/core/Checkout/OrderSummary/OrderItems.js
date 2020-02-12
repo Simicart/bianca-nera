@@ -3,7 +3,8 @@ import Image from 'src/simi/BaseComponents/Image';
 import { resourceUrl, logoUrl } from 'src/simi/Helper/Url';
 import Identify from 'src/simi/Helper/Identify';
 import { configColor } from 'src/simi/Config';
-import { Price } from '@magento/peregrine';
+// import { Price } from '@magento/peregrine';
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing';
 import Arrow from 'src/simi/BaseComponents/Icon/Arrowup';
 const $ = window.$;
 

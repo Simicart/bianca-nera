@@ -11,5 +11,5 @@ export const paypalPlaceOrder = (callBack, getParams) => {
 
 export const callUrlWebview = (callBack, postData) => {
     // sendRequest(`/rest/V1/simiconnector/payfortplaceoderafters/start`, callBack, 'GET', getParams)
-    sendRequest('rest/V1/simiconnector/payfortplaceoderafters', callBack, 'POST',{}, postData)
+    sendRequest('/rest/V1/simiconnector/payfortplaceoderafters', callBack, 'POST',{}, postData)
 }

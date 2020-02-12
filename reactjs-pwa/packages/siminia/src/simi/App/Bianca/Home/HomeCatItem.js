@@ -35,10 +35,10 @@ const HomeCatItem = props => {
     return (
         <div className={`home-cate-item ${isFull ? 'full-width':''}`} role="presentation">
             <div className="cate-title">
-                <span className="--text">{Identify.normalizeName(item.simicategory_name)}</span>
+                <span className="--text">{Identify.normalizeName(item.cat_name)}</span>
             </div>
             <div className="cate-img" onClick={action}>
-                <img src={img} alt={item.simicategory_name}/>
+                <img src={img} alt={item.cat_name}/>
             </div>
             <div className="cate-btn">
                 <div className="btn" onClick={action}><span>{Identify.__('View all')}</span></div>

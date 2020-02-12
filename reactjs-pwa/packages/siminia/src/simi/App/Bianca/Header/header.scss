@@ -268,6 +268,12 @@ $textColor3: #e4e4e4;
           flex-direction: row-reverse;
           margin-top: 7px;
 
+          .right-bar-item.non-compare{
+            display: none;
+          }
+          .right-bar-item.compare-list{
+            display: inline;
+          }
           .right-bar-item {
             font-size: 12px;
             text-align: center;
@@ -543,7 +549,7 @@ $textColor3: #e4e4e4;
   left: unset !important;
   right: 139px !important;
 }
-.rtl-root input {
+.rtl-root .header-search input {
   padding-left: 5px !important;
   padding-right: 24px !important;
 }
@@ -881,6 +887,19 @@ body.fixed-scroll {
 }
 
 @media (max-width: 1023px) {
+  .rtl-root{
+    .header-wrapper.mobile{
+      .container-header{
+        .right-bar{
+          #compare-list-product{
+            margin-right: 25px !important;
+            margin-top: 8.5px;
+            margin-left: unset !important;
+          }
+        }
+      }
+    }
+  }
   .header-wrapper.mobile {
     .container-header {
       .header {
@@ -895,9 +914,22 @@ body.fixed-scroll {
         }
       }
       .right-bar {
+        .right-bar-item.non-compare{
+          display: none;
+        }
         .right-bar-item.cart {
           margin-right: 1px !important;
           margin-left: 25px !important;
+        }
+        #compare-list-product{
+          margin-left: 25px !important;
+          margin-top: 8.5px;
+        }
+        .right-bar-item {
+          .add-to-compare-btn{
+            color: $mainColor1;
+            font-size: 16px;
+          }
         }
       }
     }
@@ -1160,6 +1192,12 @@ Simple header (for checkout and cart)
       .storelocator .storelocator-icon {
         margin-right: 0px;
         margin-left: 4px;
+      }
+    }
+    .minicart{
+      .cart-list{
+          padding-right: 28px;
+          padding-left: 70px;
       }
     }
   }

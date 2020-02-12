@@ -8,6 +8,8 @@ namespace Simi\Simicustomize\Model;
 
 use Hybrid_Auth;
 
+use function PHPSTORM_META\type;
+
 class Customer extends \Simi\Simiconnector\Model\Customer
 {
 
@@ -48,40 +50,52 @@ class Customer extends \Simi\Simiconnector\Model\Customer
                 switch ($data->providerId) {
                     case "facebook.com":
                         try {
-                            $config = [
-                                'callback'  => \Hybridauth\HttpClient\Util::getCurrentUrl(),
-                                'keys' => ['id' => '2565225196864428', 'secret' => 'f59fdb06ce2456ebe4a456421479246c'],
-                                'endpoints' => [
-                                    'api_base_url'     => 'https://graph.facebook.com/v2.12/',
-                                    'authorize_url'    => 'https://www.facebook.com/dialog/oauth',
-                                    'access_token_url' => 'https://graph.facebook.com/oauth/access_token',
-                                ]
-                            ];
-                            $adapter = new \Hybridauth\Provider\Facebook($config);
+                            $fbId = $this->simiObjectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/social_login/facebook_id');
+                            $fbSecret = $this->simiObjectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/social_login/facebook_secret');
+                            if ($fbId && $fbSecret) {
+                                $config = [
+                                    'callback'  => \Hybridauth\HttpClient\Util::getCurrentUrl(),
+                                    'keys' => ['id' => $fbId, 'secret' => $fbSecret],
+                                    'endpoints' => [
+                                        'api_base_url'     => 'https://graph.facebook.com/v2.12/',
+                                        'authorize_url'    => 'https://www.facebook.com/dialog/oauth',
+                                        'access_token_url' => 'https://graph.facebook.com/oauth/access_token',
+                                    ]
+                                ];
+                                $adapter = new \Hybridauth\Provider\Facebook($config);
 
-                            $adapter->setAccessToken(['access_token' => $data->accessToken]);
+                                $adapter->setAccessToken(['access_token' => $data->accessToken]);
 
-                            $userProfile = $adapter->getUserProfile();
+                                $userProfile = $adapter->getUserProfile();
 
-                            $adapter->disconnect();
+                                $adapter->disconnect();
+                            } else {
+                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login !'), 4);
+                            }
                         } catch (\Exception $e) {
                             throw new \Simi\Simiconnector\Helper\SimiException(__($e->getMessage()), 4);
                         }
                         break;
                     case "google.com":
                         try {
-                            $config = [
-                                'callback'  => \Hybridauth\HttpClient\Util::getCurrentUrl(),
-                                'keys' => ['id' => '772735916871-qmp7locp0nn7tjrr6qmhcgp98rj84kbn.apps.googleusercontent.com', 'secret' => 'uopFGQe8_tGXkFScVw321QiG']
-                            ];
+                            $googleId = $this->simiObjectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/social_login/google_id');
+                            $googleSecret = $this->simiObjectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/social_login/google_secret');
+                            if ($googleId && $googleSecret) {
+                                $config = [
+                                    'callback'  => \Hybridauth\HttpClient\Util::getCurrentUrl(),
+                                    'keys' => ['id' => $googleId, 'secret' => $googleSecret]
+                                ];
 
-                            $adapter = new \Hybridauth\Provider\Google($config);
+                                $adapter = new \Hybridauth\Provider\Google($config);
 
-                            $adapter->setAccessToken(['access_token' => $data->accessToken]);
+                                $adapter->setAccessToken(['access_token' => $data->accessToken]);
 
-                            $userProfile = $adapter->getUserProfile();
+                                $userProfile = $adapter->getUserProfile();
 
-                            $adapter->disconnect();
+                                $adapter->disconnect();
+                            } else {
+                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login !'), 4);
+                            }
                         } catch (\Exception $e) {
                             throw new \Simi\Simiconnector\Helper\SimiException(__($e->getMessage()), 4);
                         }
@@ -89,25 +103,33 @@ class Customer extends \Simi\Simiconnector\Model\Customer
                     case "twitter.com":
                         try {
                             // $currentUrl = \Hybridauth\HttpClient\Util::getCurrentUrl();
-                            $config = [
-                                'callback'  => \Hybridauth\HttpClient\Util::getCurrentUrl(),
-                                'keys' => ['key' => 'inE1PMSfzSbJZFjzar2pruHC9', 'secret' => 'EqZ7rrFcnGmdAfovg2NEyCNBXxunRSaXcjpxesinnrVEguqS2l'],
-                                'authorize' => true
-                            ];
+                            $twitterKey = $this->simiObjectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/social_login/twitter_key');
+                            $twitterSecret = $this->simiObjectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/social_login/twitter_secret');
 
-                            $adapter = new \Hybridauth\Provider\Twitter($config);
-                            if ($data->accessTokenSecret) {
-                                $adapter->setAccessToken([
-                                    'access_token' => $data->accessToken,
-                                    'access_token_secret' => $data->accessTokenSecret
-                                ]);
+                            if ($twitterKey && $twitterSecret) {
+
+                                $config = [
+                                    'callback'  => \Hybridauth\HttpClient\Util::getCurrentUrl(),
+                                    'keys' => ['key' => 'inE1PMSfzSbJZFjzar2pruHC9', 'secret' => 'EqZ7rrFcnGmdAfovg2NEyCNBXxunRSaXcjpxesinnrVEguqS2l'],
+                                    'authorize' => true
+                                ];
+
+                                $adapter = new \Hybridauth\Provider\Twitter($config);
+                                if ($data->accessTokenSecret) {
+                                    $adapter->setAccessToken([
+                                        'access_token' => $data->accessToken,
+                                        'access_token_secret' => $data->accessTokenSecret
+                                    ]);
+                                } else {
+                                    throw new \Simi\Simiconnector\Helper\SimiException(__('Twitter need access token secret !'), 4);
+                                }
+
+                                $userProfile = $adapter->getUserProfile();
+
+                                $adapter->disconnect();
                             } else {
-                                throw new \Simi\Simiconnector\Helper\SimiException(__('Twitter need access token secret !'), 4);
+                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login !'), 4);
                             }
-
-                            $userProfile = $adapter->getUserProfile();
-
-                            $adapter->disconnect();
                         } catch (\Exception $e) {
                             throw new \Simi\Simiconnector\Helper\SimiException(__($e->getMessage()), 4);
                         }
@@ -148,5 +170,78 @@ class Customer extends \Simi\Simiconnector\Model\Customer
             // Notify user to check mailbox and verify new account
             throw new \Simi\Simiconnector\Helper\SimiException(__('Please check your mailbox to active your account !.'), 4);
         }
+    }
+    public function updateProfile($data)
+    {
+        $data     = $data['contents'];
+        $result   = [];
+
+        $customer = $this->simiObjectManager->create('Magento\Customer\Model\Customer');
+        $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
+        $customer->loadByEmail($data->email);
+
+        $customerData = [
+            'firstname' => $data->firstname,
+            'lastname'  => $data->lastname,
+            'email'     => $data->email,
+        ];
+
+        // Fix bug 'invalid state change requested' when change password.
+        // The reason is quote has customer_id is null
+        $cart = $this->simiObjectManager->get('Magento\Checkout\Model\Cart');
+        $cart->getQuote()->setData('customer_id', $customer->getId());
+        $cart->saveQuote();
+
+        if (isset($data->change_password) && $data->change_password == 1) {
+            $currPass = $data->old_password;
+            $newPass  = $data->new_password;
+            $confPass = $data->com_password;
+            $customer->setChangePassword(1);
+            if ($customer->authenticate($data->email, $currPass)) {
+                if ($newPass != $confPass) {
+                    throw new \Magento\Framework\Exception\InputException(
+                        __('Password confirmation doesn\'t match entered password.')
+                    );
+                }
+                $customer->setPassword($newPass);
+                $customer->setConfirmation($confPass);
+                $customer->setPasswordConfirmation($confPass);
+            }
+        }
+        $this->setCustomerData($customer, $data);
+        $customerForm   = $this->simiObjectManager->get('Magento\Customer\Model\Form');
+        $customerForm->setFormCode('customer_account_edit')
+            ->setEntity($customer);
+        $customerErrors = $customerForm->validateData($customer->getData());
+        if ($customerErrors !== true) {
+            if (is_array($customerErrors)) {
+                throw new \Simi\Simiconnector\Helper\SimiException($customerErrors[0], 4);
+            } else {
+                throw new \Simi\Simiconnector\Helper\SimiException($customerErrors, 4);
+            }
+        } else {
+            $customerForm->compactData($customerData);
+        }
+
+        if (is_array($customerErrors)) {
+            throw new \Simi\Simiconnector\Helper\SimiException(__('Invalid profile information'), 4);
+        }
+        $customer->setConfirmation(null);
+        if (isset($data->telephone)) {
+            $CollectionCustomer = $this->simiObjectManager->create('Magento\Customer\Model\ResourceModel\Customer\CollectionFactory');
+            $resultCollection = $CollectionCustomer->create()
+                ->addAttributeToFilter('mobilenumber', $data->telephone)
+                ->load();
+            if (count($resultCollection) > 0) {
+                $message = __('Aready exist phone number !');
+                throw new \Simi\Simiconnector\Helper\SimiException(__($message), 4);
+            } else {
+                $customer->setData('mobilenumber', $data->telephone);
+            }
+        }
+
+        $customer->save();
+        $this->_getSession()->setCustomer($customer);
+        return $customer;
     }
 }

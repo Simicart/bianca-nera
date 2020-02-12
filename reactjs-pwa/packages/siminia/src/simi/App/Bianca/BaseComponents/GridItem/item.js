@@ -25,6 +25,7 @@ import { getOS } from 'src/simi/App/Bianca/Helper';
 import { getCartDetails } from 'src/actions/cart';
 import { connect } from 'src/drivers';
 import { compose } from 'redux';
+import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 
 const $ = window.$;
 require('./item.scss')
@@ -149,12 +150,13 @@ class Griditem extends React.Component {
             showToastMessage(Identify.__('Product has added to your compare list'.toUpperCase()),)
             hideFogLoading()
             openCompareModal()
-        } else {
+        } else{
             compareProducts = [];
             compareProducts.push(data.product);
             Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE,'compare_product', compareProducts);
             showToastMessage(Identify.__('Product has added to your compare list'.toUpperCase()),)
             hideFogLoading()
+            document.getElementById('compare-list-product').style.display = 'inline';
             openCompareModal()
         }
     }
@@ -180,6 +182,10 @@ class Griditem extends React.Component {
         })
     }
 
+    smootScollToMain = () => {
+        smoothScrollToView($('#siminia-main-page'));
+    }
+
     renderVendorName = (item) => {
         if (item && item.simiExtraField && item.simiExtraField.attribute_values) {
             const {attribute_values} = item.simiExtraField
@@ -191,7 +197,7 @@ class Griditem extends React.Component {
                         return parseInt(vendor.entity_id) === parseInt(attribute_values.vendor_id);
                     });
                     if (vendor) {
-                        this.vendorName = <Link to={`/designers/${vendor.vendor_id}.html`}>{attribute_values.vendor_name}</Link>
+                        this.vendorName = <Link to={`/designers/${vendor.vendor_id}.html`} onClick={this.smootScollToMain}>{attribute_values.vendor_name}</Link>
                     }
                 } else {
                     this.vendorName = attribute_values.vendor_name
@@ -303,7 +309,7 @@ class Griditem extends React.Component {
                     const { config } = storeConfig && storeConfig.simiStoreConfig || {};
                     const { preorder_deposit } = config;
                     if (preorder_deposit)
-                        depositText = (<p className="item-deposit">{Identify.__(`Deposit ${preorder_deposit}%`)}</p>)
+                        depositText = (<p className="item-deposit">{Identify.__('Deposit')+' '+preorder_deposit+'%'}</p>)
                 } else
                     addToCartBtn = (
                         <Colorbtn
@@ -315,8 +321,7 @@ class Griditem extends React.Component {
         }
         
         return (
-            <div
-                className="siminia-product-grid-item">
+            <div className="siminia-product-grid-item" onClick={() => {analyticClickGTM(name, item.id, item.price)}}>
                 <QuickView openModal={this.state.openModal} closeModal={this.closeModal} product={item} />
                 <div style={{position: 'relative'}} className="grid-item-image">
                     {
@@ -333,11 +338,11 @@ class Griditem extends React.Component {
                     <div className="product-des-info">
                         <div className="product-name">
                             <div role="presentation" className="product-name small"
-                                onClick={() => {analyticClickGTM(name, item.id, item.price); props.handleLink(location)}} >{ReactHTMLParse(name)}</div>
+                                onClick={() => {props.handleLink(location)}} >{ReactHTMLParse(name)}</div>
                         </div>
                         <div className="vendor-and-price">
                             <div role="presentation" className={`prices-layout ${Identify.isRtl() ? "prices-layout-rtl" : ''}`} id={`price-${id}`} 
-                                onClick={() => {analyticClickGTM(name, item.id, item.price); props.handleLink(location)}}>
+                                onClick={() => {props.handleLink(location)}}>
                                 <Price
                                     prices={price} type={type_id}
                                 />

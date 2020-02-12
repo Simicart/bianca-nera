@@ -4,7 +4,8 @@ import Deleteicon from 'src/simi/App/Bianca/BaseComponents/Icon/Trash'
 import EditIcon from 'src/simi/BaseComponents/Icon/Pencil'
 import Image from 'src/simi/BaseComponents/Image'
 import { configColor } from 'src/simi/Config'
-import { Price } from '@magento/peregrine'
+// import { Price } from '@magento/peregrine'
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing'
 import { resourceUrl, logoUrl } from 'src/simi/Helper/Url';
 import {
     showFogLoading,
@@ -13,12 +14,13 @@ import {
 import ReactHTMLParse from 'react-html-parser';
 import SpecialCartItem from './SpecialCartItem'
 import { productUrlSuffix } from 'src/simi/Helper/Url';
+import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 
 require('./cartItem.scss')
 
 const CartItem = props => {
     const inputQty = useRef(null)
-    const { currencyCode, item, isPhone, itemTotal, handleLink } = props
+    const { currencyCode, item, isPhone, itemTotal, handleLink, history } = props
     if (itemTotal && (itemTotal.simi_pre_order_option || itemTotal.simi_trytobuy_option))
         return <SpecialCartItem itemTotal={itemTotal}
             handleLink={handleLink} currencyCode={currencyCode} isPhone={isPhone} isOpen={props.isOpen}/>
@@ -50,6 +52,13 @@ const CartItem = props => {
         }
     }
 
+    const redirectToVendorPage = (vendorId) => {
+        try{
+            smoothScrollToView($('#siminia-main-page'));
+        }catch(err){}
+        history.push(`/designers/${vendorId}.html`);
+    }
+
     const getVendorName = (vendorId) => {
         const storeConfig = Identify.getStoreConfig();
         let vendorList;
@@ -66,8 +75,13 @@ const CartItem = props => {
             if (vendor && vendor.lastname) vendorName = `${vendorName} ${vendor.lastname}`;
             const {profile} = vendor || {}
             vendorName = profile && profile.store_name || vendorName;
-            if (vendorName) return vendorName;
-            // return (vendorName && vendorName.vendor_id)?vendorName.vendor_id:'';
+            if(vendor && vendorName){
+                if (vendor.vendor_id) {
+                    return <span onClick={(e)=>{e.preventDefault(); redirectToVendorPage(vendor.vendor_id)}}>{vendorName}</span>
+                }
+                return <span onClick={(e)=>{e.preventDefault(); redirectToVendorPage(vendor.entity_id)}}>{vendorName}</span>
+            }
+            // if (vendorName) return vendorName;
         }
     }
 
@@ -116,11 +130,9 @@ const CartItem = props => {
                     </React.Fragment>
                     : null
                 }
-                {!props.isOpen && !isPhone
-                ?   
+                {/* Designer name does not display in minicart */}
+                {!props.isOpen && !isPhone && 
                     <div className='designer-name'>{item.attribute_values && getVendorName(item.attribute_values.vendor_id)}</div>
-                :
-                    null
                 }
             </div>
         </div>
@@ -269,7 +281,7 @@ const CartItem = props => {
                     </div>
                     <div className="cart-item-detail">
                         {props.isOpen
-                        ?   <div>
+                        ?   <div className="item-info-qty">
                                 {itemInfo}
                                 {itemQty}
                             </div> 
@@ -278,7 +290,7 @@ const CartItem = props => {
                         {!props.isOpen? itemPrice : null
                         }
                         {!props.isOpen ? itemQty : null}
-                        <div>
+                        <div className="item-subtotal-action">
                             {itemSubTotal}
                             <div
                                 role="button"

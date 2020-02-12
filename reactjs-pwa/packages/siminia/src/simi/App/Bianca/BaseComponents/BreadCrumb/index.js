@@ -31,14 +31,11 @@ class Breadcrumb extends React.Component{
                 const action = item.link ? ()=>history.push(item.link) : ()=>{} //fix for last breadcrumb has link
                 const arrow = size === key+1 ? null : <span className="breadcrumb-arrow">/ </span>
                 let name = item.name.split(' ');
-                name = name.map((word) => {
-                    return word.charAt(0).toUpperCase() + word.toLowerCase().slice(1);
-                });
-                name = name.join(' ');
+                name = name.map((word) => (word.charAt(0).toUpperCase() + word.toLowerCase().slice(1))).join(' ');
                 return (
                     <React.Fragment key={key}>
                         <span role="presentation" className="breadcrumb-item" onClick={()=>action()} onKeyUp={()=>action()}>
-                            {name}
+                            {Identify.__(name)}
                         </span>
                         {arrow}
                     </React.Fragment>
@@ -49,7 +46,7 @@ class Breadcrumb extends React.Component{
                     <React.Fragment key={children}>
                         <span className="breadcrumb-arrow">/ </span>
                         <span role="presentation" className="breadcrumb-item">
-                            {children}
+                            {Identify.__(children)}
                         </span>
                     </React.Fragment>
                 );

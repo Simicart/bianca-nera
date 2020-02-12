@@ -32,7 +32,7 @@ class PhoneInputReadonly extends Component {
         return (
             <div id="verify-opt-readonly" className={`verify-opt-readonly ${Identify.isRtl() ? 'verify-opt-readonly-rtl' : ''}`}>
                 <div className="label">
-                    {Identify.__('current Phone number *'.toUpperCase())}
+                    {Identify.__('current Phone number *').toUpperCase()}
                 </div>
                 <div className="custom-input">
                     <div className="element-1">

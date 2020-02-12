@@ -75,14 +75,14 @@ class ResetPassword extends React.Component {
 					title: Identify.__('Reset Customer Password')
 				})}
 				<div className="title">
-					<span>{Identify.__('reset password'.toUpperCase())}</span>
+					<span>{Identify.__('reset password').toUpperCase()}</span>
 				</div>
 				<div className="wrap">
-					<div className="title-form">{Identify.__('create new password?'.toUpperCase())}</div>
+					<div className="title-form">{Identify.__('create new password ?').toUpperCase()}</div>
 					<p className="description-form">{Identify.__('Enter a new password for account:')}</p>
 					<Form className="form" getApi={this.setFormApi} onSubmit={handleSubmit}>
 						<div className="newPassword">
-							<div className="title-input">{Identify.__('NEW PASSWORD *')}</div>
+							<div className="title-input">{Identify.__('new password *')}</div>
 							<TextInput
 								style={{ paddingLeft: '56px' }}
 								field="password"
@@ -93,7 +93,7 @@ class ResetPassword extends React.Component {
 							/>
 						</div>
 						<div className="confirmPassword">
-							<div className="title-input">{Identify.__('CONFIRM NEW PASSWORD *')}</div>
+							<div className="title-input">{Identify.__('confirm new password *')}</div>
 							<TextInput
 								style={{ paddingLeft: '56px' }}
 								field="confirm"
@@ -109,11 +109,11 @@ class ResetPassword extends React.Component {
 								type="submit"
 								style={{ backgroundColor: '#101820', color: '#fff' }}
 							>
-								{Identify.__('Reset My Password'.toUpperCase())}
+								{Identify.__('Reset My Password').toUpperCase()}
 							</button>
 						</div>
 						<span className="back special-back" id="btn-back">
-							<Link to={'/'}>{Identify.__('back'.toUpperCase())}</Link>
+							<Link to={'/'}>{Identify.__('back').toUpperCase()}</Link>
 						</span>
 					</Form>
 				</div>

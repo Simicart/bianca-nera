@@ -211,39 +211,39 @@ const CreateAccount = props => {
                 onSubmit={handleSubmit}
             >
                 <div className={classes.lead1}>
-                    {Identify.__('create an account'.toUpperCase())}
+                    {Identify.__('create an account').toUpperCase()}
                 </div>
                 <div className={classes.lead2}>
                     {Identify.__('Please enter the following information to create your account.')}
                 </div>
-                <Field label="First Name *" required={true}>
+                <Field label={Identify.__('First Name *')} required={true}>
                     <TextInput
                         classes={classes}
                         field="customer.firstname"
                         autoComplete="given-name"
                         validate={validators.get('firstName')}
                         validateOnBlur
-                        placeholder="First Name"
+                        placeholder={Identify.__('First Name')}
                     />
                 </Field>
-                <Field label="Last Name *" required={true}>
+                <Field label={Identify.__('Last Name *')} required={true}>
                     <TextInput
                         classes={classes}
                         field="customer.lastname"
                         autoComplete="family-name"
                         validate={validators.get('lastName')}
                         validateOnBlur
-                        placeholder="Last Name"
+                        placeholder={Identify.__('Last Name')}
                     />
                 </Field>
-                <Field label="Email Address *" required={true}>
+                <Field label={Identify.__('Email Address *')} required={true}>
                     <TextInput
                         classes={classes}
                         field="customer.email"
                         autoComplete="email"
                         validate={validators.get('email')}
                         validateOnBlur
-                        placeholder="Email"
+                        placeholder={Identify.__('Email')}
                     />
                 </Field>
                 {/* <Field label="Phone Number *" required={true}>
@@ -261,7 +261,7 @@ const CreateAccount = props => {
                     handleChangePhone={(val1, val2) => onChange(val1, val2)}
                     type={'login'}
                 />
-                <Field label="Password *">
+                <Field label={Identify.__('Password *')}>
                     <TextInput
                         classes={classes}
                         field="password"
@@ -269,16 +269,16 @@ const CreateAccount = props => {
                         autoComplete="new-password"
                         validate={validators.get('password')}
                         validateOnBlur
-                        placeholder="Password"
+                        placeholder={Identify.__('Password')}
                     />
                 </Field>
-                <Field label="Password Confirmation*">
+                <Field label={Identify.__('Password confirmation*')}>
                     <TextInput
                         field="confirm"
                         type="password"
                         validate={validators.get('confirm')}
                         validateOnBlur
-                        placeholder="Password confirmation"
+                        placeholder={Identify.__('Password confirmation')}
                     />
                 </Field>
                 <div className={classes.error}>{errorMessage}</div>
@@ -294,7 +294,7 @@ const CreateAccount = props => {
                     id="btn-back"
                     onClick={handleBack}
                 >
-                    <span>{Identify.__('back'.toUpperCase())}</span>
+                    <span>{Identify.__('back').toUpperCase()}</span>
                 </div>
             </Form>
         </React.Fragment>

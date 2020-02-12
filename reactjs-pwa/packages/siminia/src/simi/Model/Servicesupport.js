@@ -6,5 +6,5 @@ export const switchServiceSupport = (callBack, quoteItemId, quote_id, add_buy_se
         getParams.add_buy_service = 1
     else
         getParams.remove_buy_service = 1
-    sendRequest('rest/V1/simiconnector/quoteitems/' + quoteItemId, callBack, 'GET', getParams)
+    sendRequest('/rest/V1/simiconnector/quoteitems/' + quoteItemId, callBack, 'GET', getParams)
 }

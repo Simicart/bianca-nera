@@ -17,7 +17,7 @@ $color2: #727272;
                     height: 20px;
                     .review-rate{
                         margin-top: 0;
-                        height: 20px;
+                        height: 18px;
                         display: inline-flex;
                         .rate-star{
                             margin-top: 2px;
@@ -31,10 +31,11 @@ $color2: #727272;
                         }
                     }
                     .review-btn {
-                        font-family: 'Gotham Medium';
+                        font-family: 'Gotham Book';
+                        font-weight: 600;
+                        line-height: 18px;
                         padding: 0;
                         cursor: pointer;
-                        margin-top: 8px;
                         &:hover {
                             text-decoration: underline;
                         }

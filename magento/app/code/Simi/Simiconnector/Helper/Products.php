@@ -261,7 +261,10 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
         $attributeCollection = $this->simiObjectManager
             ->create('Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection');
         $attributeCollection
+            ->setItemObjectClass(\Magento\Catalog\Model\ResourceModel\Eav\Attribute::class)
+            ->addStoreLabel($this->storeManager->getStore()->getId())
             ->addIsFilterableFilter()
+            ->setOrder('position', 'ASC')
             //->addVisibleFilter() //cody comment out jun152019
             //->addFieldToFilter('used_in_product_listing', 1) //cody comment out jun152019
             //->addFieldToFilter('is_visible_on_front', 1) //cody comment out jun152019
@@ -269,6 +272,7 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
         if ($this->is_search)
             $attributeCollection->addFieldToFilter('is_filterable_in_search', 1);
 
+        // var_dump($attributeCollection->getSelectSql(true));die;
 
         $allProductIds = $collection->getAllIds();
         $arrayIDs      = [];
@@ -390,7 +394,8 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
         foreach ($attributeCollection as $attribute) {
             $attributeOptions = [];
             $attributeValues  = $collection->getAllAttributeValues($attribute->getAttributeCode());
-            if (in_array($attribute->getDefaultFrontendLabel(), $titleFilters)) {
+            $label = $attribute->getStoreLabel() ? $attribute->getStoreLabel() : $attribute->getDefaultFrontendLabel();
+            if (in_array($label, $titleFilters)) {
                 continue;
             }
             foreach ($attributeValues as $productId => $optionIds) {
@@ -417,10 +422,10 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
             }
 
             if ($this->simiObjectManager->get('Simi\Simiconnector\Helper\Data')->countArray($filters) >= 1) {
-                $titleFilters[] = $attribute->getDefaultFrontendLabel();
+                $titleFilters[] = $label;
                 $layerFilters[] = [
                     'attribute' => $attribute->getAttributeCode(),
-                    'title'     => $attribute->getDefaultFrontendLabel(),
+                    'title'     => $label,
                     'filter'    => $filters,
                 ];
             }

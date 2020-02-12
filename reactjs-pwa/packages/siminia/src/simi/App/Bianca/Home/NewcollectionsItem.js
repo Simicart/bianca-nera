@@ -13,11 +13,13 @@ const NewcollectionsItem = props => {
 
     return (
         <div className={`item ${isPhone ? 'phone-view':''}`} role="presentation">
-            {item.newcollections_name ? 
-                <h3 className="title">{Identify.__(item.newcollections_name)}</h3>
-                :
-                <h3 className="title">{Identify.__('New Collections')}</h3>
-            }
+            <div className="title-box">
+                {item.newcollections_name ? 
+                    <h3 className="title">{Identify.__(item.newcollections_name)}</h3>
+                    :
+                    <h3 className="title">{Identify.__('New Collections')}</h3>
+                }
+            </div>
             <div className="collections-images">
                 <div className="img-row-1">
                     <div className="img-1" onClick={() => action(item.url_path_0)}>

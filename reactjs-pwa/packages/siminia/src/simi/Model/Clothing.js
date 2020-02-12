@@ -5,5 +5,5 @@ export const submitQuote = (callBack, postData) => {
 }
 
 export const uploadFile = (callBack, postData) =>{
-    sendRequest(`rest/V1/simiconnector/uploadfiles`, callBack, 'POST', {}, postData)
+    sendRequest(`/rest/V1/simiconnector/uploadfiles`, callBack, 'POST', {}, postData)
 }

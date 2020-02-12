@@ -9,6 +9,8 @@ import Gallery from 'src/simi/App/Bianca/BaseComponents/Products/Gallery';
 import LoadMore from 'src/simi/App/Bianca/BaseComponents/Products/loadMore';
 // import RecentViewed from 'src/simi/App/Bianca/BaseComponents/Products/recentViewed';
 import CompareProduct from 'src/simi/App/Bianca/BaseComponents/CompareProducts/index';
+import { analyticImpressionsGTM } from 'src/simi/Helper/Analytics';
+
 require('src/simi/App/Bianca/BaseComponents/Products/products.scss');
 
 const $ = window.$;
@@ -80,10 +82,15 @@ class Products extends React.Component {
             return <Loading />
         if (!data.products || !data.products.total_count)
             return(<div className="no-product">{Identify.__('No product found')}</div>)
+        
+        analyticImpressionsGTM(items, '', 'Designer Products');
+
         return (
             <React.Fragment>
                 <div className="top-sort-by">
-                    <Sortby parent={this} sortByData={sortByData} isPhone={isPhone}/>
+                    <Sortby parent={this} sortByData={sortByData} isPhone={isPhone} 
+                        sortFields={data.products.sort_fields || null }
+                    />
                     {this.renderItemCount(data)}
                 </div>
                 <section className="gallery">

@@ -69,7 +69,9 @@ const Home = props => {
                 <ProductList homeData={data} history={history}/>
             </div>
             <div className={`popular-categories-wrap ${isPhone ? 'mobile':''}`}>
-                <h3 className="title">{Identify.__('Popular Categories')}</h3>
+                <div className="title-box">
+                    <h3 className="title">{Identify.__('Popular Categories')}</h3>
+                </div>
                 <HomeCat catData={data} history={history} isPhone={isPhone}/>
             </div>
             <div className={`new-collections-wrap ${isPhone ? 'mobile':''}`}>

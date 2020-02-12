@@ -84,6 +84,34 @@
             </group>
         </section>
         <section id="simiconnector">
+            <group id="firebase" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Firebase Configuration</label>
+                <field id="firebase_config" translate="label" type="textarea" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Firebase Config Object</label>
+                    <comment>Your config must be Object JSON. Example: { "apiKey":"abcdef", ...}</comment>
+                </field>
+            </group>
+            <group id="social_login" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Social Login Configuration</label>
+                <field id="facebook_id" translate="label" type="text" sortOrder="201" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Facebook App ID</label>
+                </field>
+                <field id="facebook_secret" translate="label" type="text" sortOrder="202" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Facebook App Secret</label>
+                </field>
+                <field id="twitter_key" translate="label" type="text" sortOrder="203" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Twitter App Key</label>
+                </field>
+                <field id="twitter_secret" translate="label" type="text" sortOrder="204" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Twitter App Secret</label>
+                </field>
+                <field id="google_id" translate="label" type="text" sortOrder="205" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google App ID</label>
+                </field>
+                <field id="google_secret" translate="label" type="text" sortOrder="206" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google App Secret</label>
+                </field>
+            </group>
             <group id="customchat">
                 <field id="license" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Livechat License</label>
@@ -148,7 +176,7 @@
                 <field id="bianca_subcribe_description" translate="label" type="textarea" sortOrder="1701" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Subcribe description</label>
                 </field>
-                <field id="footer_logo" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="1702" showInDefault="1" showInWebsite="1" showInStore="1" >
+                <field id="footer_logo" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="1702" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Upload footer logo</label>
                     <backend_model>Simi\Simicustomize\Model\Config\Backend\FooterLogo</backend_model>
                     <upload_dir config="system" scope_info="1">footer_logo</upload_dir>

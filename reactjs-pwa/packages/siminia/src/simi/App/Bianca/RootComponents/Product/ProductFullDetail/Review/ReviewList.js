@@ -25,7 +25,7 @@ const ReviewList = props => {
 
     useEffect(() => {
         if (!state.data) {
-            sendRequest(`rest/V1/simiconnector/reviews`, apiCallBack, 'GET', {'filter[product_id]': product_id, limit: pageSize}, {})
+            sendRequest(`/rest/V1/simiconnector/reviews`, apiCallBack, 'GET', {'filter[product_id]': product_id, limit: pageSize}, {})
         }
     }, []);
 
@@ -34,7 +34,7 @@ const ReviewList = props => {
             dispatch({page: 1, data: {...state.data, ...{reviews: state.data.reviews.slice(0, 3), from: 0}}}); //Show less
         } else {
             dispatch({page: page, loadingMore: true});
-            sendRequest(`rest/V1/simiconnector/reviews`, apiCallBack, 'GET', {'filter[product_id]': product_id, limit: 5, offset: page}, {})
+            sendRequest(`/rest/V1/simiconnector/reviews`, apiCallBack, 'GET', {'filter[product_id]': product_id, limit: 5, offset: page}, {})
         }
     });
 

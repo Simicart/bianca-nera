@@ -152,7 +152,7 @@ const ProfileForm = props => {
             const messages = data.errors.map(value => {
                 return { type: 'error', message: value.message, auto_dismiss: true }
             })
-            props.toggleMessages(messages)
+            props.toggleMessages(Identify.__(messages))
         } else if (data.message && data.hasOwnProperty('customer')) {
             if (isChangePass) {
                 // Remove saved user email and password at localStorage
@@ -168,7 +168,7 @@ const ProfileForm = props => {
             $('#real-input-register').val('')
             localStorage.removeItem('numberphone_register')
             setPhone('')
-            props.toggleMessages([{ type: 'success', message: data.message, auto_dismiss: true }])
+            props.toggleMessages([{ type: 'success', message: Identify.__(data.message), auto_dismiss: true }])
         }
         hideFogLoading()
     }

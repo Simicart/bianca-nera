@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { string, shape } from 'prop-types';
-
+import Identify from 'src/simi/Helper/Identify';
 import classify from 'src/classify';
 import Trigger from './trigger';
 import defaultClasses from './emptyMiniCart.css';
@@ -22,10 +22,10 @@ class EmptyMiniCart extends Component {
             <div className={`${classes.root} empty-mobile`}>
                 <BasketIcon style={{height: '30px', width: '30px'}}/>
                 <h3 className={classes.emptyTitle}>
-                    YOUR CART IS EMPTY
+                    {Identify.__('YOUR CART IS EMPTY')}
                 </h3>
                 <Trigger>
-                    <span className={classes.continue}>Continue Shopping</span>
+                    <span className={classes.continue}>{Identify.__('Continue Shopping')}</span>
                 </Trigger>
             </div>
         );

@@ -76,7 +76,7 @@ class Dashboardmenu extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <aside className={this.props.className}>
+                <aside id="left-menu" className={this.props.className}>
                     {this.renderLeftMenu()}
                 </aside>
             </React.Fragment>

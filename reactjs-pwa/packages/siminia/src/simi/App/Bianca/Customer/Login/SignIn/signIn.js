@@ -64,7 +64,7 @@ class SignIn extends Component {
                             field="email"
                             validate={isRequired}
                             validateOnBlur
-                            placeholder="Email"
+                            placeholder={Identify.__('Email')}
                         />
                     </div>
                     <div className='passwordInput'>
@@ -79,7 +79,7 @@ class SignIn extends Component {
                             type="password"
                             validate={isRequired}
                             validateOnBlur
-                            placeholder="Password"
+                            placeholder={Identify.__('Password')}
                         />
                     </div>
                     <div className={`${Identify.isRtl() ? 'rtl-signInAction' : null} signInAction`} >
@@ -97,7 +97,7 @@ class SignIn extends Component {
                             priority="high" className='signInButton' type="submit"
                             style={{ backgroundColor: '#101820', color: '#fff' }}
                         >
-                            {Identify.__('Sign In'.toUpperCase())}
+                            {Identify.__('Sign In').toUpperCase()}
                         </button>
                     </div>
                 </Form>

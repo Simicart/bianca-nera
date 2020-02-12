@@ -275,7 +275,7 @@ class CustomerLayout extends React.Component {
                     <BreadCrumb history={this.props.history} breadcrumb={[{ name: 'Home', link: '/' }, { name: 'Account' }]} />
                     <div className='container'>
                         <div className="welcome-customer">
-                            {Identify.__("Welcome %s").replace('%s', firstname + ' ' + lastname)}
+                            {Identify.__("Welcome") + ` ${firstname} ${lastname}`}
                         </div>
                         <div className="dashboard-layout">
                             {this.renderMenu()}

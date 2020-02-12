@@ -28,9 +28,9 @@ class Coupon extends \Simi\Simiconnector\Helper\Data
         $couponCodeLenght = strlen($couponCode);
         if ($couponCodeLenght) {            
             if ($couponCode == $this->_getCart()->getQuote()->getCouponCode()) {
-                $message = __('Coupon code "%1" was applied.', $couponCode);
+                $message = __('Coupon code %1 was applied.', $couponCode);
             } else {
-                $message = __('Coupon code "%1" is not valid.', $couponCode);
+                $message = __('Coupon code %1 is not valid.', $couponCode);
             }
         } else {
             $message = __('Coupon code was canceled.', $couponCode);

@@ -19,8 +19,11 @@ class Index extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-        $resultPage = $this->customerFactory->create();
-        $collection = $resultPage->getCollection(); //Get Collection of module data
-        var_dump($collection->getData());
+        // $resultPage = $this->customerFactory->create();
+        // $collection = $resultPage->getCollection(); //Get Collection of module data
+        // var_dump($collection->getData());
+        // $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        // $config = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/firebase/firebase_config');
+        // echo $config;
     }
 }

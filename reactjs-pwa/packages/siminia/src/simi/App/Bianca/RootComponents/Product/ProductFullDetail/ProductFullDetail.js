@@ -158,11 +158,11 @@ class ProductFullDetail extends Component {
                     }
                 }
             }
-            if (reviewRating && reviewRating.rate && reviewRating.number) {
+            if (reviewRating && reviewRating.rate !== undefined && reviewRating.number) {
                 window.productDataStructure.aggregateRating = {
                     "@type": "AggregateRating",
                     "ratingValue": reviewRating.rate,
-                    "ratingCount": reviewRating.number
+                    "reviewCount": reviewRating.number
                 }
             }
             stData.innerHTML = JSON.stringify(window.productDataStructure);
@@ -419,6 +419,7 @@ class ProductFullDetail extends Component {
             Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE,'compare_product', compareProducts);
             showToastMessage(Identify.__('Product has added to your compare list'.toUpperCase()),)
             hideFogLoading();
+            document.getElementById('compare-list-product').style.display = 'inline';
             this.showModalCompare();
         }
     }
@@ -806,6 +807,7 @@ class ProductFullDetail extends Component {
                                 optionCodes={optionCodes}
                                 optionSelections={optionSelections}
                                 product={product}
+                                isPhone={isPhone}
                             />
                             {/* {parseInt(is_salable) === 0 && parseInt(pre_order) !== 1 && 
                                 <div className="out-of-stock"><span>{Identify.__('Out of stock')}</span></div>
@@ -845,7 +847,7 @@ class ProductFullDetail extends Component {
                             <div className="product-short-desc">
                                 {ReactHTMLParse(short_desc)}
                                 {!parseInt(is_salable) && pre_order === '1' && preorder_deposit ? 
-                                    <p className="deposit">{Identify.__(`Deposit ${preorder_deposit}%`)}</p> 
+                                    <p className="deposit">{Identify.__('Deposit')+' '+preorder_deposit+'%'}</p> 
                                     : null }
                             </div>
                             <div className="options">{productOptions}</div>

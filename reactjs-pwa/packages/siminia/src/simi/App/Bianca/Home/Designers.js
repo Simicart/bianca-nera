@@ -58,7 +58,11 @@ const Designers = props => {
 
     return (
         <div className={`brand-slider ${isPhone ? 'phone-view':''}`}>
-            { data && <h3 className="title">{Identify.__('Shop By Designers')}</h3>}
+            { data && 
+                <div className="title-box">
+                    <h3 className="title">{Identify.__('Shop By Designers')}</h3>
+                </div>
+            }
             <Scroller data={newData} initItemIndex={startItemIndex} lastItems={lastItems} history={history} slideSettings={slideSettings} isPhone={isPhone} 
                 onClickItem={onClickItem}/>
         </div>

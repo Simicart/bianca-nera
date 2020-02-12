@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 
 
 const Sortby = props => {
-    const { history, location, sortByData, isPhone } = props;
+    const { history, location, sortByData, sortFields, isPhone } = props;
     const { search } = location;
     let dropdownItem = null
 
@@ -15,18 +15,27 @@ const Sortby = props => {
         if (dropdownItem)
             dropdownItem.handleToggle()
         const queryParams = new URLSearchParams(search);
-        queryParams.set('product_list_order', item.key);
+        queryParams.set('product_list_order', item.value);
         queryParams.set('product_list_dir', item.direction);
         history.push({ search: queryParams.toString() });
     }
 
     let selections = [];
-    const orders = [
-        {"key":"name","value":"Name","direction":"asc"},
-        {"key":"name","value":"Name","direction":"desc"},
-        {"key":"price","value":"Price","direction":"asc"},
-        {"key":"price","value":"Price","direction":"desc"},
+    let orders = [
+        {"value":"name","label":"Name","direction":"asc"},
+        {"value":"name","label":"Name","direction":"desc"},
+        {"value":"price","label":"Price","direction":"asc"},
+        {"value":"price","label":"Price","direction":"desc"},
     ];
+
+    if (sortFields && sortFields.options) {
+        orders = [];
+        sortFields.options.map((item)=>{
+            orders.push({...item, direction: "asc"})
+            orders.push({...item, direction: "desc"})
+            return item;
+        });
+    }
 
     let sortByTitle = isPhone ? <React.Fragment>{Identify.__('Sort')} <span className={'icon-arrow-down'}></span></React.Fragment> : Identify.__('Sort by');
 
@@ -34,11 +43,11 @@ const Sortby = props => {
         let itemCheck = ''
         const itemTitle = (
             <React.Fragment>
-                {Identify.__(item.value)} <span className={item.direction === 'asc'? 'icon-arrow-up' :'icon-arrow-down'}></span>
+                {Identify.__(item.label)} <span className={item.direction === 'asc'? 'icon-arrow-up' :'icon-arrow-down'}></span>
             </React.Fragment>
         )
 
-        if (sortByData && sortByData[`${item.key}`] === item.direction.toUpperCase()) {
+        if (sortByData && sortByData[`${item.value}`] === item.direction.toUpperCase()) {
             itemCheck = (
                 <span className="is-selected">
                     <Check color={configColor.button_background} style={{width: 16, height: 16, marginRight: 4}}/>

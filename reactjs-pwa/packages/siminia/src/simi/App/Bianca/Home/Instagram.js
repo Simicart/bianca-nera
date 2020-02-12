@@ -123,7 +123,9 @@ const Instagram = (props) => {
 
     return (
         <div className={`instagram-slider ${isPhone ? 'phone-view':''}`}>
-            <h3 className="title">{Identify.__('Shop Our Instagram')}</h3>
+            <div className="title-box">
+                <h3 className="title">{Identify.__('Shop Our Instagram')}</h3>
+            </div>
             <div className="container instagram-container">
                 <div className="carousel-block">
                     { items && 

@@ -90,7 +90,7 @@ $borderMobileColor: #A7A7A7;
         height: fit-content;
         // display: inline-block;
         .product-prices {
-            font-family: "Gotham";
+            font-family: "Gotham Book";
             font-size: 14px;
             line-height: 14px;
             text-align: start;
@@ -101,9 +101,10 @@ $borderMobileColor: #A7A7A7;
             .regular {
                 display: inline-block;
                 font-weight: 600;
+                margin-inline-end: 10px;
             }
             .special {
-                margin-inline-start: 10px;
+                margin-inline-start: 0px;
                 display: inline-block;
                 .sale_off {
                     display: none;
@@ -113,7 +114,6 @@ $borderMobileColor: #A7A7A7;
                     text-decoration: line-through;
                     font-size: 14px;
                     font-weight: 500;
-                    float: left;
                 }
             }
         }
@@ -125,10 +125,11 @@ $borderMobileColor: #A7A7A7;
         font-family: 'Gotham Book';
         line-height: 14px;
         margin-top: 12px;
+        text-align: start;
     }
     .siminia-product-des {
         padding: 16px 24px;
-        text-align: left;
+        text-align: start;
         overflow: hidden;
         border: 1px solid $borderColor;
         box-sizing: border-box;
@@ -312,13 +313,17 @@ $borderMobileColor: #A7A7A7;
             }
             .cart-wishlish-compare .add-to-cart-btn {
                 margin-right: 0px;
+                margin-inline-end: 0px;
                 width: 100%;
                 max-width: 100%;
                 height: 28px;
                 font-size: 12px;
-                font-family: 'Gotham';
-                padding-top: 8px;
+                font-family: 'Gotham Book';
                 font-weight: 500;
+                padding-top: 0px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .product-name.small {

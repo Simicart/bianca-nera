@@ -8,6 +8,7 @@ import SizeChart from './SizeChart';
 import defaultClasses from './style.scss';
 import {getSizeChart} from 'src/simi/Model/Customer';
 import Loading from "src/simi/BaseComponents/Loading";
+import Identify from 'src/simi/Helper/Identify';
 
 const MySizeChart = props => {
     const [sizeData, setSizeData] = useState('')
@@ -25,7 +26,7 @@ const MySizeChart = props => {
 
     return (
         <div className='my-size-chart-area'>
-            <PageTitle title={'Size Chart History'.toUpperCase()}/>
+            <PageTitle title={Identify.__('Size Chart History').toUpperCase()}/>
             {sizeData
             ?
                 <SizeChart data={sizeData} isPhone={props.isPhone}/>

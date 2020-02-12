@@ -160,6 +160,7 @@ const Search = props => {
                             filterData={filterData?JSON.parse(productListFilter):null}
                             setCurrentPage={setCurrentPage}
                             loading={loading}
+                            pageType="Search Results"
                         />
                     </div>
                 );

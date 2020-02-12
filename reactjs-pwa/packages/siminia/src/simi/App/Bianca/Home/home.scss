@@ -16,17 +16,19 @@ $color1: #101820;
         text-transform: uppercase;
         border-radius: unset;
     }
-    h3.title{
-        font-family: Didot;
-        font-size: 24px;
-        font-weight: 600;
-        text-align: center;
-        color: #000;
+    .title-box{
         margin-top: 80px;
-        line-height: 24px;
-        height: 20px;
-        @media (max-width: 1023px){
-            font-size: 20px;
+        text-align: center;
+        h3.title{
+            font-family: Didot;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            color: #000;
+            display: inline;
+            @media (max-width: 1023px){
+                font-size: 20px;
+            }
         }
     }
     // fix all
@@ -89,7 +91,7 @@ $color1: #101820;
         }
     }
     .shop-by-brand-wrap{
-        h3.title{
+        .title-box{
             margin-top: 60px;
         }
         .brand-slider{
@@ -130,12 +132,12 @@ $color1: #101820;
                             }
                             .left-chevron-wrapper{
                                 height: 32px;
-                                top: -42px;
+                                top: -51px;
                                 left: 0px;
                             }
                             .right-chevron-wrapper{
                                 height: 32px;
-                                top: -42px;
+                                top: -51px;
                                 right: 0px;
                             }
                             .left-chevron-wrapper, .right-chevron-wrapper{
@@ -295,7 +297,7 @@ $color1: #101820;
             }
         }
         &.mobile{
-            h3.title{
+            .title-box{
                 margin-top: 35px;
             }
             .home-container{
@@ -411,7 +413,7 @@ $color1: #101820;
             .newcollections{
                 .collections-wrap{
                     .item{
-                        h3.title{
+                        .title-box{
                             margin-top: 42px;
                         }
                         .collections-images{
@@ -477,7 +479,7 @@ $color1: #101820;
         }
         &.mobile{
             .brand-slider{
-                h3.title{
+                .title-box{
                     margin-top: 42px;
                 }
                 .scroller{
@@ -497,7 +499,7 @@ $color1: #101820;
                     }
                     .left-chevron-wrapper{
                         position: absolute;
-                        top: -39px;
+                        top: -48px;
                         left: 0;
                         height: 27px;
                         .chevron-left{
@@ -507,7 +509,7 @@ $color1: #101820;
                     }
                     .right-chevron-wrapper{
                         position: absolute;
-                        top: -39px;
+                        top: -48px;
                         right: 0;
                         height: 27px;
                         .chevron-right{
@@ -520,7 +522,7 @@ $color1: #101820;
         }
     }
     .shop-our-instagram-wrap{
-        h3.title{
+        .title-box{
             margin-top: 17px;
         }
         .instagram-block{
@@ -560,7 +562,7 @@ $color1: #101820;
             }
         }
         &.mobile{
-            h3.title{
+            .title-box{
                 margin-top: 42px;
             }
             .instagram-block{
@@ -660,7 +662,7 @@ $color1: #101820;
         &.mobile{
             .instagram-slider{
                 padding-bottom: 106px;
-                h3.title{
+                .title-box{
                     margin-top: 42px;
                 }
                 .instagram-container{
@@ -707,25 +709,35 @@ $color1: #101820;
         }
     }
     // for mobile only
-    .mobile{
-        h3.title{
-            margin-top: 30px;
+    &.MacOS{
+        .mobile{
+            .title-box{
+                margin-bottom: -2px;
+                h3.title{
+                    padding-top: 2px;
+                }
+            }
         }
-        &.iOS{
-            .popular-categories-wrap{
-                .home-container{
-                    .home-cate-item{
-                        .cate-title{
-                            span{
-                                display: block;
-                                line-height: 30px;
-                                padding-top: 9px;
-                                height: auto;
-                            }
+    }
+    &.iOS{
+        .popular-categories-wrap.mobile{
+            .home-container{
+                .home-cate-item{
+                    .cate-title{
+                        span{
+                            display: block;
+                            line-height: 30px;
+                            padding-top: 7px;
+                            height: auto;
                         }
                     }
                 }
             }
+        }
+    }
+    .mobile{
+        .title-box{
+            margin-top: 30px;
         }
     }
 }

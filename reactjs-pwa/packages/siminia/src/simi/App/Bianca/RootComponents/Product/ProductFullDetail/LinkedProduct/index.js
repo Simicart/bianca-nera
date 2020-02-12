@@ -121,6 +121,12 @@ const LinkedProducts = props => {
         if (breakPoint.gutter) gutter = breakPoint.gutter;
     }
 
+    let _activeItemIndex = activeItemIndex;
+    if (Identify.isRtl() && linkedProducts && linkedProducts.length) {
+        linkedProducts.reverse();
+        if (activeItemIndex === 0) _activeItemIndex = (linkedProducts.length - 1);
+    }
+
     return (
         <div className="linked-product-ctn">
             <h2 className="title">
@@ -143,16 +149,16 @@ const LinkedProducts = props => {
                     slidesToScroll={1}
                     outsideChevron={true}
                     showSlither={false}
-                    activeItemIndex={activeItemIndex}
+                    activeItemIndex={_activeItemIndex}
                     requestToChangeActive={setActiveItemIndex}
                     leftChevron={<ChevronLeft className="chevron-left" style={{width: `${iconWidth}px`}} />}
                     rightChevron={<ChevronRight className="chevron-right" style={{width: `${iconWidth}px`}} />}
                     classes={{ wrapper: "wrapper", itemsWrapper: 'items-wrapper', itemsInnerWrapper: 'items-inner-wrapper', itemWrapper: 'item-wrapper', rightChevronWrapper: 'right-chevron-wrapper', leftChevronWrapper: 'left-chevron-wrapper' }}
                 >
-                    <CompareProduct history={history} openModal={openCompareModal} closeModal={closeCompareModal}/> 
                     {linkedProducts}
                 </ItemsCarousel>
             </div>
+            <CompareProduct history={history} openModal={openCompareModal} closeModal={closeCompareModal}/>
         </div>
     )
 }

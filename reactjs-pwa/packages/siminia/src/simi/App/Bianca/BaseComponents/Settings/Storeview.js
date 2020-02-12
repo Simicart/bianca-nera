@@ -97,7 +97,7 @@ class Storeview extends React.Component {
             const storeItem =  (
                 <div className={'store-item'} style={{display: 'flex'}}>
                     <div className={`store-name`}>
-                        {store.name}
+                        {Identify.__(store.name)}
                     </div>
                 </div>
             )
@@ -125,7 +125,7 @@ class Storeview extends React.Component {
             const item = this.renderItem()
             return item
         } catch(err) {
-            console.log(err)
+            // console.log(err)
         }
         return ''
     }

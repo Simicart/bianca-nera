@@ -123,7 +123,7 @@ class VerifyOtpModal extends React.Component {
                 classNames={{ overlay: Identify.isRtl() ? "rtl-wrap-modal" : "" }}
             >
                 <div className="title">
-                    {Identify.__('verify your mobile number'.toUpperCase())}
+                    {Identify.__('verify your mobile number').toUpperCase()}
                 </div>
                 <div className="description">
                     {Identify.__('A text message with 6-digit verifycation code has been sent to ')}
@@ -141,7 +141,7 @@ class VerifyOtpModal extends React.Component {
                         <input className="otp otp6" name="otp6" maxLength="1" value={this.state.value6} onChange={this.onChange6} />
                     </div>
                     <button type="submit">
-                        {Identify.__('verify'.toUpperCase())}
+                        {Identify.__('verify').toUpperCase()}
                     </button>
                 </form>
                 <div className="error">

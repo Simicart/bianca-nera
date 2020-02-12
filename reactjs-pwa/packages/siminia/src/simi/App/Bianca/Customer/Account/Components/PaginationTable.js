@@ -33,7 +33,7 @@ class PaginationTable extends Pagination {
 
     componentDidUpdate(prevProps){
         if(this.props.limit !== prevProps.limit){
-            this.setState({limit: this.props.limit})
+            this.setState({limit: this.props.limit || 10})
         }
     }
 
@@ -145,7 +145,7 @@ class PaginationTable extends Pagination {
                 {
                     this.props.showInfoItem &&
                     <span style={{marginRight : 10,fontSize : 16}}>
-                        {`${totalItem} ${totalItem > 1 ? 'items':'item'}`}
+                        {`${totalItem} `+ (totalItem > 1 ? Identify.__('items'):Identify.__('item'))}
                     </span>
                 }
             </div>

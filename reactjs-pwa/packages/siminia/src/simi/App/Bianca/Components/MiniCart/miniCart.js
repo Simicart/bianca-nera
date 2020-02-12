@@ -2,7 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { compose } from 'redux';
 import { connect } from 'src/drivers';
 import { bool, func, object, shape, string } from 'prop-types';
-import { Price } from '@magento/peregrine';
+// import { Price } from '@magento/peregrine';
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing';
 import classify from 'src/classify';
 import {
     getCartDetails,
@@ -28,6 +29,9 @@ import {
     hideFogLoading
 } from 'src/simi/BaseComponents/Loading/GlobalLoading';
 import { isArray } from 'util';
+import { analyticRemoveCartGTM } from 'src/simi/Helper/Analytics';
+
+require('./minicart.scss');
 
 class MiniCart extends Component {
     static propTypes = {
@@ -107,6 +111,7 @@ class MiniCart extends Component {
     removeFromCart(item) {
         if (confirm(Identify.__('Are you sure?')) === true) {
             showFogLoading()
+            analyticRemoveCartGTM(item.name, item.item_id, item.price, item.qty);
             removeItemFromCart(
                 () => {
                     this.props.getCartDetails();
@@ -118,7 +123,7 @@ class MiniCart extends Component {
     }
 
     get productList() {
-        const { cart, isOpen } = this.props;
+        const { cart, isOpen, history } = this.props;
 
         const { cartCurrencyCode, cartId } = this;
 
@@ -147,6 +152,7 @@ class MiniCart extends Component {
                             handleLink={this.handleLink.bind(this)}
                             isOpen={isOpen}
                             email={this.props.email}
+                            history={history}
                         />
                     );
                     obj.push(element);
@@ -186,7 +192,7 @@ class MiniCart extends Component {
             <div>
                 {hasDiscount ? 
                     <div className={classes.subtotal}>
-                        <div className={classes.subtotalLabel}>Discount {discount}%</div>
+                        <div className={classes.subtotalLabel}>{Identify.__('Discount')} {discount}%</div>
                         <div>
                             <Price
                                 currencyCode={cartCurrencyCode}
@@ -198,7 +204,7 @@ class MiniCart extends Component {
                 }
                 {hasGiftVoucher ?
                     <div className={classes.subtotal}>
-                    <div className={classes.subtotalLabel}>Discount({giftCard.giftcard_code})</div>
+                    <div className={classes.subtotalLabel}>{Identify.__('Discount')}({giftCard.giftcard_code})</div>
                         <div>
                             <Price
                                 currencyCode={cartCurrencyCode}
@@ -210,7 +216,7 @@ class MiniCart extends Component {
                 }
                 {hasSubtotal ? (
                 <div className={classes.subtotal}>
-                    <div className={classes.subtotalLabel}>Subtotal</div>
+                    <div className={classes.subtotalLabel}>{Identify.__('Subtotal')}</div>
                     <div>
                         <Price currencyCode={cartCurrencyCode} value={totalPrice} />
                     </div>
@@ -229,7 +235,7 @@ class MiniCart extends Component {
         const grandTotal = cart.totals.grand_total;
         return hasGrandtotal ? (
             <div className={classes.grandTotal}>
-                <div className={classes.grandTotalLabel}>Grand Total</div>
+                <div className={classes.grandTotalLabel}>{Identify.__('Grand Total')}</div>
                 <div className={classes.grandPrice}>
                     <Price currencyCode={cartCurrencyCode} value={grandTotal} />
                 </div>
@@ -332,7 +338,7 @@ class MiniCart extends Component {
                         closeDrawer();
                         document.body.classList.remove('minicart-open');
                     }}>
-                        <button className={classes.viewCartBtn}>
+                        <button className={`mini-cart-view-cart-btn ${classes.viewCartBtn}`}>
                             {Identify.__('VIEW & EDIT CART')}
                         </button>
                     </Link>
@@ -408,7 +414,7 @@ class MiniCart extends Component {
                     <div className={classes.header}></div>
                 :
                     <div className={classes.header}>
-                        <h2 className={classes.title}>
+                        <h2 className={Identify.isRtl() ? classes.titleRtl : classes.title}>
                             <span>{title}</span>
                         </h2>
                     </div>

@@ -22,7 +22,9 @@ const ProductList = props => {
                 if (item.category_id)
                     return (
                         <div className="default-productlist-item" key={index}>
-                            <h3 className="title">{Identify.__(item.list_title)}</h3>
+                            <div className="title-box">
+                                <h3 className="title">{Identify.__(item.list_title)}</h3>
+                            </div>
                             <CompareProduct history={history} openModal={openCompareModal} closeModal={closeCompareModal}/>
                             <ProductSlider openCompareModal={showModalCompare} dataProduct={item} history={history}/>
                         </div>

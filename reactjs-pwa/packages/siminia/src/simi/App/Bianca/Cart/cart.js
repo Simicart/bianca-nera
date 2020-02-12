@@ -12,7 +12,8 @@ import Loading from 'src/simi/BaseComponents/Loading';
 import Identify from 'src/simi/Helper/Identify';
 // import CartItem from 'src/simi/App/core/Cart/cartItem'
 import CartItem from './cartItem';
-import { Price } from '@magento/peregrine';
+// import { Price } from '@magento/peregrine';
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing';
 import { Colorbtn } from 'src/simi/BaseComponents/Button';
 import TitleHelper from 'src/simi/Helper/TitleHelper';
 import {
@@ -25,6 +26,7 @@ import Coupon from 'src/simi/App/Bianca/BaseComponents/Coupon';
 import GiftVoucher from 'src/simi/App/Bianca/Cart/Components/GiftVoucher';
 import EmptyMiniCart from '../Components/MiniCart/emptyMiniCart';
 import { isArray } from 'util';
+import { analyticRemoveCartGTM } from 'src/simi/Helper/Analytics';
 
 require('./cart.scss');
 
@@ -35,9 +37,13 @@ class Cart extends Component {
         this.state = {
             isPhone: isPhone,
             focusItem: null,
-            items: this.props.cart.details.items,
+            items: this.props.cart.details.items || [],
             isLoading: true
         };
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        return {...state, items: props.cart.details.items || []}
     }
 
     setIsPhone() {
@@ -61,11 +67,10 @@ class Cart extends Component {
                 }
             }
         }
-        this.setState({isLoading: false})
         showFogLoading();
+        this.props.getCartDetails();
         this.setIsPhone();
-        const { getCartDetails } = this.props;
-        getCartDetails();
+        this.setState({isLoading: false});
     }
 
     get cartId() {
@@ -104,47 +109,40 @@ class Cart extends Component {
                     [item.item_id]: "0",
                 };
             },initialValue);
-            this.setState({isLoading: true})
+            // this.setState({isLoading: true})
             removeAllItems(this.removeAllCallBack, allItems);
         }
     }
 
     removeAllCallBack = (data) => {
-        this.setState({isLoading: false})
-        this.setState({items: data.quoteitems})
-        getCartDetails();
+        // this.setState({isLoading: false, items: data.quoteitems || []});
+        this.setState({items: data.quoteitems});
+        this.props.getCartDetails({forceRefresh: true}); //bug not refresh
     }
 
-    get productList() {
+    get cartItemList() {
         const { cart } = this.props;
         if (!cart) return;
         const { cartCurrencyCode, cartId } = this;
         if (cartId) {
             const obj = [];
-            obj.push(
-                <Fragment>
-                    {!this.state.isPhone
-                    ?
-                        <div
-                            key={Identify.randomString(5)}
-                            className="cart-item-header"
-                        >
-                            <div style={{ width: '52.32%' }}>{Identify.__('Items')}</div>
-                            <div style={{ width: '18.5%', textAlign: 'left' }}>
-                                {Identify.__('Price')}
-                            </div>
-                            <div style={{ width: '17.38%', textAlign: 'left' }}>
-                                {Identify.__('Quantity')}
-                            </div>
-                            <div style={{ width: '12.8%', textAlign: 'right' }}>
-                                {Identify.__('Subtotal')}
-                            </div>
-                            {/* <div style={{width: '7%'}}>{Identify.__('').toUpperCase()}</div> */}
+            if (!this.state.isPhone) {
+                obj.push(
+                    <div className="cart-item-header" key={Identify.randomString(5)}>
+                        <div style={{ width: '52.32%' }}>{Identify.__('Items')}</div>
+                        <div style={{ width: '18.5%', textAlign: 'left' }}>
+                            {Identify.__('Price')}
                         </div>
-                    :   null
-                    }
-                </Fragment>
-            );
+                        <div style={{ width: '17.38%', textAlign: 'left' }}>
+                            {Identify.__('Quantity')}
+                        </div>
+                        <div style={{ width: '12.8%', textAlign: 'right' }}>
+                            {Identify.__('Subtotal')}
+                        </div>
+                        {/* <div style={{width: '7%'}}>{Identify.__('').toUpperCase()}</div> */}
+                    </div>
+                );
+            }
             if(cart.details.items){
                 for (const i in cart.details.items) {
                     const item = cart.details.items[i];
@@ -158,7 +156,7 @@ class Cart extends Component {
                         });
                     }
                     if (itemTotal) {
-                        const element = (
+                        obj.push(
                             <CartItem
                                 key={Identify.randomString(5)}
                                 item={item}
@@ -172,7 +170,6 @@ class Cart extends Component {
                                 email={this.props.email}
                             />
                         );
-                        obj.push(element);
                     }
                 }
             }
@@ -234,7 +231,7 @@ class Cart extends Component {
             <div>
                 {hasSubtotal ? (
                     <div className="subtotal">
-                        <div className="subtotal-label">Subtotal</div>
+                        <div className="subtotal-label">{Identify.__('Subtotal')}</div>
                         <div>
                             <Price
                                 currencyCode={cartCurrencyCode}
@@ -246,7 +243,7 @@ class Cart extends Component {
                 {hasDiscount ? (
                     <div className="subtotal">
                         <div className="subtotal-label">
-                            Discount {discount}%
+                            {Identify.__('Discount')} {discount}%
                         </div>
                         <div>
                             <Price
@@ -259,7 +256,7 @@ class Cart extends Component {
                 {
                     hasGiftVoucher ?
                     <div className='subtotal'>
-                    <div className='subtotal-label'>Discount({giftCard.giftcard_code})</div>
+                    <div className='subtotal-label'>{Identify.__('Discount')} ({giftCard.giftcard_code})</div>
                         <div>
                             <Price
                                 currencyCode={cartCurrencyCode}
@@ -271,7 +268,7 @@ class Cart extends Component {
                 }
                 {hasGrandtotal ? (
                     <div className="grandtotal">
-                        <div className="grandtotal-label">Grand Total</div>
+                        <div className="grandtotal-label">{Identify.__('Grand Total')}</div>
                         <div className="grandtotal-price">
                             <Price
                                 currencyCode={cartCurrencyCode}
@@ -333,6 +330,7 @@ class Cart extends Component {
     removeFromCart(item) {
         if (confirm(Identify.__('Are you sure?')) === true) {
             showFogLoading();
+            analyticRemoveCartGTM(item.name, item.item_id, item.price, item.qty);
             removeItemFromCart(
                 () => {
                     this.props.getCartDetails();
@@ -378,10 +376,10 @@ class Cart extends Component {
         );
     }
 
-    get miniCartInner() {
+    get renderCart() {
         const {isLoading} = this.props.cart;
         const {
-            productList,
+            cartItemList,
             props,
             total,
             checkoutButton
@@ -390,7 +388,7 @@ class Cart extends Component {
             isCartEmpty,
             cart
         } = props;
-        if (isCartEmpty || !cart.details.items || !parseInt(cart.details.items_count)) {
+        if (isCartEmpty || !cart.details.items || !parseInt(cart.details.items_count) || this.state.items.length === 0) {
             if(isLoading){
                 return <Loading />;
             }
@@ -409,9 +407,7 @@ class Cart extends Component {
                     return (
                         <div className="cart-page-siminia">
                             <div className="empty-cart">
-                                {Identify.__(
-                                    'You have no items in your shopping cart'
-                                )}
+                                {Identify.__('You have no items in your shopping cart')}
                             </div>
                         </div>
                     );
@@ -450,68 +446,32 @@ class Cart extends Component {
             })
         }
 
-        return (
-            <Fragment>
-                {this.state.isPhone
-                ?
-                    <Fragment>
-                        <div className="cart-header">
-                            {cart.details && parseInt(cart.details.items_count) ? (
-                                <div className="cart-title">
-                                    <div>{Identify.__('Shopping cart')}</div>
-                                </div>
-                            ) : (
-                                ''
-                            )}
+        return <Fragment>
+            <div className="cart-header">
+                {cart.details && parseInt(cart.details.items_count) ? (
+                    <div className="cart-title">
+                        <div>{Identify.__('Shopping cart')}</div>
+                    </div>
+                ) : (
+                    ''
+                )}
+            </div>
+            <div className="body">
+                {cartItemList}
+                <div className={`summary-zone ${this.state.isPhone?'row':''}`}>
+                    <div className="summary-title">{Identify.__('Summary'.toUpperCase())}</div>
+                    {isLoading ? <Loading/>
+                    :
+                        <div>
+                            {(!is_all_gift_card && !giftCartValue && !is_try_to_buy && !is_pre_order) && this.couponCode()}
+                            {(!is_all_gift_card && !cpValue && !is_try_to_buy && !is_pre_order) && this.giftVoucher(giftCartValue)}
+                            {total}
+                            {checkoutButton}
                         </div>
-                        <div className="body">
-                            {productList}
-                            <div className="summary-zone row">
-                                <div className="summary-title">{Identify.__('Summary'.toUpperCase())}</div>
-                                {isLoading ? <Loading/>
-                                :
-                                    <div>
-                                        {(!is_all_gift_card && !giftCartValue && !is_try_to_buy && !is_pre_order) && this.couponCode()}
-                                        {(!is_all_gift_card && !cpValue && !is_try_to_buy && !is_pre_order) && this.giftVoucher(giftCartValue)}
-                                        {total}
-                                        {checkoutButton}
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </Fragment>
-                :
-                    <Fragment>
-                        {this.state.isPhone && this.breadcrumb}
-                        <div className="cart-header">
-                            {cart.details && parseInt(cart.details.items_count) ? (
-                                <div className="cart-title">
-                                    <div>{Identify.__('Shopping cart')}</div>
-                                </div>
-                            ) : (
-                                ''
-                            )}
-                        </div>
-
-                        <div className="body">
-                            {productList}
-                            <div className="summary-zone">
-                                <div className="summary-title">{Identify.__('Summary'.toUpperCase())}</div>
-                                {isLoading ? <Loading/>
-                                :
-                                    <div>
-                                        {(!is_all_gift_card && !giftCartValue && !is_try_to_buy && !is_pre_order) && this.couponCode()}
-                                        {(!is_all_gift_card && !cpValue && !is_try_to_buy && !is_pre_order) && this.giftVoucher(giftCartValue)}
-                                        {total}
-                                        {checkoutButton}
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </Fragment>
-                }
-            </Fragment>
-        );
+                    }
+                </div>
+            </div>
+        </Fragment>
     }
 
     render() {
@@ -521,7 +481,7 @@ class Cart extends Component {
                 {TitleHelper.renderMetaHeader({
                     title: Identify.__('Shopping Cart')
                 })}
-                {this.miniCartInner}
+                {this.renderCart}
             </div>
         );
     }

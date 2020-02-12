@@ -42,7 +42,7 @@ class VerifyForm extends Component {
         return (
             <div id="verify-opt-area" className={`verify-opt-area ${Identify.isRtl() ? 'verify-opt-area-rtl' : ''}`}>
                 <div className="label">
-                    {Identify.__('phone number*'.toUpperCase())}
+                    {Identify.__('phone number*').toUpperCase()}
                 </div>
                 <div className="custom-input">
                     <div className="element-1" onClick={() => showOption()}>
@@ -65,15 +65,15 @@ class VerifyForm extends Component {
                         />
                     </div>
                 </div>
-                <div id="number_phone-required" className="error-message">{Identify.__("Mobile number is required.")}</div>
-                <div id="number_phone-invalid" className="error-message">{Identify.__("Invalid Number.")}</div>
-                <div id="number_phone-not-exist" className="error-message">{Identify.__("Mobile number don't exist")}</div>
+                <div id="number_phone-required" className="error-message">{Identify.__('Mobile number is required.')}</div>
+                <div id="number_phone-invalid" className="error-message">{Identify.__('Invalid Number.')}</div>
+                <div id="number_phone-not-exist" className="error-message">{Identify.__('Mobile number don\'t exist')}</div>
                 <div className='phone-otp-desc'>
                     {/* {Identify.__('Mobile No. Without Country Code i.e 9898989898')} */}
                 </div>
                 <div className="wrap">
                     <div id="must-verify" className="error-message">
-                        {Identify.__('You must ')}{Identify.__('verify phone number'.toUpperCase())}{Identify.__(' before ')}{Identify.__('register'.toUpperCase())}
+                        {Identify.__('You must ')}{Identify.__('verify phone number').toUpperCase()}{Identify.__(' before ')}{Identify.__('register').toUpperCase()}
                     </div>
                     <div role="presentation" id="createAccount" className='login-otp' onClick={this.props.openGetModal}>
                         {Identify.__('verify PHONE NUMBER').toUpperCase()}

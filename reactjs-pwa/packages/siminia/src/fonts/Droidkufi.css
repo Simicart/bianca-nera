@@ -1,0 +1,124 @@
+/* 
+ * Droid Arabic Kufi (Arabic) http://www.google.com/webfonts/earlyaccess
+ */
+@font-face {
+  font-family: 'Droid Arabic Kufi';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Droid Arabic Kufi';
+  font-style: normal;
+  font-weight: 500;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Droid Arabic Kufi';
+  font-style: normal;
+  font-weight: 600;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Droid Arabic Kufi';
+  font-style: normal;
+  font-weight: 700;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+/* Override existed font-family */
+@font-face {
+  font-family: 'Gotham';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham';
+  font-style: normal;
+  font-weight: 500;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham';
+  font-style: normal;
+  font-weight: 600;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham';
+  font-style: normal;
+  font-weight: 700;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham Book';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham Book';
+  font-style: normal;
+  font-weight: 500;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham Book';
+  font-style: normal;
+  font-weight: 600;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham Book';
+  font-style: normal;
+  font-weight: 700;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham Medium';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham Medium';
+  font-style: normal;
+  font-weight: 500;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham Medium';
+  font-style: normal;
+  font-weight: 600;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Gotham Medium';
+  font-style: normal;
+  font-weight: 700;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: Didot;
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: Didot;
+  font-style: normal;
+  font-weight: 500;
+  src: url(/fonts/DroidKufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: Didot;
+  font-style: normal;
+  font-weight: 600;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: Didot;
+  font-style: normal;
+  font-weight: 700;
+  src: url(/fonts/DroidKufi/DroidKufi-Bold.ttf) format('truetype');
+}

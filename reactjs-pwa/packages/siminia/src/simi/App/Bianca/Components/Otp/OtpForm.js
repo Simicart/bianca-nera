@@ -55,7 +55,7 @@ class OtpForm extends Component {
         return (
             <div id="login-opt-area" className={`login-opt-area ${Identify.isRtl() ? 'login-opt-area-rtl' : ''}`}>
                 <div className="label">
-                    {Identify.__('phone *'.toUpperCase())}
+                    {Identify.__('phone *').toUpperCase()}
                 </div>
                 <div className="custom-input">
                     <div className="element-1" onClick={() => showOption()}>
@@ -78,14 +78,14 @@ class OtpForm extends Component {
                         />
                     </div>
                 </div>
-                <div id="number_phone-required" className="error-message">{Identify.__("Mobile number is required.")}</div>
-                <div id="number_phone-invalid" className="error-message">{Identify.__("Invalid Number.")}</div>
-                <div id="number_phone-not-exist" className="error-message">{Identify.__("Mobile number don't exist")}</div>
+                <div id="number_phone-required" className="error-message">{Identify.__('Mobile number is required.')}</div>
+                <div id="number_phone-invalid" className="error-message">{Identify.__('Invalid Number.')}</div>
+                <div id="number_phone-not-exist" className="error-message">{Identify.__('Mobile number don\'t exist')}</div>
                 <div className='phone-otp-desc'>
                     {/* {Identify.__('Mobile No. Without Country Code i.e 9898989898')} */}
                 </div>
                 <div role="presentation" style={this.props.isButtonDisabled ? styleInActive : styleActice} className='login-otp' onClick={!this.props.isButtonDisabled ? this.props.handleSendOtp : doNothing}>
-                    {Identify.__('SEND VERIFICATION CODE').toUpperCase()}
+                    {Identify.__('send verification code').toUpperCase()}
                 </div>
             </div>
         )

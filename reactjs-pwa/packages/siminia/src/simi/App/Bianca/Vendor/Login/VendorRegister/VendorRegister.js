@@ -48,7 +48,7 @@ const VendorRegister = (props) => {
 				{...props}
 				style={fieldState.error ? { border: 'solid 1px red' } : null}
 			/>
-			{fieldState.error ? <small style={{ color: 'red' }}>{fieldState.error}</small> : null}
+			{fieldState.error ? <small style={{ color: 'red' }}>{Identify.__(fieldState.error)}</small> : null}
 		</React.Fragment>
 	));
 
@@ -85,7 +85,7 @@ const VendorRegister = (props) => {
 
 	const validateOption = (value, opt) => {
 		if (opt === 'req') {
-			return !value || !validateEmpty(value) ? 'Please select an option.' : undefined;
+			return !value || !validateEmpty(value) ? Identify.__('Please select an option.') : undefined;
 		}
 		return undefined;
 	};
@@ -208,11 +208,11 @@ const VendorRegister = (props) => {
 		} else {
 			var regionValue = null;
 			return (
-				<Field label="Region *">
+				<Field label={Identify.__('Region *')}>
 					<TextInput
 						field="vendor.region"
 						validate={validators.get('region')}
-						placeholder="Region"
+						placeholder={Identify.__('Region')}
 						validateOnBlur
 					/>
 				</Field>
@@ -387,43 +387,43 @@ const VendorRegister = (props) => {
 				onSubmit={handleSubmit}
 			>
 				<React.Fragment>
-					<div className={classes.lead1}>{Identify.__('create an account'.toUpperCase())}</div>
+					<div className={classes.lead1}>{Identify.__('create an account').toUpperCase()}</div>
 					<div className={classes.lead2}>
 						{Identify.__('Please enter the following information to create your account.')}
 					</div>
-					<Field label="First Name *" required={true}>
+					<Field label={Identify.__('First Name *')} required={true}>
 						<TextInput
 							field="firstname"
 							autoComplete="given-name"
 							validate={validators.get('firstName')}
 							validateOnBlur
-							placeholder="First name"
+							placeholder={Identify.__('First name')}
 						/>
 					</Field>
-					<Field label="Last Name *" required={true}>
+					<Field label={Identify.__('Last Name *')} required={true}>
 						<TextInput
 							field="lastname"
 							autoComplete="family-name"
 							validate={validators.get('lastName')}
 							validateOnBlur
-							placeholder="Last name"
+							placeholder={Identify.__('Last name')}
 						/>
 					</Field>
-					<Field label="Designer Id *">
+					<Field label={Identify.__('Designer Id *')}>
 						<TextInput
 							field="vendor.vendor_id"
 							validate={validators.get('vendorId')}
 							validateOnBlur
-							placeholder="Designer ID"
+							placeholder={Identify.__('Designer ID')}
 						/>
 					</Field>
-					<Field label="Email address *" required={true}>
+					<Field label={Identify.__('Email address *')} required={true}>
 						<TextInput
 							field="email"
 							autoComplete="email"
 							validate={validators.get('email')}
 							validateOnBlur
-							placeholder="Email"
+							placeholder={Identify.__('Email')}
 						/>
 					</Field>
 					<div className={classes.form_row}>
@@ -449,11 +449,11 @@ const VendorRegister = (props) => {
 							})}
 						</SimiSelect>
 					</div>
-					<Field label="City *">
+					<Field label={Identify.__('City *')}>
 						<TextInput
 							field="vendor.city"
 							validate={validators.get('city')}
-							placeholder="City"
+							placeholder={Identify.__('City')}
 							validateOnBlur
 						/>
 					</Field>
@@ -472,32 +472,32 @@ const VendorRegister = (props) => {
 						handleChangePhone={(val1, val2) => onChange(val1, val2)}
 						type={'login'}
 					/>
-					<Field label="Website *">
+					<Field label={Identify.__('Website *')}>
 						<TextInput field="vendor.website" validate={validators.get('website')} validateOnBlur />
 					</Field>
-					<Field label="Facebook *">
+					<Field label={Identify.__('Facebook *')}>
 						<TextInput field="vendor.facebook" validate={validators.get('facebook')} validateOnBlur />
 					</Field>
-					<Field label="Instagram *">
+					<Field label={Identify.__('Instagram *')}>
 						<TextInput field="vendor.instagram" validate={validators.get('instagram')} validateOnBlur />
 					</Field>
-					<Field label="Password *">
+					<Field label={Identify.__('Password *')}>
 						<TextInput
 							field="password"
 							type="password"
 							autoComplete="new-password"
 							validate={validators.get('password')}
 							validateOnBlur
-							placeholder="Password"
+							placeholder={Identify.__('Password')}
 						/>
 					</Field>
-					<Field label="Password Confirmation *">
+					<Field label={Identify.__('Password Confirmation*')}>
 						<TextInput
 							field="confirm"
 							type="password"
 							validate={validators.get('confirm')}
 							validateOnBlur
-							placeholder="Password Confirmation"
+							placeholder={Identify.__('Password Confirmation')}
 						/>
 					</Field>
 					<div className={classes.error}>{errorMessage}</div>
@@ -507,7 +507,7 @@ const VendorRegister = (props) => {
 						</button>
 					</div>
 					<div className={`special-back ${classes['back']}`} onClick={handleBack} id="btn-back">
-						<span>{Identify.__('back'.toUpperCase())}</span>
+						<span>{Identify.__('back').toUpperCase()}</span>
 					</div>
 				</React.Fragment>
 			</Form>

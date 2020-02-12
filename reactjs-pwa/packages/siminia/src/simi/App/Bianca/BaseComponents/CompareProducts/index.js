@@ -29,7 +29,7 @@ const CompareProduct = props => {
     const getVendorName = (vendorId) => {
         let vendorList;
         if(storeConfig){
-            vendorList = storeConfig.simiStoreConfig.config.vendor_list;
+            vendorList = storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.config && storeConfig.simiStoreConfig.config.vendor_list;
             const vendor = vendorList.find(vendor => {
                 if(vendorId === 'default'){
                     return null;
@@ -51,14 +51,16 @@ const CompareProduct = props => {
         setHasRemoved(true)
 
         if(itemToRemove !== -1){
-            
             listItem.splice(itemToRemove,1)
             Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE,'compare_product',listItem)
             listItem = Identify.getDataFromStoreage(
                 Identify.LOCAL_STOREAGE,
                 'compare_product'
             );
-            
+            if(Array.isArray(listItem) && listItem.length === 0){
+                localStorage.removeItem('compare_product');
+                document.getElementById('compare-list-product').style.display = 'none';
+            }
         }
     }
 
@@ -151,7 +153,7 @@ const CompareProduct = props => {
                                 ?
                                     <Fragment>
                                         <span>
-                                            {storeConfig.simiStoreConfig.currency}&nbsp;
+                                            {storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.currency}&nbsp;
                                         </span>
                                         <span>
                                             { item.special_price
@@ -161,7 +163,7 @@ const CompareProduct = props => {
                                         </span>
                                         <span className="compare-item-old-price">
                                             <span>
-                                                {storeConfig.simiStoreConfig.currency}&nbsp;
+                                                {storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.currency}&nbsp;
                                             </span>
                                             <span>
                                                 {item.app_options && item.app_options.configurable_options
@@ -176,7 +178,7 @@ const CompareProduct = props => {
                                 :
                                     <span>
                                         <span>
-                                            {storeConfig.simiStoreConfig.currency}&nbsp;
+                                            {storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.currency}&nbsp;
                                         </span>
                                         <span>
                                             {item.app_options && item.app_options.configurable_options

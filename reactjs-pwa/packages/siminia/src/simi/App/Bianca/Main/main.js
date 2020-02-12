@@ -35,12 +35,16 @@ class Main extends Component {
     }
 
     mainContent(storeConfig = null) {
-        console.log(this.props)
+        const mageStore = storeConfig && storeConfig.storeConfig || null;
+        if (mageStore && mageStore.locale === 'ar_KW') {
+            import('src/fonts/Droidkufi.css');
+            document.documentElement.classList.add('font_ar_KW');
+        }
         return (
             <React.Fragment>
                 <Header storeConfig={storeConfig}/>
                 <div id="data-breadcrumb"/>
-                {storeConfig ? <div className={classes.page} id="siminia-main-page">{this.props.children}</div> : <LoadingComponent />}
+                {storeConfig ? <div className={`${classes.page}`} id="siminia-main-page">{this.props.children}</div> : <LoadingComponent />}
                 <Footer />
             </React.Fragment>
         )

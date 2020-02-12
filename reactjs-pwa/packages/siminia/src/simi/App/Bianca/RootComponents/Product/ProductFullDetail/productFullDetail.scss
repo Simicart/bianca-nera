@@ -93,7 +93,7 @@ $colorRed: #b91c1c;
                                 overflow-y: auto;
                                 /* width */
                                 &::-webkit-scrollbar {
-                                    width: 0px;
+                                    width: 2px;
                                 }
                                 &::-webkit-scrollbar * {
                                     background: transparent;
@@ -310,7 +310,7 @@ $colorRed: #b91c1c;
                                         border: 1px solid $color1;
                                         background-color: unset;
                                         img{
-                                            width: 81px;
+                                            width: 80px;
                                             height: 53px;
                                         }
                                     }
@@ -569,8 +569,8 @@ $colorRed: #b91c1c;
         .detail-top{
             padding-bottom: 35px;
             .top-col{
+                width: 100%;
                 &.col-right{
-                    width: 100%;
                     max-width: 572px;
                 }
                 .image-carousel {
@@ -601,7 +601,28 @@ $colorRed: #b91c1c;
                                 margin: 0;
                                 margin-top: 16px;
                                 margin-right: 0;
-                                max-width: 344px;
+                                display: flex;
+                                flex-direction: row;
+                                flex-wrap: nowrap;
+                                overflow-x: auto;
+                                /* width */
+                                &::-webkit-scrollbar {
+                                    width: 0px;
+                                    height: 2px;
+                                }
+                                /* Track */
+                                &::-webkit-scrollbar-track {
+                                    background: #7272722b;
+                                }
+                                /* Handle */
+                                &::-webkit-scrollbar-thumb {
+                                    background: #10182080;
+                                    border-radius: 5px;
+                                }
+                                /* Handle on hover */
+                                &::-webkit-scrollbar-thumb:hover {
+                                    background: #101820db;
+                                }
                                 .thumbs{
                                     display: block;
                                     margin-right: 0;
@@ -610,34 +631,33 @@ $colorRed: #b91c1c;
                                     width: 100%;
                                     max-width: 100%;
                                     overflow: initial;
-                                    overflow-x: auto;
                                     /* width */
                                     &::-webkit-scrollbar {
-                                        width: 0px;
-                                        height: 2px;
+                                        width: initial;
+                                        height: initial;
                                     }
                                     /* Track */
                                     &::-webkit-scrollbar-track {
-                                        background: #7272722b;
+                                        background: initial;
                                     }
                                     /* Handle */
                                     &::-webkit-scrollbar-thumb {
-                                        background: #10182080;
-                                        border-radius: 5px;
+                                        background: initial;
+                                        border-radius: initial;
                                     }
                                     /* Handle on hover */
                                     &::-webkit-scrollbar-thumb:hover {
-                                        background: #101820db;
+                                        background: initial;
                                     }
                                     .thumb{
                                         width: 56px;
                                         height: 71px;
                                         overflow: initial;
                                         margin: 0px;
-                                        margin-right: 16px;
+                                        margin-inline-end: 16px;
                                         border: 1px solid transparent;
                                         &:last-child{
-                                            margin-right: 0px;
+                                            margin-inline-end: 0px;
                                         }
                                         img{
                                             width: 100%;
@@ -941,10 +961,6 @@ $colorRed: #b91c1c;
     }
     &.MacOS.mobile{
         .detail-top .top-col.col-right .main-actions{
-            .top-review .review-btn{
-                margin-top: 5px;
-                margin-bottom: -5px;
-            }
             .product-price{
                 .prices-container{
                     .prices-layout{
@@ -1259,9 +1275,27 @@ $colorRed: #b91c1c;
                         margin-left: 64px;
                         margin-right: 16px;
                     }
-                    .product-price .prices-container .prices-layout .price-simple .product-prices .special .price{
+                    .product-price .prices-container .prices-layout{
+                        .price-configurable, .price-simple{
+                            .product-prices{
+                                .regular .price{
+                                    padding-top: 0px;
+                                    margin-bottom: 0px;
+                                }
+                                .special .price{
+                                    margin-left: 0px;
+                                    margin-right: 32px;
+                                }
+                            }
+                        }
+                    }
+                    .options .option-root .list-size .size-guide{
                         margin-left: 0px;
-                        margin-right: 32px;
+                        margin-right: 16px;
+                        button{direction: ltr;}
+                    }
+                    .options .option-root .list-size .option-select .MuiListItem-root .MuiListItemText-root .choose-your-size{
+                        direction: ltr;
                     }
                     .cart-actions{
                         .cart-ctn .btn{
@@ -1291,7 +1325,7 @@ $colorRed: #b91c1c;
                                 max-height: 593px;
                                 /* width */
                                 &::-webkit-scrollbar {
-                                    width: 0px;
+                                    width: 2px;
                                 }
                                 &::-webkit-scrollbar * {
                                     background: transparent;
@@ -1320,7 +1354,7 @@ $colorRed: #b91c1c;
                                     max-height: unset;
                                     overflow-y: unset;
                                     .thumb{
-                                        width: 82px;
+                                        width: 80px;
                                         margin-bottom: 16px;
                                         &:first-child{
                                             margin-bottom: 0px;
@@ -1336,18 +1370,25 @@ $colorRed: #b91c1c;
                 }
             }
         }
+        .linked-product-ctn .linked-products{
+            direction: ltr;
+        }
         &.mobile{
             .detail-top .top-col{
+                .title{
+                    margin-right: 0px;
+                }
                 .image-carousel .product-carousel .carousel .thumbs-wrapper{
                     margin-left: 0px;
                     width: auto;
                     .thumbs{
                         margin-left: 0px;
-                        direction: ltr;
-                        // direction: rtl;
                         display: flex;
                         flex-wrap: nowrap;
                         flex-direction: row;
+                        direction: ltr;
+                        width: auto;
+                        max-width: unset;
                         .thumb{
                             width: 56px;
                             flex: 0 0 56px;
@@ -1359,12 +1400,22 @@ $colorRed: #b91c1c;
                     }
                 }
                 .main-actions{
+                    margin-right: 0px;
                     .product-price .prices-container .prices-layout .product-prices .regular{
                         margin-right: 0px;
                     }
                     .top-review .review-rate .review-count{
                         margin-left: auto;
                         margin-right: 16px;
+                    }
+                    .options .option-root .list-size .size-guide{
+                        left: 0px;
+                        right: unset;
+                        @media (max-width: 497px){
+                            margin-left: 0px;
+                            margin-right: 5px;
+                        }
+                        button{direction: ltr;}
                     }
                     .cart-actions .cart-ctn{
                         &:first-child{

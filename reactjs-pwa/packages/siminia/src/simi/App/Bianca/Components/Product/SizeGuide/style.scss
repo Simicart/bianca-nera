@@ -78,7 +78,7 @@ $color3: #f2f2f2;
                             width: 100%;
                             max-width: 180px;
                             min-height: 48px;
-                            padding: 17px 16px;
+                            padding: 6px 16px;
                             margin-top: 8px;
                             border: none;
                             outline: none;
@@ -187,5 +187,9 @@ $color3: #f2f2f2;
                 font-size: 14px;
             }
         }
+    }
+    &.rtl-root #size_guide-modal .size-guide .form-your-size .form .form-row{
+        margin-left: 16px;
+        margin-right: 0px;
     }
 }

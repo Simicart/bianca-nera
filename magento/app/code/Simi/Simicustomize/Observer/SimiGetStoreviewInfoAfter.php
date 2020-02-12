@@ -143,6 +143,30 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 }
                 $object->storeviewInfo['custom_pwa_titles'] = $customTitleDict;
             }
+            // Nam customize
+            $object->storeviewInfo['header_footer_config'] = array(
+                'bianca_header_phone' => $this->config->getValue('simiconnector/pwa_header/bianca_header_phone'),
+                'bianca_header_sale_title' => $this->config->getValue('simiconnector/pwa_header/bianca_header_sale_title'),
+                'bianca_header_sale_link' => $this->config->getValue('simiconnector/pwa_header/bianca_header_sale_link'),
+                'bianca_header_storelocator' => $this->config->getValue('simiconnector/pwa_header/bianca_header_storelocator'),
+                'bianca_subcribe_description' => $this->config->getValue('simiconnector/pwa_footer_subcribe/bianca_subcribe_description'),
+                'footer_logo' => $this->config->getValue('simiconnector/pwa_footer_subcribe/footer_logo'),
+                'footer_logo_alt' => $this->config->getValue('simiconnector/pwa_footer_subcribe/footer_logo_alt'),
+                'footer_customer_service' => $this->config->getValue('simiconnector/footer_customer_service/customer_service'),
+                'footer_information' => $this->config->getValue('simiconnector/footer_customer_service/more_information'),
+                'bianca_footer_phone' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_phone'),
+                'bianca_footer_email' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_email'),
+                'bianca_footer_facebook' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_facebook'),
+                'bianca_footer_instagram' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_instagram'),
+                'bianca_footer_twitter' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_twitter'),
+                'bianca_footer_linkedin' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_linkedin'),
+                'bianca_footer_google' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_google'),
+                'bianca_android_app' => $this->config->getValue('simiconnector/footer_app/bianca_android_app'),
+                'bianca_ios_app' => $this->config->getValue('simiconnector/footer_app/bianca_ios_app')
+            );
+            $object->storeviewInfo['social_login_config'] = array(
+                'firebase_config' => $this->config->getValue('simiconnector/firebase/firebase_config')
+            );
         }
     }
 }

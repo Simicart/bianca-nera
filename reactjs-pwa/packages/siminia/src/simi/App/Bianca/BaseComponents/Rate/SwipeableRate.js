@@ -13,10 +13,10 @@ class SwipeableRate extends React.Component {
         this.rate_code = this.props.rate_code ;
         this.flag = this.props.change ;
     }
-    handleChangeRate = (item, id) => {
-        if (item) {
+    handleChangeRate = (elementId, id) => {
+        if (elementId) {
             const ColorStar = configColor.button_background;
-            const star = $('#' + item + '-' + id + '');
+            const star = $('#' + elementId+'_'+id);
             $(star[0]).nextAll().children().css('fill', '#e0e0e0');
             $(star[0]).prevAll().children().css('fill', ColorStar);
             $(star[0]).children().css('fill', ColorStar);
@@ -34,25 +34,27 @@ class SwipeableRate extends React.Component {
         let point = 0;
         let rate_key = 0;
         let id = '';
+        if (this.flag) {
+            id = this.rate_code.replace(/\s/g, '_')
+        }
         for (let i = 0; i < 5; i++) {
-            if (this.flag) {
-                id = this.rate_code + '-' + i
-            }
             if (this.rate_option) {
                 point = this.rate_option[i].value;
                 rate_key = this.rate_option[i].key;
             }
             if (i + 1 <= this.rate) {
                 star.push(
-                    <span role="presentation" key={i} id={id} className={rate_point + " rate-star " + select}
-                          onClick={() => this.handleChangeRate(this.rate_code, i)} data-key={rate_key}
-                          data-point={point}><StarWhite style={{height: this.size + 'px', width: this.size + 'px',fill:configColor.button_background}}/></span>
+                    <span role="presentation" key={i} id={id+'_'+i} className={rate_point + " rate-star " + select}
+                          onClick={() => this.handleChangeRate(id, i)} data-key={rate_key} data-point={point}>
+                          <StarWhite style={{height: this.size + 'px', width: this.size + 'px',fill:configColor.button_background}}/>
+                    </span>
                 );
             } else {
                 star.push(
-                    <span role="presentation" key={i} id={id} className={rate_point + " rate-star "}
-                          onClick={() => this.handleChangeRate(this.rate_code, i)} data-key={rate_key}
-                          data-point={point}><StarWhite style={{fill : '#e0e0e0',height: this.size + 'px', width: this.size + 'px'}}/></span>
+                    <span role="presentation" key={i} id={id+'_'+i} className={rate_point + " rate-star "}
+                          onClick={() => this.handleChangeRate(id, i)} data-key={rate_key} data-point={point}>
+                          <StarWhite style={{fill : '#e0e0e0',height: this.size + 'px', width: this.size + 'px'}}/>
+                    </span>
                 );
             }
         }

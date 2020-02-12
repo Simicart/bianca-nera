@@ -105,6 +105,19 @@ $colorSubTitle: #727272;
 }
 
 .rtl-root {
+    #left-menu .left-cats-menu .MuiListItem-button,
+    #left-menu .left-store,
+    #left-menu .left-bottom-menu,
+    .left-store-switch .storeview-switcher .storeview div[class~="MuiListItem-gutters"],
+    .left-store-switch .currency-switcher .currency div[class~="MuiListItem-gutters"]{
+        padding-left: 19px;
+        padding-right: 33px;
+    }
+    #left-menu .left-contact-us .menu-item{
+        padding-left: 19px;
+        margin-left: 19px;
+        margin-right: 33px;
+    }
     .left-store-switch .storeview-switcher .storeview .menu-item{
         margin-right: -5px;
         padding-right: 33px;

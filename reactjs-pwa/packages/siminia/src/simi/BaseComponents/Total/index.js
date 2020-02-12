@@ -1,6 +1,6 @@
 import React from 'react'
 import Identify from 'src/simi/Helper/Identify'
-import { Price } from '@magento/peregrine'
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing'
 import PropTypes from 'prop-types'
 import {configColor} from 'src/simi/Config'
 
@@ -25,7 +25,9 @@ const Total = props => {
             <div key={index} className={className}>
                 <div>
                     <span className="label">{Identify.__(item.title)}</span>
-                    <span className="price" style={{color : configColor.price_color}}><Price currencyCode={currencyCode} value={item.value}/></span>
+                    <span className="price" style={{color : configColor.price_color}}>
+                        <Price currencyCode={currencyCode} value={item.value} />
+                    </span>
                 </div>
             </div>
         )

@@ -241,8 +241,22 @@
             background-color: #F8F8F8;
             border: none;
         }
+        .coupon-code .coupon-code-area-tablet{
+            input{
+                background-color: #E9E9E9;
+            }
+            .submit-coupon{
+                width: 41%;
+                max-width: 106px;
+            }
+        }
+        .gift-voucher-checkout .gift-voucher-area{
+            background-color: #E9E9E9;
+            #submit-voucher, #remove-voucher{
+                max-width: 106px;
+            }
+        }
     }
-
 }
 
 .rtl-root {
@@ -257,5 +271,15 @@
     }
     .checkout-column .checkout-col-1 {
         margin-right: 0px;
+    }
+}
+
+@media screen and (max-width: 1023px){
+    .rtl-root {
+        .checkout-column .checkout-col-1,
+        .checkout-column .checkout-col-2,
+        .checkout-column .checkout-col-3 {
+            width: 100%;
+        }
     }
 }

@@ -79,6 +79,16 @@ class Quote extends AbstractTotal
             return $this;
         }
 
+        $giftcardProductPrices = 0; // totals of product item type is giftcard
+        foreach($items as $item){
+            if ($item->getProductType() == 'aw_giftcard'){
+                $giftcardProductPrices += $item->getProduct()->getFinalPrice();
+            }
+        }
+        // Apply discount by giftcard value for totals of normal product type (not giftcard) only.
+        $baseGrandTotal = $baseGrandTotal - $giftcardProductPrices;
+        $grandTotal = $grandTotal - $giftcardProductPrices;
+
         $baseTotalGiftcardAmount = $totalGiftcardAmount = 0;
         $giftcards = $quote->getExtensionAttributes()->getAwGiftcardCodes();
         /** @var $giftcard GiftcardQuoteInterface */
@@ -110,14 +120,20 @@ class Quote extends AbstractTotal
                     ->setGiftcardAmount($giftcardUsedAmount);
             }
         }
+
+        $realBaseTotalGiftcardAmount = $baseTotalGiftcardAmount;
+        $realTotalGiftcardAmount = $totalGiftcardAmount;
+        $realBaseGrandTotal = max($total->getBaseGrandTotal() - $baseTotalGiftcardAmount, 0);
+        $realGrandTotal = max($total->getGrandTotal() - $totalGiftcardAmount, 0);
+
         $this
             ->_addBaseAmount($baseTotalGiftcardAmount)
             ->_addAmount($totalGiftcardAmount);
         $total
             ->setBaseAwGiftcardAmount($baseTotalGiftcardAmount)
             ->setAwGiftcardAmount($totalGiftcardAmount)
-            ->setBaseGrandTotal($total->getBaseGrandTotal() - $baseTotalGiftcardAmount)
-            ->setGrandTotal($total->getGrandTotal() - $totalGiftcardAmount);
+            ->setBaseGrandTotal($realBaseGrandTotal)
+            ->setGrandTotal($realGrandTotal);
         $quote
             ->setBaseAwGiftcardAmount($baseTotalGiftcardAmount)
             ->setAwGiftcardAmount($totalGiftcardAmount);

@@ -1,6 +1,7 @@
 import React from 'react'
 import Identify from 'src/simi/Helper/Identify';
-import { Price } from '@magento/peregrine';
+// import { Price } from '@magento/peregrine';
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing';
 
 require('./Childproducts.scss');
 

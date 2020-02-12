@@ -64,8 +64,8 @@ export const StoreLocator = props => {
         <div className="store-locator-ctn container">
             <BreadCrumb
                 breadcrumb={[
-                    { name: 'Home', link: '/' },
-                    { name: 'Store Locators' }
+                    { name: Identify.__('Home'), link: '/' },
+                    { name: Identify.__('Store Locators') }
                 ]}
             />
             {showingDetailItem && <div className="back-store-btn" onClick={()=>setShowingDetailItem(null)} role="presentation">{Identify.__('Back')}</div>}

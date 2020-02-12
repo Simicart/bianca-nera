@@ -34,7 +34,7 @@ class ProductImage extends React.Component {
         };
         this.statusFormatter = this.props.statusFormatter || this.defaultStatusFormatter;
         this.infiniteLoop = this.props.infiniteLoop || false;
-
+        this.isPhone = props.isPhone;
     }
 
     openImageLightbox = (index) => {

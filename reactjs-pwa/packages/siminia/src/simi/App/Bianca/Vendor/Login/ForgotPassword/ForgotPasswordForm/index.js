@@ -18,13 +18,13 @@ const ForgotPasswordForm  =  props => {
             className={`${classes.root} ${Identify.isRtl() ? classes['rtl-rootForm'] : null}`}
             onSubmit={onSubmit}
         >
-            <Field label="Email *" required={true}>
+            <Field label={Identify.__('Email *')} required={true}>
                 <TextInput
                     autoComplete="email"
                     field="email"
                     validate={isRequired}
                     validateOnBlur
-                    placeholder="Email"
+                    placeholder={Identify.__('Email')}
                 />
             </Field>
             <div className={classes.buttonContainer}>
@@ -39,7 +39,7 @@ const ForgotPasswordForm  =  props => {
                 id="btn-back"
                 onClick={handleBack}
             >
-                <span>{Identify.__('back'.toUpperCase())}</span>
+                <span>{Identify.__('back').toUpperCase()}</span>
             </div>
         </Form>
     )

@@ -1,6 +1,7 @@
 import React from 'react';
 import Identify from './Identify'
-import { Price } from '@magento/peregrine'
+// import { Price } from '@magento/peregrine'
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing'
 
 export const formatPrice = (value, currency = null) => {
     if (!currency)

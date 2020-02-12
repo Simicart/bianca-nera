@@ -83,6 +83,7 @@
     text-align: center;
     display: inline-block;
     margin-top: 0px;
+    text-transform: uppercase;
 }
 
 .userInput {
@@ -488,7 +489,7 @@
 
 @media(max-width: 500px) {
     .login-background {
-        padding: 10px;
+        padding: 20px;
         padding-top: 0;
         padding-bottom: 0;
     }
@@ -511,7 +512,7 @@
 
 @media(max-width: 425px) {
     .login-container {
-        margin-top: 20px;
+        margin-top: 20px !important;
         border: unset !important;
         padding-bottom: 50px !important;
     }

@@ -112,7 +112,7 @@ class Login extends Component {
 				// getProfileAfterOtp(this.handleSendProfile.bind(this, data.customer_access_token));
 			} else {
 				hideFogLoading();
-				showToastMessage('Invalid login !')
+				showToastMessage(Identify.__('Invalid login !'))
 			}
 		}
 	}
@@ -206,7 +206,7 @@ class Login extends Component {
 				data.errors.map((error) => {
 					errorMsg += error.message;
 				});
-				showToastMessage(errorMsg);
+				showToastMessage(Identify.__(errorMsg));
 			}
 		} else {
 			storage.removeItem('cartId');
@@ -219,9 +219,14 @@ class Login extends Component {
 		}
 	};
 
+
 	authenticate = (provider) => {
 		const authProvider = new firebase.auth[`${provider}AuthProvider`]();
-		firebaseApp.auth().signInWithPopup(authProvider).then(this.authHandler);
+		firebaseApp.auth().signInWithPopup(authProvider).then(this.authHandler).catch(function(error) {
+			// Handle Errors here.
+			var errorMessage = error.message;
+			showToastMessage(Identify.__(errorMessage))
+		  });;
 	};
 
 	get socialAndCreateAccount() {
@@ -238,7 +243,7 @@ class Login extends Component {
 					<div className={`${classes['signInDivider']} ${Identify.isRtl() ? classes['rtl-divider'] : null}`}>
 						<hr className={`${classes['hr']} ${classes['left-hr']}`} />
 						<div className={`${classes['signInWidth']}`}>
-							{Identify.__('or sign in with'.toUpperCase())}
+							{Identify.__('or sign in with').toUpperCase()}
 						</div>
 						<hr className={`${classes['hr']} ${classes['right-hr']}`} />
 					</div>
@@ -406,7 +411,7 @@ class Login extends Component {
 							errorMsg += error.message;
 						}
 					});
-					showToastMessage(errorMsg);
+					showToastMessage(Identify.__(errorMsg));
 				}
 			}
 		}
@@ -457,7 +462,7 @@ class Login extends Component {
 							className={`${classes['buyer-login']}`}
 							style={{ display: `${this.state.forgotPassSuccess}` }}
 						>
-							<span>{Identify.__('Buyer'.toUpperCase())}</span>
+							<span>{Identify.__('Buyer').toUpperCase()}</span>
 						</div>
 						<div
 							className={`${isCreateAccountOpen || isForgotPasswordOpen

@@ -110,7 +110,7 @@ class Login extends Component {
 				window.location.href = data.redirect_url;
 			} else {
 				hideFogLoading();
-				showToastMessage('Invalid login !')
+				showToastMessage(Identify.__('Invalid login !'))
 			}
 		}
 	}
@@ -311,7 +311,7 @@ class Login extends Component {
 							className={`${classes['designer-login']}`}
 							style={{ display: `${this.state.forgotPassSuccess}` }}
 						>
-							<span>{Identify.__('Designer'.toUpperCase())}</span>
+							<span>{Identify.__('Designer').toUpperCase()}</span>
 						</div>
 						<div
 							className={`${isVendorRegisterOpen || isForgotPasswordOpen

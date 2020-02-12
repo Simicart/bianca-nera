@@ -136,7 +136,7 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         $data     = $data['contents'];
         $result   = [];
 
-        $customer = $this->simiObjectManager->create('Magento\Customer\Model\Customer');
+        $customer = $this->simiObjectManager->get('Magento\Customer\Model\Customer');
         $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
         $customer->loadByEmail($data->email);
 
@@ -151,6 +151,11 @@ class Customer extends \Magento\Framework\Model\AbstractModel
             $newPass  = $data->new_password;
             $confPass = $data->com_password;
             $customer->setChangePassword(1);
+            // Fix bug 'invalid state change requested' when change password.
+            // The reason is quote has customer_id is null
+            $cart = $this->simiObjectManager->get('Magento\Checkout\Model\Cart');
+            $cart->getQuote()->setData('customer_id', $customer->getId());
+            $cart->saveQuote();
             if ($customer->authenticate($data->email, $currPass)) {
                 if ($newPass != $confPass) {
                     throw new \Magento\Framework\Exception\InputException(

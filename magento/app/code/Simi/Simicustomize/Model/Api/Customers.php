@@ -82,6 +82,12 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
                     if ($this->simiObjectManager->get('Simi\Simiconnector\Model\Customer')->logout()) {
                         $this->builderQuery = $this->simiObjectManager
                             ->get('Magento\Customer\Model\Customer')->load($lastCustomerId);
+                        //fix bug logout not clear old quote
+                        $cart = $this->simiObjectManager->get('Magento\Checkout\Model\Cart');
+                        $quote = $this->simiObjectManager->create('Magento\Quote\Model\Quote');
+                        $cart->setQuote($quote);
+                        $newCustomer = $this->simiObjectManager->create('Magento\Customer\Model\Customer');
+                        $this->simiObjectManager->get('Magento\Customer\Model\Session')->setCustomer($newCustomer);
                     } else {
                         throw new \Simi\Simiconnector\Helper\SimiException(__('Logout Failed'), 4);
                     }
@@ -100,6 +106,20 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
             $this->builderQuery = $this->simiObjectManager->get('Magento\Customer\Model\Customer')->getCollection()
                 ->addFieldToFilter('entity_id', $currentCustomerId);
         }
+    }
+
+        /*
+     * Update Profile
+     */
+
+    public function update()
+    {
+        $data                  = $this->getData();
+        $customer              = $this->simiObjectManager
+            ->get('Simi\Simicustomize\Model\Customer')->updateProfile($data);
+        $this->builderQuery    = $customer;
+        $this->RETURN_MESSAGE = __('The account information has been saved.');
+        return $this->show();
     }
 
     /*

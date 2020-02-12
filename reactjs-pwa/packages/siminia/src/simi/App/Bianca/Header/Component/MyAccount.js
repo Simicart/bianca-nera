@@ -54,7 +54,7 @@ class MyAccount extends React.Component {
 				data.errors.map((error) => {
 					errorMsg += error.message;
 				});
-				showToastMessage(errorMsg);
+				showToastMessage(Identify.__(errorMsg));
 			}
 		} else {
 			// Redirect to page logout pwa

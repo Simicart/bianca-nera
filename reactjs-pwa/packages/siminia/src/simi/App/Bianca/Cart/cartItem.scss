@@ -41,7 +41,7 @@
                 display: flex;
                 min-height: 103px;
                 margin: 0;
-                padding: 24px 0 32px;
+                padding: 32px 0 32px;
                 &:first-child{
                     padding-top: 0px;
                 }
@@ -139,6 +139,9 @@
         .cart-item-detail{
             display: grid;
             grid-template-columns: 44% 24% 10% 22%;
+            @media screen and (min-width: 1541px){
+                grid-template-columns: 45% 24% auto 22%;
+            }
             width: 100%;
             padding-right: 25px;
             justify-content: space-between;
@@ -153,6 +156,10 @@
                 color: #101820;
                 font-size: 14px;
                 font-weight: 600;
+                span{
+                    display: inline-block;
+                    cursor: pointer;
+                }
             }
         }
 
@@ -473,6 +480,106 @@
         .item-subtotal{
             .cart-item-value{
                 padding-left: 0;
+            }
+        }
+    }
+}
+
+
+.rtl-root{
+    .cart-page{
+        .cart-list{
+            .cart-siminia-item{
+                .cart-item-detail{
+                    .item-subtotal-action{
+                        .item-edit,.item-delete{
+                            svg{
+                                margin-right: auto!important;
+                                margin-left: 8px!important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .minicart{
+        .cart-list{
+            .cart-siminia-item{
+                .img-cart-container{
+                    margin-right: 0px;
+                }
+                .cart-item-detail{
+                    .item-info-qty{
+                        margin-right: 24px;
+                        .item-qty{
+                            .minicart-qty-title{
+                                margin-left: 18px;
+                                margin-right: 0px;
+                            }
+                        }
+                        .item-options{
+                            div:first-child{
+                                margin-right: 0px;
+                                margin-left: 12px;
+                            }
+                        }
+                        input{
+                            padding: 0 !important
+                        }
+                    }
+                    .item-subtotal-action{
+                        .item-edit,.item-delete{
+                            svg{
+                                margin-right: 0 !important;
+                                margin-left: 8px !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @media (max-width: 768px){
+        .cart-page{
+            .cart-siminia-item{
+                .cart-item-detail{
+                    margin-left: 0px;
+                    margin-right: 36px;
+                }
+                .item-options{
+                    div{
+                        &:first-child{
+                            margin-left: 12px;
+                            margin-right: 0px;
+                        }
+                    }
+                }
+                .item-qty{
+                    .minicart-qty-title{
+                        padding-left: 12px;
+                        padding-right: 0px;
+                    }
+                    .item-edit{
+                        padding: 25px 51px 0 0;
+                        justify-content: flex-start;
+                        >svg{
+                            margin-right: auto!important;
+                            margin-left: 8px!important;
+                        }
+                    }
+                }
+                .item-subtotal{
+                    .cart-item-value{
+                        padding-right: 0;
+                    }
+                }
+                .item-delete{
+                    >svg{
+                        margin-right: auto!important;
+                        margin-left: 8px!important;
+                    }
+                }
             }
         }
     }

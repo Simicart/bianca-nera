@@ -12,9 +12,9 @@ import { connect } from 'src/drivers';
 import { compose } from 'redux';
 
 const OrderList = props => {
-    const { showForDashboard, data } = props
-    const [limit, setLimit] = useState(10);
-    const [title, setTitle] = useState(10)
+    const { showForDashboard, data, isPhone } = props
+    const [limit, setLimit] = useState(isPhone ? 5 : 10);
+    // const [title, setTitle] = useState('');
     const cols =
         [
             { title: Identify.__("Order #"), width: "14.02%" },
@@ -108,22 +108,22 @@ const OrderList = props => {
                         data={showForDashboard ? listOrder.slice(0, 5) : listOrder}
                         cols={cols}
                         showPageNumber={!showForDashboard}
-                        limit={typeof(limit) === 'string' ? parseInt(limit): limit}
+                        limit={parseInt(limit)}
                         setLimit={setLimit}
                         currentPage={currentPage}
-                        title={title}
-                        setTitle={setTitle}
+                        // title={title}
+                        // setTitle={setTitle}
                     /> :
                     <PaginationTable
                         renderItem={renderOrderItem}
                         data={showForDashboard ? listOrder.slice(0, 5) : listOrder}
                         cols={cols}
                         showPageNumber={!showForDashboard}
-                        limit={typeof(limit) === 'string' ? parseInt(limit): limit}
+                        limit={parseInt(limit)}
                         setLimit={setLimit}
                         currentPage={currentPage}
-                        title={title}
-                        setTitle={setTitle}
+                        // title={title}
+                        // setTitle={setTitle}
                     />
                 )
             }

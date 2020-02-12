@@ -114,11 +114,12 @@ $errorFormBgColor: #ece2e2;
                     border-bottom: 1px dashed $errorFormColor;
                     background-color: $errorFormBgColor;
                 }
-
+                form{
+                    display: flex;
+                    flex-direction: row;
+                }
                 label{
                     color: $textColor2;
-                    position: absolute;
-                    top: -6px;
                     font-size: 16px;
                     font-weight: 500;
                     height: 24px;
@@ -127,20 +128,24 @@ $errorFormBgColor: #ece2e2;
                 }
                 input{
                     width: 100%;
-                    padding-left: 60px;
                     background-color: transparent;
                     border: none;
                     user-select: none;
                     outline: none;
                     line-height: 22px;
-                    margin-bottom: 6px;
+                    margin-bottom: 0px;
+                    padding-inline-start: 5px!important;
+                    padding-inline-end: 18px!important;
+                    padding-left: 60px;
+                    padding-right: 18px;
+                    flex: 1 1;
                 }
                 button{
                     position: absolute;
                     right: 0px;
                     user-select: none;
                     outline: none;
-
+                    height: 100%;
                     i{
                         font-size: 16px;
                         color: $textColor1;
@@ -423,6 +428,12 @@ $errorFormBgColor: #ece2e2;
         text-transform: none;
         color: #101820;
     }
+    .rtl-root{
+        .footer-app.on-mobile .mobile-social .footer-mobile-social .social-icon{
+            margin-right: 20px !important;
+            margin-left: 20px !important;
+        }
+    }
     .footer-app.on-mobile .mobile-social .footer-mobile-social .facebook-icon::before{
         content: "\e00b";
     }
@@ -543,10 +554,12 @@ $errorFormBgColor: #ece2e2;
 .rtl-root{
     .footer-app{
         .footer-wrapper{
-            .footer-subscriber .subscriber-form{
-                input{
-                    padding-right: 60px!important;
+            .list-item{
+                .row{
+                    display: flex;
                 }
+            }
+            .footer-subscriber .subscriber-form{
                 button{
                     left: 0px;
                     right: unset;
@@ -565,9 +578,20 @@ $errorFormBgColor: #ece2e2;
             }
         }
         &.on-mobile{
-            .list-item .footer-mobile .MuiIconButton-root{
-                left: unset;
-                right: 12px;
+            .list-item {
+                .row{
+                    display: unset;
+                }
+                .footer-mobile {
+                    .MuiExpansionPanelDetails-root{
+                        padding-left: unset !important;
+                        padding-right: 27px !important;
+                    }
+                    .MuiIconButton-root{
+                        left: unset;
+                        right: 12px;
+                    }
+                }
             }
         }
     }

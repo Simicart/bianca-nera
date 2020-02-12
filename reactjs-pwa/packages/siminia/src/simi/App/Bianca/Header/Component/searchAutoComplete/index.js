@@ -73,6 +73,22 @@ const SearchAutoComplete = props => {
         }
     }, [resetState, runQuery, setLoading, valid, value, visible]);
 
+    useEffect(() => {
+        if (window.innerWidth < 1024) {
+            if (window.location.pathname === "/login.html" || window.location.pathname === "/designer_login.html") {
+                if ($('.suggestion-detail').children().length > 0) {
+                    if ($('#login-opt-area').length === 1) {
+                        $('#login-opt-area').css('display', 'none')
+                    }
+                } else {
+                    if ($('#login-opt-area').length === 1) {
+                        $('#login-opt-area').css('display', 'block')
+                    }
+                }
+            }
+        }
+    });
+
     return (
         <div className={rootClassName+' search-auto-complete-root'} ref={wrapperRef}>
             

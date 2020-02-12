@@ -131,6 +131,18 @@
     font-family: Gotham;
 }
 
+.titleRtl{
+    margin-left: auto;
+    margin-right: 0px;
+    align-items: center;
+    display: inline-flex;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 0;
+    text-transform: uppercase;
+    font-family: Gotham;
+}
+
 .totals {
     align-items: center;
     display: flex;
@@ -182,6 +194,6 @@
 .grandPrice{
     font-size: 24px;
     line-height: 24px;
-    font-family: Gotham Medium;
-    padding-top: 11px;
+    font-family: 'Gotham Book';
+    font-weight: 600;
 }

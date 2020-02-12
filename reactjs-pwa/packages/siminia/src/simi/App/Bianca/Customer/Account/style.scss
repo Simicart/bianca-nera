@@ -176,11 +176,12 @@
 }
 .customer-page-title {
     color: #101820;
-    font-family: 'Gotham Medium';
+    font-family: 'Gotham Book';
+    font-weight: 600;
     font-size: 24px;
-    font-weight: 500;
     line-height: 24px;
     text-transform: uppercase;
+    margin-bottom: 20px;
     .view-all{
         color: #101820;
         font-size: 14px;
@@ -526,12 +527,11 @@
     line-height: 14px;
     font-weight: 500;
     text-transform: uppercase;
-
     a{
         font-size: 14px;
-        font-family: Gotham Medium;
+        font-family: 'Gotham Book';
+        font-weight: 600;
         line-height: 14px;
-        height: 0px;
     }
 }
 .dash-column-box .edit-information{
@@ -917,9 +917,6 @@ Order history
     .dashboard-acc-information, .dashboard-address-book{
         margin-top: 16px;
     }
-    .customer-dashboard.dashboard .customer-page-title{
-        margin-bottom: 20px;
-    }
     .acc-information,
     .address-book__container{
         flex-direction: column;
@@ -1018,10 +1015,8 @@ Order history
                 padding: 0px 16px;
                 .customer-page-title {
                     margin-bottom: 16px;
-                    font-family: 'Gotham Medium';
-                    font-weight: 500;
                     font-size: 18px;
-                    margin-bottom: 0px;
+                    margin-bottom: 10px;
                     text-transform: capitalize;
                     line-height: 18px;
                 }

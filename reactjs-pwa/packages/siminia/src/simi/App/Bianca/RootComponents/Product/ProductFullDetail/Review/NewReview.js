@@ -85,18 +85,16 @@ const NewReview = props => {
         <div>
             <div className="review-form">
                 <p className="your-rating-title">{Identify.__('Your Review')}</p>
-                <table className="table">
-                    <tbody>
+                <div className="rate-table">
                     {rates.map((item, index) => {
                         return (
-                            <tr key={index}>
-                                <td className="label-item" width="50px">{Identify.__(item.rate_code)}</td>
-                                    <td id={item.rate_code}><SwipeableRate rate={1} size={24} rate_option={item.rate_options} rate_code={item.rate_code} change={true}/></td>
-                            </tr>
+                            <div className="rate-item" key={index}>
+                                <div className="rate-cell label-item" width="50px">{Identify.__(item.rate_code)}</div>
+                                <div className="rate-cell stars-item" id={item.rate_code}><SwipeableRate rate={1} size={24} rate_option={item.rate_options} rate_code={item.rate_code} change={true}/></div>
+                            </div>
                         );
                     })}
-                    </tbody>
-                </table>
+                </div>
                 <div className="form-content">
                     {/* <div className="form-group">
                         <p className="label-item">{Identify.__('Nickname')}<span className="rq">*</span></p>

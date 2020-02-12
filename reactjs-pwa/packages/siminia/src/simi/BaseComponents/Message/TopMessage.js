@@ -33,7 +33,7 @@ class TopMessage extends React.Component {
         let data = {
             className : classes['message-warning'],
             label : 'Warning',
-            text : msg.message,
+            text : Identify.__(msg.message),
             iconColor: '#333132',
             icon : <WarningIcon color="#333132"/>
         }
@@ -41,7 +41,7 @@ class TopMessage extends React.Component {
             data = {
                 className : classes['message-success'],
                 label : 'Success',
-                text : msg.message,
+                text : Identify.__(msg.message),
                 iconColor: '#0F7D37',
                 icon : <Success color="#0F7D37"/>
             }
@@ -49,7 +49,7 @@ class TopMessage extends React.Component {
             data = {
                 className : classes['message-error'],
                 label : 'Error',
-                text : msg.message,
+                text : Identify.__(msg.message),
                 iconColor: '#FA0A11',
                 icon : <ErrorIcon color="#FA0A11"/>
             }
@@ -57,7 +57,7 @@ class TopMessage extends React.Component {
             data = {
                 className : classes['message-success'],
                 label : '',
-                text : msg.message,
+                text : Identify.__(msg.message),
                 iconColor: '#0F7D37',
                 icon : <Success color="#0F7D37"/>
             }

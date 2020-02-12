@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Identify from 'src/simi/Helper/Identify';
 
 class Pagination extends React.Component {
 
@@ -205,7 +206,7 @@ class Pagination extends React.Component {
             return null
         }
         return (
-            <div className="info"><span>Items {pageFrom} - {pageTo < size ? pageTo : size} of {size}</span></div>
+            <div className="info"><span>{Identify.__('Items')} {pageFrom} - {pageTo < size ? pageTo : size} {Identify.__('of')} {size}</span></div>
         );
     }
 
@@ -217,7 +218,7 @@ class Pagination extends React.Component {
         }
         return (
             <div className="options-size">
-                <span>Show</span>
+                <span>{Identify.__('Show')}</span>
                 <select onChange={this.optionsHandle} value={pageSize}>
                     {
                         pageSizeOptions.map((size, index)=>{
@@ -225,7 +226,7 @@ class Pagination extends React.Component {
                         })
                     }
                 </select>
-                <span>per page</span>
+                <span>{Identify.__('per page')}</span>
             </div>
         );
     }

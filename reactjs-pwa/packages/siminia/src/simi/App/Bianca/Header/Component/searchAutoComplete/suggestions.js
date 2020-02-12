@@ -5,10 +5,12 @@ import { mergeClasses } from 'src/classify';
 import SuggestedCategories from './suggestedCategories';
 import SuggestedProducts from './suggestedProducts';
 import defaultClasses from './suggestions.css';
+import Identify from 'src/simi/Helper/Identify'
+
+import { analyticImpressionsGTM } from 'src/simi/Helper/Analytics';
 
 const Suggestions = props => {
     const { products, searchValue, setVisible, visible } = props;
-    // console.log(products)
     const { filters, items } = products;
     const classes = mergeClasses(defaultClasses, props.classes);
 
@@ -24,6 +26,8 @@ const Suggestions = props => {
         filters.find(({ name }) => name === 'Category') || {};
     const categories = categoryFilter.filter_items || [];
 
+    analyticImpressionsGTM(items, '', 'Search Results Suggestion');
+
     return (
         <Fragment>
             <SuggestedCategories
@@ -33,7 +37,7 @@ const Suggestions = props => {
                 classes={classes}
             />
             <h2 className={classes.heading}>
-                <span>{'Product Suggestions'}</span>
+                <span>{Identify.__('Product Suggestions')}</span>
             </h2>
             <SuggestedProducts onNavigate={onNavigate} products={items} />
         </Fragment>

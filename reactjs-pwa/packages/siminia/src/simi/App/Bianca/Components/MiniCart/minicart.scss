@@ -1,0 +1,17 @@
+.minicart{
+    .cart-list{
+        .cart-siminia-item{
+            .minicart-qty-title{
+            font-weight: 500;
+            }
+        }
+    }
+}
+.rtl-root {
+    .minicart{
+        .mini-cart-view-cart-btn{
+            margin-left: 16px;
+            margin-right: 0px;
+        }
+    }
+}

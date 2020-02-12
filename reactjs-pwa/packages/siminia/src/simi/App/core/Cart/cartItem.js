@@ -3,7 +3,8 @@ import Identify from 'src/simi/Helper/Identify'
 import Deleteicon from 'src/simi/BaseComponents/Icon/Trash'
 import Image from 'src/simi/BaseComponents/Image'
 import {configColor} from 'src/simi/Config'
-import { Price } from '@magento/peregrine'
+// import { Price } from '@magento/peregrine'
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing'
 import { resourceUrl, logoUrl } from 'src/simi/Helper/Url'
 import ReactHTMLParse from 'react-html-parser';
 require('./cartItem.scss')

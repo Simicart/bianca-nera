@@ -5,7 +5,8 @@ import { configColor } from 'src/simi/Config'
 import Deleteicon from 'src/simi/App/Bianca/BaseComponents/Icon/Trash'
 import Image from 'src/simi/BaseComponents/Image'
 import ReactHTMLParse from 'react-html-parser';
-import { Price } from '@magento/peregrine'
+// import { Price } from '@magento/peregrine'
+import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing'
 import {updateSubProductSpecialItem} from 'src/simi/Model/Cart'
 import { getCartDetails } from 'src/actions/cart';
 import { connect } from 'src/drivers';
@@ -25,7 +26,6 @@ const getVendorName = (vendorId) => {
 
 const SpecialCartItem = props => {
     const {itemTotal, handleLink, currencyCode, isPhone} = props
-    console.log(props)
     let subItems = null
     if (itemTotal.simi_pre_order_option) {
         subItems = JSON.parse(itemTotal.simi_pre_order_option)

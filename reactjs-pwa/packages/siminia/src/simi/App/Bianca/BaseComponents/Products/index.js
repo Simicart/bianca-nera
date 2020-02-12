@@ -9,6 +9,7 @@ import ReactHTMLParse from 'react-html-parser'
 import RecentViewed from './recentViewed'
 import Modal from 'react-responsive-modal'
 import CompareProduct from '../CompareProducts/index'
+import { analyticImpressionsGTM } from 'src/simi/Helper/Analytics';
 require('./products.scss')
 
 const $ = window.$;
@@ -43,7 +44,7 @@ class Products extends React.Component {
             data.products.filters) {
             return (
                 <div>
-                    <span className="shopping-option">SHOPPING OPTION</span>
+                    <span className="shopping-option">{Identify.__('SHOPPING OPTION')}</span>
                     <Filter data={data.products.filters} filterData={filterData}/>
                 </div>
             );
@@ -163,12 +164,13 @@ class Products extends React.Component {
 
     renderList = () => {
         const {props} = this
-        const { data, pageSize, history, location, sortByData, currentPage } = props;
+        const { data, pageSize, history, location, sortByData, currentPage, title, pageType } = props;
         const items = data ? data.products.items : null;
         if (!data)
             return <Loading />
         if (!data.products || !data.products.total_count)
             return(<div className="no-product">{Identify.__('No product found')}</div>)
+        analyticImpressionsGTM(items, title, pageType || 'Category');
         return (
             <React.Fragment>
                 {!this.state.isPhone ? 
@@ -176,7 +178,8 @@ class Products extends React.Component {
                         <Sortby 
                             parent={this}
                             sortByData={sortByData}
-                            />
+                            sortFields={data.products.sort_fields || null }
+                        />
                         {this.renderItemCount(data)}
                     </div> :
                     <div className="mobile-item-count">

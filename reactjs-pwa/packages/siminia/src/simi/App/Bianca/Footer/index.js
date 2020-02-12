@@ -44,15 +44,16 @@ const Footer = (props) => {
         storeConfig &&
         storeConfig.simiStoreConfig &&
 		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.base
+		storeConfig.simiStoreConfig.config.header_footer_config
     ){
-        footer_phone = storeConfig.simiStoreConfig.config.base.bianca_footer_phone
-        footer_email = storeConfig.simiStoreConfig.config.base.bianca_footer_email
-        footer_facebook = storeConfig.simiStoreConfig.config.base.bianca_footer_facebook
-        footer_instagram = storeConfig.simiStoreConfig.config.base.bianca_footer_instagram
-        footer_twitter = storeConfig.simiStoreConfig.config.base.bianca_footer_twitter
-        footer_linkedin = storeConfig.simiStoreConfig.config.base.bianca_footer_linkedin
-        footer_google = storeConfig.simiStoreConfig.config.base.bianca_footer_google
+		let footerConfig = storeConfig.simiStoreConfig.config.header_footer_config
+        footer_phone = footerConfig.bianca_footer_phone
+        footer_email = footerConfig.bianca_footer_email
+        footer_facebook = footerConfig.bianca_footer_facebook
+        footer_instagram = footerConfig.bianca_footer_instagram
+        footer_twitter = footerConfig.bianca_footer_twitter
+        footer_linkedin = footerConfig.bianca_footer_linkedin
+        footer_google = footerConfig.bianca_footer_google
     }
 
     // get customer services and link
@@ -60,10 +61,10 @@ const Footer = (props) => {
         storeConfig &&
 		storeConfig.simiStoreConfig &&
 		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.base &&
-		storeConfig.simiStoreConfig.config.base.footer_customer_service
+		storeConfig.simiStoreConfig.config.header_footer_config &&
+		storeConfig.simiStoreConfig.config.header_footer_config.footer_customer_service
 	) {
-        footer_customer_service = storeConfig.simiStoreConfig.config.base.footer_customer_service
+        footer_customer_service = storeConfig.simiStoreConfig.config.header_footer_config.footer_customer_service
     }
     if(footer_customer_service){
         const cs = JSON.parse(footer_customer_service)
@@ -92,10 +93,10 @@ const Footer = (props) => {
         storeConfig &&
 		storeConfig.simiStoreConfig &&
 		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.base &&
-		storeConfig.simiStoreConfig.config.base.footer_information
+		storeConfig.simiStoreConfig.config.header_footer_config &&
+		storeConfig.simiStoreConfig.config.header_footer_config.footer_information
 	) {
-        footer_information = storeConfig.simiStoreConfig.config.base.footer_information
+        footer_information = storeConfig.simiStoreConfig.config.header_footer_config.footer_information
 	}
 	
     if(footer_information){
@@ -105,6 +106,10 @@ const Footer = (props) => {
 	
 	const scrollTop = () =>{
 		smoothScrollToView($("#id-message"));
+	}
+
+	const scrollRoot = () =>{
+		smoothScrollToView($("#root"));
 	}
 
     const listInfos = (infos) => {
@@ -129,10 +134,10 @@ const Footer = (props) => {
 		storeConfig &&
         storeConfig.simiStoreConfig &&
 		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.base && 
-		storeConfig.simiStoreConfig.config.base.bianca_subcribe_description
+		storeConfig.simiStoreConfig.config.header_footer_config && 
+		storeConfig.simiStoreConfig.config.header_footer_config.bianca_subcribe_description
 	){
-		bianca_subcribe_description = storeConfig.simiStoreConfig.config.base.bianca_subcribe_description
+		bianca_subcribe_description = storeConfig.simiStoreConfig.config.header_footer_config.bianca_subcribe_description
 	}
 
 	// get link android and ios app
@@ -140,13 +145,13 @@ const Footer = (props) => {
 		storeConfig &&
         storeConfig.simiStoreConfig &&
 		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.base
+		storeConfig.simiStoreConfig.config.header_footer_config
 	){
-		if(storeConfig.simiStoreConfig.config.base.bianca_android_app){
-			bianca_android_app = storeConfig.simiStoreConfig.config.base.bianca_android_app
+		if(storeConfig.simiStoreConfig.config.header_footer_config.bianca_android_app){
+			bianca_android_app = storeConfig.simiStoreConfig.config.header_footer_config.bianca_android_app
 		}
-		if(storeConfig.simiStoreConfig.config.base.bianca_ios_app){
-			bianca_ios_app = storeConfig.simiStoreConfig.config.base.bianca_ios_app
+		if(storeConfig.simiStoreConfig.config.header_footer_config.bianca_ios_app){
+			bianca_ios_app = storeConfig.simiStoreConfig.config.header_footer_config.bianca_ios_app
 		}
 	}
 
@@ -203,7 +208,7 @@ const Footer = (props) => {
 					<div className={`container`}>
 						<div className={`row`}>
 							<div className={`col-md-4 col-md-offset-4`}>
-								<div className="footer-logo">
+								<div onClick={scrollRoot} className="footer-logo">
 									<Link to="/">
 										<img src={footerLogoUrl()} alt={footerLogoAlt()} />
 									</Link>
@@ -213,7 +218,7 @@ const Footer = (props) => {
 						<div className={`row`}>
 							<div className={`col-md-4 col-md-offset-4`}>
 								<div className="footer-subscriber">
-									<h3>subscribe newsletter</h3>
+									<h3>{Identify.__('subscribe newsletter')}</h3>
 									<p>{Identify.__(bianca_subcribe_description)}</p>
 									<Subscriber />
 								</div>

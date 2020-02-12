@@ -23,5 +23,8 @@
         }
     }
 }
-
-
+.rtl-root{
+    .linked-product-ctn .linked-products .linked-product-item{
+        direction: rtl;
+    }
+}

@@ -57,13 +57,13 @@ const MyGiftVouchers = props => {
 
     return (
         <div className="my-gift-vouchers-area">
-            <PageTitle title={'GIFT VOUCHERS'} />
+            <PageTitle title={Identify.__('GIFT VOUCHERS')} />
             <form className="form-add-voucher" onSubmit={handleSubmitVoucher}>
                 <TextBox
                     label={Identify.__('ADD A GIFT VOUCHERS')}
                     name="voucher"
                     className="add-voucher"
-                    placeholder="Specify Gift Code"
+                    placeholder={Identify.__('Specify Gift Code')}
                     // onChange={(e)=>setCode(e.target.value)}
                     id={"voucher-input"}
                 />

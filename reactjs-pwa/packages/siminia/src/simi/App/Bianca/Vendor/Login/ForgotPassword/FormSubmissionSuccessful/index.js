@@ -6,7 +6,7 @@ import classes from './formSubmissionSuccessful.css';
 
 const FormSubmissionSuccessful = props => {
     const {successMessage} = props
-    const textMessage = successMessage?successMessage:Identify.__('If there is an account associated with that email, you will receive an email with a link to change your password');
+    const textMessage = successMessage? Identify.__(successMessage):Identify.__('If there is an account associated with that email, you will receive an email with a link to change your password');
     const { onContinue } = props;
 
     return (

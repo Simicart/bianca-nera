@@ -48,7 +48,8 @@ class Products extends \Simi\Simiconnector\Helper\Products
 
     protected function addFilterByAttribute($attribute, $attributeValues, &$layerFilters, &$titleFilters, $arrayIDs, $options = null) {
         $attributeOptions = [];
-        if (in_array($attribute->getDefaultFrontendLabel(), $titleFilters)) {
+        $label = $attribute->getStoreLabel() ? $attribute->getStoreLabel() : $attribute->getDefaultFrontendLabel();
+        if (in_array($label, $titleFilters)) {
             return;
         }
         foreach ($attributeValues as $productId => $optionIds) {
@@ -76,10 +77,10 @@ class Products extends \Simi\Simiconnector\Helper\Products
         }
 
         if ($this->simiObjectManager->get('Simi\Simiconnector\Helper\Data')->countArray($filters) >= 1) {
-            $titleFilters[] = $attribute->getDefaultFrontendLabel();
+            $titleFilters[] = $label;
             $layerFilters[] = [
                 'attribute' => $attribute->getAttributeCode(),
-                'title'     => $attribute->getDefaultFrontendLabel(),
+                'title'     => $label,
                 'filter'    => $filters,
             ];
         }

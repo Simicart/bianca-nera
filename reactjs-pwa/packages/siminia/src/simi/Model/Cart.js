@@ -7,12 +7,12 @@ const storage = new BrowserPersistence();
 export const addToCart = (callBack, params) => {
     let getParams = storage.getItem('cartId');
     getParams = getParams?{quote_id: getParams}:{}
-    sendRequest('rest/V1/simiconnector/quoteitems', callBack, 'POST', getParams, params)
+    sendRequest('/rest/V1/simiconnector/quoteitems', callBack, 'POST', getParams, params)
 }
 
 export const removeItemFromCart = (callBack, itemId, isSignedIn) => {
     if (isSignedIn)
-        sendRequest('rest/V1/carts/mine/items/' + itemId, callBack, 'DELETE')
+        sendRequest('/rest/V1/carts/mine/items/' + itemId, callBack, 'DELETE')
     else {
         const cartId = storage.getItem('cartId');
         if (!cartId) {
@@ -26,7 +26,7 @@ export const removeItemFromCart = (callBack, itemId, isSignedIn) => {
 export const updateCoupon = (callBack, params) => {
     let getParams = storage.getItem('cartId');
     getParams = getParams ? {quote_id: getParams} : {};
-    sendRequest('rest/V1/simiconnector/quoteitems', callBack, 'PUT', getParams, params)
+    sendRequest('/rest/V1/simiconnector/quoteitems', callBack, 'PUT', getParams, params)
 }
 
 export const updateGiftVoucher = (callBack, giftVoucher, isSignedIn, storeCode) => {
@@ -62,11 +62,11 @@ export const updateSubProductSpecialItem = (callBack, cartItemId, subProductSku,
     getParams = getParams ? {quote_id: getParams} : {};
     getParams.subproductsku = subProductSku
     getParams.newquantity = quantity
-    sendRequest('rest/V1/simiconnector/quoteitems/' + cartItemId, callBack, 'PUT', getParams)
+    sendRequest('/rest/V1/simiconnector/quoteitems/' + cartItemId, callBack, 'PUT', getParams)
 }
 
 export const removeAllItems = (callBack, params) => {
     let getParams = storage.getItem('cartId');
     getParams = getParams ? {quote_id: getParams} : {};
-    sendRequest('rest/V1/simiconnector/quoteitems/', callBack, 'PUT', getParams, params);
+    sendRequest('/rest/V1/simiconnector/quoteitems/', callBack, 'PUT', getParams, params);
 }

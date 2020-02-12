@@ -25,7 +25,9 @@ const Brands = props => {
 
     return (
         <div className="brand-slider">
-            <h3 className="title">{Identify.__('Shop By Brands')}</h3>
+            <div className="title-box">
+                <h3 className="title">{Identify.__('Shop By Brands')}</h3>
+            </div>
             <Scroller data={data} initItemIndex={startItemIndex} slideSettings={slideSettings} history={history} isPhone={isPhone}/>
         </div>
     );

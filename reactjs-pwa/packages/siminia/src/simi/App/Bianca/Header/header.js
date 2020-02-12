@@ -43,7 +43,6 @@ class Header extends React.Component {
 
 	searchTrigger = () => {
 		if (this.searchFormCallback && typeof this.searchFormCallback === 'function') {
-			console.log('toggle search');
 			if (Identify.isRtl()) {
 					$('.rtl-root #btn-back').toggleClass('move-down')
 			} else {
@@ -124,31 +123,27 @@ class Header extends React.Component {
 	};
 
 	renderRightBar = (isSignedIn) => {
-		const { history } = this.props
 		const { classes } = this;
 		const compareData = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'compare_product')
+		const compareStyle = compareData && compareData.length > 0 ? 'compare-list' : 'non-compare'
 		return (
 			<div className={`right-bar ${Identify.isRtl() ? 'rtl-right-bar' : null}`}>
-				<div className={'right-bar-item'} id="cart">
+				<div className={`right-bar-item`} id="cart">
 					<CartTrigger classes={classes} />
 				</div>
 				{this.renderWishList(isSignedIn)}
-				{compareData && compareData.length > 0
-					?
-					<div className={'right-bar-item'} id="my-account">
-						<div className="compare">
-							<span
-								role="presentation"
-								className="add-to-compare-btn icon-bench-press"
-								onClick={this.showModalCompare}
-							>
-							</span>
-							<CompareProduct history={history} openModal={this.state.openCompareModal} closeModal={this.closeCompareModal} />
-						</div>
-
+				<div className={`right-bar-item ${compareStyle}`} id='compare-list-product'>
+					<div className="compare">
+						<span
+							role="presentation"
+							className="add-to-compare-btn icon-bench-press"
+							onClick={this.showModalCompare}
+						>
+						</span>
+						<CompareProduct history={history} openModal={this.state.openCompareModal} closeModal={this.closeCompareModal} />
 					</div>
-					: null
-				}
+
+				</div>
 				<div className={'right-bar-item'} id="my-account">
 					<MyAccount classes={classes} />
 				</div>
@@ -189,6 +184,9 @@ class Header extends React.Component {
 	}
 
 	renderViewPhone = (bianca_header_sale_title, bianca_header_sale_link) => {
+		const {history} = this.props
+		const compareData = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'compare_product')
+		const compareStyle = compareData && compareData.length > 0 ? 'compare-list' : 'non-compare'
 		return (
 			<React.Fragment>
 				<div className="container-global-notice">
@@ -215,6 +213,16 @@ class Header extends React.Component {
 								<div className={'right-bar-item'}>
 									<SearchFormTrigger searchTrigger={this.searchTrigger} />
 								</div>
+							<div className={`right-bar-item ${compareStyle}`} id='compare-list-product'>
+								<div>
+									<span
+										role="presentation"
+										className="add-to-compare-btn icon-bench-press"
+										onClick={this.showModalCompare}
+									>
+									</span>
+								</div>
+							</div>
 								<div className={'right-bar-item cart'}>
 									<CartTrigger isPhone={this.state.isPhone} />
 								</div>
@@ -235,6 +243,7 @@ class Header extends React.Component {
 					<TopMessage />
 					<ToastMessage />
 				</div>
+				<CompareProduct history={history} openModal={this.state.openCompareModal} closeModal={this.closeCompareModal} />
 			</React.Fragment>
 		);
 	};
@@ -254,9 +263,9 @@ class Header extends React.Component {
 			storeConfig &&
 			storeConfig.simiStoreConfig &&
 			storeConfig.simiStoreConfig.config &&
-			storeConfig.simiStoreConfig.config.base
+			storeConfig.simiStoreConfig.config.header_footer_config
 		) {
-			const base_option = storeConfig.simiStoreConfig.config.base;
+			const base_option = storeConfig.simiStoreConfig.config.header_footer_config;
 			bianca_header_phone = base_option.bianca_header_phone ? base_option.bianca_header_phone : '';
 			bianca_header_sale_title = base_option.bianca_header_sale_title ? base_option.bianca_header_sale_title : '';
 			bianca_header_sale_link = base_option.bianca_header_sale_link ? base_option.bianca_header_sale_link : '';

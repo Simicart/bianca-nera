@@ -45,7 +45,7 @@ class ForgotPassword extends Component {
             data.errors.map(value => {
                 messages +=  value.message
             })
-            showToastMessage(messages)
+            showToastMessage(Identify.__(messages))
             this.setState({ resetSubmited: false})
         }
     }
@@ -74,7 +74,7 @@ class ForgotPassword extends Component {
                     title:Identify.__('Forgot password')
                 })}
                 <div className={`${classes['wrap']} ${Identify.isRtl() ? classes['rtl-wrap'] : null}`}>
-                    <div className={classes["title"]}>{Identify.__("forgot password?".toUpperCase())}</div>
+                    <div className={classes["title"]}>{Identify.__("forgot password?").toUpperCase()}</div>
                     <p className={classes.instructions}>
                         {Identify.__('Enter your email address to reset your password.')}
                     </p>
