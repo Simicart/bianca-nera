@@ -425,8 +425,14 @@ $color1: #101820;
                 left: 32px;
             }
             .contact-wrap .contact-form{
-                .contact-input.phone-input .arrow-down{
-                    left: 0;
+                .contact-input.phone-input{
+                    .arrow-down{
+                        right: 0;
+                    }
+                    input{
+                        padding-left: 0px;
+                        padding-right: 52px;
+                    }
                 }
                 .form-row.time .contact-input:before{
                     right: unset;

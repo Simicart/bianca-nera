@@ -190,6 +190,14 @@ class MiniCart extends Component {
 
         return (
             <div>
+                {hasSubtotal ? (
+                <div className={classes.subtotal}>
+                    <div className={classes.subtotalLabel}>{Identify.__('Subtotal')}</div>
+                    <div>
+                        <Price currencyCode={cartCurrencyCode} value={totalPrice} />
+                    </div>
+                </div>
+                ) : null}
                 {hasDiscount ? 
                     <div className={classes.subtotal}>
                         <div className={classes.subtotalLabel}>{Identify.__('Discount')} {discount}%</div>
@@ -214,14 +222,6 @@ class MiniCart extends Component {
                     </div>
                     : null
                 }
-                {hasSubtotal ? (
-                <div className={classes.subtotal}>
-                    <div className={classes.subtotalLabel}>{Identify.__('Subtotal')}</div>
-                    <div>
-                        <Price currencyCode={cartCurrencyCode} value={totalPrice} />
-                    </div>
-                </div>
-                ) : null}
             </div>
         ) 
         

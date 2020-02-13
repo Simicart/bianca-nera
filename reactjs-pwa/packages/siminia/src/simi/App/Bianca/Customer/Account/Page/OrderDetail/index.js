@@ -12,15 +12,12 @@ require('./orderDetails.scss')
 
 const Detail = (props) => {
     const [data, setData] = useState(null)
-    console.log(props)
-    console.log(data)
     const [loaded, setLoaded] = useState(false)
     const { history } = props
     const isPhone = window.innerWidth < 1024 
     const id = history.location.state.orderData.increment_id || null;
     const storeConfig = Identify.getStoreConfig();
 
-    console.log(storeConfig)
     useEffect(() => {
         const api = Identify.ApiDataStorage('quoteOrder') || {}
         if (api.hasOwnProperty(id)) {
@@ -274,7 +271,6 @@ const Detail = (props) => {
 
     const renderTotal = () => {
         const totalPrice = data.total;
-
         return (
             <div className="detail-order-footer">
                 <div className="box-total-price">
@@ -283,6 +279,11 @@ const Detail = (props) => {
                             <span className="bold">{Identify.__('Subtotal')}</span>
                             <span className="price">{totalPrice.tax ? getFormatPrice(totalPrice.subtotal_incl_tax) : getFormatPrice(totalPrice.subtotal_excl_tax)}</span>
                         </div>
+                        {totalPrice.aw_giftcard_amount && totalPrice.aw_giftcard_codes &&
+                        <div className="summary-price-line">
+                            <span className="bold">{Identify.__('Gift Card')} ({totalPrice.aw_giftcard_codes})</span>
+                            <span className="price">{getFormatPrice(-totalPrice.aw_giftcard_amount)}</span>
+                        </div>}
                         <div className="summary-price-line">
                             <span className="bold">{Identify.__('Delivery')}</span>
                             <span className="price">{totalPrice.tax ? getFormatPrice(totalPrice.shipping_hand_incl_tax) : getFormatPrice(totalPrice.shipping_hand_excl_tax)}</span>

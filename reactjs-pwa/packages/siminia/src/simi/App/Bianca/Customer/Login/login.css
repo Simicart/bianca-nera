@@ -236,7 +236,7 @@
 
 .login-background div[class~="signInButtonCtn"] button {
     font-size: 16px;
-    font-weight: 500 !important;
+    /* font-weight: 500 !important; */
     white-space: nowrap;
     text-align: center;
     padding-top: 16px !important;
@@ -245,8 +245,10 @@
     width: 100%;
     min-width: 200px;
     padding-bottom: 16px !important;
-    font-family: 'Gotham Medium';
+    /* font-family: 'Gotham Medium'; */
     line-height: 16px !important;
+    font-family: 'Gotham Book';
+    font-weight: 600;
 }
 
 .login-background .inactive {

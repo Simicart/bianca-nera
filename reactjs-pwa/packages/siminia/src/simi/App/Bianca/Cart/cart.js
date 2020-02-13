@@ -40,10 +40,17 @@ class Cart extends Component {
             items: this.props.cart.details.items || [],
             isLoading: true
         };
+        this.isLoading = true;
     }
 
-    static getDerivedStateFromProps(props, state) {
-        return {...state, items: props.cart.details.items || []}
+    static getDerivedStateFromProps = (props, state) => {
+        if (props.cart.details && props.cart.details.items && props.cart.details.items.length) {
+            this.isLoading = false;
+            return {...state, items: props.cart.details.items || []}
+        } else {
+            this.isLoading = true;
+        }
+        return {...state}
     }
 
     setIsPhone() {
@@ -69,13 +76,12 @@ class Cart extends Component {
         }
         showFogLoading();
         this.props.getCartDetails();
-        this.setIsPhone();
         this.setState({isLoading: false});
+        this.setIsPhone();
     }
 
     get cartId() {
         const { cart } = this.props;
-
         return cart && cart.details && cart.details.id;
     }
 
@@ -389,7 +395,7 @@ class Cart extends Component {
             cart
         } = props;
         if (isCartEmpty || !cart.details.items || !parseInt(cart.details.items_count) || this.state.items.length === 0) {
-            if(isLoading){
+            if(this.isLoading){
                 return <Loading />;
             }
             else{

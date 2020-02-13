@@ -1208,6 +1208,12 @@ $colorRed: #b91c1c;
             }
         }
     }
+    &.rtl-root{
+        #reserve-modal .reserve-modal-content .modal-body .locations-select .option-select .store-input:before{
+            left: 16px;
+            right: unset;
+        }
+    }
 }
 #reserve-modal-message{
     margin-top: 10%;

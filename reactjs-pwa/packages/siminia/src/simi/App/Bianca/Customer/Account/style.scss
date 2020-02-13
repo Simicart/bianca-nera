@@ -1,6 +1,25 @@
 .customer-dashboard {
     padding-top: 93px;
     padding-bottom: 86px;
+    .dashboard-content{
+        .section-top{
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .section-title{
+            font-family: 'Gotham Book';
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 20px;
+        }
+        .view-all{
+            font-family: 'Gotham Book';
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+    }
 }
 .dashboard-layout {
     display: flex;
@@ -488,7 +507,7 @@
 .dash-column-box {
     background-color: #ffffff;
     padding: 24px 24px 27px;
-    flex-basis: 376px;
+    flex-basis: 50%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -497,7 +516,7 @@
 }
 .acc-information .dash-column-box:not(:first-of-type),
 .dashboard-address-book .dash-column-box:not(:first-of-type) {
-    margin-left: 16px;
+    margin-inline-start: 16px;
 }
 .dash-column-box .box-title {
     font-weight: bold;

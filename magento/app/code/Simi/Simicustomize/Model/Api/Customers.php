@@ -108,6 +108,22 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
         }
     }
 
+    /*
+     * Register
+     */
+
+    public function store()
+    {
+        $data                  = $this->getData();
+        if ($data['resourceid'] !== "sociallogin" && $data['resourceid'] !== "createpassword" && $data['resourceid'] !== "logout") {
+            $customer              = $this->simiObjectManager->get('Simi\Simiconnector\Model\Customer')->register($data);
+            $this->builderQuery    = $customer;
+            $this->RETURN_MESSAGE = __("Thank you for registering with "
+                . $this->storeManager->getStore()->getName() . " store");
+        }
+        return $this->show();
+    }
+
         /*
      * Update Profile
      */

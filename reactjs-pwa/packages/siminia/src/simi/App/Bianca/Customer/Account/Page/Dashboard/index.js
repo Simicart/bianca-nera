@@ -96,8 +96,8 @@ const Dashboard = props => {
                 (
                     !isPhone ? (
                         <div className="dashboard-recent-orders">
-                            <div className="customer-page-title">
-                                {Identify.__("Recent Orders")}
+                            <div className="section-top">
+                                <div className="section-title">{Identify.__("Recent Orders")}</div>
                                 <Link className="view-all" to='/orderhistory.html'>{Identify.__("View all")}</Link>
                             </div>
                             <OrderHistory data={data.customerOrders.items} showForDashboard={true} />
@@ -109,13 +109,14 @@ const Dashboard = props => {
                                 className="view-recent-orders"
                             />
                         </Link>
-                        
                     )
                 )
             }
             <div className='dashboard-acc-information'>
-                <div className='customer-page-title'>
-                    {Identify.__("Account Information")}
+                <div className="section-top">
+                    <div className='section-title'>
+                        {Identify.__("Account Information")}
+                    </div>
                 </div>
                 <div className="acc-information" >
                     <div className="dash-column-box">
@@ -166,8 +167,10 @@ const Dashboard = props => {
             </div>
             {data.customer && data.customer.addresses && (
                 <div className="dashboard-address-book">
-                    <div className="customer-page-title">
-                        {Identify.__("Address Book")}
+                    <div className="section-top">
+                        <div className="section-title">
+                            {Identify.__("Address Book")}
+                        </div>
                         <Link className="view-all" to="/addresses.html">{Identify.__("Manage addresses".toUpperCase())}</Link>
                     </div>
                     {renderDefaultAddress(data.customer.addresses, data.customer.default_billing, data.customer.default_shipping)}

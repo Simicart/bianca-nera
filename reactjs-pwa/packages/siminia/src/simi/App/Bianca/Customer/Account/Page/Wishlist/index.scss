@@ -26,6 +26,12 @@
                 .product-name {
                     font-size: 14px;
                     color: #101820;
+                    line-height: 14px;
+                    max-height: 28px;
+                    overflow: hidden;
+                    display: block;
+                    word-break: break-word;
+                    white-space: pre-line;
                 }
                 .prices-layout {
                     margin-top: 12px;

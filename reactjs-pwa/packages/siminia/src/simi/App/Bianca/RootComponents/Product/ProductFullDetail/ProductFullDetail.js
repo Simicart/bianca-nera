@@ -158,7 +158,7 @@ class ProductFullDetail extends Component {
                     }
                 }
             }
-            if (reviewRating && reviewRating.rate !== undefined && reviewRating.number) {
+            if (reviewRating && reviewRating.rate !== undefined && parseInt(reviewRating.rate) > 0) {
                 window.productDataStructure.aggregateRating = {
                     "@type": "AggregateRating",
                     "ratingValue": reviewRating.rate,

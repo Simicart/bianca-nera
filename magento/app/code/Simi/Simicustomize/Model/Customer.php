@@ -244,4 +244,49 @@ class Customer extends \Simi\Simiconnector\Model\Customer
         $this->_getSession()->setCustomer($customer);
         return $customer;
     }
+
+    /*
+     * Create Customer
+     * @param
+     * $data - Object with at least:
+     * $data->firstname
+     * $data->lastname
+     * $data->email
+     * $data->password
+     */
+
+    protected function _createCustomer($data)
+    {
+        $websiteid = $data->website_id ?? null;
+        $mobile = $data->telephone ?? null;
+        if ($websiteid && $mobile) {
+            $customerData = $this->simiObjectManager->create('\Magento\Customer\Model\Customer');
+            $customerSearch = $customerData->getCollection()->addFieldToFilter("mobilenumber", $mobile)
+                ->addFieldToFilter("website_id", $websiteid);
+
+            if (count($customerSearch) > 0) {
+                throw new \Simi\Simiconnector\Helper\SimiException(__('Already exist account with this phone number !'), 4);
+            }
+        }
+
+        $customer = $this->simiObjectManager->create('Magento\Customer\Api\Data\CustomerInterface')
+            ->setFirstname($data->firstname)
+            ->setLastname($data->lastname)
+            ->setEmail($data->email);
+        $this->simiObjectManager->get('Simi\Simicustomize\Override\Helper\Customer')->applyDataToCustomer($customer, $data);
+
+        $password = null;
+        if (isset($data->password) && $data->password) {
+            $password = $data->password;
+        }
+        $customer = $this->getAccountManagement()->createAccount($customer, $password, '');
+        $subscriberFactory = $this->simiObjectManager->get('Magento\Newsletter\Model\SubscriberFactory');
+        if (isset($data->news_letter) && ($data->news_letter == '1')) {
+            $subscriberFactory->create()->subscribeCustomerById($customer->getId());
+        } else {
+            $subscriberFactory->create()->unsubscribeCustomerById($customer->getId());
+        }
+        $customer = $this->simiObjectManager->create('Magento\Customer\Model\Customer')->load($customer->getId());
+        return $customer;
+    }
 }

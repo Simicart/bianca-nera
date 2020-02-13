@@ -207,7 +207,7 @@ class Reviews extends \Simi\Simiconnector\Model\Api\Apiabstract
         if (isset($parameters[self::LIMIT]) && $parameters[self::LIMIT]) {
             $limit = $parameters[self::LIMIT];
         }
-        $offset = $limit * ($page - 1) + 1;
+        $offset = max($limit * ($page - 1), 0);
         if (isset($parameters[self::OFFSET]) && $parameters[self::OFFSET]) {
             $offset = $parameters[self::OFFSET];
         }

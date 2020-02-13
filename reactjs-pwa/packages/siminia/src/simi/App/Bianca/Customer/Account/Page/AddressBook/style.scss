@@ -17,9 +17,10 @@
     font-weight: 600;
 }
 .address-book .address-content {
-    display: flex;
-    flex-wrap: wrap;
     margin-top: 15px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-gap: 16px;
     .address-box{
         width: 100%;
         .box-content{
@@ -28,13 +29,7 @@
             }
         }
     }
-    .billing-address{
-        margin-inline-end: 16px;
-    }
     .additional-address{
-        &:nth-child(2n+1){
-            margin-inline-end: 16px;
-        }
         .white-box-content{
             display: flex;
             justify-content: space-between;
