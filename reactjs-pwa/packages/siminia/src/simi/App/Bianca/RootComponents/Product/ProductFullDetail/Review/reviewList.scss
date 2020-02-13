@@ -74,6 +74,15 @@
             padding-top: 2px;
         }
     }
+    .load-more{
+        text-align: end;
+        .btn-load-more{
+            cursor: pointer;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
 }
 .mobile {
     .review-list{
