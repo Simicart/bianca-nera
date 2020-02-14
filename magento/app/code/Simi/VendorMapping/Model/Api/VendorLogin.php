@@ -50,8 +50,23 @@ class VendorLogin extends LoginPost implements VendorLoginInterface
 
             if (!empty($login['username']) && !empty($login['password'])) {
                 try {
-                    // get customer by username (email)
                     $simiObjectManager = $this->_objectManager;
+
+                    // Check if exist vendor account
+                    $vendorCollection = $simiObjectManager
+                    ->get('Vnecoms\Vendors\Model\Vendor')->getCollection()->addFieldToFilter('email', $login['username']);
+                    if (count($vendorCollection) == 0) {
+                        $message = __("Designer account does not exist !");
+                        return [
+                            [
+                                'status' => 'error',
+                                'is_login' => '0',
+                                'message' => $message
+                            ]
+                        ];
+                    }
+
+                    // get customer by username (email)
                     $helperCustomer = $simiObjectManager->create('Simi\Simicustomize\Override\Helper\Customer');
                     // type of customer is Magento\Customer\Model\Customer
                     $customer = $helperCustomer->getCustomerByEmail($login['username']);
