@@ -11,13 +11,42 @@ class MapBranch extends React.Component {
 
     static defaultProps = {
         center: {
-            lat: 54.21,
-            lng: -13.43
+            lat: 29.37,
+            lng: 47.98
         },
         zoom: 9
     };
 
-    componentWillMount() {
+    componentDidMount(){
+        let objCenter = this.props.center;
+        const {data, multiple, currentLocation} = this.props;
+        if (this.props.markerFocus && this.props.markerFocus.center) {
+            // return { ...state, centerT: this.props.markerFocus.center };
+            this.setState({ centerT: this.props.markerFocus.center });
+        }
+        if (data) {
+            if(multiple && data.storelocations.length > 0){
+                const arrLngLat = [];
+                data.storelocations.map((item) => {
+                    const lat = Number(item.latitude);
+                    const lng = Number(item.longitude);
+                    return arrLngLat.push({ lat, lng });
+                });
+                if (currentLocation){
+                    const crLat = Number(currentLocation.lat);
+                    const crLng = Number(currentLocation.lng);
+                    arrLngLat.push({ lat: crLat, lng: crLng });
+                }
+                objCenter = this.averageGeolocation(arrLngLat);
+            }
+            /* else{
+                objCenter = {lat: Number(this.props.center.lat), lng: Number(this.props.center.lng)}
+            } */
+            // return { ...state, centerT: objCenter };
+            this.setState({ centerT: objCenter });
+        }
+    }
+    /* componentWillMount() {
         let objCenter = this.props.center;
         const {data, multiple, currentLocation} = this.props;
         if (data) {
@@ -41,9 +70,9 @@ class MapBranch extends React.Component {
 
             this.setState({ centerT: objCenter });
         }
-    }
+    } */
 
-    componentWillReceiveProps(nextProps) {
+    /* componentWillReceiveProps(nextProps) {
         if (
             this.props.markerFocus &&
             JSON.stringify(this.props.markerFocus.center) !==
@@ -51,7 +80,7 @@ class MapBranch extends React.Component {
         ) {
             this.setState({ centerT: nextProps.markerFocus.center });
         }
-    }
+    } */
 
     averageGeolocation = coords => {
         if (coords.length === 1) {

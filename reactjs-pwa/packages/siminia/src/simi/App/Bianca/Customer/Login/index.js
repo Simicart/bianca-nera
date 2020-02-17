@@ -388,7 +388,7 @@ class Login extends Component {
 
 	signinCallback = (data) => {
 		hideFogLoading();
-		if (this.props.simiSignedIn) {
+		if (this.props.simiSignedIn instanceof Function) {
 			if (data && !data.errors) {
 				storage.removeItem('cartId');
 				storage.removeItem('signin_token');
@@ -405,11 +405,12 @@ class Login extends Component {
 				let errorMsg = '';
 				if (data.errors.length) {
 					data.errors.map((error) => {
-						if (error.endpoint == 'rest/V1/integration/customer/token') {
-							errorMsg = 'Wrong password, does not exist account or account is not actived !';
+						errorMsg += error.message;
+						/* if (error.endpoint == '/rest/V1/integration/customer/token') {
+							errorMsg = 'Wrong password, does not exist account or account is not actived!';
 						} else {
 							errorMsg += error.message;
-						}
+						} */
 					});
 					showToastMessage(Identify.__(errorMsg));
 				}

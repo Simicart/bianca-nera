@@ -72,7 +72,7 @@ const Storelist = props => {
                 return
             } else if (showingDetailItem) {
                 return  (
-                    <div className="store-content-showing-detail">
+                    <div className="store-content-showing-detail" key={item_id}>
                         {title}
                         <StoreSummary 
                             key={item_id}

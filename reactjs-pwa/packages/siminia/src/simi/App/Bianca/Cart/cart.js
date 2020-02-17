@@ -38,19 +38,16 @@ class Cart extends Component {
             isPhone: isPhone,
             focusItem: null,
             items: this.props.cart.details.items || [],
-            isLoading: true
+            isLoading: false
         };
         this.isLoading = true;
     }
 
     static getDerivedStateFromProps = (props, state) => {
         if (props.cart.details && props.cart.details.items && props.cart.details.items.length) {
-            this.isLoading = false;
-            return {...state, items: props.cart.details.items || []}
-        } else {
-            this.isLoading = true;
+            return {...state, items: props.cart.details.items || [], isLoading: props.cart.isLoading}
         }
-        return {...state}
+        return {...state, isLoading: props.cart.isLoading}
     }
 
     setIsPhone() {
@@ -74,9 +71,8 @@ class Cart extends Component {
                 }
             }
         }
-        showFogLoading();
+        this.isLoading = true;
         this.props.getCartDetails();
-        this.setState({isLoading: false});
         this.setIsPhone();
     }
 
@@ -115,14 +111,13 @@ class Cart extends Component {
                     [item.item_id]: "0",
                 };
             },initialValue);
-            // this.setState({isLoading: true})
             removeAllItems(this.removeAllCallBack, allItems);
         }
     }
 
     removeAllCallBack = (data) => {
-        // this.setState({isLoading: false, items: data.quoteitems || []});
-        this.setState({items: data.quoteitems});
+        this.setState({isLoading: false, items: data.quoteitems || []});
+        this.isLoading = false;
         this.props.getCartDetails({forceRefresh: true}); //bug not refresh
     }
 
@@ -214,6 +209,7 @@ class Cart extends Component {
         const { cartCurrencyCode, cartId } = this;
         const hasSubtotal = cartId && cart.totals && 'subtotal' in cart.totals;
         const totalPrice = cart.totals.subtotal;
+        const {coupon_code, discount_amount} = cart.totals || {};
         const hasGrandtotal =
             cartId && cart.totals && 'grand_total' in cart.totals;
         const grandTotal = cart.totals.grand_total;
@@ -249,12 +245,12 @@ class Cart extends Component {
                 {hasDiscount ? (
                     <div className="subtotal">
                         <div className="subtotal-label">
-                            {Identify.__('Discount')} {discount}%
+                            {Identify.__('Discount')} ({coupon_code||`${discount}%`})
                         </div>
                         <div>
                             <Price
                                 currencyCode={cartCurrencyCode}
-                                value={discount}
+                                value={discount_amount}
                             />
                         </div>
                     </div>
@@ -336,6 +332,7 @@ class Cart extends Component {
     removeFromCart(item) {
         if (confirm(Identify.__('Are you sure?')) === true) {
             showFogLoading();
+            this.isLoading = false;
             analyticRemoveCartGTM(item.name, item.item_id, item.price, item.qty);
             removeItemFromCart(
                 () => {
@@ -395,7 +392,8 @@ class Cart extends Component {
             cart
         } = props;
         if (isCartEmpty || !cart.details.items || !parseInt(cart.details.items_count) || this.state.items.length === 0) {
-            if(this.isLoading){
+            if(this.isLoading || this.state.isLoading){
+                this.isLoading = false;
                 return <Loading />;
             }
             else{

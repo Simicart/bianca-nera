@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import Panel from 'src/simi/BaseComponents/Panel';
 import Identify from 'src/simi/Helper/Identify';
 import Arrow from 'src/simi/BaseComponents/Icon/Arrowup';
-import Total from 'src/simi/BaseComponents/Total';
+import Total from 'src/simi/App/Bianca/BaseComponents/Total';
 import isObjectEmpty from 'src/util/isObjectEmpty';
 import OrderItems from './OrderItems';
 import { isArray } from 'util';

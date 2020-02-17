@@ -270,6 +270,7 @@ const Detail = (props) => {
     };
 
     const renderTotal = () => {
+        const {coupon_code, discount_amount, discount_description} = data;
         const totalPrice = data.total;
         return (
             <div className="detail-order-footer">
@@ -279,9 +280,14 @@ const Detail = (props) => {
                             <span className="bold">{Identify.__('Subtotal')}</span>
                             <span className="price">{totalPrice.tax ? getFormatPrice(totalPrice.subtotal_incl_tax) : getFormatPrice(totalPrice.subtotal_excl_tax)}</span>
                         </div>
+                        {coupon_code && discount_amount &&
+                        <div className="summary-price-line">
+                            <span className="bold">{Identify.__('Discount')} ({coupon_code})</span>
+                            <span className="price">{getFormatPrice(discount_amount)}</span>
+                        </div>}
                         {totalPrice.aw_giftcard_amount && totalPrice.aw_giftcard_codes &&
                         <div className="summary-price-line">
-                            <span className="bold">{Identify.__('Gift Card')} ({totalPrice.aw_giftcard_codes})</span>
+                            <span className="bold">{Identify.__('Discount')} ({totalPrice.aw_giftcard_codes})</span>
                             <span className="price">{getFormatPrice(-totalPrice.aw_giftcard_amount)}</span>
                         </div>}
                         <div className="summary-price-line">

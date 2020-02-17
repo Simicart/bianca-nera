@@ -81,6 +81,19 @@ export async function sendRequest(endPoint, callBack, method='GET', getData= {},
             if (response.ok) {
                 return response.json();
             }
+            /** Allow response for status 401 Unauthorized */
+            if (response.ok === false && response.statusText === 'Unauthorized') {
+                let data = {};
+                data.errors = [];
+                data.status = response.status;
+                data.statusText = response.statusText;
+                try{
+                    return response.text().then(function(text) {
+                        data.errors = [JSON.parse(text)];
+                        return data;
+                    });
+                } catch (err){}
+            }
         })
         .then(function (data) {
             if (data) {

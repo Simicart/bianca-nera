@@ -75,7 +75,7 @@ export const StoreLocator = props => {
                     <div className="branch-map">
                         <MapBranch
                             data={stores}
-                            currentLocation={stores.hasOwnProperty('current_location') && stores.current_location ? stores.current_location : ''}
+                            currentLocation={stores.hasOwnProperty('current_location') && stores.current_location ? stores.current_location : showingDetailItem && markerFocus.center || ''}
                             markerFocus={markerFocus}
                             multiple={!showingDetailItem}
                             height={isPhone?343:572}
