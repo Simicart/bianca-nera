@@ -28,6 +28,7 @@ const CreateAccount = props => {
     const [phoneRegister, setPhone] = useState("")
     const [showModalGet, setModalGet] = useState(false)
     const [showModalVerify, setModalVerify] = useState(false)
+    const [idModalPopup, setIdModalPopup] = useState('')
     var registeringEmail = null
     var registeringPassword = null
 
@@ -138,7 +139,8 @@ const CreateAccount = props => {
             localStorage.setItem("numberphone_register", phoneRegister);
             // Open modal verify otp
             openVModal();
-            setTimeout(() => closeVModal(), 120000);
+            // setTimeout() return an id, we pass it into hook state variable
+            setIdModalPopup(setTimeout(() => closeVModal(), 120000));
         }
     }
 
@@ -148,6 +150,8 @@ const CreateAccount = props => {
 
     const closeVModal = () => {
         setModalVerify(false)
+        // clear timeout
+        clearTimeout(idModalPopup)
     }
 
     const handleVerifyRegister = () => {

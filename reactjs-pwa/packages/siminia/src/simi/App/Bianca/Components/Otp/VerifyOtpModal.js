@@ -9,6 +9,8 @@ const $ = window.$;
 class VerifyOtpModal extends React.Component {
     constructor(props) {
         super(props)
+        this.countDownElement = React.createRef();
+        console.log('constructor')
         this.state = {
             value1: '',
             value2: '',
@@ -19,39 +21,74 @@ class VerifyOtpModal extends React.Component {
         };
     }
 
+    jumbTo2 = () => {
+        $('#form-verify-otp .otp2').focus();
+    }
+    jumbTo3 = () => {
+        $('#form-verify-otp .otp3').focus();
+    }
+    jumbTo4 = () => {
+        $('#form-verify-otp .otp4').focus();
+    }
+    jumbTo5 = () => {
+        $('#form-verify-otp .otp5').focus();
+    }
+    jumbTo6 = () => {
+        $('#form-verify-otp .otp6').focus();
+    }
     onChange1 = (e) => {
+        console.log(e.target.value)
         const re = /^[0-9\b]+$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
+        if (re.test(e.target.value)) {
             this.setState({ value1: e.target.value })
+            this.jumbTo2()
+        } else {
+            this.setState({ value1: '' })
         }
     }
     onChange2 = (e) => {
         const re = /^[0-9\b]+$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
+        if (re.test(e.target.value)) {
             this.setState({ value2: e.target.value })
+            this.jumbTo3()
+        } else {
+            this.setState({ value2: '' })
         }
+
+
     }
     onChange3 = (e) => {
         const re = /^[0-9\b]+$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
+        if (re.test(e.target.value)) {
             this.setState({ value3: e.target.value })
+            this.jumbTo4()
+        } else {
+            this.setState({ value3: '' })
         }
     }
     onChange4 = (e) => {
         const re = /^[0-9\b]+$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
+        if (re.test(e.target.value)) {
             this.setState({ value4: e.target.value })
+            this.jumbTo5()
+        } else {
+            this.setState({ value4: '' })
         }
     }
     onChange5 = (e) => {
         const re = /^[0-9\b]+$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
+        if (re.test(e.target.value)) {
             this.setState({ value5: e.target.value })
+            this.jumbTo6()
+        } else {
+            this.setState({ value5: '' })
         }
     }
     onChange6 = (e) => {
         const re = /^[0-9\b]+$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
+        if (re.test(e.target.value)) {
+            this.setState({ value6: e.target.value })
+        } else {
             this.setState({ value6: e.target.value })
         }
     }
@@ -63,9 +100,32 @@ class VerifyOtpModal extends React.Component {
         }
     }
 
+    resetForm = () => {
+        // reset form
+        console.log('reset form')
+        this.setState = ({
+            value1: '',
+            value2: '',
+            value3: '',
+            value4: '',
+            value5: '',
+            value6: ''
+        });
+    }
+
     render() {
 
         const { openVerifyModal, closeVerifyModal } = this.props
+
+        const closeModalAndClearTimeout = () => {
+            // set state time clock = -1
+            this.countDownElement.current.time = -1
+            // clear time out
+            this.countDownElement.current.clearTimeOut()
+            // close modal
+            this.props.closeVerifyModal()
+        }
+
         const verifyOtp = (e) => {
             e.preventDefault()
             $('.otp-form .error').css('display', 'none')
@@ -91,35 +151,17 @@ class VerifyOtpModal extends React.Component {
                 localStorage.setItem('login_otp', otp)
                 // call api
                 this.props.callApi(localStorage.getItem('numberphone_otp'))
-                // close modal
-                this.props.closeVerifyModal()
+                // close modal and clear time out
+                closeModalAndClearTimeout()
             }
 
-
-
-        }
-
-        const jumbTo2 = () => {
-            $('#form-verify-otp .otp2').focus();
-        }
-        const jumbTo3 = () => {
-            $('#form-verify-otp .otp3').focus();
-        }
-        const jumbTo4 = () => {
-            $('#form-verify-otp .otp4').focus();
-        }
-        const jumbTo5 = () => {
-            $('#form-verify-otp .otp5').focus();
-        }
-        const jumbTo6 = () => {
-            $('#form-verify-otp .otp6').focus();
         }
 
         return (
             <Modal
                 modalId="verify-otp-modal"
                 open={openVerifyModal}
-                onClose={closeVerifyModal}
+                onClose={closeModalAndClearTimeout}
                 classNames={{ overlay: Identify.isRtl() ? "rtl-wrap-modal" : "" }}
             >
                 <div className="title">
@@ -131,13 +173,13 @@ class VerifyOtpModal extends React.Component {
                         {localStorage.getItem('numberphone_otp') ? localStorage.getItem('numberphone_otp') : localStorage.getItem('numberphone_register')}
                     </span>
                 </div>
-                <form onSubmit={verifyOtp} method="post" id="form-verify-otp">
+                <form onSubmit={verifyOtp} method="post" id="form-verify-otp" className="form-verify-otp">
                     <div className="otp-form">
-                        <input className="otp otp1" name="otp1" maxLength="1" value={this.state.value1} onChange={this.onChange1} onKeyUp={jumbTo2} />
-                        <input className="otp otp2" name="otp2" maxLength="1" value={this.state.value2} onChange={this.onChange2} onKeyUp={jumbTo3} />
-                        <input className="otp otp3" name="otp3" maxLength="1" value={this.state.value3} onChange={this.onChange3} onKeyUp={jumbTo4} />
-                        <input className="otp otp4" name="otp4" maxLength="1" value={this.state.value4} onChange={this.onChange4} onKeyUp={jumbTo5} />
-                        <input className="otp otp5" name="otp5" maxLength="1" value={this.state.value5} onChange={this.onChange5} onKeyUp={jumbTo6} />
+                        <input className="otp otp1" name="otp1" maxLength="1" value={this.state.value1} onChange={this.onChange1} />
+                        <input className="otp otp2" name="otp2" maxLength="1" value={this.state.value2} onChange={this.onChange2} />
+                        <input className="otp otp3" name="otp3" maxLength="1" value={this.state.value3} onChange={this.onChange3} />
+                        <input className="otp otp4" name="otp4" maxLength="1" value={this.state.value4} onChange={this.onChange4} />
+                        <input className="otp otp5" name="otp5" maxLength="1" value={this.state.value5} onChange={this.onChange5} />
                         <input className="otp otp6" name="otp6" maxLength="1" value={this.state.value6} onChange={this.onChange6} />
                     </div>
                     <button type="submit">
@@ -148,7 +190,7 @@ class VerifyOtpModal extends React.Component {
                     {Identify.__('Invalid otp code !')}
                 </div>
                 <div className="count-down">
-                    {Identify.__('Resend after')}<CountDown time={120} />
+                    {Identify.__('Resend after')}<CountDown ref={this.countDownElement} time={120} />
                 </div>
             </Modal>
         )

@@ -30,6 +30,7 @@ const ProfileForm = props => {
     const [phoneChange, setPhone] = useState("")
     const [showModalGet, setModalGet] = useState(false)
     const [showModalVerify, setModalVerify] = useState(false)
+    const [idModalProfilePopup, setIdModalProfilePopup] = useState('')
 
     useEffect(() => {
         if (
@@ -262,7 +263,8 @@ const ProfileForm = props => {
             localStorage.setItem("numberphone_register", phoneChange);
             // Open modal verify otp
             openVModal();
-            setTimeout(() => closeVModal(), 120000);
+            // setTimeout() return an id, we pass it into hook state variable
+            setIdModalProfilePopup(setTimeout(() => closeVModal(), 120000));
         }
     }
 
@@ -272,6 +274,8 @@ const ProfileForm = props => {
 
     const closeVModal = () => {
         setModalVerify(false)
+        // clear timeout
+        clearTimeout(idModalProfilePopup)
     }
 
     const handleVerifyChangePhone = () => {

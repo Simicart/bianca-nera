@@ -163,10 +163,10 @@ class Header extends React.Component {
 		const { pathname } = this.props.location
 		if (!pathname)
 			return
-		ga('send', {
+		/* ga('send', {
 			hitType: 'pageview',
 			page: pathname
-		});
+		}); */
 		if (
 			this.props.location && this.props.storeConfig
 			&& this.props.storeConfig && this.props.storeConfig.simiStoreConfig

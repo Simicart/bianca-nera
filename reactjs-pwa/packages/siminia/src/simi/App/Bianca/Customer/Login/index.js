@@ -78,6 +78,8 @@ class Login extends Component {
 	}
 
 	closeVerifyModal = () => {
+		clearTimeout(localStorage.getItem('idPopup'))
+		localStorage.removeItem('idPopup')
 		this.setState({
 			openVerifyModal: false
 		})

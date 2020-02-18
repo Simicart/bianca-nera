@@ -71,7 +71,9 @@ class LoginOTP extends Component {
             localStorage.setItem("numberphone_otp", this.state.phone);
             // Open modal verify otp
             this.props.openVModal();
-            setTimeout(() => this.props.closeVModal(), 120000);
+            // setTimeout() return an id, we pass it into state
+            let idValue = setTimeout(() => this.props.closeVModal(), 120000)
+            localStorage.setItem('idPopup', idValue)
         } else {
             $('#login-opt-area #number_phone-invalid').css({ display: 'block' })
             $('#login-opt-area #verify-phone-area').addClass('hidden');

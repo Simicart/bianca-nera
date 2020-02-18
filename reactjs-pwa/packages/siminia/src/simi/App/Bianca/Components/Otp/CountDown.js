@@ -22,6 +22,10 @@ class CountDown extends React.Component {
         clearInterval(this.timer)
     }
 
+    clearTimeOut = () => {
+        clearInterval(this.timer)
+    }
+
     startTime = () => {
         let time = this.time;
         let h = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));

@@ -32,6 +32,7 @@ const VendorRegister = (props) => {
 	const [phoneRegister, setPhone] = useState("")
 	const [showModalGet, setModalGet] = useState(false)
 	const [showModalVerify, setModalVerify] = useState(false)
+	const [idModalVendorPopup, setIdModalVendorPopup] = useState('')
 	let registeringEmail = null;
 	let registeringPassword = null;
 
@@ -314,7 +315,8 @@ const VendorRegister = (props) => {
 			localStorage.setItem("numberphone_register", phoneRegister);
 			// Open modal verify otp
 			openVModal();
-			setTimeout(() => closeVModal(), 120000);
+			// setTimeout() return an id, we pass it into hook state variable
+            setIdModalVendorPopup(setTimeout(() => closeVModal(), 120000));
 		}
 	}
 
@@ -324,6 +326,8 @@ const VendorRegister = (props) => {
 
 	const closeVModal = () => {
 		setModalVerify(false)
+		// clear timeout
+        clearTimeout(idModalVendorPopup)
 	}
 
 	const handleVerifyRegister = () => {
