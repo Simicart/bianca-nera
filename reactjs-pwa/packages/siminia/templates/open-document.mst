@@ -76,7 +76,10 @@
     var OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
         OneSignal.init({
-        appId: "4a66382f-2d4a-4830-bb22-20eeb6511772",
+        appId: "bcaaa55c-596f-4874-9efe-4cc376b378f7",
+            notifyButton: {
+                enable: true,
+            },
         });
     });
     </script>

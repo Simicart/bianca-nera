@@ -220,7 +220,7 @@ const Footer = (props) => {
 								<div className="footer-subscriber">
 									<h3>{Identify.__('subscribe newsletter')}</h3>
 									<p>{Identify.__(bianca_subcribe_description)}</p>
-									<Subscriber />
+									<Subscriber key={Identify.isRtl()}/>
 								</div>
 							</div>
 						</div>

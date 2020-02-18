@@ -100,7 +100,7 @@ const NavMegaitem = props => {
                             <img
                                 src={
                                     rootItem.image
-                                        ? `${baseUrl}/pub/media/catalog/category/${rootItem.image}`
+                                        ? `/pub/media/catalog/category/${rootItem.image}`
                                         : 'https://www.simicart.com/media/simicart/mockup-ps-simipwa.png'
                                 }
                                 alt={rootItem.image_url}

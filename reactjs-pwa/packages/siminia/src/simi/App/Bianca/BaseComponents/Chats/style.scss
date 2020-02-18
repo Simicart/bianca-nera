@@ -169,6 +169,7 @@ $color1: #101820;
 }
 #chat-widget-container{visibility: hidden;}
 #contact-modal-overlay{
+    background: #e4e4e480!important;
     @media screen and (max-width: 375px){
         padding: 16px;
     }
@@ -177,6 +178,11 @@ $color1: #101820;
         max-width: 604px;
         min-height: 494px;
         padding: 24px 32px 32px 32px;
+        -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.5);
+        -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.5);
+        box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.5);
+        margin-top: auto;
+        margin-bottom: auto;
         @media screen and (max-width: 1023px){
             padding: 15px 20px 32px 20px;
         }

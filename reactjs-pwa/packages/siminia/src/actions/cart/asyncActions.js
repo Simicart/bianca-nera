@@ -1,5 +1,5 @@
 import { RestApi, Util } from '@magento/peregrine';
-
+import CacheHelper from 'src/simi/Helper/CacheHelper';
 import { closeDrawer, toggleDrawer } from 'src/actions/app';
 import checkoutActions from 'src/actions/checkout';
 import actions from './actions';
@@ -72,8 +72,9 @@ export const createCart = () =>
             dispatch(actions.getCart.receive(error));
             //cody logout + reload while getting cart failed (token outdated)
             //if (!cartId) {
-                storage.removeItem('signin_token');
-                clearCartId();
+                // storage.removeItem('signin_token');
+                // clearCartId();
+                CacheHelper.clearCaches();
                 window.location.reload();
             //}
             //end cody changing

@@ -88,17 +88,15 @@ const Subscriber = props => {
                     )
                 }}
             </SimiMutation>
-            <React.Fragment>
-                <div className={classForm}>
-                    <form className={props.formClassName} onSubmit={formAction}>
-                        <label htmlFor="subcriber-email">{Identify.__('Email *')}</label>
-                        <input id="subcriber-email" onKeyUp={checkEmpty}  onChange={validateChange} ref={emailInput} name="email" className={`email ${invalid}`} />
-                        <button type="submit"><i className="icon-arrow-right icons"></i></button>
-                    </form>
-                </div>
-                <div className={`${errorEmail}`}>{Identify.__('Your email address is invalid. Please enter a valid address !')}</div>
-                { waiting && <Loading/> }
-            </React.Fragment>
+            <div className={classForm}>
+                <form className={props.formClassName} onSubmit={formAction}>
+                    <label htmlFor="subcriber-email">{Identify.__('Email *')}</label>
+                    <input id="subcriber-email" onKeyUp={checkEmpty}  onChange={validateChange} ref={emailInput} name="email" className={`email ${invalid}`} />
+                    <button type="submit"><i className="icon-arrow-right icons"></i></button>
+                </form>
+            </div>
+            <div className={`${errorEmail}`}>{Identify.__('Your email address is invalid. Please enter a valid address !')}</div>
+            { waiting && <Loading/> }
         </React.Fragment>
     )
 }
