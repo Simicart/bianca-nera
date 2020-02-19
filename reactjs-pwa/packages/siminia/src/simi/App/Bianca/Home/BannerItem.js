@@ -1,9 +1,12 @@
 import React from 'react'
 import {Colorbtn} from 'src/simi/BaseComponents/Button'
 import {productUrlSuffix, cateUrlSuffix} from 'src/simi/Helper/Url';
+import Identify from 'src/simi/Helper/Identify';
 
 const BannerItem = props => {
     const { history, item, isPhone } = props;
+    const {storeConfig} = Identify.getStoreConfig() || {};
+    const base_url = storeConfig && storeConfig.base_url || window.location.href || '';
 
     const handleOnClickBanner = (e) => {
         if (parseInt(item.type, 10) === 1) {
@@ -16,9 +19,23 @@ const BannerItem = props => {
             if (item.url_path) {
                 history.push(item.url_path + cateUrlSuffix());
             }
-        } else {
-                e.preventDefault();
-                window.open(item.banner_url);
+        } else if(item.banner_url) {
+            e.preventDefault();
+            if (base_url) {
+                const hostName = base_url.replace(/^http(s?):\/\//g, '').replace(/\/.*$/g, '');
+                var regExpr = new RegExp(`^${hostName}`);
+                if (item.banner_url.indexOf(hostName) !== -1) {
+                    history.push(
+                        item.banner_url.replace(/^http(s?):\/\//g, '').replace(regExpr, '')
+                    );
+                    return;
+                }
+            }
+            if(item.banner_url.search(/^http(s?):\/\//) !== 0){
+                history.push(item.banner_url);
+                return;
+            }
+            window.open(item.banner_url);
         }
     }
 
