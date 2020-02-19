@@ -37,7 +37,7 @@ class OtpForm extends Component {
         const updateValue = () => {
             let country_code = $('#phone-form-control').val()
             let new_val = $('#real-input').val()
-            this.props.handleChangePhone(country_code, new_val)
+            this.props.handleChangePhone(country_code, new_val.replace(/^0+/g, ''))
         }
 
         const storeConfig = Identify.getStoreConfig();

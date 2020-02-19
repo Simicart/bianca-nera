@@ -114,7 +114,6 @@ const CreateAccount = props => {
 
         showFogLoading()
         phone = phone.replace(/[- )(]/g, '').replace(/\+/g, "").replace(/\,/g, "");
-        var phoneNB = phone
         let params = {
             mobile: phone
         }
@@ -166,10 +165,10 @@ const CreateAccount = props => {
         if (data && data.result && (data.result == "true")) {
             hideFogLoading();
             setAllowSubmit(true)
-            showToastMessage(Identify.__('Phone number is Valid !'))
+            showToastMessage(Identify.__('Your phone number is verified successfully!'))
         } else {
             hideFogLoading();
-            showToastMessage(Identify.__('Verify OTP fail !'))
+            showToastMessage(Identify.__('OTP verification failed. Please try again.'))
         }
     }
 
@@ -208,6 +207,7 @@ const CreateAccount = props => {
                 openVerifyModal={showModalVerify}
                 closeVerifyModal={closeVModal}
                 callApi={(phonenumber) => handleVerifyRegister(phonenumber)}
+                key={Identify.randomString(3)}
             />
             <Form
                 className={`form-create-account ${classes.root} ${Identify.isRtl() ? classes['rtl-rootForm'] : null}`}

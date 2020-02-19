@@ -1,6 +1,11 @@
 $colorTitle: #101820;
 $colorSubTitle: #727272;
-
+#left-menu{
+    .left-top-menu{
+        overflow-y: auto;
+        padding-bottom: 140px;
+    }
+}
 .left-store-switch .storeview-switcher .storeview .menu-title{
     text-transform: uppercase;
     color: $colorTitle;

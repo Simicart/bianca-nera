@@ -24,7 +24,7 @@ class VerifyForm extends Component {
         const updateValue = () => {
             let country_code = $('#verify-opt-area #phone-form-control').val()
             let new_val = $('#real-input-register').val()
-            this.props.handleChangePhone(country_code, new_val)
+            this.props.handleChangePhone(country_code, new_val.replace(/^0+/g, ''))
         }
 
         const storeConfig = Identify.getStoreConfig();

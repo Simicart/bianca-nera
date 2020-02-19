@@ -10,7 +10,6 @@ class VerifyOtpModal extends React.Component {
     constructor(props) {
         super(props)
         this.countDownElement = React.createRef();
-        console.log('constructor')
         this.state = {
             value1: '',
             value2: '',
@@ -19,80 +18,46 @@ class VerifyOtpModal extends React.Component {
             value5: '',
             value6: ''
         };
+        this.nextInput = 1;
     }
 
-    jumbTo2 = () => {
-        $('#form-verify-otp .otp2').focus();
-    }
-    jumbTo3 = () => {
-        $('#form-verify-otp .otp3').focus();
-    }
-    jumbTo4 = () => {
-        $('#form-verify-otp .otp4').focus();
-    }
-    jumbTo5 = () => {
-        $('#form-verify-otp .otp5').focus();
-    }
-    jumbTo6 = () => {
-        $('#form-verify-otp .otp6').focus();
-    }
-    onChange1 = (e) => {
-        console.log(e.target.value)
-        const re = /^[0-9\b]+$/;
-        if (re.test(e.target.value)) {
-            this.setState({ value1: e.target.value })
-            this.jumbTo2()
-        } else {
-            this.setState({ value1: '' })
-        }
-    }
-    onChange2 = (e) => {
-        const re = /^[0-9\b]+$/;
-        if (re.test(e.target.value)) {
-            this.setState({ value2: e.target.value })
-            this.jumbTo3()
-        } else {
-            this.setState({ value2: '' })
-        }
-
-
-    }
-    onChange3 = (e) => {
-        const re = /^[0-9\b]+$/;
-        if (re.test(e.target.value)) {
-            this.setState({ value3: e.target.value })
-            this.jumbTo4()
-        } else {
-            this.setState({ value3: '' })
-        }
-    }
-    onChange4 = (e) => {
-        const re = /^[0-9\b]+$/;
-        if (re.test(e.target.value)) {
-            this.setState({ value4: e.target.value })
-            this.jumbTo5()
-        } else {
-            this.setState({ value4: '' })
-        }
-    }
-    onChange5 = (e) => {
-        const re = /^[0-9\b]+$/;
-        if (re.test(e.target.value)) {
-            this.setState({ value5: e.target.value })
-            this.jumbTo6()
-        } else {
-            this.setState({ value5: '' })
-        }
-    }
-    onChange6 = (e) => {
-        const re = /^[0-9\b]+$/;
-        if (re.test(e.target.value)) {
-            this.setState({ value6: e.target.value })
-        } else {
-            this.setState({ value6: e.target.value })
-        }
+    jumbTo = (num) => {
+        $(`#form-verify-otp .otp${num}`) && $(`#form-verify-otp .otp${num}`).focus();
     }
 
+    onChange = (e) => {
+        const maxInputs = 6;
+        const re = /^[0-9\b]+$/;
+        let value = {}
+        let i = e.target.attributes['data-index'] && parseInt(e.target.attributes['data-index'].value) || 0;
+        if (i < maxInputs) this.nextInput = i;
+        // delete by backspace
+        if (e.target.value === '') {
+            value[`value${i}`] = '';
+            if (i > 1) {
+                this.jumbTo(i-1);
+            }
+            if (this.nextInput > maxInputs) this.nextInput = i;
+            this.setState(value);
+            return;
+        }
+        // stopped at the highest level index input
+        if (this.nextInput > maxInputs) {
+            return;
+        }
+        if (re.test(event.data)) {
+            value[`value${i}`] = event.data;
+            this.nextInput += 1;
+            if (i < maxInputs) {
+                this.jumbTo(i+1);
+            }
+        }
+        //  else {
+        //     value[`value${i}`] = '';
+        // }
+        this.setState(value);
+    }
+    
     componentDidMount() {
         $('#form-verify-otp .otp1').focus();
         if (Identify.isRtl()) {
@@ -102,7 +67,6 @@ class VerifyOtpModal extends React.Component {
 
     resetForm = () => {
         // reset form
-        console.log('reset form')
         this.setState = ({
             value1: '',
             value2: '',
@@ -175,12 +139,12 @@ class VerifyOtpModal extends React.Component {
                 </div>
                 <form onSubmit={verifyOtp} method="post" id="form-verify-otp" className="form-verify-otp">
                     <div className="otp-form">
-                        <input className="otp otp1" name="otp1" maxLength="1" value={this.state.value1} onChange={this.onChange1} />
-                        <input className="otp otp2" name="otp2" maxLength="1" value={this.state.value2} onChange={this.onChange2} />
-                        <input className="otp otp3" name="otp3" maxLength="1" value={this.state.value3} onChange={this.onChange3} />
-                        <input className="otp otp4" name="otp4" maxLength="1" value={this.state.value4} onChange={this.onChange4} />
-                        <input className="otp otp5" name="otp5" maxLength="1" value={this.state.value5} onChange={this.onChange5} />
-                        <input className="otp otp6" name="otp6" maxLength="1" value={this.state.value6} onChange={this.onChange6} />
+                        <input className="otp otp1" name="otp1" data-index={1} maxLength="2" value={this.state.value1} onChange={this.onChange} />
+                        <input className="otp otp2" name="otp2" data-index={2} maxLength="2" value={this.state.value2} onChange={this.onChange} />
+                        <input className="otp otp3" name="otp3" data-index={3} maxLength="2" value={this.state.value3} onChange={this.onChange} />
+                        <input className="otp otp4" name="otp4" data-index={4} maxLength="2" value={this.state.value4} onChange={this.onChange} />
+                        <input className="otp otp5" name="otp5" data-index={5} maxLength="2" value={this.state.value5} onChange={this.onChange} />
+                        <input className="otp otp6" name="otp6" data-index={6} maxLength="2" value={this.state.value6} onChange={this.onChange} />
                     </div>
                     <button type="submit">
                         {Identify.__('verify').toUpperCase()}

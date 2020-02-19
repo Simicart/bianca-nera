@@ -262,7 +262,7 @@ class LeftMenuContent extends React.Component{
         const {classes, isSignedIn} = this.props
         return (
             <div className={classes["list-menu-header"]} style={{maxHeight:window.innerHeight}}>
-                <div>
+                <div className="left-top-menu">
                     {this.renderSections()}
                     {this.renderItemDownloadApp()}
                 </div>
