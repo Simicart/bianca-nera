@@ -342,10 +342,10 @@ const VendorRegister = (props) => {
 		if (data && data.result && (data.result == "true")) {
 			hideFogLoading();
 			setAllowSubmit(true)
-			showToastMessage(Identify.__('Phone number is Valid !'))
+			showToastMessage(Identify.__('Your phone number is verified successfully!'))
 		} else {
 			hideFogLoading();
-			showToastMessage(Identify.__('Verify OTP fail !'))
+			showToastMessage(Identify.__('OTP verification failed. Please try again.'))
 		}
 	}
 
