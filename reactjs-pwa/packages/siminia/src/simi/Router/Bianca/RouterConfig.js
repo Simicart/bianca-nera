@@ -199,15 +199,15 @@ const router = {
         path: '/mygiftvouchers.html',
         render : (location) => <Account {...location} page={`giftvoucher`}/>
     },
-    contact: {
+    /* contact: {
         path: '/contact.html',
         render : location => <Contact {...location} page={`contact`}/>
-    },
+    }, */
     clothing_alterations: {
         path: '/clothing-alterations.html',
         render : location => <Clothing {...location} page={`clothing`}/>
     },
-    contact: {
+    paypal_express: {
         path: '/paypal_express.html',
         render : location => <PaypalExpress {...location} page={`contact`}/>
     },

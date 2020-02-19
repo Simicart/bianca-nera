@@ -3,7 +3,7 @@ import Product from 'src/simi/App/Bianca/RootComponents/Product'
 import Category from 'src/simi/App/Bianca/Components/Category'
 import Simicms from 'src/simi/App/Bianca/Components/Simicms'
 import resolveUrl from 'src/simi/queries/urlResolver.graphql'
-import CMS from 'src/simi/App/core/RootComponents/CMS'
+import CMS from 'src/simi/App/Bianca/RootComponents/CMS'
 import { simiUseQuery } from 'src/simi/Network/Query';
 import Loading from 'src/simi/BaseComponents/Loading'
 import Identify from 'src/simi/Helper/Identify'
@@ -48,7 +48,7 @@ const NoMatch = props => {
     } else if (location && location.pathname) {
         parseFromDoc = false
         const pathname = location.pathname
-
+console.log('urlResolverurlResolver')
         //load from dict
         const dataFromDict = getDataFromUrl(pathname)
         if (dataFromDict && dataFromDict.id) {
