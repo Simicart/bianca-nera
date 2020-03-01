@@ -11,7 +11,9 @@ import {initializeUI,subscribeUser} from "src/simi/Helper/SimiServiceworker";
 import './index.css';
 
 const { BrowserPersistence } = Util;
-const apiBase = new URL('/graphql', location.origin).toString();
+//simi use direct magento url to call graphql if defined on config:
+//const apiBase = new URL('/graphql', location.origin).toString();
+const apiBase = new URL('', (window.SMCONFIGS && window.SMCONFIGS.directly_request && window.SMCONFIGS.merchant_url) ? (window.SMCONFIGS.merchant_url + 'graphql') : location.origin).toString();
 
 /**
  * The Venia adapter provides basic context objects: a router, a store, a

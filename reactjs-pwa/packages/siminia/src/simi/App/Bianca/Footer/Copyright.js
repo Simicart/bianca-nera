@@ -1,10 +1,9 @@
 import React from 'react';
 import Identify from "src/simi/Helper/Identify";
-import {Link} from 'react-router-dom';
 
 const Copyright = props => {
     const {isPhone, classes} = props;
-    let copyright = `${new Date().getFullYear()} ${Identify.__('Simicart')}`;
+    let copyright = `${new Date().getFullYear()} ${Identify.__('SimiCart')}`;
     return (
         <div className={classes["app-copyright"]}>
             <div className="container">
@@ -19,9 +18,9 @@ const Copyright = props => {
                             style={{ fontSize: "13px" }}
                         >
                             {Identify.__("eCommerce by ")}
-                            <Link to="/" style={{ color: "#FC565A" }}>
-                                {Identify.__("Simicart")}
-                            </Link>
+                            <a href="https://www.simicart.com/" style={{ color: "#FC565A" }}>
+                                {Identify.__("SimiCart")}
+                            </a>
                         </div>
                 </div>
             </div>

@@ -230,6 +230,14 @@ module.exports = async function(env) {
             };
         }
         config.devServer = await PWADevServer.configure(devServerConfig);
+        let allowedHosts = [];
+        if (process.env.ALLOWED_HOSTS) {
+            allowedHosts = process.env.ALLOWED_HOSTS.split(',');
+        }
+        config.devServer = {...config.devServer,
+            disableHostCheck: process.env.DISABLE_HOST_CHECK === 1 || false,
+            allowedHosts: allowedHosts
+        }
 
         // A DevServer generates its own unique output path at startup. It needs
         // to assign the main outputPath to this value as well.

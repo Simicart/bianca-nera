@@ -50,6 +50,7 @@ class Main extends Component {
         )
     }
     render() {
+        const {store_id, currency} = Identify.getAppSettings() || {};
         return (
             <main className={classes.root}>
                 <div className="app-loading" style={{display:'none'}} id="app-loading">
@@ -57,7 +58,7 @@ class Main extends Component {
                 </div>
                 { Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, Constants.STORE_CONFIG) ?
                     this.mainContent(Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, Constants.STORE_CONFIG)) :
-                    <Simiquery query={simiStoreConfigDataQuery}>
+                    <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency}}>
                         {({ data }) => {
                             if (data && data.storeConfig) {
                                 Identify.saveStoreConfig(data)

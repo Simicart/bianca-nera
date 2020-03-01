@@ -481,10 +481,9 @@ $textColor3: #e4e4e4;
         display: flex;
         display: none;
         justify-content: space-between;
-        -webkit-box-shadow: 0px 20px 20px -12px #00000030;
-        -moz-box-shadow: 0px 20px 20px -12px #00000030;
-        box-shadow: 0px 20px 20px -12px #00000030;
-
+        -webkit-box-shadow: 0px 10px 10px 5px #00000030;
+        -moz-box-shadow: 0px 10px 10px 5px #00000030;
+        box-shadow: 0px 10px 10px 5px #00000030;
         .mega-content {
           max-width: 769px;
           width: 100%;

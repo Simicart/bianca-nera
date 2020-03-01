@@ -40,6 +40,20 @@ const defaultConfigFields = [
     'taxvat_show',
 ];
 
+const defaultConfigValues = {
+    'company_show' : 'req',
+    'street_show' : 'req',
+    'country_id_show': 'req',
+    'region_id_show': 'req',
+    'city_show': 'req',
+    'zipcode_show': 'opt',
+    'telephone_show': 'opt',
+    'fax_show': '',
+    'prefix_show': '',
+    'suffix_show': '',
+    'taxvat_show': '',
+}
+
 const DEFAULT_FORM_VALUES = {
     addresses_same: true
 };
@@ -86,7 +100,7 @@ const AddressForm = props => {
     const simiGetStoreConfig = Identify.getStoreConfig();
     const simiStoreViewCustomer = simiGetStoreConfig.simiStoreConfig.config.customer;
 
-    let configFields = null;
+    let configFields = defaultConfigValues;
     if (simiStoreViewCustomer && simiStoreViewCustomer.hasOwnProperty('address_fields_config')) {
         const { address_fields_config } = simiStoreViewCustomer;
         configFields = useMemo(

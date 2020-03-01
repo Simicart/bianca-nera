@@ -33,24 +33,6 @@
 
     <link rel="preconnect" href="{{env.MAGENTO_BACKEND_URL}}">
 
-    <script type="text/javascript">
-        window.addEventListener('error', function(e) {
-            if (
-                e && e.target &&
-                (
-                    (e.target.src && (typeof e.target.src === 'string') && e.target.src.indexOf('vendor~client') !== -1) ||
-                    (e.message && e.message=='Script error.')
-                )
-             ) {
-                console.log(e)
-                //version is outdated - old client file not found
-                sessionStorage.clear();
-                localStorage.setItem("CLIENT_VER", null);
-                window.location.reload();
-            }
-        }, true);
-    </script>
-
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -77,3 +59,45 @@
     {{#bundles.prefetch}}
     <link rel="prefetch script" href="/{{.}}">
     {{/bundles.prefetch}}
+    <script type="text/javascript">
+        window.addEventListener('error', function (e) {
+            if (
+                e && e.target &&
+                (
+                    (e.target.src && (typeof e.target.src === 'string') && e.target.src.indexOf('vendor~client') !== -1) ||
+                    (e.message && e.message == 'Script error.')
+                )
+            ) {
+                console.log('Version is outdated - old client file not found')
+                try {
+                    caches.keys().then(function (cacheNames) {
+                        return Promise.all(
+                            cacheNames.filter(function (cacheName) {
+                                // Return true if you want to remove this cache,
+                                // but remember that caches are shared across
+                                // the whole origin
+                            }).map(function (cacheName) {
+                                return caches.delete(cacheName);
+                            })
+                        );
+                    })
+
+                    navigator.serviceWorker.getRegistrations().then(
+                        function (registrations) {
+                            for (let registration of registrations) {
+                                registration.unregister();
+                            }
+                        });
+                } catch (err) {
+                    console.log(err)
+                }
+                try {
+                    sessionStorage.clear();
+                    localStorage.setItem("CLIENT_VER", null);
+                    window.location.reload();
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        }, true);
+    </script>
