@@ -8,23 +8,32 @@ import {configColor} from 'src/simi/Config';
 import MenuItem from "src/simi/App/Bianca/BaseComponents/MenuItem";
 import {showFogLoading} from 'src/simi/BaseComponents/Loading/GlobalLoading'
 
+import {saveCategoriesToDict} from 'src/simi/Helper/Url';
+import simiStoreConfigDataQuery from 'src/simi/queries/getStoreConfigData.graphql';
+import { Simiquery } from 'src/simi/Network/Query';
+
 import { Util } from '@magento/peregrine';
 const { BrowserPersistence } = Util;
 const storage = new BrowserPersistence();
 
 class Currency extends StoreView {
 
+    state = {
+        changingCurrency: false,
+        merchantConfigs: {}
+    }
+
     constructor(props){
         super(props);
         this.checkCurrency = false;
     }
     
-    chosedCurrency(currency) {
+    selectCurrency(currency) {
         showFogLoading()
-        let appSettings = Identify.getAppSettings()
+        const merchantConfigsBefore = Identify.getStoreConfig();
+        let appSettings = Identify.getAppSettings() || {};
         const cartId = storage.getItem('cartId')
         const signin_token = storage.getItem('signin_token')
-        appSettings = appSettings?appSettings:{}
         const currentStoreId = parseInt(appSettings.store_id, 10);
         CacheHelper.clearCaches()
         appSettings.currency = currency;
@@ -35,7 +44,8 @@ class Currency extends StoreView {
         if (signin_token)
             storage.setItem('signin_token', signin_token)
         Identify.storeAppSettings(appSettings);
-        window.location.reload()
+        // window.location.reload()
+        this.setState({changingCurrency: true, merchantConfigs: merchantConfigsBefore})
     }
 
     getSelectedCurrency() {
@@ -43,15 +53,34 @@ class Currency extends StoreView {
             const merchantConfigs = Identify.getStoreConfig();
             if (merchantConfigs && merchantConfigs.simiStoreConfig)
                 this.selectedCurrency = merchantConfigs.simiStoreConfig.currency
+            if (!this.selectedCurrency) {
+                const {currency} = Identify.getAppSettings() || {};
+                this.selectedCurrency = currency;
+            }
         }
         return this.selectedCurrency
     }
 
     renderItem() {
-        const {classes} = this.props
+        const {store_id, currency} = Identify.getAppSettings() || {};
+        if (this.state.changingCurrency) {
+            return (
+                <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency}}>
+                    {({ data }) => {
+                        if (data && data.storeConfig) {
+                            Identify.saveStoreConfig(data)
+                            saveCategoriesToDict(data.simiRootCate)
+                            window.location.reload()
+                        }
+                        return null
+                    }}
+                </Simiquery>
+            )
+        }
         try {
             if (typeof(storage) !== "undefined") {
                 const merchantConfigs = Identify.getStoreConfig();
+                if (!merchantConfigs) merchantConfigs = this.state.merchantConfigs;
                 const currencies = merchantConfigs.simiStoreConfig.config.base.currencies;
                 
                 if(currencies.length > 1) {
@@ -77,9 +106,9 @@ class Currency extends StoreView {
 
     renderSubItem(){
         if(!this.checkCurrency) return;
-        const {classes} = this.props
         let storesRender = [];
-        const merchantConfigs = Identify.getStoreConfig();
+        let merchantConfigs = Identify.getStoreConfig();
+        if (!merchantConfigs) merchantConfigs = this.state.merchantConfigs;
         const currencyList = merchantConfigs.simiStoreConfig.config.base.currencies || null
 
         
@@ -91,9 +120,6 @@ class Currency extends StoreView {
                     <span className={`not-selected`} style={{width: 18, height: 18}}></span>;
                 const currencyItem = (
                     <span className={`currency-item`} style={{display: 'flex'}}>
-                        {/* <div className={`${classes["selected"]} selected`}>
-                            {icon}
-                        </div> */}
                         <div className={`currency-name`}>
                             {currency.title}
                         </div>
@@ -107,7 +133,7 @@ class Currency extends StoreView {
                         role="presentation"
                         key={Identify.randomString(5)}
                         style={{marginLeft: 5,marginRight:5}}
-                        onClick={() => this.chosedCurrency(currency.value)}>
+                        onClick={() => this.selectCurrency(currency.value)}>
                             <MenuItem title={currencyItem} className={this.props.className}/>
                     </div>
                 );
