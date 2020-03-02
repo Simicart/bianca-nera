@@ -1,6 +1,6 @@
 var SMCONFIGS = {
     //magento url, end with slash
-    merchant_url: 'http://magento.localhost.com/magento/',
+    merchant_url: 'https://bianca-nera.com/magento/',
     //for pwastudio, call api directly to merchant instead of calling via upward
     directly_request: true,
     simicart_url: "https://www.simicart.com/appdashboard/rest/app_configs/",
