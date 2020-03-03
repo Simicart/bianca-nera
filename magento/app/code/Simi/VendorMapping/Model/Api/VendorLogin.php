@@ -133,11 +133,17 @@ class VendorLogin extends LoginPost implements VendorLoginInterface
                     $helper = $this->_objectManager->get('Vnecoms\Vendors\Helper\Data');
                     $redirectUrl = $helper->getHomePageUrl();
                     // URL is checked to be internal in $this->_redirect->success()
+
+                    // get customer_access_token
+                    $customerToken = $simiObjectManager->get(\Magento\Integration\Model\Oauth\TokenFactory::class);
+                    $tokenKey = $customerToken->create()->createCustomerToken($customer->getId())->getToken();
+
                     return [
                         [
                             'status' => 'success',
                             'is_login' => '1',
-                            'sessionId' => $this->session->getSessionId(),
+                            'customer_identity' => $this->session->getSessionId(),
+                            'customer_access_token' => $tokenKey,
                             // 'vendor_url' => $redirectUrl,
                             'redirect_url' => $redirectUrl . '?simiSessId=' . $this->session->getSessionId(),
                             // 'redirect_path' => 'vendors/simivendor/vendors',

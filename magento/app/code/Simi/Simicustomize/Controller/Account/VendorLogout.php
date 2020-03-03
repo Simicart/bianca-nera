@@ -96,7 +96,7 @@ class VendorLogout extends AbstractAccount implements HttpGetActionInterface, Ht
         // Redirect to pwa site
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $linkRedirect = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/url_logout/url');
-        header("Location: {$linkRedirect}");
+        header("Location: {$linkRedirect}logout.html");
         exit;
     }
 }

@@ -13,6 +13,7 @@
     <preference for="Magento\Customer\Controller\Account\CreatePassword" type="Simi\Simicustomize\Controller\Account\CreatePassword" />
     <preference for="Vnecoms\Vendors\Block\Vendors\Page\Toplinks\Users" type="Simi\Simicustomize\Block\Vendors\Page\Toplinks\Users" />
     <preference for="Magento\Customer\Controller\Account\Logout" type="Simi\Simicustomize\Controller\Account\VendorLogout" />
+    <preference for="Magento\Customer\Controller\Account\Index" type="Simi\Simicustomize\Controller\Account\Index" />
     <preference for="Magento\Catalog\Model\Category\Attribute\Source\Sortby" type="Simi\Simicustomize\Model\Category\Attribute\Source\Sortby"/>
     <type name="Magento\Quote\Model\Quote\Item\Repository">
         <plugin name="simi_cart_plugin_quote_item_repository" type="Simi\Simicustomize\Plugin\QuoteItemRepository" />
