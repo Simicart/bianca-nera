@@ -6,10 +6,7 @@ const storage = new BrowserPersistence();
 
 export const addToCart = (callBack, params) => {
     let getParams = storage.getItem('cartId');
-    if (window.SMCONFIGS && window.SMCONFIGS.directly_request && window.SMCONFIGS.merchant_url)
-        getParams = {}
-    else
-        getParams = getParams ? {quote_id: getParams} : {};
+    getParams = getParams ? {quote_id: getParams} : {};
     sendRequest('rest/V1/simiconnector/quoteitems', callBack, 'POST', getParams, params)
 }
 
@@ -29,9 +26,6 @@ export const removeItemFromCart = (callBack, itemId, isSignedIn) => {
 export const updateCoupon = (callBack, params) => {
     let getParams = storage.getItem('cartId');
     getParams = getParams ? {quote_id: getParams} : {};
-    if (window.SMCONFIGS && window.SMCONFIGS.directly_request && window.SMCONFIGS.merchant_url){
-        getParams = {}
-    }
     sendRequest('/rest/V1/simiconnector/quoteitems', callBack, 'PUT', getParams, params)
 }
 
@@ -68,20 +62,11 @@ export const updateSubProductSpecialItem = (callBack, cartItemId, subProductSku,
     getParams = getParams ? {quote_id: getParams} : {};
     getParams.subproductsku = subProductSku
     getParams.newquantity = quantity
-    if (window.SMCONFIGS && window.SMCONFIGS.directly_request && window.SMCONFIGS.merchant_url){
-        getParams = {subproductsku: subProductSku, newquantity: quantity}
-    }
     sendRequest('/rest/V1/simiconnector/quoteitems/' + cartItemId, callBack, 'PUT', getParams)
 }
 
 export const removeAllItems = (callBack, params) => {
     let getParams = storage.getItem('cartId');
     getParams = getParams ? {quote_id: getParams} : {};
-    if (window.SMCONFIGS && window.SMCONFIGS.directly_request && window.SMCONFIGS.merchant_url){
-        getParams = {}
-    }
-    else {
-        getParams = getParams ? {quote_id: getParams} : {};
-    }
     sendRequest('/rest/V1/simiconnector/quoteitems', callBack, 'PUT', getParams, params)
 }
