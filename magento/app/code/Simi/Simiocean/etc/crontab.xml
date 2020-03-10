@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="simiocean_product">
+        <job name="simi_simiocean_product_sync" instance="Simi\Simiocean\Cron\Productsync" method="execute">
+            <config_path>simiocean/cron/product_pull</config_path>
+        </job>
+    </group>
+    <group id="simiocean_customer">
+        <job name="simi_simiocean_customer_pull" instance="Simi\Simiocean\Cron\Customerpull" method="execute">
+            <config_path>simiocean/cron/customer_pull</config_path>
+        </job>
+    </group>
+</config>

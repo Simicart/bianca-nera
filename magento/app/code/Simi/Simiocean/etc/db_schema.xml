@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="simiocean_product" comment="Simiocean sync product mapping">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Primary Id"/>
+        <column xsi:type="varchar" name="sku" nullable="true" length="32" comment="SKU"/>
+        <column xsi:type="varchar" name="barcode" nullable="true" length="32" comment="BarCode"/>
+        <column xsi:type="varchar" name="product_name" nullable="true" length="256" comment="Product name"/>
+        <column xsi:type="varchar" name="color_id" nullable="true" length="10" comment="ColorID"/>
+        <column xsi:type="varchar" name="color_name" nullable="true" length="32" comment="Transform ColorOnlineName | ColorEnName | ColorArName"/>
+        <column xsi:type="varchar" name="size" nullable="true" length="32" comment="Size get from SizeName"/>
+        <column xsi:type="varchar" name="price" nullable="true" length="32" comment="Price"/>
+        <column xsi:type="int"     name="qty" unsigned="true" padding="10" nullable="true" comment="Quantity"/>
+        <column xsi:type="int" name="product_id" unsigned="true" padding="10" nullable="true" comment="Magento Product ID"/>
+        <column xsi:type="int" name="parent_id" unsigned="true" padding="10" nullable="true" comment="Magento parent Product ID"/>
+        <column xsi:type="datetime" name="sync_time" nullable="true" comment="Sync completed time"/>
+        <column xsi:type="datetime" name="created_at" nullable="true" comment="Created at"/>
+        <constraint xsi:type="unique" referenceId="SIMIOCEAN_PRODUCT_SKU_BARCODE">
+            <column name="sku"/>
+            <column name="barcode"/>
+        </constraint>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+    <table name="simiocean_customer" comment="Simiocean sync customer mapping">
+        <column xsi:type="int"      name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Primary Id"/>
+        <column xsi:type="varchar"  name="customer_id" nullable="true" length="32" comment="CustomerID"/>
+        <column xsi:type="varchar"  name="first_name" nullable="true" length="32" comment="FirstName"/>
+        <column xsi:type="varchar"  name="last_name" nullable="true" length="256" comment="LastName"/>
+        <column xsi:type="varchar"  name="home_phone" nullable="true" length="256" comment="HomePhone"/>
+        <column xsi:type="varchar"  name="mobile_phone" nullable="true" length="256" comment="MobilePhone"/>
+        <column xsi:type="varchar"  name="birth_date" nullable="true" length="64" comment="BirthDate"/>
+        <column xsi:type="varchar"  name="email" nullable="true" length="256" comment="Email"/>
+        <column xsi:type="float"    name="points" unsigned="true" nullable="true" comment="Points"/>
+        <column xsi:type="varchar"  name="customer_size" nullable="true" length="256" comment="CustomerSize"/>
+        <column xsi:type="int"      name="m_customer_id" unsigned="true" padding="10" nullable="true" comment="Magento Customer ID"/>
+        <column xsi:type="datetime" name="sync_time" nullable="true" comment="Sync completed time"/>
+        <column xsi:type="datetime" name="created_at" nullable="true" comment="Created at"/>
+        <constraint xsi:type="unique" referenceId="SIMIOCEAN_CUSTOMER_ID">
+            <column name="customer_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="SIMIOCEAN_CUSTOMER_ID_M_CUSTOMER_ID">
+            <column name="customer_id"/>
+            <column name="m_customer_id"/>
+        </constraint>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+    <table name="simiocean_sync_table" comment="Simiocean table sync status">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Primary Id"/>
+        <column xsi:type="varchar" name="type" nullable="true" length="32" comment="Sync type product, customer"/>
+        <column xsi:type="int"     name="page_num" unsigned="true" padding="10" nullable="true" comment="PageNumber"/>
+        <column xsi:type="int"     name="page_size" unsigned="true" padding="10" nullable="true" comment="PageSize synced from defined in service variables"/>
+        <column xsi:type="int"     name="record_number" unsigned="true" padding="10" nullable="true" comment="Number of record for one request get from ocean server"/>
+        <column xsi:type="datetime" name="updated_from" nullable="true" comment="The filter time from updated_at"/>
+        <column xsi:type="datetime" name="updated_to" nullable="true" comment="The filter time to updated_at"/>
+        <column xsi:type="datetime" name="created_at" nullable="true" comment="Created at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>

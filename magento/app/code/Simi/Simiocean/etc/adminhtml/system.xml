@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="simiocean" translate="label" sortOrder="200" showInDefault="1">
+            <class>separator-top</class>
+            <label>Ocean ERP</label>
+            <tab>simi</tab>
+            <resource>Simi_Simi::config_simi</resource>
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1">
+                <label>General</label>
+                <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Disable or enable synchronization with Ocean ERP</comment>
+                </field>
+                <field id="arstore" translate="label" type="select" sortOrder="1" showInDefault="1">
+                    <label>Arabic Store</label>
+                    <source_model>Simi\Simiocean\Model\Config\Source\Store</source_model>
+                    <comment>Select store to map Arabic language from Ocean. If there is no selecting then use Eng language for all stores.</comment>
+                </field>
+                <field id="debug" translate="label" type="select" sortOrder="1" showInDefault="1">
+                    <label>Debug on</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show debug on log file.</comment>
+                </field>
+            </group>
+            <group id="auth" translate="label" type="text" sortOrder="1" showInDefault="1">
+                <label>Auth Info</label>
+                <field id="server_api" translate="label" type="text" sortOrder="1" showInDefault="1">
+                    <label>Server API</label>
+                    <comment>Start with http:// or https://, for example: "http://91.140.251.165:9292/TestOceanAPI/"</comment>
+                </field>
+                <field id="private_key" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Private Key</label>
+                    <comment></comment>
+                </field>
+                <field id="public_key" translate="label" type="text" sortOrder="20" showInDefault="1">
+                    <label>Public Key</label>
+                    <comment></comment>
+                </field>
+            </group>
+            <group id="options" translate="label" type="text" sortOrder="1" showInDefault="1">
+                <label>Sync Options</label>
+                <!-- <field id="skip_product" translate="label" type="select" sortOrder="1" showInDefault="1">
+                    <label>Skip Product when delete from Ocean ERP</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="skip_customer" translate="label" type="select" sortOrder="1" showInDefault="1">
+                    <label>Skip Customer when delete from Ocean ERP</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field> -->
+                <field id="product_number" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of the product syncing each a cron job run</label>
+                    <comment>The default value is 10. Be careful with your number putting to here too hight, it may take your server hight the CPU%.</comment>
+                </field>
+                <field id="customer_number" translate="label" type="text" sortOrder="20" showInDefault="1">
+                    <label>Number of the customer syncing each a cron job run</label>
+                    <comment>The default value is 100. Be careful with your number putting to here too hight, it may take your server hight the CPU%.</comment>
+                </field>
+            </group>
+            <group id="cron" translate="label" type="text" sortOrder="1" showInDefault="1">
+                <label>Cron Options</label>
+                <field id="product_pull" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Product Pull</label>
+                    <comment>The default value is "*/5 * * * *".</comment>
+                </field>
+                <field id="customer_pull" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Customer Pull</label>
+                    <comment>The default value is "*/5 * * * *".</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

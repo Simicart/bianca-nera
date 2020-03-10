@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+         <simiocean>
+            <general>                                               
+                <enabled>1</enabled>
+                <debug>0</debug>
+            </general>
+            <options>                                               
+                <skip_product>1</skip_product>
+                <skip_customer>1</skip_customer>
+                <product_number>10</product_number>
+                <customer_number>100</customer_number>
+            </options>
+            <cron>                                               
+                <product_pull>*/5 * * * *</product_pull>
+                <customer_pull>*/5 * * * *</customer_pull>
+            </cron>
+        </simiocean>
+    </default>
+</config>
