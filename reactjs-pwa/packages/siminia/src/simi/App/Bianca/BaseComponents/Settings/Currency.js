@@ -11,6 +11,7 @@ import {showFogLoading} from 'src/simi/BaseComponents/Loading/GlobalLoading'
 import {saveCategoriesToDict} from 'src/simi/Helper/Url';
 import simiStoreConfigDataQuery from 'src/simi/queries/getStoreConfigData.graphql';
 import { Simiquery } from 'src/simi/Network/Query';
+import  * as Constants from 'src/simi/Config/Constants'
 
 import { Util } from '@magento/peregrine';
 const { BrowserPersistence } = Util;
@@ -30,10 +31,11 @@ class Currency extends StoreView {
     
     selectCurrency(currency) {
         showFogLoading()
-        const merchantConfigsBefore = Identify.getStoreConfig();
-        let appSettings = Identify.getAppSettings() || {};
+        let appSettings = Identify.getAppSettings()
         const cartId = storage.getItem('cartId')
         const signin_token = storage.getItem('signin_token')
+        const simiSessId = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID)
+        appSettings = appSettings?appSettings:{}
         const currentStoreId = parseInt(appSettings.store_id, 10);
         CacheHelper.clearCaches()
         appSettings.currency = currency;
@@ -43,9 +45,9 @@ class Currency extends StoreView {
             storage.setItem('cartId', cartId)
         if (signin_token)
             storage.setItem('signin_token', signin_token)
+        Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID, simiSessId)
         Identify.storeAppSettings(appSettings);
-        // window.location.reload()
-        this.setState({changingCurrency: true, merchantConfigs: merchantConfigsBefore})
+        window.location.reload()
     }
 
     getSelectedCurrency() {
