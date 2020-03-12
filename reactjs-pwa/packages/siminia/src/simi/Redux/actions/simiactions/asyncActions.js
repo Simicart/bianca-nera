@@ -26,7 +26,7 @@ export const changeSampleValue = value => async dispatch => {
 export const simiSignedIn = response => async dispatch => {
     dispatch(userActions.signIn.receive(response));
     dispatch(getUserDetails()).then(() => dispatch(fullFillAddress()));
-    await clearCartId();
+    dispatch(removeCart());
     dispatch(getCartDetails({ forceRefresh: true }));
     // dispatch(fullFillAddress());
 }
