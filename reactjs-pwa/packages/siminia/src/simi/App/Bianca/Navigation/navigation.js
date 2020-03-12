@@ -8,12 +8,13 @@ import * as Constants from 'src/simi/Config/Constants';
 
 const Navigation = props => {
     const { getUserDetails, currentUser, isSignedIn, cartId } = props
-
     if (!cartId) {
-        if (!isSignedIn)
+        if (!isSignedIn) {
             props.createCart() //create cart if empty
-        else
+        }
+        else if (currentUser && currentUser.email) {
             props.getCartDetails() //get cart if empty and logged int
+        }
     }
 
     //if not logged in or out of session, clear the old things
