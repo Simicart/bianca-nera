@@ -15,7 +15,7 @@ class SimiSystemRestModify implements ObserverInterface {
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer) {
-        $this->simiObjectManager->get('\Simi\Simicustomize\Helper\SpecialOrder')->submitQuotFromRestToSession();
+        //$this->simiObjectManager->get('\Simi\Simicustomize\Helper\SpecialOrder')->submitQuotFromRestToSession();
         $obj = $observer->getObject();
         $routeData = $observer->getData('routeData');
         $contentArray = $obj->getContentArray();
