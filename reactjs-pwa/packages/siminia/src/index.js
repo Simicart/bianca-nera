@@ -13,7 +13,9 @@ import './index.css';
 const { BrowserPersistence } = Util;
 //simi use direct magento url to call graphql if defined on config:
 //const apiBase = new URL('/graphql', location.origin).toString();
-const apiBase = new URL('', (window.SMCONFIGS && window.SMCONFIGS.directly_request && window.SMCONFIGS.merchant_url) ? (window.SMCONFIGS.merchant_url + 'graphql') : location.origin).toString();
+const apiBase = (window.SMCONFIGS && window.SMCONFIGS.directly_request && window.SMCONFIGS.merchant_url) ?
+    new URL('', window.SMCONFIGS.merchant_url + 'graphql').toString() :
+    new URL('/graphql', location.origin).toString();
 
 /**
  * The Venia adapter provides basic context objects: a router, a store, a

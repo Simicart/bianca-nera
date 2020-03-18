@@ -202,8 +202,6 @@ resource:
       pattern: 'CMS_PAGE'
       use:
         inline:
-          # See the top-level 'cmsPage' object for details on its resolved data
-          model: cmsPage
           template: './templates/cmspage-shell.mst'
     - matches: urlResolver.type
       pattern: 'CATEGORY'
@@ -340,23 +338,6 @@ categoryResult:
         inline: 1
       currentPage:
         inline: 1
-
-# The cmsPage object is an object containing only the relevant data from the
-# top-level 'cmsPageResult' object.
-cmsPage: cmsPageResult.data.cmsPage
-
-# The cmsPageResult object is a ServiceResolver that returns data from a
-# GraphQL backing service, whose URL is resolved in the top-level 'magentoGQL'
-# object.
-#
-# This object retrieves information about a specific CMS page.
-cmsPageResult:
-  url: magentoGQL
-  query: './src/queries/getCmsPage.graphql'
-  variables:
-    inline:
-      onServer: true
-      id: urlResolver.id
 
 # The urlKey object returns the value of the URL key from the request path
 urlKey:
