@@ -13,6 +13,9 @@ use Simi\Simiocean\Helper\Config;
 
 class Product extends AbstractModel
 {
+    const DIR_WEB_TO_OCEAN = 'website_to_ocean';
+    const DIR_OCEAN_TO_WEB = 'ocean_to_website';
+    
     /** Object Simi\Simiocean\Helper\Config */
     protected $config;
 

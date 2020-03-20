@@ -62,6 +62,7 @@ class UpdateProductAttributes implements DataPatchInterface, PatchVersionInterfa
                 'default' => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::VALUE_NO,
                 'required' => false,
                 'visible'  => false,
+                'filterable' => true,
                 'sort_order' => 100,
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
                 'is_used_in_grid' => true,

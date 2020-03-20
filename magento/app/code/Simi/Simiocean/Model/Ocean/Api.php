@@ -74,15 +74,14 @@ class Api
                     }
                     break;
                 case "PUT":
-                    curl_setopt($this->_ch, CURLOPT_PUT, true);
-                    curl_setopt($this->_ch, CURLOPT_HTTPHEADER, array('X-HTTP-Method-Override: PUT'));
+                    curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "PUT");
                     if ($body) {
                         curl_setopt($this->_ch, CURLOPT_POSTFIELDS, $this->helper->encrypt($body));
                     }
                     break;
                 case "DELETE":
                     curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                    curl_setopt($this->_ch, CURLOPT_POSTFIELDS, $this->helper->encrypt($body));
+                    if ($body) curl_setopt($this->_ch, CURLOPT_POSTFIELDS, $this->helper->encrypt($body));
                     break;
             }
             //Other cURL options.

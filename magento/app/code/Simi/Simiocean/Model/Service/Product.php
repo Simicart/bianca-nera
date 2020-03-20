@@ -33,6 +33,9 @@ class Product extends \Magento\Framework\Model\AbstractModel
     protected $colorMapping;
     protected $sizeMapping;
     protected $brandMapping;
+
+    protected $categoryService;
+
     /**
      * @var Simi\Simiocean\Model\SyncTable
      */
@@ -80,6 +83,11 @@ class Product extends \Magento\Framework\Model\AbstractModel
     protected $productInterfaceFactory;
 
     /**
+     * @var \Magento\Framework\Api\ExtensibleDataObjectConverter
+     */
+    protected $extensibleDataObjectConverter;
+
+    /**
      * @var AttributeSetRepository
      */
     protected $attributeSetRepository;
@@ -122,6 +130,11 @@ class Product extends \Magento\Framework\Model\AbstractModel
     /** @var Simi\Simiocean\Model\Logger */
     protected $logger;
 
+    /** @var \Magento\Store\Model\StoreManagerInterface */
+    protected $storeManager;
+
+    protected $linkManagement;
+
     /**
      * @param Magento\Framework\Model\Context $context
      * @param Magento\Framework\Registry $registry
@@ -134,14 +147,18 @@ class Product extends \Magento\Framework\Model\AbstractModel
      * @param MethodsMap $methodsMapProcessor
      */
     public function __construct(
+        \Magento\Framework\Api\ExtensibleDataObjectConverter $extensibleDataObjectConverter,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Catalog\Api\CategoryLinkManagementInterface $linkManagement,
         \Simi\Simiocean\Helper\Data $helper,
         \Simi\Simiocean\Helper\Config $config,
         \Simi\Simiocean\Model\Ocean\Product $productApi,
         \Simi\Simiocean\Model\Product\ColorMapping $colorMapping,
         \Simi\Simiocean\Model\Product\SizeMapping $sizeMapping,
         \Simi\Simiocean\Model\Product\BrandMapping $brandMapping,
+        \Simi\Simiocean\Model\Service\Category $categoryService, 
         \Simi\Simiocean\Model\SyncTable $syncTable,
         \Simi\Simiocean\Model\SyncTableFactory $syncTableFactory,
         \Simi\Simiocean\Model\Logger $logger,
@@ -185,13 +202,17 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $this->simioceanProductFactory = $simioceanProductFactory;
         $this->simioceanProductResource = $simioceanProductResource;
         $this->logger = $logger;
+        $this->extensibleDataObjectConverter = $extensibleDataObjectConverter;
+        $this->storeManager = $storeManager;
+        $this->linkManagement = $linkManagement;
+        $this->categoryService = $categoryService;
         parent::__construct($context, $registry);
     }
 
     /**
      * Sync pull products in processing
      */
-    public function process(){
+    public function syncPull(){
         // Check what is next page to get
         $page = 1;
         $size = self::LIMIT;
@@ -245,10 +266,12 @@ class Product extends \Magento\Framework\Model\AbstractModel
                             if ($this->config->getArStore() != null 
                                 && isset($oceanProduct['ProductArName']) && $oceanProduct['ProductArName']) 
                             {
-                                $arStoreId = $this->config->getArStore();
-                                $product->setStoreId($arStoreId);
+                                $arStoreIds = explode(',', $this->config->getArStore());
                                 $product->setName($oceanProduct['ProductArName'].'-'.$oceanProduct['ColorArName'].'-'.$oceanProduct['SizeName']);
-                                $product->save();
+                                foreach($arStoreIds as $storeId){
+                                    $product->setStoreId($storeId);
+                                    $product->save();
+                                }
                             }
                         }catch(\Exception $e){}
                         $skuGroup[$oceanProduct['SKU']] = $oceanProduct; // It means only when product created then go to create the configurable product
@@ -264,6 +287,18 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 $configurableProductModel->setUrlKey(str_replace(' ', '-', strtolower($configurableProductModel->getName())).'-'.$sku);
                 $assocProductIds = $this->getProductIds($sku);
                 if($savedProduct = $this->createConfigurableProduct($configurableProductModel, $assocProductIds)){
+                    if (isset($oceanProduct['CategoryId']) && isset($oceanProduct['SubcategoryId'])) {
+                        if ($categoryId = $this->categoryService->getMagentoCategoryId($oceanProduct['SubcategoryId'], $oceanProduct['CategoryId'])) {
+                            try{
+                                $this->linkManagement->assignProductToCategories($savedProduct->getSku(), array($categoryId));
+                            } catch (\Exception $e) {
+                                $this->logger->debug(array(
+                                    'Product sync pull: Assign product to catalog error. Catalog Id: '.$categoryId,
+                                    $e->getMessage()
+                                ));
+                            }
+                        }
+                    }
                     // Save parent product id for simiocean_product synced
                     foreach($assocProductIds as $productId){
                         $simioceanProduct = $this->getSimioceanSynced($productId);
@@ -290,6 +325,139 @@ class Product extends \Magento\Framework\Model\AbstractModel
                     ->save();
                 return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Sync pull product from ocean to website
+     */
+    public function syncUpdatePull(){
+        $page = 1;
+        $size = self::LIMIT;
+        $lastDays = 1; // 1 day ago from now
+
+        if ($this->config->getProductSyncNumber() != null) {
+            $size = (int)$this->config->getProductSyncNumber();
+        }
+        // Get time and page number from last synced
+        $timeFrom = 'now';
+        $timeTo = 'now';
+        $lastSyncTable = $this->syncTable->getLastSyncByTime(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE);
+        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
+            if ($lastSyncTable->getPageSize() && $lastSyncTable->getRecordNumber() >= $lastSyncTable->getPageSize()) {
+                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
+                $timeTo = $lastSyncTable->getUpdatedTo();
+                $timeFrom = $lastSyncTable->getUpdatedFrom();
+            } else {
+                $timeFrom = $lastSyncTable->getUpdatedTo();
+            }
+        }
+
+        // ToDate
+        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
+        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
+        $dateToParam = $dateTo->getTimestamp();
+
+        // FromDate
+        $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
+        if ($timeFrom == 'now') {
+            $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
+        }
+        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
+            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
+        }
+        $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
+        $dateFromParam = $dateFrom->getTimestamp();
+
+        try{
+            $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
+        }catch(\Exception $e){
+            $this->logger->debug(array(
+                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                $e->getMessage()
+            ));
+            return false;
+        }
+
+        if (is_array($oProducts)) {
+            $hasUpdate = false;
+            $records = count($oProducts);
+            foreach($oProducts as $oProduct){
+                if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
+                    && $oProduct['SKU'] && $oProduct['BarCode']
+                ) {
+                    $oceanObject = $this->dataObjectFactory->create();
+                    $oceanObject->setData($oProduct);
+                    $productData = $this->convertProductData($oProduct); // convert data array to product object model
+                    $productData->setSku($oProduct['SKU'].'_'.$oProduct['BarCode']);
+                    $productData->setName($productData->getName().'-'. $oceanObject->getData('ColorEnName') .'-'.$oceanObject->getData('SizeName'));
+                    $productData->setUrlKey(str_replace(' ', '-', strtolower($productData->getName())).'-'.$oceanObject->getData('BarCode'));
+                    
+                    if ($oceanProduct = $this->getOceanProduct($oProduct['SKU'], $oProduct['BarCode'])) {
+                        $syncTime = new \DateTime($oceanProduct->getSyncTime(), new \DateTimeZone('UTC'));
+                        $modifyTime = new \DateTime(gmdate('Y-m-d H:i:s', $oceanObject->getData('SPECModificationDate')), new \DateTimeZone('UTC'));
+                        if ($modifyTime > $syncTime) {
+                            if ($product = $this->updateProduct($productData)) {
+                                try{
+                                    $oceanProduct->setSku($oProduct['SKU']);
+                                    $oceanProduct->setBarcode($oProduct['BarCode']);
+                                    $oceanProduct->setProductName($oceanObject->getData('ProductEnName') ?: $oceanObject->getData('ProductArName'));
+                                    $oceanProduct->setColorId($oceanObject->getData('ColorID'));
+                                    $oceanProduct->setColorName($oceanObject->getData('ColorEnName') ?: $oceanObject->getData('ColorArName'));
+                                    $oceanProduct->setSize($oceanObject->getData('SizeName'));
+                                    $oceanProduct->setPrice($oceanObject->getData('Price'));
+                                    $oceanProduct->setQty($oceanObject->getData('StockQuantity'));
+                                    $oceanProduct->setProductId($product->getId());
+                                    $oceanProduct->setSyncTime(gmdate('Y-m-d H:i:s'));
+                                    $oceanProduct->setDirection(\Simi\Simiocean\Model\Product::DIR_OCEAN_TO_WEB);
+                                    $oceanProduct->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS);
+                                    $oceanProduct->save();
+                                }catch(\Exception $e){
+                                    $this->logger->debug(array(
+                                        'Warning! Save simiocean product failed. SKU: '.$oceanProduct->getSku().', BarCode: '.$oceanProduct->getBarcode(), 
+                                        $e->getMessage()
+                                    ));
+                                }
+                                // save product Arab store
+                                try{
+                                    if ($this->config->getArStore() != null 
+                                        && isset($oProduct['ProductArName']) && $oProduct['ProductArName']) 
+                                    {
+                                        $arStoreIds = explode(',', $this->config->getArStore());
+                                        $product->setName($oProduct['ProductArName'].'-'.$oceanObject->getData('ColorArName').'-'.$oceanObject->getData('SizeName'));
+                                        foreach($arStoreIds as $storeId){
+                                            $product->setStoreId($storeId);
+                                            $product->save();
+                                        }
+                                    }
+                                }catch(\Exception $e){}
+                                $hasUpdate = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $lastSyncTable->setId(null);
+            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE);
+            $lastSyncTable->setPageNum($page);
+            $lastSyncTable->setPageSize($size);
+            $lastSyncTable->setRecordNumber($records);
+            $lastSyncTable->setUpdatedFrom($dateFromGmt);
+            $lastSyncTable->setUpdatedTo($dateToGmt);
+            $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
+            $lastSyncTable->save();
+            return $hasUpdate;
+        } else {
+            if ($lastSyncTable->getId()){
+                $lastSyncTable->setRecordNumber(0);
+                $lastSyncTable->save();
+            }
+            $this->logger->debug(array(
+                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                'Server: '.$oProducts
+            ));
         }
         return false;
     }
@@ -325,6 +493,22 @@ class Product extends \Magento\Framework\Model\AbstractModel
         return null;
     }
 
+    public function getOceanProduct($sku, $barcode){
+        if ($sku && $barcode) {
+            $model = $this->simioceanProductFactory->create();
+            $collection = $model->getCollection();
+            $collection->addFieldToFilter('sku', $sku)
+                ->addFieldToFilter('barcode', $barcode)
+                ->getSelect()
+                ->where('product_id IS NOT NULL')
+                ->limit(1);
+            if ($collection->getSize()) {
+                return $collection->getFirstItem();
+            }
+        }
+        return false;
+    }
+
     /**
      * Convert to magento product data model from ocean raw data array
      * @return ProductInterface
@@ -355,6 +539,11 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $productModel->setCustomAttribute('color', $productModel->getColor());
         $productModel->setCustomAttribute('size', $productModel->getSize());
         $productModel->setCustomAttribute('brand', $productModel->getBrand());
+
+        if (!(int)$productModel->getSpecialPrice()) {
+            $productModel->setSpecialPrice(''); //reset special price
+            $productModel->setCustomAttribute('special_price', '');
+        }
         
         return $productModel;
     }
@@ -369,8 +558,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
             array(
                 'use_config_manage_stock' => 1,
                 'manage_stock' => 1, // manage stock
-                'is_in_stock' => 1, // Stock Availability of product
-                'qty' => $productModel->getQty() // qty of product
+                'is_in_stock' => ((int)$productModel->getQty() > 0) ? 1 : 0, // Stock Availability of product
+                'qty' => (int)$productModel->getQty() // qty of product
             )
         );
         $createdAt = gmdate("Y-m-d H:i:s");
@@ -483,13 +672,87 @@ class Product extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Check product sku exists
-     * @param string $sku
+     * Edit/update product to website
+     * @param \Magento\Catalog\Api\Data\ProductInterface $productModel product model data to update
      * @return \Magento\Catalog\Model\Product|false
      */
-    public function getProductExists($sku){
+    protected function updateProduct($productModel){
+        $storeId = (int)$this->storeManager->getStore()->getId();
+        if ($existingProduct = $this->getProductExists($productModel->getSku(), true, $storeId)) {
+            try{
+                $productModel->setStockData(
+                    array(
+                        'use_config_manage_stock' => 1,
+                        'manage_stock' => 1, // manage stock
+                        'is_in_stock' => ((int)$productModel->getQty() > 0) ? 1 : 0, // Stock Availability of product
+                        'qty' => (int)$productModel->getQty() // qty of product
+                    )
+                );
+                $productModel->setUpdatedAt(gmdate("Y-m-d H:i:s"));
+                $productModel->setTypeId(\Magento\Catalog\Model\Product\Type::TYPE_SIMPLE);
+                $productModel->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE);
+                if (class_exists('\Vnecoms\VendorsProduct\Model\Source\Approval')) {
+                    $productModel->setApproval(\Vnecoms\VendorsProduct\Model\Source\Approval::STATUS_APPROVED);//Vnecoms attribute
+                }
+                //Find default attributeSet id and set attribute_set_id
+                if ($attributeSet = $this->getAttributeSet()) {
+                    $productModel->setAttributeSetId($attributeSet->getId());
+                }
+                $productModel->setIsOcean(1);
+
+                $productModel->setData(
+                    $this->productResourceModel->getLinkField(),
+                    $existingProduct->getData($this->productResourceModel->getLinkField())
+                );
+                if (!$productModel->hasData(\Magento\Catalog\Model\Product::STATUS)) {
+                    $productModel->setStatus($existingProduct->getStatus());
+                }
+
+                /** @var ProductExtension $extensionAttributes */
+                $extensionAttributes = $productModel->getExtensionAttributes();
+                if (empty($extensionAttributes->__toArray())) {
+                    $productModel->setExtensionAttributes($existingProduct->getExtensionAttributes());
+                }
+
+                $productDataArray = $this->extensibleDataObjectConverter
+                    ->toNestedArray($productModel, [], \Magento\Catalog\Api\Data\ProductInterface::class);
+                $productDataArray = array_replace($productDataArray, $productModel->getData());
+
+                // unset($productDataArray['media_gallery']);
+                foreach ($productDataArray as $key => $value) {
+                    $existingProduct->setData($key, $value);
+                }
+                // if (isset($productDataArray['media_gallery'])) {
+                //     $this->processMediaGallery($product, $productDataArray['media_gallery']['images']);
+                // }
+                if (!$existingProduct->getOptionsReadonly()) {
+                    $existingProduct->setCanSaveCustomOptions(true);
+                }
+                $existingProduct->setStoreId(0);
+                $existingProduct->save();
+                $store = $this->storeManager->getWebsite()->getDefaultStore();
+                $existingProduct->setStoreId((int)$store->getId() ?: $storeId);
+                $existingProduct->save();
+                return $existingProduct;
+            } catch(\Exception $e) {
+                $this->logger->debug(array('Save product error: '.$e->getMessage()));
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check product sku exists
+     * @param string $sku
+     * @param boolean $editable
+     * @param int $storeId
+     * @param boolean $forceReload
+     * @return \Magento\Catalog\Model\Product|false
+     */
+    public function getProductExists($sku, $editable = false, $storeId = null, $forceReload = false){
         try {
-            $product = $this->productRepository->get($sku);
+            $product = $this->productRepository->get($sku, $editable, $storeId, $forceReload);
             if ($product->getId()) {
                 return $product;
             }
@@ -540,16 +803,6 @@ class Product extends \Magento\Framework\Model\AbstractModel
             $this->attributeSet = $attributeSet;
         }
         return $this->attributeSet;
-    }
-
-    /**
-     * Edit/update product to magento
-     * @param $id product identify
-     * @param $data product data to update
-     * @return bool
-     */
-    protected function updateProduct($id, $data){
-
     }
 
     /**

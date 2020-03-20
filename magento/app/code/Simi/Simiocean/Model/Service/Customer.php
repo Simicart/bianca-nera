@@ -28,6 +28,7 @@ use Simi\Simiocean\Model\ResourceModel\Customer as OceanCustomerResource;
 
 class Customer extends \Magento\Framework\Model\AbstractModel
 {
+    const CUSTOMER_SAVED = 'simi_ocean_customer_saved'; /** Flag customer saved by Simiocean */
     const LIMIT = 100;
 
     protected $helper;
@@ -37,6 +38,8 @@ class Customer extends \Magento\Framework\Model\AbstractModel
      */
     protected $syncTable;
     protected $syncTableFactory;
+    protected $syncTablePush;
+    protected $syncTablePushFactory;
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface,
@@ -103,6 +106,7 @@ class Customer extends \Magento\Framework\Model\AbstractModel
 
     /** @var Simi\Simiocean\Model\Logger */
     protected $logger;
+    protected $registry;
 
     /**
      * @param \Magento\Framework\Model\Context $context
@@ -122,6 +126,8 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         \Simi\Simiocean\Model\Ocean\Customer $customerApi,
         \Simi\Simiocean\Model\SyncTable $syncTable,
         \Simi\Simiocean\Model\SyncTableFactory $syncTableFactory,
+        \Simi\Simiocean\Model\SyncTablePush $syncTablePush,
+        \Simi\Simiocean\Model\SyncTablePushFactory $syncTablePushFactory,
         \Simi\Simiocean\Model\Logger $logger,
         Encryptor $encryptor,
         CustomerRepositoryInterface $customerRepository,
@@ -151,16 +157,23 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         $this->dataObjectFactory = $dataObjectFactory;
         $this->syncTable = $syncTable;
         $this->syncTableFactory = $syncTableFactory;
+        $this->syncTablePush = $syncTablePush;
+        $this->syncTablePushFactory = $syncTablePushFactory;
         $this->oceanCustomerFactory = $oceanCustomerFactory;
         $this->oceanCustomerResource = $oceanCustomerResource;
+        $this->registry = $registry;
         $registry->register('isSecureArea', true);
         parent::__construct($context, $registry);
     }
 
-    /**
-     * Sync pull products in processing
-     */
     public function process(){
+        return true;
+    }
+
+    /**
+     * Sync pull customer in processing
+     */
+    public function syncPull(){
         // Check what is next page to get
         $page = 1;
         $size = self::LIMIT;
@@ -185,20 +198,22 @@ class Customer extends \Magento\Framework\Model\AbstractModel
                 ) {
                     $customerModel = $this->convertCustomerData($oceanCustomer); // convert data array to product object model
                     if($customer = $this->createCustomer($customerModel)){
-                        $oceanCustomerModel = $this->oceanCustomerFactory->create();
-                        $oceanCustomerModel->setCustomerId($oceanCustomer['CustomerID']);
-                        $oceanCustomerModel->setFirstName($oceanCustomer['FirstName']);
-                        $oceanCustomerModel->setLastName($oceanCustomer['LastName']);
-                        $oceanCustomerModel->setHomePhone($oceanCustomer['HomePhone']);
-                        $oceanCustomerModel->setMobilePhone($oceanCustomer['MobilePhone']);
-                        $oceanCustomerModel->setBirthDate($oceanCustomer['BirthDate']);
-                        $oceanCustomerModel->setEmail($oceanCustomer['Email']);
-                        $oceanCustomerModel->setPoints((float)$oceanCustomer['Points']);
-                        $oceanCustomerModel->setCustomerSize($oceanCustomer['CustomerSize']);
-                        $oceanCustomerModel->setMCustomerId($customer->getId());
-                        $oceanCustomerModel->setSyncTime($datetime);
-                        $oceanCustomerModel->setCreatedAt($datetime);
                         try{
+                            $oceanCustomerModel = $this->oceanCustomerFactory->create();
+                            $oceanCustomerModel->setCustomerId($oceanCustomer['CustomerID']);
+                            $oceanCustomerModel->setFirstName(isset($oceanCustomer['FirstName']) ? $oceanCustomer['FirstName'] : null);
+                            $oceanCustomerModel->setLastName(isset($oceanCustomer['LastName']) ? $oceanCustomer['LastName'] : null);
+                            $oceanCustomerModel->setHomePhone(isset($oceanCustomer['HomePhone']) ? $oceanCustomer['HomePhone'] : null);
+                            $oceanCustomerModel->setMobilePhone($oceanCustomer['MobilePhone']);
+                            $oceanCustomerModel->setBirthDate(isset($oceanCustomer['BirthDate']) ? $oceanCustomer['BirthDate'] : null);
+                            $oceanCustomerModel->setEmail(isset($oceanCustomer['Email']) ? $oceanCustomer['Email'] : null);
+                            $oceanCustomerModel->setPoints(isset($oceanCustomer['Points']) ? (float)$oceanCustomer['Points'] : null);
+                            $oceanCustomerModel->setCustomerSize(isset($oceanCustomer['CustomerSize']) ? $oceanCustomer['CustomerSize'] : null);
+                            $oceanCustomerModel->setMCustomerId($customer->getId());
+                            $oceanCustomerModel->setSyncTime($datetime);
+                            $oceanCustomerModel->setCreatedAt($datetime);
+                            $oceanCustomerModel->setDirection('ocean_to_website');
+                            $oceanCustomerModel->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS);
                             $oceanCustomerModel->save();
                         }catch(\Exception $e){
                             $this->logger->debug(array(
@@ -207,18 +222,19 @@ class Customer extends \Magento\Framework\Model\AbstractModel
                             ));
                         }
                         // save customer Arab store
-                        try{
-                            if ($this->config->getArStore() != null) {
-                                $arStoreId = $this->config->getArStore();
-                                if ($arStoreId) {
-                                    $customer->setStoreId($arStoreId);
-                                }
-                                /** @var Magento\Customer\Model\Data\AddressInterface */
-                                $address = $this->convertAddress($customerModel, $oceanCustomer, true);
-                                $customer->setAddresses(array($address));
-                                $customer->save();
-                            }
-                        }catch(\Exception $e){}
+                        // try{
+                        //     if ($this->config->getArStore() != null) {
+                        //         $arStoreIds = explode(',', $this->config->getArStore());
+                        //         /** @var Magento\Customer\Model\Data\AddressInterface */
+                        //         $address = $this->convertAddress($customerModel, $oceanCustomer, true);
+                        //         $customer->setAddresses(array($address));
+                        //         $this->registry->register(self::CUSTOMER_SAVED, true, true);
+                        //         foreach($arStoreIds as $storeId){
+                        //             $customer->setStoreId($storeId);
+                        //             $customer->save();
+                        //         }
+                        //     }
+                        // }catch(\Exception $e){}
                         $isCustomerSync = true;
                     }
                 }
@@ -239,19 +255,367 @@ class Customer extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Get Ocean Customer synced from table simiocean_customer synced by customer_id
-     * For now, the customer_id column is not unique
-     * @param int $customerId of magento customer
-     * @return \Simi\Simiocean\Model\Customer|null
+     * Sync push customer to the ocean system
+     * @return boolean
      */
-    /* public function getOceanCustomerSynced($customerId){
-        $model = $this->oceanCustomerFactory->create();
-        $this->oceanCustomerResource->load($model, $customerId, 'customer_id');
-        if ($model && $model->getId()) {
-            return $model;
+    public function syncPush(){
+        // Check what is next page to get
+        $tryNumberMax = 2; //max try times to push again
+        $page = 1;
+        $size = self::LIMIT;
+        if ($this->config->getCustomerSyncNumber() != null) {
+            $size = (int)$this->config->getCustomerSyncNumber();
         }
-        return null;
-    } */
+        $lastSyncTable = $this->syncTablePush->getLastSync(\Simi\Simiocean\Model\SyncTablePush\Type::TYPE_CUSTOMER);
+        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
+            if ($lastSyncTable->getTryNumber() < $tryNumberMax) {
+                $page = $lastSyncTable->getPageNum(); //increment 1 page
+            } else {
+                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
+            }
+        }
+
+        // Get customers with limited
+        $isCustomerSync = false;
+        $searchCriteria = $this->objectFactory->create(\Magento\Framework\Api\SearchCriteriaInterface::class, []);;
+        $sortOrder = new \Magento\Framework\Api\SortOrder();
+        $sortOrder->setField('entity_id')->setDirection(\Magento\Framework\Api\SortOrder::SORT_ASC);
+        $searchCriteria
+            ->setPageSize($size)
+            ->setCurrentPage($page)
+            ->setSortOrders(array($sortOrder));
+        $searchResult = $this->customerRepository->getList($searchCriteria);
+        $customers = $searchResult->getItems();
+        $datetime = gmdate('Y-m-d H:i:s');
+        $isSyncedFromOcean = false;
+        foreach($customers as $customer){
+            if ($customer->getId() && !$this->isOceanCustomerExists($customer->getId())) {
+                $debug = '';
+                try{
+                    $oceanCustomerModel = $this->oceanCustomerFactory->create();
+                    $oceanData = $this->customerToOcean($customer);
+                    // Save customer info to sync table
+                    try{
+                        $oceanCustomerModel->setFirstName( isset($oceanData['FirstName']) ? $oceanData['FirstName'] : null );
+                        $oceanCustomerModel->setLastName( isset($oceanData['LastName']) ? $oceanData['LastName'] : null );
+                        $oceanCustomerModel->setHomePhone( isset($oceanData['HomePhone']) ? $oceanData['HomePhone'] : null );
+                        $oceanCustomerModel->setMobilePhone( isset($oceanData['MobilePhone']) ? $oceanData['MobilePhone'] : null );
+                        $oceanCustomerModel->setBirthDate( isset($oceanData['BirthDate']) ? $oceanData['BirthDate'] : null );
+                        $oceanCustomerModel->setEmail( isset($oceanData['Email']) ? $oceanData['Email'] : null );
+                        $oceanCustomerModel->setPoints( isset($oceanData['Points']) ? (float)$oceanData['Points'] : null );
+                        $oceanCustomerModel->setCustomerSize( isset($oceanData['CustomerSize']) ? $oceanData['CustomerSize'] : null );
+                        $oceanCustomerModel->setMCustomerId($customer->getId());
+                        $oceanCustomerModel->setSyncTime($datetime);
+                        $oceanCustomerModel->setCreatedAt($datetime);
+                        $oceanCustomerModel->setDirection(\Simi\Simiocean\Model\Customer::DIR_WEB_TO_OCEAN);
+                        $oceanCustomerModel->setStatus(\Simi\Simiocean\Model\SyncStatus::SYNCING);
+                        $oceanCustomerModel->save();
+                    }catch(\Exception $e){
+                        $this->logger->debug(array(
+                            'Warning! Save ocean customer failed. Magento customer id: '.$oceanCustomerModel->getMCustomerId(), 
+                            $e->getMessage()
+                        ));
+                    }
+                    $result = $this->customerApi->addCustomer($oceanData);
+                    $customerID = (int) $result;
+                    $debug = $result;
+                }catch(\Exception $e){
+                    $customerID = false;
+                    $debug = $e->getMessage();
+                    // $oceanCustomerModel->setSyncTime($datetime);
+                    $oceanCustomerModel->setStatus(\Simi\Simiocean\Model\SyncStatus::FAILED);
+                    $oceanCustomerModel->setMessage($debug);
+                    $oceanCustomerModel->save();
+                }
+                // Skipping error message by check strlen((string)$customerID) == strlen((string)$result)
+                if ($customerID && (int)$customerID && strlen((string)$customerID) == strlen((string)$result)) {
+                    try{
+                        // save customerID to sync table
+                        // $oceanCustomerModel->setSyncTime($datetime);
+                        $oceanCustomerModel->setCustomerId((int)$customerID);
+                        $oceanCustomerModel->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS);
+                        $oceanCustomerModel->save();
+                        $isCustomerSync = true;
+                    }catch(\Exception $e){
+                        $isCustomerSync = false;
+                        $this->logger->debug(array(
+                            'Warning! Save ocean customer failed. CustomerID: '.$oceanCustomerModel->getCustomerId(), 
+                            $e->getMessage()
+                        ));
+                    }
+                } else {
+                    // var_dump($oceanData['MobilePhone'].' - '.$customer->getId());
+                    // var_dump($debug);
+                    if (isset($oceanData['MobilePhone']) && $oceanData['MobilePhone'] 
+                        && strpos($debug, 'There is a registerd customer with this mobile number') != false
+                    ) {
+                        $oceanCustomerModel->setStatus(\Simi\Simiocean\Model\SyncStatus::CONFLICT);
+                        $oceanCustomerModel->save();
+                    } else {
+                        $oceanCustomerModel->setStatus(\Simi\Simiocean\Model\SyncStatus::FAILED);
+                        $oceanCustomerModel->setMessage($debug);
+                        $oceanCustomerModel->save();
+                    }
+                }
+            } else {
+                // Exists the m customer id in the sync ocean table
+                $isSyncedFromOcean = true;
+            }
+        }
+        
+        // Check and go to next step
+        if ($isSyncedFromOcean) {
+            $syncTable = $this->syncTablePushFactory->create(); /** @var Simi\Simiocean\Model\SyncTable */
+            $syncTable->setType(\Simi\Simiocean\Model\SyncTablePush\Type::TYPE_CUSTOMER)
+                ->setPageNum($page)
+                ->setPageSize($size)
+                ->setRecordNumber(count($customers))
+                ->setTryNumber($tryNumberMax)
+                ->setCreatedAt($datetime)
+                ->save();
+            return true;
+        } elseif (!$isCustomerSync && ($lastSyncTable->getId() && $lastSyncTable->getTryNumber() < $tryNumberMax)) {
+            $lastSyncTable->setTryNumber((int)$lastSyncTable->getTryNumber() + 1);
+            $lastSyncTable->save();
+        } elseif ($isCustomerSync) {
+            $syncTable = $this->syncTablePushFactory->create(); /** @var Simi\Simiocean\Model\SyncTable */
+            $syncTable->setType(\Simi\Simiocean\Model\SyncTablePush\Type::TYPE_CUSTOMER)
+                ->setPageNum($page)
+                ->setPageSize($size)
+                ->setRecordNumber(count($customers))
+                ->setTryNumber($tryNumberMax)
+                ->setCreatedAt($datetime)
+                ->save();
+            return true;
+        } else {
+            $syncTable = $this->syncTablePushFactory->create(); /** @var Simi\Simiocean\Model\SyncTable */
+            $syncTable->setType(\Simi\Simiocean\Model\SyncTablePush\Type::TYPE_CUSTOMER)
+                ->setPageNum($page)
+                ->setPageSize($size)
+                ->setRecordNumber(count($customers))
+                ->setTryNumber(1)
+                ->setCreatedAt($datetime)
+                ->save();
+        }
+
+        return false;
+    }
+
+    /**
+     * Get modified customer from ocean system and update it to website.
+     * Limited by system config settings.
+     * Paging when the list too long.
+     */
+    public function syncUpdateFromOcean(){
+        $page = 1;
+        $size = self::LIMIT;
+        $lastDays = 1; // 1 day ago from now
+
+        if ($this->config->getCustomerSyncNumber() != null) {
+            $size = (int)$this->config->getCustomerSyncNumber();
+        }
+       
+        // Get time and page number from last synced
+        $timeFrom = 'now';
+        $timeTo = 'now';
+        $lastSyncTable = $this->syncTable->getLastSyncByTime(\Simi\Simiocean\Model\SyncTable\Type::TYPE_CUSTOMER_UPDATE);
+        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
+            if ($lastSyncTable->getPageSize() && $lastSyncTable->getRecordNumber() >= $lastSyncTable->getPageSize()) {
+                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
+                $timeTo = $lastSyncTable->getUpdatedTo();
+                $timeFrom = $lastSyncTable->getUpdatedFrom();
+            } else {
+                $timeFrom = $lastSyncTable->getUpdatedTo();
+            }
+        }
+
+        // ToDate
+        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
+        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
+        $dateToParam = $dateTo->getTimestamp();
+
+        // FromDate
+        $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
+        if ($timeFrom == 'now') {
+            $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
+        }
+        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
+            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
+        }
+        $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
+        $dateFromParam = $dateFrom->getTimestamp();
+
+        try{
+            $oCustomers = $this->customerApi->getFilterCustomers($dateFromParam, $dateToParam, $page, $size);
+        }catch(\Exception $e){
+            $this->logger->debug(array(
+                'Error: Get ocean customers updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                $e->getMessage()
+            ));
+            return false;
+        }
+        if (is_array($oCustomers)) {
+            $hasUpdate = false;
+            $records = count($oCustomers);
+            foreach($oCustomers as $oCustomer){
+                if (isset($oCustomer['CustomerID']) && $oCustomer['CustomerID']
+                    && isset($oCustomer['MobilePhone']) && $oCustomer['MobilePhone'] 
+                    && isset($oCustomer['ModificationDate']) && $oCustomer['ModificationDate']
+                ) {
+                    $customerData = $this->convertCustomerData($oCustomer);
+                    $customer = $this->getCustomerExists('', $oCustomer['MobilePhone']);
+                    if (!$customer) {
+                        /** 
+                         * Uncomment this block if want to create new customer when ocean 
+                         * update a customer but it does not existing in website 
+                         * */
+                        // $mobileEmail = str_replace(array('+', '-', '_', '.', ' '), '', $oCustomer['MobilePhone']);
+                        // $mobileEmail = (int) $mobileEmail ? $mobileEmail : substr(md5($mobileEmail), 0, 15);
+                        // $email = $mobileEmail.'@bianca-nera-ocean.com';
+                        // $password = md5($oCustomer['MobilePhone'].$email);
+                        // $password = substr(str_shuffle("BIANCANERA"), 0, 1).substr($password, 1, 10).'123@';
+                        // $passwordHash = $this->createPasswordHash($password);
+                        // $dataCustomer = $this->customerRepository->save($customerData, $passwordHash);
+                        // /** @var \Magento\Customer\Model\Customer $savedCustomer */
+                        // $savedCustomer = $this->customerFactory->create()->load($dataCustomer->getId());
+                        // $this->saveOceanCustomer($oCustomer, $savedCustomer->getId());
+                    } else {
+                        $oCustomerObject = $this->getOceanCustomer($oCustomer['CustomerID']);
+                        if ($oCustomerObject->getId()) {
+                            $syncTime = new \DateTime($oCustomerObject->getSyncTime(), new \DateTimeZone('UTC'));
+                            $modifyTime = new \DateTime(gmdate('Y-m-d H:i:s', $oCustomer['ModificationDate']), new \DateTimeZone('UTC'));
+                            if ($modifyTime > $syncTime) {
+                                // update customer if existed
+                                $this->updateCustomer($customer, $customerData);
+                                $this->saveOceanCustomer($oCustomer, $customer->getId());
+                                $hasUpdate = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $lastSyncTable->setId(null);
+            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_CUSTOMER_UPDATE);
+            $lastSyncTable->setPageNum($page);
+            $lastSyncTable->setPageSize($size);
+            $lastSyncTable->setRecordNumber($records);
+            $lastSyncTable->setUpdatedFrom($dateFromGmt);
+            $lastSyncTable->setUpdatedTo($dateToGmt);
+            $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
+            $lastSyncTable->save();
+            return $hasUpdate;
+        } else {
+            if ($lastSyncTable->getId()){
+                $lastSyncTable->setRecordNumber(0);
+                $lastSyncTable->save();
+            }
+            $this->logger->debug(array(
+                'Error: Get ocean customers updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                'Server: '.$oCustomers
+            ));
+        }
+        return false;
+    }
+
+    /**
+     * Get modified customer from website system and update/create it to ocean.
+     * Status pending or missing and direction website_to_ocean
+     * Limited by system config settings.
+     */
+    public function syncUpdateFromWebsite(){
+        $isSynced = false;
+        $oceanCustomerCollection = $this->getPendingUpdate();
+        foreach($oceanCustomerCollection as $oceanCustomer){
+            if ($oceanCustomer->getMCustomerId() && $oceanCustomer->getMobilePhone()) {
+                $customer = $this->customerRepository->getById($oceanCustomer->getMCustomerId());
+                $isSyncedFromOcean = false;
+                if ($customer && $customer->getId()) {
+                    $result = '';
+                    try{
+                        // Save customer info to sync table
+                        // $oceanCustomer->setDirection(\Simi\Simiocean\Model\Customer::DIR_WEB_TO_OCEAN);
+                        // $oceanCustomer->setStatus(\Simi\Simiocean\Model\SyncStatus::SYNCING);
+                        // $oceanCustomer->save();
+
+                        $oceanData = $this->customerToOcean($customer);
+                        if ($oceanCustomer->getCustomerId() && $oceanCustomer->getStatus() == \Simi\Simiocean\Model\SyncStatus::PENDING) {
+                            $oceanData['CustomerID'] = $oceanCustomer->getCustomerId();
+                            $result = $this->customerApi->updateCustomer($oceanData);
+                        } elseif ($oceanCustomer->getStatus() == \Simi\Simiocean\Model\SyncStatus::MISSING) {
+                            $result = $this->customerApi->addCustomer($oceanData);
+                        }
+                        $customerID = (int) $result;
+                    }catch(\Exception $e){
+                        $customerID = false;
+                        $result = $e->getMessage();
+                    }
+
+                    // Skipping error message by check strlen((string)$customerID) == strlen((string)$result)
+                    if ($customerID && (int)$customerID && strlen((string)$customerID) == strlen((string)$result)) {
+                        $oceanCustomer->setCustomerId($customerID);
+                        $oceanCustomer->setSyncTime(gmdate('Y-m-d H:i:s'));
+                        $oceanCustomer->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS);
+                        $oceanCustomer->save();
+                        $isSynced = true;
+                    } else {
+                        if (isset($oceanData['MobilePhone']) && $oceanData['MobilePhone'] 
+                            && strpos($result, 'There is a registerd customer with this mobile number') != false
+                        ) {
+                            $oceanCustomer->setStatus(\Simi\Simiocean\Model\SyncStatus::CONFLICT);
+                            $oceanCustomer->save();
+                        } else {
+                            $oceanCustomer->setStatus(\Simi\Simiocean\Model\SyncStatus::FAILED);
+                            $oceanCustomer->setMessage($result);
+                            $oceanCustomer->save();
+                        }
+                    }
+                }
+            }
+        }
+        return $isSynced;
+    }
+
+    /**
+     * Convert customer data to ocean
+     * @param \Magento\Customer\Api\Data\CustomerInterface $customerData
+     * @return array
+     */
+    protected function customerToOcean(\Magento\Customer\Api\Data\CustomerInterface $customerData){
+        $date = new \DateTime($customerData->getDob(), new \DateTimeZone('UTC'));
+        $date2 = new \DateTime('0001-01-01', new \DateTimeZone('UTC')); //0001-01-01T00:00:00+00:00
+        $birthDate = ($date < $date2) ? $date->format('Y-m-d\TH:i:s') : $date2->format('Y-m-d\TH:i:s');
+
+        $address = $this->objectFactory->create(AddressInterface::class, []);
+        $addresses = $customerData->getAddresses();
+        if ($addresses && count($addresses)) {
+            $address = $addresses[0]; // get first address item
+        }
+        $street = $address->getStreet();
+
+        $mobilePhone = $customerData->getCustomAttribute('mobilenumber');
+        $mobilePhone = $mobilePhone ? $mobilePhone->getValue() : null;
+        $branchEnNames = $customerData->getCustomAttribute('branch_en_names');
+        $branchEnNames = $branchEnNames ? $branchEnNames->getValue() : null;
+        $branchArNames = $customerData->getCustomAttribute('branch_ar_names');
+        $branchArNames = $branchArNames ? $branchArNames->getValue() : null;
+
+        $data = array(
+            'FirstName' => $customerData->getFirstname(),
+            'LastName' => $customerData->getLastname(),
+            'MobilePhone' => $mobilePhone,
+            'BirthDate' => $birthDate,
+            'Email' => $customerData->getEmail(),
+            'StreetEnName' => is_array($street) && !empty($street) ? $street[0] : null,
+            'StateEnName' => $address->getCity(),
+            'AreaCode' => (int) str_replace(array('-', '_', ' ', '.'), '', $address->getPostCode()) ?: 1,
+        );
+
+        if ($branchEnNames) $data['BranchEnNames'] = $branchEnNames;
+        if ($branchArNames) $data['BranchArNames'] = $branchArNames;
+
+        return $data;
+    }
 
     /**
      * Convert to magento customer data model from ocean raw data array
@@ -284,14 +648,11 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         $customerModel->setAddresses(array($address));
 
         $customerModel->setCustomAttribute('mobilenumber', $dataObject->getPhone());
-
-        if ($isArStore) {
-            $branchArNames = $dataObject->getData('BranchArNames');
-            $customerModel->setData('branch', $branchArNames ? $branchArNames : $dataObject->getData('BranchEnNames'));
-        }
+        $customerModel->setCustomAttribute('branch_en_names', $dataObject->getData('BranchEnNames'));
+        $customerModel->setCustomAttribute('branch_ar_names', $dataObject->getData('BranchArNames'));
 
         if ($customerModel->getDob()) {
-            $date = new \DateTime($customerModel->getDob(), new \DateTimeZone('Asia/Kuwait'));
+            $date = new \DateTime($customerModel->getDob(), new \DateTimeZone('UTC')); // Not Asia/Kuwait skip date
             $customerModel->setDob(gmdate('Y-m-d H:i:s', $date->getTimestamp()));
         }
 
@@ -355,15 +716,17 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         $mobileAttr = $customer->getCustomAttribute('mobilenumber');
         $mobile = $mobileAttr ? $mobileAttr->getValue() : '';
         if (!$customer->getEmail()) {
-            $customer->setEmail($mobile.'@bianca-nera-ocean.com');
+            $mobileEmail = str_replace(array('+', '-', '_', '.', ' '), '', $mobile);
+            $mobileEmail = (int) $mobileEmail ? $mobileEmail : substr(md5($mobileEmail), 0, 15);
+            $customer->setEmail($mobileEmail.'@bianca-nera-ocean.com');
         }
         try{
             $customer->setData('is_ocean', 1); // If this attribute has created in database
             if (!$savedCustomer = $this->getCustomerExists($customer->getEmail(), $mobile)) {
                 $password = md5($mobile.$customer->getEmail());
                 $password = substr(str_shuffle("BIANCANERA"), 0, 1).substr($password, 1, 10).'123@';
-                // $dataCustomer = $this->accountManagement->createAccount($customer, $password);
                 $passwordHash = $this->createPasswordHash($password);
+                $this->registry->register(self::CUSTOMER_SAVED, true, true);
                 $dataCustomer = $this->customerRepository->save($customer, $passwordHash);
                 /** @var \Magento\Customer\Model\Customer $savedCustomer */
                 $savedCustomer = $this->customerFactory->create()->load($dataCustomer->getId());
@@ -372,7 +735,28 @@ class Customer extends \Magento\Framework\Model\AbstractModel
             }
             return $savedCustomer;
         } catch(\Exception $e) {
-            $this->logger->debug(array('Save customer error: '.$e->getMessage(), 'CustomerID: '.$customer->getEmail(), 'Phone: '.$mobile));
+            $this->logger->debug(array('Sync pull: Save customer error '.$e->getMessage(), 'Email: '.$customer->getEmail(), 'Phone: '.$mobile));
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * Update customer existed in website
+     * @param \Magento\Customer\Model\Customer $customer
+     * @param \Magento\Customer\Api\Data\CustomerInterface $customerData
+     * @return boolean
+     */
+    protected function updateCustomer(\Magento\Customer\Model\Customer $customer, $customerData = null){
+        try{
+            if (is_object($customerData)) {
+                $dataArray = $this->dataObjectProcessor->buildOutputDataArray($customerData, \Magento\Customer\Api\Data\CustomerInterface::class);
+                $this->dataObjectHelper->populateWithArray($customer, $dataArray, \Magento\Customer\Api\Data\CustomerInterface::class);
+            }
+            $this->registry->register(self::CUSTOMER_SAVED, true, true);
+            $customer->save();
+            return true;
+        }catch(\Exception $e){
             return false;
         }
         return false;
@@ -413,6 +797,118 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         }
         return false;
     }
+
+    
+
+    /**
+     * @param int $mCustomerId id of magento customer entity
+     * @return boolean
+     */
+    protected function isOceanCustomerExists($mCustomerId){
+        $connection = $this->oceanCustomerResource->getConnection();
+        $bind = ['customer_id' => $mCustomerId];
+        $select = $connection->select()
+            ->from($this->oceanCustomerResource->getTable('simiocean_customer'), 'customer_id')
+            ->where('m_customer_id = :customer_id')
+            ->where('customer_id IS NOT NULL');
+        if ($connection->fetchOne($select, $bind)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get ocean customer existed in synced
+     * @param string $customerId
+     * @return \Simi\Simiocean\Model\Customer|null
+     */
+    protected function getOceanCustomer($customerId){
+        $model = $this->oceanCustomerFactory->create();
+        $this->oceanCustomerResource->load($model, $customerId, 'customer_id');
+        if ($model) {
+            return $model;
+        }
+        return null;
+    }
+
+    /**
+     * Get ocean customer pending update from website to ocean
+     * @return \Simi\Simiocean\Model\ResourceModel\Customer\Collection
+     */
+    protected function getPendingUpdate(){
+        $size = self::LIMIT;
+        if ($this->config->getCustomerSyncNumber() != null) {
+            $size = (int)$this->config->getCustomerSyncNumber();
+        }
+        $model = $this->oceanCustomerFactory->create();
+        $collection = $model->getCollection();
+        $collection->addFieldToFilter('status', array('in' => array(
+                \Simi\Simiocean\Model\SyncStatus::PENDING, 
+                \Simi\Simiocean\Model\SyncStatus::MISSING
+            )))
+            ->addFieldToFilter('direction', \Simi\Simiocean\Model\Customer::DIR_WEB_TO_OCEAN)
+            ->getSelect()
+            // ->where('customer_id IS NOT NULL')
+            ->order('sync_time asc')
+            ->limit($size);
+        return $collection;
+    }
+
+    /**
+     * Create or update ocean customer data to ocean customer sync table
+     * @param array $oCustomer
+     * @param int $mCustomerId of magento customer
+     * @param string $status
+     * @param string $direction one of ocean_to_website, website_to_ocean
+     * @return boolean
+     */
+    public function saveOceanCustomer($oCustomer, $mCustomerId, $status = \Simi\Simiocean\Model\SyncStatus::SUCCESS, $direction = 'ocean_to_website'){
+        $object = $this->dataObjectFactory->create();
+        $object->setData($oCustomer);
+        try{
+            if ($oCustomerObject = $this->getOceanCustomer($object->getCustomerID())) {
+                $datetime = gmdate('Y-m-d H:i:s');
+                $oCustomerObject->setCustomerId($object->getCustomerID());
+                $oCustomerObject->setFirstName($object->getFirstName());
+                $oCustomerObject->setLastName($object->getLastName());
+                $oCustomerObject->setHomePhone($object->getHomePhone());
+                $oCustomerObject->setMobilePhone($object->getMobilePhone());
+                $oCustomerObject->setBirthDate($object->getBirthDate());
+                $oCustomerObject->setEmail($object->getEmail());
+                $oCustomerObject->setPoints((float)$object->getPoints());
+                $oCustomerObject->setCustomerSize($object->getCustomerSize());
+                $oCustomerObject->setMCustomerId($mCustomerId);
+                $oCustomerObject->setSyncTime($datetime);
+                if ($oCustomerObject->getId()) {
+                    $oCustomerObject->setCreatedAt($datetime);
+                }
+                $oCustomerObject->setDirection($direction);
+                $oCustomerObject->setStatus($status);
+                $oCustomerObject->save();
+            }
+        }catch(\Exception $e){
+            $this->logger->debug(array(
+                'Warning! Save ocean customer failed. CustomerID: '.$object->getCustomerID(), 
+                $e->getMessage()
+            ));
+        }
+        return false;
+    }
+
+    /**
+     * Get Ocean Customer synced from table simiocean_customer synced by customer_id
+     * For now, the customer_id column is not unique
+     * @param int $customerId of magento customer
+     * @return \Simi\Simiocean\Model\Customer|null
+     */
+    /* protected function getOceanCustomerByMcustomerId($customerId){
+        $model = $this->oceanCustomerFactory->create();
+        $this->oceanCustomerResource->load($model, $customerId, 'm_customer_id');
+        if ($model && $model->getId()) {
+            return $model;
+        }
+        return null;
+    } */
 
     /**
      * Create a hash for the given password

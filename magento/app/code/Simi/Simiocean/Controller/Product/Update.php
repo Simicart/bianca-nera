@@ -4,7 +4,7 @@ namespace Simi\Simiocean\Controller\Product;
 
 use Magento\Framework\App\Action\Context;
 
-class Pull extends \Magento\Framework\App\Action\Action
+class Update extends \Magento\Framework\App\Action\Action
 {
     protected $helper;
     protected $serviceProduct;
@@ -23,7 +23,7 @@ class Pull extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         echo '<pre>';
-        $data = $this->serviceProduct->syncPull();
+        $data = $this->serviceProduct->syncUpdatePull();
         var_dump($data);
         exit;
     }

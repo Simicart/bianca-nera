@@ -12,6 +12,7 @@ class Productsync
      * @var \Simi\Simiocean\Model\Logger
      */
     protected $logger;
+    protected $config;
     
     /**
      * @var \Simi\Simiocean\Model\Service\Product
@@ -25,15 +26,27 @@ class Productsync
      */
     public function __construct(
         \Simi\Simiocean\Model\Logger $logger,
+        \Simi\Simiocean\Helper\Config $config,
         \Simi\Simiocean\Model\Service\Product $productService
     ) {
-        $this->logger   = $logger;
+        $this->logger           = $logger;
+        $this->config           = $config;
         $this->productService   = $productService;
     }
 
-    public function execute()
+    public function syncPull()
     {
-        $this->productService->process();
-        $this->logger->debug(array('Cron: Product sync success!'));
+        if ($this->config->isSyncEnabled()) {
+            $this->productService->syncPull();
+            $this->logger->debug(array('Cron: Product sync success!'));
+        }
+    }
+
+    public function syncPullUpdate()
+    {
+        if ($this->config->isSyncEnabled()) {
+            $this->productService->syncUpdatePull();
+            $this->logger->debug(array('Cron: Product sync pull update success!'));
+        }
     }
 }

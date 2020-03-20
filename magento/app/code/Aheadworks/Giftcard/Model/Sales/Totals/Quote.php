@@ -79,17 +79,42 @@ class Quote extends AbstractTotal
             return $this;
         }
 
+        $vendorModelResource = null;
+        if (class_exists('\Vnecoms\Vendors\Model\ResourceModel\Vendor')) {
+            $vendorModelResource = \Magento\Framework\App\ObjectManager::getInstance()->create('\Vnecoms\Vendors\Model\ResourceModel\Vendor');
+        }
+
+        $budgetVendor = array(); // the budget to discount of vendors
+        $budgetVendorIdIsSet = array();
         $giftcardProductPrices = 0; // totals of product item type is giftcard
+        /** @var \Magento\Quote\Model\Quote\Item[] $items */
         foreach($items as $item){
             if ($item->getProductType() == 'aw_giftcard'){
-                $giftcardProductPrices += $item->getProduct()->getFinalPrice();
+                $giftcardProductPrices += ($item->getQty() * $item->getProduct()->getFinalPrice());
+            } elseif (class_exists('\Vnecoms\Vendors\Model\Vendor') && $item->getVendorId() && $vendorModelResource) {
+                $connection = $vendorModelResource->getConnection();
+                $select = $connection->select()
+                    ->from($vendorModelResource->getTable('ves_vendor_entity'), array('entity_id', 'vendor_id'))
+                    ->where('entity_id = :vendor_id')
+                    ->limit(1);
+                $bind = array('vendor_id' => $item->getVendorId());
+                $vendorData = $connection->fetchRow($select, $bind);
+                if (isset($vendorData['entity_id']) && isset($vendorData['vendor_id'])) {
+                    if (!isset($budgetVendor[$vendorData['vendor_id']][$item->getId()])) {
+                        $budgetVendor[$vendorData['vendor_id']][$item->getId()] = 0;
+                    }
+                    $budgetVendor[$vendorData['vendor_id']][$item->getId()] = ($item->getQty() * $item->getProduct()->getFinalPrice()); // add for multiple items of a vendor
+                    $budgetVendorIdIsSet[$item->getVendorId()] = $vendorData['vendor_id'];
+                }
             }
         }
         // Apply discount by giftcard value for totals of normal product type (not giftcard) only.
         $baseGrandTotal = $baseGrandTotal - $giftcardProductPrices;
         $grandTotal = $grandTotal - $giftcardProductPrices;
 
-        $baseTotalGiftcardAmount = $totalGiftcardAmount = 0;
+        $vendorItemDiscountAmounts = array(); // amount[vendor_id][item_id] = float
+        $vendorItemBaseDiscountAmounts = array(); // amount[vendor_id][item_id] = float
+        $baseTotalGiftcardAmount = $totalGiftcardAmount = 0; /* The giftcard total to reduce grand total */
         $giftcards = $quote->getExtensionAttributes()->getAwGiftcardCodes();
         /** @var $giftcard GiftcardQuoteInterface */
         foreach ($giftcards as $giftcard) {
@@ -103,11 +128,35 @@ class Quote extends AbstractTotal
                 $giftcard->setIsInvalid(true);
                 continue;
             }
-            $baseGiftcardUsedAmount = min($giftcard->getGiftcardBalance(), $baseGrandTotal);
-            $baseGrandTotal -= $baseGiftcardUsedAmount;
 
-            $giftcardUsedAmount = min($this->priceCurrency->convert($baseGiftcardUsedAmount), $grandTotal);
-            $grandTotal -= $giftcardUsedAmount;
+            $giftcardUsedAmount = $baseGiftcardUsedAmount = 0;
+            $giftcardModel = \Magento\Framework\App\ObjectManager::getInstance()->create('\Aheadworks\Giftcard\Model\Giftcard');
+            $giftcardModel->load($giftcard->getGiftcardId());
+            if ($giftcardModel->getVendorId()) {
+                // Discount for budget of giftcard by vendor
+                $giftcardVendorId = $giftcardModel->getVendorId();
+                if (isset($budgetVendor[$giftcardVendorId])) {
+                    $budgetGiftcardBalance = $giftcard->getGiftcardBalance();
+                    foreach($budgetVendor[$giftcardVendorId] as $itemId => $budgetItem){
+                        if ($budgetItem > 0) {
+                            $itemBaseDiscountAmount = min($giftcard->getGiftcardBalance(), $budgetItem, $budgetGiftcardBalance, $baseGrandTotal);
+                            $vendorItemBaseDiscountAmounts[$giftcardVendorId][$itemId] = $itemBaseDiscountAmount;
+                            $budgetGiftcardBalance -= $itemBaseDiscountAmount;
+                            $baseGiftcardUsedAmount += $itemBaseDiscountAmount;
+                            $baseGrandTotal -= $baseGiftcardUsedAmount;
+                            $itemDiscountAmount = min($this->priceCurrency->convert($itemBaseDiscountAmount), $grandTotal);
+                            $vendorItemDiscountAmounts[$giftcardVendorId][$itemId] = $itemDiscountAmount;
+                            $giftcardUsedAmount += $itemDiscountAmount;
+                            $grandTotal -= $giftcardUsedAmount;
+                        }
+                    }
+                }
+            } else {
+                $baseGiftcardUsedAmount = min($giftcard->getGiftcardBalance(), $baseGrandTotal);
+                $baseGrandTotal -= $baseGiftcardUsedAmount;
+                $giftcardUsedAmount = min($this->priceCurrency->convert($baseGiftcardUsedAmount), $grandTotal);
+                $grandTotal -= $giftcardUsedAmount;
+            }
 
             $baseTotalGiftcardAmount += $baseGiftcardUsedAmount;
             $totalGiftcardAmount += $giftcardUsedAmount;
@@ -121,8 +170,26 @@ class Quote extends AbstractTotal
             }
         }
 
-        $realBaseTotalGiftcardAmount = $baseTotalGiftcardAmount;
-        $realTotalGiftcardAmount = $totalGiftcardAmount;
+        // Set discount amount for each item
+        foreach($items as $item) {
+            if (isset($budgetVendorIdIsSet[$item->getVendorId()])) {
+                $vendorId = $budgetVendorIdIsSet[$item->getVendorId()]; //not vendor identity_id
+                if (isset($vendorItemBaseDiscountAmounts[$vendorId][$item->getId()])) {
+                    $baseDiscountAmount = $vendorItemBaseDiscountAmounts[$vendorId][$item->getId()];
+                    $item->setBaseDiscountAmount($baseDiscountAmount);
+                    $item->setBaseOriginalDiscountAmount($baseDiscountAmount);
+                }
+                if (isset($vendorItemDiscountAmounts[$vendorId][$item->getId()])) {
+                    $discountAmount = $vendorItemDiscountAmounts[$vendorId][$item->getId()];
+                    $discountPercent = $item->getRowTotal() > 0 ? $discountAmount / $item->getRowTotal() * 100 : 0;
+                    $item->setDiscountPercent($discountPercent);
+                    $item->setDiscountAmount($discountAmount);
+                    $item->setOriginalDiscountAmount($discountAmount);
+                }
+                $item->save();
+            }
+        }
+
         $realBaseGrandTotal = max($total->getBaseGrandTotal() - $baseTotalGiftcardAmount, 0);
         $realGrandTotal = max($total->getGrandTotal() - $totalGiftcardAmount, 0);
 

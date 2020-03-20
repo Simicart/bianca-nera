@@ -34,13 +34,13 @@ class Customer
 
     /**
      * Get customers from Ocean filter by FromDate to ToDate
-     * @param int $page number
-     * @param int $size limit each page
      * @param int $from date timestamp
      * @param int $to date timestamp
+     * @param int $page number
+     * @param int $size limit each page
      * @return array|false
      */
-    public function getFilterCustomers($page = 1, $size = 10, $from = '', $to = ''){
+    public function getFilterCustomers($from = '', $to = '', $page = 1, $size = 10){
         if ($page && $size) {
             $query = "api/Customer?PageNumber=$page&PageSize=$size";
             if ($from) {

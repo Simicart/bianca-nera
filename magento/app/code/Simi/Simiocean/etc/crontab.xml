@@ -7,13 +7,33 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="simiocean_product">
-        <job name="simi_simiocean_product_sync" instance="Simi\Simiocean\Cron\Productsync" method="execute">
+        <job name="simi_simiocean_product_category" instance="Simi\Simiocean\Cron\Category" method="syncPull">
+            <schedule>*/30 * * * *</schedule>
+        </job>
+        <job name="simi_simiocean_product_sync" instance="Simi\Simiocean\Cron\Productsync" method="syncPull">
+            <config_path>simiocean/cron/product_pull</config_path>
+        </job>
+        <job name="simi_simiocean_product_sync_update" instance="Simi\Simiocean\Cron\Productsync" method="syncPullUpdate">
             <config_path>simiocean/cron/product_pull</config_path>
         </job>
     </group>
     <group id="simiocean_customer">
-        <job name="simi_simiocean_customer_pull" instance="Simi\Simiocean\Cron\Customerpull" method="execute">
+        <job name="simi_simiocean_customer_pull" instance="Simi\Simiocean\Cron\Customersync" method="syncFromOcean">
             <config_path>simiocean/cron/customer_pull</config_path>
+        </job>
+        <job name="simi_simiocean_customer_push" instance="Simi\Simiocean\Cron\Customersync" method="syncFromWebsite">
+            <config_path>simiocean/cron/customer_push</config_path>
+        </job>
+        <job name="simi_simiocean_customer_update_pull" instance="Simi\Simiocean\Cron\Customersync" method="syncUpdateFromOcean">
+            <config_path>simiocean/cron/customer_pull</config_path>
+        </job>
+        <job name="simi_simiocean_customer_update_push" instance="Simi\Simiocean\Cron\Customersync" method="syncUpdateFromWebsite">
+            <config_path>simiocean/cron/customer_push</config_path>
+        </job>
+    </group>
+    <group id="simiocean_invoice">
+        <job name="simi_simiocean_invoice_push" instance="Simi\Simiocean\Cron\Invoicesync" method="syncPush">
+            <config_path>simiocean/cron/invoice_push</config_path>
         </job>
     </group>
 </config>

@@ -1,29 +1,29 @@
 <?php
 
-namespace Simi\Simiocean\Controller\Product;
+namespace Simi\Simiocean\Controller\Invoice;
 
 use Magento\Framework\App\Action\Context;
 
-class Pull extends \Magento\Framework\App\Action\Action
+class Push extends \Magento\Framework\App\Action\Action
 {
     protected $helper;
-    protected $serviceProduct;
+    protected $serviceInvoice;
 
     public function __construct(
         Context $context,
         \Simi\Simiocean\Helper\Data $helper,
-        \Simi\Simiocean\Model\Service\Product $serviceProduct
+        \Simi\Simiocean\Model\Service\Invoice $serviceInvoice
     ) {
         parent::__construct($context);
         $this->helper = $helper;
-        $this->serviceProduct = $serviceProduct;
+        $this->serviceInvoice = $serviceInvoice;
         $this->objectManager = $context->getObjectManager();
     }
 
     public function execute()
     {
         echo '<pre>';
-        $data = $this->serviceProduct->syncPull();
+        $data = $this->serviceInvoice->syncPush();
         var_dump($data);
         exit;
     }

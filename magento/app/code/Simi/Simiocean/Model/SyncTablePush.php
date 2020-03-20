@@ -12,7 +12,7 @@ use Magento\Framework\Registry;
 use Simi\Simiocean\Helper\Config;
 use Simi\Simiocean\Model\SyncTable\Type;
 
-class SyncTable extends AbstractModel
+class SyncTablePush extends AbstractModel
 {
     /** Object Simi\Simiocean\Helper\Config */
     protected $config;
@@ -35,7 +35,7 @@ class SyncTable extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init(\Simi\Simiocean\Model\ResourceModel\SyncTable::class);
+        $this->_init(\Simi\Simiocean\Model\ResourceModel\SyncTablePush::class);
     }
 
     public function getTypeName(){
@@ -45,7 +45,7 @@ class SyncTable extends AbstractModel
 
     /**
      * Get last item synced by type id
-     * @param string $typeId
+     * @var string $typeId
      * @return this object
      */
     public function getLastSync($typeId){
@@ -54,26 +54,6 @@ class SyncTable extends AbstractModel
             ->getSelect()
             ->order('page_num desc')
             ->limit(1);
-        if ($collection->getSize()) {
-            return $collection->getFirstItem();
-        }
-        return $this;
-    }
-
-    /**
-     * Get last item synced by type id and time update to
-     * @param string $typeId
-     * @param string $fromTime
-     * @return this object
-     */
-    public function getLastSyncByTime($typeId, $fromTime = ''){
-        $collection = $this->getCollection();
-        if ($fromTime) $collection->addFieldToFilter('updated_from', array('gteq' => $fromTime));
-        $collection->addFieldToFilter('type', $typeId)
-            ->getSelect()
-                ->order('updated_to desc')
-                ->order('page_num desc')
-                ->limit(1);
         if ($collection->getSize()) {
             return $collection->getFirstItem();
         }

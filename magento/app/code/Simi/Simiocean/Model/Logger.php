@@ -11,7 +11,7 @@ use Simi\Simiocean\Helper\Config;
 
 class Logger
 {
-    const CONF_DEBUG = 'simiocean/general/debug';
+    const CONF_DEBUG = 'simiocean/develop/debug';
 
     /** Object Simi\Simiocean\Helper\Config */
     protected $config;
