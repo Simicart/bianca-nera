@@ -281,12 +281,10 @@ class Category extends \Magento\Framework\Model\AbstractModel
                 throw new \Exception($parentCates);
             }
         } catch (\Exception $e) {
-            var_dump($e->getMessage());die;
             $this->logger->debug(array(
                 'Get categories error:',
                 $e->getMessage()
             ));
-            
             return false;
         }
         return true;
