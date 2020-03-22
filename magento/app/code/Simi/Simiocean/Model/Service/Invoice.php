@@ -22,6 +22,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
     protected $oceanInvoice;
     protected $oceanCustomerResource;
     protected $oceanProductResource;
+    protected $productService;
     
     protected $invoiceFactory;
     protected $invoiceItemRepository;
@@ -43,6 +44,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
         \Simi\Simiocean\Model\ResourceModel\Customer $oceanCustomerResource,
         \Simi\Simiocean\Model\ResourceModel\Product $oceanProductResource,
         \Magento\Sales\Model\Order\InvoiceFactory $invoiceFactory,
+        \Simi\Simiocean\Model\Service\Product $productService,
         \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
         \Magento\Catalog\Model\ProductRepository $productRepository
     ){
@@ -58,6 +60,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
         $this->invoiceFactory = $invoiceFactory;
         $this->invoiceItemRepository = $invoiceItemRepository;
         $this->productRepository = $productRepository;
+        $this->productService = $productService;
 
         $registry->register('isSecureArea', true);
         parent::__construct($context, $registry);
@@ -78,6 +81,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
         // }
         $oceanInvoices = $this->getInvoiceSync($size);
         $isSyncSuccess = true;
+        $hasSyncSuccess = false;
         foreach($oceanInvoices as $oInvoice){
             if (!$oInvoice->getInvoiceId()) {
                 continue;
@@ -154,6 +158,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                     $oInvoice->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS);
                     $oInvoice->save();
                     $isSyncSuccess = true;
+                    $hasSyncSuccess = true;
                 }catch(\Exception $e){
                     $this->logger->debug(array(
                         'Warning! Save ocean invoice failed. InvoiceNo: '.$invoiceNo, 
@@ -171,6 +176,10 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 }
                 $isSyncSuccess = false;
             }
+        }
+
+        if ($hasSyncSuccess) {
+            $this->productService->syncUpdateStock();
         }
 
         return $isSyncSuccess;

@@ -64,6 +64,24 @@ class Product
     }
 
     /**
+     * Get product list by stock update
+     * @param int $from Timestamp
+     * @param int $to Timestamp
+     * @param int $page
+     * @param int $limit
+     * return bool|array
+     */
+    public function getProductStockUpdate($from, $to = '', $page = 1, $size = 10){
+        if ($from) {
+            if ($to) {
+                return $this->api->call("api/Product/StockDates?FromDate=$from&ToDate=$to&PageNumber=$page&PageSize=$size");
+            }
+            return $this->api->call("api/Product/StockDates?FromDate=$from&PageNumber=$page&PageSize=$size");
+        }
+        return false;
+    }
+
+    /**
      * Get product by SKU from Ocean
      * return bool|array
      */

@@ -345,7 +345,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $timeTo = 'now';
         $lastSyncTable = $this->syncTable->getLastSyncByTime(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE);
         if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
-            if ($lastSyncTable->getPageSize() && $lastSyncTable->getRecordNumber() >= $lastSyncTable->getPageSize()) {
+            if ($lastSyncTable->getRecordNumber() > 0) {
                 $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
                 $timeTo = $lastSyncTable->getUpdatedTo();
                 $timeFrom = $lastSyncTable->getUpdatedFrom();
@@ -370,6 +370,14 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
         $dateFromParam = $dateFrom->getTimestamp();
 
+        // $page = 1;
+        // var_dump('FromDate: '.$dateFromParam.' ('.$dateFromGmt.')');
+        // var_dump('ToDate: '.$dateToParam .' ('.$dateToGmt.')');
+        // var_dump('Page: '.$page);
+        // var_dump('Size: '.$size);
+        // $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
+        // var_dump($oProducts);die;
+        
         try{
             $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
         }catch(\Exception $e){
@@ -484,6 +492,117 @@ class Product extends \Magento\Framework\Model\AbstractModel
             }
             $this->logger->debug(array(
                 'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                'Server: '.$oProducts
+            ));
+        }
+        return false;
+    }
+
+    /**
+     * Sync pull product from ocean to website
+     */
+    public function syncUpdateStock(){
+        $page = 1;
+        $size = self::LIMIT;
+        $lastDays = 1; // 1 day ago from now
+
+        if ($this->config->getProductSyncNumber() != null) {
+            $size = (int)$this->config->getProductSyncNumber();
+        }
+        // Get time and page number from last synced
+        $timeFrom = 'now';
+        $timeTo = 'now';
+        $lastSyncTable = $this->syncTable->getLastSyncByTime(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_STOCK);
+        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
+            if ($lastSyncTable->getRecordNumber() > 0) {
+                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
+                $timeTo = $lastSyncTable->getUpdatedTo();
+                $timeFrom = $lastSyncTable->getUpdatedFrom();
+            } else {
+                $timeFrom = $lastSyncTable->getUpdatedTo();
+            }
+        }
+
+        // ToDate
+        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
+        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
+        $dateToParam = $dateTo->getTimestamp();
+
+        // FromDate
+        $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
+        if ($timeFrom == 'now') {
+            $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
+        }
+        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
+            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
+        }
+        $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
+        $dateFromParam = $dateFrom->getTimestamp();
+
+        try{
+            $oProducts = $this->productApi->getProductStockUpdate($dateFromParam, $dateToParam, $page, $size);
+        }catch(\Exception $e){
+            $this->logger->debug(array(
+                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                $e->getMessage()
+            ));
+            return false;
+        }
+
+        if (is_array($oProducts)) {
+            $configurables = array();
+            $hasUpdate = false;
+            $records = count($oProducts);
+            foreach($oProducts as $oProduct){
+                if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
+                    && $oProduct['SKU'] && $oProduct['BarCode']
+                ) {
+                    $productSku = $oProduct['SKU'].'_'.$oProduct['BarCode'];
+                    $product = $this->getProductExists($productSku);
+                    if ($product && isset($oProduct['StockQuantity'])) {
+                        // Not prorected for loop update
+                        $product->setStockData(
+                            array(
+                                'use_config_manage_stock' => 1,
+                                'manage_stock' => 1, // manage stock
+                                'is_in_stock' => ((int) $oProduct['StockQuantity'] > 0) ? 1 : 0, // Stock Availability of product
+                                'qty' => (int) $oProduct['StockQuantity'] // qty of product
+                            )
+                        );
+                        $product->save();
+                        // save product Arab store
+                        try{
+                            if ($this->config->getArStore() != null){
+                                $arStoreIds = explode(',', $this->config->getArStore());
+                                foreach($arStoreIds as $storeId){
+                                    $product->setStoreId($storeId);
+                                    $product->save();
+                                }
+                            }
+                        }catch(\Exception $e){}
+
+                        $hasUpdate = true;
+                    }
+                }
+            }
+
+            $lastSyncTable->setId(null);
+            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_STOCK);
+            $lastSyncTable->setPageNum($page);
+            $lastSyncTable->setPageSize($size);
+            $lastSyncTable->setRecordNumber($records);
+            $lastSyncTable->setUpdatedFrom($dateFromGmt);
+            $lastSyncTable->setUpdatedTo($dateToGmt);
+            $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
+            $lastSyncTable->save();
+            return $hasUpdate;
+        } else {
+            if ($lastSyncTable->getId()){
+                $lastSyncTable->setRecordNumber(0);
+                $lastSyncTable->save();
+            }
+            $this->logger->debug(array(
+                'Error: Get ocean products updated stock error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
                 'Server: '.$oProducts
             ));
         }

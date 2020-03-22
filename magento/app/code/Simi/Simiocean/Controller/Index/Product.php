@@ -58,10 +58,10 @@ class Product extends \Magento\Framework\App\Action\Action
 
         echo '<pre>';
         // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductList(2020, 1);
-        $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProducts(2020, 10, 10);
-        print_r($products);die;
+        // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProducts(2020, 10, 10);
+        // print_r($products);die;
         
-        $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductSku('19151009');
+        $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductSku('2042004');
         print_r($products);die;
 
         // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProducts(2019, 100, 1);
