@@ -73,38 +73,38 @@ class Category extends \Magento\Framework\Model\AbstractModel
                 foreach ($parentCates as $oCate) {
                     if (isset($oCate['CategoryId'])) {
                         $subCates = $this->categoryApi->getSubCategory($oCate['CategoryId']);
+                        $category = null;
                         $categoryId = null;
-                        if($oceanCategory = $this->getOceanCategory($oCate['CategoryId'])){
-                            if ($magentoId = $oceanCategory->getMagentoId()) {
-                                $categoryId = $magentoId;
-                                $category = null;
+                        $oceanCategory = $this->getOceanCategory($oCate['CategoryId']);
+                        if ($oceanCategory) {
+                            $categoryId = $oceanCategory->getMagentoId();
+                            if ($categoryId) {
                                 try{
-                                    $category = $this->categoryRepository->get($magentoId);
+                                    $category = $this->categoryRepository->get($categoryId);
                                 }catch(\Exception $e){}
-                                if ($category) {
-                                    $category->setName(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : null);
-                                    // $category->setIsActive(true);
-                                    $category->setUpdatedAt(gmdate('Y-m-d H:i:s'));
-                                    $category->save();
-                                    if ($this->config->getArStore() != null){
-                                        $arStoreIds = explode(',', $this->config->getArStore());
-                                        foreach($arStoreIds as $storeId){
-                                            $category->setStoreId($storeId);
-                                            $category->setName(isset($oCate['CategoryArName']) ? $oCate['CategoryArName'] : null);
-                                            $category->setUrlKey(urlencode(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : ''));
-                                            try{
-                                                $category->save();
-                                            }catch(\Exception $e){};
-                                        }
-                                    }
-                                }
-                                $oceanCategory->setSyncTime(gmdate('Y-m-d H:i:s'));
-                                $oceanCategory->setCategoryArName(isset($oCate['CategoryArName']) ? $oCate['CategoryArName'] : null);
-                                $oceanCategory->setCategoryEnName(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : null);
-                                $oceanCategory->save();
-                            } else {
-                                //TODO: Ocean synced but no magento category
                             }
+                        }
+                        if($oceanCategory && $categoryId && $category && $category->getId()){
+                            $category->setName(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : null);
+                            // $category->setIsActive(true);
+                            $category->setUpdatedAt(gmdate('Y-m-d H:i:s'));
+                            $category->save();
+                            if ($this->config->getArStore() != null){
+                                $arStoreIds = explode(',', $this->config->getArStore());
+                                foreach($arStoreIds as $storeId){
+                                    $category->setStoreId($storeId);
+                                    $category->setName(isset($oCate['CategoryArName']) ? $oCate['CategoryArName'] : null);
+                                    $category->setUrlKey(urlencode(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : ''));
+                                    try{
+                                        $category->save();
+                                    }catch(\Exception $e){};
+                                }
+                            }
+                            
+                            $oceanCategory->setSyncTime(gmdate('Y-m-d H:i:s'));
+                            $oceanCategory->setCategoryArName(isset($oCate['CategoryArName']) ? $oCate['CategoryArName'] : null);
+                            $oceanCategory->setCategoryEnName(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : null);
+                            $oceanCategory->save();
                         } else {
                             $date = gmdate('Y-m-d H:i:s');
                             // $category = $this->objectManager->create(\Magento\Catalog\Model\Category::class);
@@ -126,7 +126,6 @@ class Category extends \Magento\Framework\Model\AbstractModel
                             $category->setStoreId($store->getId());
                             $category->setUrlKey(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : '');
                             
-                            
                             if (is_array($subCates)) {
                                 $category->setData('children_count', count($subCates));
                             } else {
@@ -134,6 +133,10 @@ class Category extends \Magento\Framework\Model\AbstractModel
                             }
 
                             try{
+                                $this->categoryResource->save($category);
+                                $categoryId = $category->getId();
+                            }catch(\Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException $e){
+                                $category->setUrlKey($category->getUrlKey().'-ocean');
                                 $this->categoryResource->save($category);
                                 $categoryId = $category->getId();
                             }catch(\Exception $e){}
@@ -151,57 +154,63 @@ class Category extends \Magento\Framework\Model\AbstractModel
                             }
 
                             if ($categoryId) {
-                                $oceanCategory = $this->oceanCategoryFactory->create();
-                                $oceanCategory->setCategoryId($oCate['CategoryId'])
-                                    ->setParentId(0) //Ocean root category id
-                                    ->setMagentoId($categoryId)
-                                    ->setSyncTime($date)
-                                    ->setCreatedAt($date)
-                                    ->setDirection(\Simi\Simiocean\Model\Category::DIR_OCEAN_TO_WEB)
-                                    ->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS)
-                                    ->setCategoryArName(isset($oCate['CategoryArName']) ? $oCate['CategoryArName'] : null)
-                                    ->setCategoryEnName(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : null)
-                                    ->save();
+                                if (!$oceanCategory) {
+                                    $oceanCategory = $this->oceanCategoryFactory->create();
+                                    $oceanCategory->setCreatedAt($date);
+                                }
+                                if ($oceanCategory) {
+                                    $oceanCategory->setCategoryId($oCate['CategoryId'])
+                                        ->setParentId(0) //Ocean root category id
+                                        ->setMagentoId($categoryId)
+                                        ->setSyncTime($date)
+                                        ->setDirection(\Simi\Simiocean\Model\Category::DIR_OCEAN_TO_WEB)
+                                        ->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS)
+                                        ->setCategoryArName(isset($oCate['CategoryArName']) ? $oCate['CategoryArName'] : null)
+                                        ->setCategoryEnName(isset($oCate['CategoryEnName']) ? $oCate['CategoryEnName'] : null)
+                                        ->save();
+                                }
                             }
                         }
 
                         // save sub categories
-                        if (is_array($subCates) && count($subCates)) {
+                        if (is_array($subCates) && count($subCates) && $categoryId) {
                             $date = gmdate('Y-m-d H:i:s');
                             foreach($subCates as $subCate){
                                 if (isset($subCate['SubcategoryID'])) {
                                     $tailUrlKey = '-'.$subCate['SubcategoryID'].'-'.$oCate['CategoryId'];
-                                    if ($oceanSubCategory = $this->getOceanCategory($subCate['SubcategoryID'], $oCate['CategoryId'])) {
-                                        // Update old subcategory
-                                        if ($magentoId = $oceanSubCategory->getMagentoId()) {
-                                            $subSategory = null;
+                                    $oceanSubCategory = $this->getOceanCategory($subCate['SubcategoryID'], $oCate['CategoryId']);
+                                    $subSategory = null;
+                                    $subCategoryId = null;
+                                    if ($oceanSubCategory) {
+                                        $subCategoryId = $oceanSubCategory->getMagentoId();
+                                        if ($subCategoryId) {
                                             try{
-                                                $subSategory = $this->categoryRepository->get($magentoId);
+                                                $subSategory = $this->categoryRepository->get($subCategoryId);
                                             }catch(\Exception $e){}
-                                            if ($subSategory) {
-                                                $subSategory->setName(isset($subCate['SubcategoryEnName']) ? $subCate['SubcategoryEnName'] : null);
-                                                // $subSategory->setIsActive(true);
-                                                $subSategory->setUpdatedAt(gmdate('Y-m-d H:i:s'));
-                                                $subSategory->save();
-                                                if ($this->config->getArStore() != null){
-                                                    $arStoreIds = explode(',', $this->config->getArStore());
-                                                    foreach($arStoreIds as $storeId){
-                                                        $subSategory->setStoreId($storeId);
-                                                        $subSategory->setName(isset($subCate['SubcategoryArName']) ? $subCate['SubcategoryArName'] : null);
-                                                        $subSategory->setUrlKey(urlencode(isset($subCate['SubcategoryEnName']) ? $subCate['SubcategoryEnName'].$tailUrlKey : ''));
-                                                        try{
-                                                            $subSategory->save();
-                                                        }catch(\Exception $e){};
-                                                    }
-                                                }
-                                            }
-                                            $oceanSubCategory->setSyncTime(gmdate('Y-m-d H:i:s'));
-                                            $oceanSubCategory->setCategoryArName(isset($subCate['SubcategoryArName']) ? $subCate['SubcategoryArName'] : null);
-                                            $oceanSubCategory->setCategoryEnName(isset($subCate['SubcategoryEnName']) ? $subCate['SubcategoryEnName'] : null);
-                                            $oceanSubCategory->save();
-                                        } else {
-                                            //TODO: Ocean synced but no magento category
                                         }
+                                    }
+                                    if ($oceanSubCategory && $subCategoryId && $subSategory && $subSategory->getId()) {
+                                        // Update old subcategory
+                                        $subSategory->setName(isset($subCate['SubcategoryEnName']) ? $subCate['SubcategoryEnName'] : null);
+                                        // $subSategory->setIsActive(true);
+                                        $subSategory->setUpdatedAt(gmdate('Y-m-d H:i:s'));
+                                        $subSategory->save();
+                                        if ($this->config->getArStore() != null){
+                                            $arStoreIds = explode(',', $this->config->getArStore());
+                                            foreach($arStoreIds as $storeId){
+                                                $subSategory->setStoreId($storeId);
+                                                $subSategory->setName(isset($subCate['SubcategoryArName']) ? $subCate['SubcategoryArName'] : null);
+                                                $subSategory->setUrlKey(urlencode(isset($subCate['SubcategoryEnName']) ? $subCate['SubcategoryEnName'].$tailUrlKey : ''));
+                                                try{
+                                                    $subSategory->save();
+                                                }catch(\Exception $e){};
+                                            }
+                                        }
+                                        
+                                        $oceanSubCategory->setSyncTime(gmdate('Y-m-d H:i:s'));
+                                        $oceanSubCategory->setCategoryArName(isset($subCate['SubcategoryArName']) ? $subCate['SubcategoryArName'] : null);
+                                        $oceanSubCategory->setCategoryEnName(isset($subCate['SubcategoryEnName']) ? $subCate['SubcategoryEnName'] : null);
+                                        $oceanSubCategory->save();
                                     } else {
                                         // Create magento sub category
                                         $subSategory = $this->objectManager->create(\Magento\Catalog\Model\Category::class);
@@ -221,6 +230,10 @@ class Category extends \Magento\Framework\Model\AbstractModel
                                         try{
                                             $this->categoryResource->save($subSategory);
                                             $subCategoryId = $subSategory->getId();
+                                        }catch(\Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException $e){
+                                            $subSategory->setUrlKey($subSategory->getUrlKey().'-ocean');
+                                            $this->categoryResource->save($subSategory);
+                                            $subCategoryId = $subSategory->getId();
                                         }catch(\Exception $e){}
 
                                         if ($this->config->getArStore() != null){
@@ -237,17 +250,21 @@ class Category extends \Magento\Framework\Model\AbstractModel
                                         
                                         // Create ocean sub category
                                         if ($subCategoryId) {
-                                            $oceanSubCategory = $this->oceanCategoryFactory->create();
-                                            $oceanSubCategory->setCategoryId($subCate['SubcategoryID'])
-                                                ->setParentId($oCate['CategoryId']) //Ocean sub category id
-                                                ->setMagentoId($subCategoryId)
-                                                ->setSyncTime($date)
-                                                ->setCreatedAt($date)
-                                                ->setDirection(\Simi\Simiocean\Model\Category::DIR_OCEAN_TO_WEB)
-                                                ->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS)
-                                                ->setCategoryArName(isset($subCate['SubcategoryArName']) ? $subCate['SubcategoryArName'] : null)
-                                                ->setCategoryEnName(isset($subCate['SubcategoryEnName']) ? $subCate['SubcategoryEnName'] : null)
-                                                ->save();
+                                            if (!$oceanSubCategory) {
+                                                $oceanSubCategory = $this->oceanCategoryFactory->create();
+                                                $oceanSubCategory->setCreatedAt($date);
+                                            }
+                                            if ($oceanSubCategory) {
+                                                $oceanSubCategory->setCategoryId($subCate['SubcategoryID'])
+                                                    ->setParentId($oCate['CategoryId']) //Ocean sub category id
+                                                    ->setMagentoId($subCategoryId)
+                                                    ->setSyncTime($date)
+                                                    ->setDirection(\Simi\Simiocean\Model\Category::DIR_OCEAN_TO_WEB)
+                                                    ->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS)
+                                                    ->setCategoryArName(isset($subCate['SubcategoryArName']) ? $subCate['SubcategoryArName'] : null)
+                                                    ->setCategoryEnName(isset($subCate['SubcategoryEnName']) ? $subCate['SubcategoryEnName'] : null)
+                                                    ->save();
+                                            }
                                         }
                                     }
                                 }
@@ -264,10 +281,12 @@ class Category extends \Magento\Framework\Model\AbstractModel
                 throw new \Exception($parentCates);
             }
         } catch (\Exception $e) {
+            var_dump($e->getMessage());die;
             $this->logger->debug(array(
                 'Get categories error:',
                 $e->getMessage()
             ));
+            
             return false;
         }
         return true;

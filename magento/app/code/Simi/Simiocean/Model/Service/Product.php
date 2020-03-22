@@ -381,6 +381,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
         }
 
         if (is_array($oProducts)) {
+            $configurables = array();
             $hasUpdate = false;
             $records = count($oProducts);
             foreach($oProducts as $oProduct){
@@ -389,6 +390,9 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 ) {
                     $oceanObject = $this->dataObjectFactory->create();
                     $oceanObject->setData($oProduct);
+                    
+                    if (!isset($configurables[$oProduct['SKU']])) $configurables[$oProduct['SKU']] = $oceanObject;
+
                     $productData = $this->convertProductData($oProduct); // convert data array to product object model
                     $productData->setSku($oProduct['SKU'].'_'.$oProduct['BarCode']);
                     $productData->setName($productData->getName().'-'. $oceanObject->getData('ColorEnName') .'-'.$oceanObject->getData('SizeName'));
@@ -433,6 +437,30 @@ class Product extends \Magento\Framework\Model\AbstractModel
                                     }
                                 }catch(\Exception $e){}
                                 $hasUpdate = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Update configurable product
+            if (!empty($configurables)) {
+                foreach($configurables as $sku => $oceanObject) {
+                    $storeId = (int)$this->storeManager->getStore()->getId();
+                    if ($configurableProduct = $this->getProductExists($sku, true, $storeId)) {
+                        if ($oceanObject->getData('CategoryId') && $oceanObject->getData('SubcategoryId')) {
+                            if ($categoryId = $this->categoryService->getMagentoCategoryId(
+                                $oceanObject->getData('SubcategoryId'), 
+                                $oceanObject->getData('CategoryId')
+                            )) {
+                                try{
+                                    $this->linkManagement->assignProductToCategories($configurableProduct->getSku(), array($categoryId));
+                                } catch (\Exception $e) {
+                                    $this->logger->debug(array(
+                                        'Product sync update pull: Assign configurable product to catalog error. Catalog Id: '.$categoryId,
+                                        $e->getMessage()
+                                    ));
+                                }
                             }
                         }
                     }
