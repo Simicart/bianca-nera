@@ -95,6 +95,13 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 $invoice = $this->invoiceFactory->create()->load($oInvoice->getInvoiceId());
                 $items = $invoice->getItems(); /** @var \Magento\Sales\Api\Data\InvoiceItemInterface[] */
                 foreach($items as $item){
+                    // For configurable product
+                    if ($this->isOceanProduct($item->getProductId())) {
+                        $baseDiscountAmount = max((float) $item->getBaseDiscountAmount(), 0);
+                        $baseDiscount = min($baseDiscountAmount, $item->getBaseRowTotal());
+                        $total += ((float) $item->getBaseRowTotal() - (float) $baseDiscount);
+                    }
+                    // For simple product
                     $oProductData = $this->getOceanProductData($item->getProductId());
                     if (isset($oProductData['sku']) && isset($oProductData['barcode'])) {
                         $qty = $item->getQty();
@@ -110,7 +117,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                         );
                         $baseDiscountAmount = max((float) $item->getBaseDiscountAmount(), 0);
                         $baseDiscount = min($baseDiscountAmount, $item->getBaseRowTotal());
-                        $total += (float) $item->getBaseRowTotal() - (float) $baseDiscount;
+                        $total += ((float) $item->getBaseRowTotal() - (float) $baseDiscount);
                     }
                 }
 
@@ -270,6 +277,24 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 ->where('barcode IS NOT NULL')
                 ->limit(1);
             return $connection->fetchRow($select, $bind);
+        }
+        return false;
+    }
+    
+    /**
+     * @return boolean
+     */
+    protected function isOceanProduct($productId){
+        if ($productId) {
+            $connection = $this->oceanProductResource->getConnection();
+            $bind = ['product_id' => $productId];
+            $select = $connection->select()
+                ->from($this->oceanProductResource->getTable('simiocean_product'), 'parent_id')
+                ->where('parent_id = :product_id')
+                ->where('sku IS NOT NULL')
+                ->where('barcode IS NOT NULL')
+                ->limit(1);
+            return (bool) $connection->fetchOne($select, $bind);
         }
         return false;
     }

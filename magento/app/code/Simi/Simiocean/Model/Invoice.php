@@ -14,4 +14,23 @@ class Invoice extends AbstractModel
     {
         $this->_init(\Simi\Simiocean\Model\ResourceModel\Invoice::class);
     }
+
+    /**
+     * Get invoice sync status by invoice id
+     * @param int $invoiceId
+     * @return string
+     */
+    public function getStatusByInvoiceId($invoiceId){
+        if ($invoiceId) {
+            $connection = $this->getResource()->getConnection();
+            $bind = ['invoice_id' => $invoiceId];
+            $select = $connection->select()
+                ->from($this->getResource()->getMainTable(), 'status')
+                ->where('invoice_id = :invoice_id')
+                // ->where('invoice_no IS NOT NULL')
+                ->limit(1);
+            return $connection->fetchOne($select, $bind);
+        }
+        return '';
+    }
 }
