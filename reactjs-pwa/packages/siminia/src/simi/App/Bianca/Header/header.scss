@@ -469,11 +469,10 @@ $textColor3: #e4e4e4;
     .sub-item{
         display: none;
         position: absolute;
-        top: 58px;
+        top: 60px;
         left: 0;
         right: 0;
         z-index: 9999;
-
         background: white;
         padding-top: 20px;
         padding-bottom: 10px;
@@ -481,6 +480,7 @@ $textColor3: #e4e4e4;
         max-width: 100%;
         min-height: 280px;
         max-height: 539px;
+        overflow-x: auto;
         box-shadow: none;
         border-bottom: solid 1px #f2f2f2;
         &.active{
@@ -542,7 +542,7 @@ $textColor3: #e4e4e4;
     /* Sticker and fixed menu */
     opacity: 1;
     visibility: visible;
-    transition: visibility 0s, opacity 0.3s ease-out;
+    // transition: visibility 0s, opacity 0.3s ease-out;
     padding-bottom: 10px;
     &.sticker{
         opacity: 0;
