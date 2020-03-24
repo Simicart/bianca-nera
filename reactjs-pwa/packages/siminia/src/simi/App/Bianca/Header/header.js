@@ -325,13 +325,14 @@ class Header extends React.Component {
 							<div className={`header ${Identify.isRtl() ? 'rtl-header' : null}`}>
 								{!simpleHeader && this.renderSearchForm()}
 								{this.renderLogo()}
+								{!simpleHeader && <HeaderNavigation classes={this.classes} />}
 								{!simpleHeader && this.renderRightBar(isSignedIn)}
 							</div>
 							{!simpleHeader && <MiniCart isOpen={cartIsOpen} history={this.props.history} />}
 						</div>
 					</div>
 				</div>
-				{!simpleHeader && <HeaderNavigation classes={this.classes} />}
+				{!simpleHeader && <HeaderNavigation classes={this.classes} addClassNames={'app-nav-main'} />}
 				<div id="id-message">
 					<TopMessage />
 					<ToastMessage />

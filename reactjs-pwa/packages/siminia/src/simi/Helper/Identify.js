@@ -302,11 +302,14 @@ class Identify {
     }
 
     static normalizeName(text){
-        let name = text.split(' ');
-        name = name.map((word) => {
-            return word.charAt(0).toUpperCase() + word.toLowerCase().slice(1);
-        });
-        return name.join(' ');
+        if (text) {
+            let name = text.split(' ');
+            name = name.map((word) => {
+                return word.charAt(0).toUpperCase() + word.toLowerCase().slice(1);
+            });
+            return name.join(' ');
+        }
+        return text;
     }
 }
 

@@ -8,7 +8,7 @@ const NavMegaitem = props => {
     const baseUrl = storeConfig.storeConfig.base_url
 
     if (props.itemAndChild) {
-        const { classes } = props;
+        const { classes, parentId } = props;
         const rootItem = props.itemAndChild;
         const childCol = props.childCol || 2;
         if (rootItem.children) {
@@ -56,20 +56,22 @@ const NavMegaitem = props => {
                         >
                             {item.name}
                         </Link>
-                        <div className={classes['mega-lv1-sub-cats']}>
-                            {subChildLevel2}
-                            {subChildLevel2.length >= 5 && (
-                                <Link
-                                    to={'/category.html'}
-                                    style={{
-                                        color: '#727272',
-                                        textDecoration: 'underline'
-                                    }}
-                                >
-                                    See more
-                                </Link>
-                            )}
-                        </div>
+                        {subChildLevel2.length > 0 &&
+                            <div className={classes['mega-lv1-sub-cats']}>
+                                {subChildLevel2}
+                                {subChildLevel2.length >= 5 && (
+                                    <Link
+                                        to={location}
+                                        style={{
+                                            color: '#727272',
+                                            textDecoration: 'underline'
+                                        }}
+                                    >
+                                        {Identify.__('See more')}
+                                    </Link>
+                                )}
+                            </div>
+                        }
                     </div>
                 );
             });
@@ -83,8 +85,10 @@ const NavMegaitem = props => {
             //     );
             // }
 
+            const className = `${classes['nav-mega-item']} ${parentId ? 'sub-item-nav-item-container-'+parentId:''}`
+
             return (
-                <div className={classes['nav-mega-item']} id={props.id}>
+                <div className={className} id={props.id}>
                     <div
                         role="presentation"
                         className={classes['mega-content']}
