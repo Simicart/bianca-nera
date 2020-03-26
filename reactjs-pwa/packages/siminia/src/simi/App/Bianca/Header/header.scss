@@ -24,9 +24,13 @@ $textColor3: #e4e4e4;
       font-size: 14px;
       .contact-info {
         width: 35%;
+        display: flex;
+        align-items: center;
       }
       .notice-msg {
         width: 30%;
+        display: flex;
+        align-items: center;
         span {
           text-align: center;
         }
@@ -40,9 +44,7 @@ $textColor3: #e4e4e4;
         font-size: 14px;
         font-weight: 500;
         line-height: 14px;
-        max-height: 14px;
-        margin-top: 15px;
-        margin-bottom: 15px;
+        max-height: 44px;
       }
       .notice-msg span a,
       .notice-msg span a:hover {

@@ -169,7 +169,7 @@ class Products extends React.Component {
         if (!data)
             return <Loading />
         if (!data.products || !data.products.total_count)
-            return(<div className="no-product">{Identify.__('No product found')}</div>)
+            return(<div className="no-product">{Identify.__('No Product')}</div>)
         analyticImpressionsGTM(items, title, pageType || 'Category');
         return (
             <React.Fragment>
@@ -224,21 +224,18 @@ class Products extends React.Component {
                     {descriptionArea}
                 </h2>
                 {props.underHeader}
-                {
-                    !cateEmpty &&
-                    <React.Fragment>
-                        <div className="product-list-container-siminia">
-                            {!this.state.isPhone && this.renderLeftNavigation()}
-                            {this.state.isPhone && this.renderBottomFilterSort()}
-                            <div className="listing-product">
-                                {this.renderList()}
-                            </div>
+                <React.Fragment>
+                    <div className="product-list-container-siminia">
+                        {!this.state.isPhone && this.renderLeftNavigation()}
+                        {this.state.isPhone && this.renderBottomFilterSort()}
+                        <div className="listing-product">
+                            {!cateEmpty && this.renderList()}
                         </div>
-                        <div className="recent-viewed-product">
-                            <RecentViewed />
-                        </div>
-                    </React.Fragment>
-                }
+                    </div>
+                    <div className="recent-viewed-product">
+                        <RecentViewed />
+                    </div>
+                </React.Fragment>
             </article>
         );
     }

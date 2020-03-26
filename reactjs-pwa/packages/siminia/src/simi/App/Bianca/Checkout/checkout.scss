@@ -160,8 +160,9 @@
             display: flex;
             justify-content: space-between;
             .address-signin-button{
-                padding: 12px 30px;
+                padding: 8px 20px;
                 height: 36px;
+                min-width: 100px;
                 font-size: 14px;
             }
             .address-forgot-pw-link {

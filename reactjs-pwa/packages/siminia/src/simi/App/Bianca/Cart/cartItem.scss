@@ -4,6 +4,9 @@
         font-weight: 600;
     }
     .cart-item-info{
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 9px;
         .des-cart{
             display: grid;
             .item-options{
@@ -23,6 +26,14 @@
                 font-family: Gotham Book;
                 font-size: 14px;
             }
+        }
+    }
+    .cart-item-detail{
+        .sub-item.item-price{
+            padding-top: 9px;
+        }
+        .item-subtotal-action{
+            padding-top: 9px;
         }
     }
 }
@@ -62,8 +73,10 @@
                     max-width: 213px;
                 }
                 .cart-item-value{
+                    font-family: 'Gotham Book';
                     font-size: 18px;
-                    padding-top: 6px;
+                    line-height: 18px;
+                    font-weight: 500;
                 }
             }
         }
@@ -165,7 +178,8 @@
 
         .sub-item.item-subtotal{
             width: auto;
-            font-family: Gotham Medium;
+            font-family: 'Gotham Book';
+            font-weight: 600;
             font-size: 14px;
             line-height: 14px;
         }
@@ -173,7 +187,8 @@
         .sub-item.item-price, .sub-item.item-qty{
             width: auto;
             padding-top: 0;
-            font-family: Gotham Medium;
+            font-family: 'Gotham Book';
+            font-weight: 600;
             font-size: 14px;
             line-height: 14px;
         }
@@ -200,7 +215,13 @@
         max-width: 82px;
         height: 103px;
         display: block;
+        margin-top: 9px;
         margin-right: 24px;
+    }
+    .minicart .cart-siminia-item .img-cart-container{
+        flex: 1 0 82px;
+        width: 82px;
+        object-fit: cover;
     }
 }
 
@@ -218,11 +239,6 @@
     width: inherit;
     object-fit: contain;
     width: 100%;
-}
-
-.cart-siminia-item .cart-item-info {
-    display: inline-block;
-    vertical-align: top;
 }
 
 .cart-siminia-item .item-name {
@@ -296,10 +312,11 @@
 
     .minicart .cart-siminia-item .item-qty{
         display: flex;
-        padding-top: 12px;
+        padding-top: 6px;
         div:first-child{
             font-size: 14px;
             margin-right: 18px;
+            line-height: 36px;
         }
     }
 }
@@ -324,6 +341,9 @@
         margin: 0 auto;
         width: 48px;
         height: 36px;
+        font-family: 'Gotham Book';
+        line-height: 14px;
+        font-size: 14px;
     }
 }
 @media(max-width: 1023px) {

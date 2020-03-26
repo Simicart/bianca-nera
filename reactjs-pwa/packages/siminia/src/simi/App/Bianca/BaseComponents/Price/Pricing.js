@@ -49,7 +49,8 @@ export default class Pricing extends Price {
             }
 
             if (isServerCurrency) {
-                const space = formatterValue.format(value).indexOf(' ') !== -1 ? ' ':'';
+                const priceValue = formatterValue.format(value);
+                const space = /\s/g.test(priceValue) ? ' ':''; // has white space
                 const serverVal = new Intl.NumberFormat(undefined, {
                     minimumFractionDigits: decimalsNum,
                     maximumFractionDigits: decimalsNum

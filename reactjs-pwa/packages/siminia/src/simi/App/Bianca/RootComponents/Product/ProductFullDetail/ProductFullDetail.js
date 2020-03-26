@@ -913,7 +913,7 @@ class ProductFullDetail extends Component {
                     >
                         <div label={Identify.__('Delivery & Returns')}>
                             <div className="delivery-returns">
-                                {delivery_returns}
+                                {ReactHTMLParse(delivery_returns)}
                             </div>
                         </div>
                         <div label={Identify.__('More Information')}>

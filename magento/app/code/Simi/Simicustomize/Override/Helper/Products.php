@@ -5,13 +5,97 @@ namespace Simi\Simicustomize\Override\Helper;
 
 class Products extends \Simi\Simiconnector\Helper\Products
 {
+    public function getLayerNavigator($collection = null, $params = null)
+    {
+        if (!$collection) {
+            $collection = $this->builderQuery;
+        }
+        if (!$params) {
+            $data       = $this->getData();
+            $params = isset($data['params'])?$data['params']:array();
+        }
+        $attributeCollection = $this->simiObjectManager
+            ->create('Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection');
+        $attributeCollection
+            ->setItemObjectClass(\Magento\Catalog\Model\ResourceModel\Eav\Attribute::class)
+            ->addStoreLabel($this->storeManager->getStore()->getId())
+            ->addIsFilterableFilter()
+            ->setOrder('position', 'ASC')
+            //->addVisibleFilter() //cody comment out jun152019
+            //->addFieldToFilter('used_in_product_listing', 1) //cody comment out jun152019
+            //->addFieldToFilter('is_visible_on_front', 1) //cody comment out jun152019
+        ;
+        if ($this->is_search)
+            $attributeCollection->addFieldToFilter('is_filterable_in_search', 1);
+
+        $allProductIds = $collection->getAllIds();
+        $arrayIDs      = [];
+        foreach ($allProductIds as $allProductId) {
+            $arrayIDs[$allProductId] = '1';
+        }
+        $layerFilters = [];
+
+        $titleFilters = [];
+        $this->_filterByAtribute($collection, $attributeCollection, $titleFilters, $layerFilters, $arrayIDs);
+
+        if ($this->simiObjectManager
+            ->get('Magento\Framework\App\ProductMetadataInterface')
+            ->getEdition() != 'Enterprise')
+            $this->_filterByPriceRange($layerFilters, $collection, $params);
+
+        // category
+        if ($this->category) {
+            $childrenCategories = $this->category->getChildrenCategories();
+            $collection->addCountToCategories($childrenCategories);
+            $filters            = [];
+            foreach ($childrenCategories as $childCategory) {
+                if ($childCategory->getProductCount()) {
+                    $filters[] = [
+                        'label' => $childCategory->getName(),
+                        'value' => $childCategory->getId(),
+                        'count' => $childCategory->getProductCount()
+                    ];
+                }
+            }
+
+            $layerFilters[] = [
+                'attribute' => 'category_id',
+                'title'     => __('Categories'),
+                'filter'    => ($filters),
+            ];
+        }
+
+        $paramArray = (array)$params;
+        $selectedFilters = $this->_getSelectedFilters();
+        
+        $selectableFilters = $this->_getSelectableFilters($collection, $paramArray, $selectedFilters, $layerFilters);
+
+        $layerArray = ['layer_filter' => $selectableFilters];
+        if ($this->simiObjectManager->get('Simi\Simiconnector\Helper\Data')->countArray($selectedFilters) > 0) {
+            $layerArray['layer_state'] = $selectedFilters;
+        }
+
+        return $layerArray;
+    }
+    
     //add vendor option to filter
     public function _filterByAtribute($collection, $attributeCollection, &$titleFilters, &$layerFilters, $arrayIDs)
     {
-        foreach ($attributeCollection as $attribute) {
-            $attributeValues  = $collection->getAllAttributeValues($attribute->getAttributeCode());
-            $this->addFilterByAttribute($attribute, $attributeValues, $layerFilters, $titleFilters, $arrayIDs);
+        if (!count($arrayIDs)) {
+            $allowedAttributes = array('color', 'size', 'is_admin_sell', 'try_to_buy', 'reservable', 'pre_order', 'vendor_id', 'price');
+            foreach ($attributeCollection as $attribute) {
+                if (in_array($attribute->getAttributeCode(), $allowedAttributes)) {
+                    $attributeValues  = $collection->getAllAttributeValues($attribute->getAttributeCode());
+                    $this->addFilterByAttributeNoProduct($attribute, $attributeValues, $layerFilters, $titleFilters);
+                }
+            }
+        } else {
+            foreach ($attributeCollection as $attribute) {
+                $attributeValues  = $collection->getAllAttributeValues($attribute->getAttributeCode());
+                $this->addFilterByAttribute($attribute, $attributeValues, $layerFilters, $titleFilters, $arrayIDs);
+            }
         }
+
         $vendorAtt = $this->simiObjectManager
                 ->create('Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection')
                 ->addFieldToFilter('attribute_code', 'vendor_id')
@@ -84,5 +168,47 @@ class Products extends \Simi\Simiconnector\Helper\Products
                 'filter'    => $filters,
             ];
         }
+    }
+
+    protected function addFilterByAttributeNoProduct($attribute, $attributeValues, &$layerFilters, &$titleFilters, $options = null) {
+        $label = $attribute->getStoreLabel() ? $attribute->getStoreLabel() : $attribute->getDefaultFrontendLabel();
+        if (in_array($label, $titleFilters)) {
+            return;
+        }
+        if (!$options)
+            $options = $attribute->getSource()->getAllOptions();
+        $filters = array();
+        if (is_array($options)) {
+            foreach ($options as $option) {
+                if (isset($option['label']) && !trim($option['label'])) {
+                    continue;
+                }
+                $option['count'] = 0;
+                $filters[]       = $option;
+            }
+        }
+        if ($attribute->getAttributeCode() == 'price') {
+            $filters = [[
+                'value' => 0 . '-' . 10000,
+                'label' => $this->_renderRangeLabel(0, 10000),
+                'count' => 1
+            ]];
+            $titleFilters[] = $label;
+            $layerFilters[] = [
+                'attribute' => $attribute->getAttributeCode(),
+                'title'     => $label,
+                'filter'    => $filters,
+            ];
+        } else {
+            if ($this->simiObjectManager->get('Simi\Simiconnector\Helper\Data')->countArray($filters) >= 1) {
+                $titleFilters[] = $label;
+                $layerFilters[] = [
+                    'attribute' => $attribute->getAttributeCode(),
+                    'title'     => $label,
+                    'filter'    => $filters,
+                ];
+            }
+        }
+        
     }
 }
