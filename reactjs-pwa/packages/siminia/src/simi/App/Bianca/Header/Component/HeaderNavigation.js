@@ -18,16 +18,18 @@ class Navigation extends React.Component{
         //     topPx = $('.header-wrapper').offset().top + $('.header-wrapper').outerHeight();
         // }
         if ($('.app-nav') && $('.app-nav').length) {
-            let topPx = 0;
+            let topPx = 0, headerHeight = 0;
+            let isSticker = false;
             if ($('.app-nav-main') && $('.app-nav-main').length) {
                 topPx = $('.app-nav-main').offset().top;
             }
-            let isSticker = false;
+            if ($('.header-wrapper .container-header .header') && $('.header-wrapper .container-header .header').length) {
+                headerHeight = $('.header-wrapper .container-header .header').outerHeight();
+            }
             let oldMainpageMargintop = 0;
             if ($('#siminia-main-page') && $('#siminia-main-page').length) {
                 oldMainpageMargintop = $('#siminia-main-page')[0].style.marginTop || 0;
             }
-            // $('.app-nav .sub-items').css({top: $('.app-nav-main').outerHeight()});
             $(document).scroll(() => {
                 if ($(window).scrollTop() >= topPx) {
                     if (isSticker) return;
@@ -35,11 +37,11 @@ class Navigation extends React.Component{
                         $('.header-wrapper').addClass('sticker')
                     }
                     $('.app-nav').addClass('sticker')
-                    // if ($('#siminia-main-page') && $('#siminia-main-page').length) {
-                    //     $('#siminia-main-page').css({
-                    //         marginTop: topPx + $('.header-wrapper .app-nav').outerHeight() + 'px'
-                    //     })
-                    // }
+                    if ($('#siminia-main-page') && $('#siminia-main-page').length) {
+                        $('#siminia-main-page').css({
+                            marginTop: headerHeight + 'px'
+                        })
+                    }
                     isSticker = true;
                 } else {
                     if (!isSticker) return;
@@ -47,11 +49,11 @@ class Navigation extends React.Component{
                         $('.header-wrapper').removeClass('sticker')
                     }
                     $('.app-nav').removeClass('sticker')
-                    // if ($('#siminia-main-page') && $('#siminia-main-page').length) {
-                    //     $('#siminia-main-page').css({
-                    //         marginTop: oldMainpageMargintop + 'px'
-                    //     })
-                    // }
+                    if ($('#siminia-main-page') && $('#siminia-main-page').length) {
+                        $('#siminia-main-page').css({
+                            marginTop: oldMainpageMargintop + 'px'
+                        })
+                    }
                     isSticker = false;
                 }
             })
@@ -72,6 +74,7 @@ class Navigation extends React.Component{
     }
     hoverDisableItem = (e) => {
         let id = e.currentTarget.id || '';
+        $(`.app-nav .${id} .sub-item`).css({marginTop: 0});
         $(`.app-nav .${id} .sub-item`).removeClass('active')
     }
 

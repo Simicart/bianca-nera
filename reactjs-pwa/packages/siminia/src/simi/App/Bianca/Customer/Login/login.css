@@ -2,7 +2,7 @@
     background-color: white;
     padding: 25px;
     padding-bottom: unset;
-    padding-top: 60px;
+    padding-top: 0px;
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
@@ -10,7 +10,7 @@
 
 .login-background .login-container {
     max-width: 770px;
-    margin-top: 10px;
+    margin-top: 41px;
     margin-left: auto;
     margin-right: auto;
     padding: 0px 0px 60px;
@@ -46,6 +46,26 @@
     width: 20%;
     margin-top: 8px;
     cursor: pointer;
+}
+
+.login-back {
+    width: fit-content;
+    border-bottom: 1px solid #101820;
+    cursor: pointer;
+    margin-top: 35px;
+    min-height: 17px;
+    line-height: 18px;
+}
+.login-back span {
+    height: 18px;
+    color: #101820;
+    font-family: 'Gotham Book';
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 18px;
+    display: inline-block;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 .login-header-title {

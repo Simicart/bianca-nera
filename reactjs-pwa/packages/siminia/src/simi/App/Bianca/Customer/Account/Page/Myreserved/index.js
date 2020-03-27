@@ -15,7 +15,7 @@ const Myreserved = props => {
     if (!data) {
         getMyReserved((data) => setData(data));
     }
-    if (!data || !data.items) {
+    if (data === null) {
         return <Loading />
     }
 
@@ -139,28 +139,32 @@ const Myreserved = props => {
                 <div className="customer-page-title">
                     {Identify.__("My Reserved Products")}
                 </div>
-                <div className='account-my-products'>
+                {data && data.status === false ? 
+                    <div className="text-left">{Identify.__('There are no results matching the selection.')}</div>
+                    :
+                    <div className='account-my-products'>
                     {isPhone ?
-                    <Pagination
-                        renderItem={renderItem}
-                        cols={cols}
-                        data={items}
-                        key={Identify.randomString(3)}
-                        currentPage={parseInt(curPage)}
-                        changedPage={(id) => setCurPage(id)}
-                        limit={5}
-                    /> :
-                    <PaginationTable
-                        renderItem={renderItem}
-                        cols={cols}
-                        data={items}
-                        key={Identify.randomString(3)}
-                        currentPage={parseInt(curPage)}
-                        changedPage={(id) => setCurPage(id)}
-                        limit={10}
-                    />
+                        <Pagination
+                            renderItem={renderItem}
+                            cols={cols}
+                            data={items}
+                            key={Identify.randomString(3)}
+                            currentPage={parseInt(curPage)}
+                            changedPage={(id) => setCurPage(id)}
+                            limit={5}
+                        /> :
+                        <PaginationTable
+                            renderItem={renderItem}
+                            cols={cols}
+                            data={items}
+                            key={Identify.randomString(3)}
+                            currentPage={parseInt(curPage)}
+                            changedPage={(id) => setCurPage(id)}
+                            limit={10}
+                        />
+                    }
+                    </div>
                 }
-                </div>
             </div>
         </div>
     )

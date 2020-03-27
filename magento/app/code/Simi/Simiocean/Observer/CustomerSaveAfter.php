@@ -43,18 +43,19 @@ class CustomerSaveAfter implements \Magento\Framework\Event\ObserverInterface
             if ($collection->getSize()) {
                 $oceanCustomer = $collection->getFirstItem();
             }
-            if ($oceanCustomer && $oceanCustomer->getId() && $oceanCustomer->getStatus() != \Simi\Simiocean\Model\SyncStatus::MISSING) {
-                $oceanCustomer = $collection->getFirstItem();
-                $oceanCustomer
-                    ->setEmail($customer->getEmail())
-                    ->setFirstName($customer->getFirstname())
-                    ->setLastName($customer->getLastname())
-                    ->setPoints((int)$customer->getPoints())
-                    ->setBirthDate(date_format(date_create($customer->getDob()), 'Y-m-d\TH:i:s'))
-                    ->setStatus(\Simi\Simiocean\Model\SyncStatus::PENDING)
-                    ->setDirection(\Simi\Simiocean\Model\Customer::DIR_WEB_TO_OCEAN);
-                $oceanCustomer->setMobilePhone($customer->getMobilenumber());
-                $oceanCustomer->save();
+            if ($oceanCustomer && $oceanCustomer->getId()) {
+                if ($oceanCustomer->getStatus() != \Simi\Simiocean\Model\SyncStatus::MISSING) {
+                    $oceanCustomer
+                        ->setEmail($customer->getEmail())
+                        ->setFirstName($customer->getFirstname())
+                        ->setLastName($customer->getLastname())
+                        ->setPoints((int)$customer->getPoints())
+                        ->setBirthDate(date_format(date_create($customer->getDob()), 'Y-m-d\TH:i:s'))
+                        ->setStatus(\Simi\Simiocean\Model\SyncStatus::PENDING)
+                        ->setDirection(\Simi\Simiocean\Model\Customer::DIR_WEB_TO_OCEAN);
+                    $oceanCustomer->setMobilePhone($customer->getMobilenumber());
+                    $oceanCustomer->save();
+                }
             } else {
                 $date = gmdate('Y-m-d H:i:s');
                 $this->oceanCustomer->setId(null)

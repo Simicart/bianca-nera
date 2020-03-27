@@ -79,6 +79,18 @@
     max-width: 970px;
     max-width: unset;
     margin-right: 0;
+    .text-left{
+        text-align: start;
+        font-family: 'Gotham Book';
+        font-weight: 500;
+        font-size: 16px;
+    }
+    .text-center{
+        text-align: center;
+    }
+    .text-right{
+        text-align: end;
+    }
     .config-page{
         width: 100%;
         margin-top: 60px;
@@ -429,6 +441,10 @@
     .text-center{
         font-weight: 500;
     }
+    .text-left{
+        font-weight: 500;
+        text-align: start;
+    }
 }
 .table-siminia {
     font-size: 16px;
@@ -520,15 +536,15 @@
     margin-inline-start: 16px;
 }
 .dash-column-box .box-title {
-    font-weight: bold;
     margin-bottom: 16px;
     font-size: 16px;
     line-height: 16px;
-    font-family: Gotham Medium;
+    font-family: 'Gotham Book';
+    font-weight: 600;
 }
 .dash-column-box .desc {
     margin-bottom: 8px;
-    font-family: Gotham Book;
+    font-family: 'Gotham Book';
     font-size: 14px;
     line-height: 14px;
 }

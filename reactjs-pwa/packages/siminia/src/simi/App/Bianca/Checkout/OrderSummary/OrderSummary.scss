@@ -41,14 +41,14 @@
                 justify-content: space-between;
             }
             .item-image img{
-                max-width: 80px;
+                max-width: 82px;
             }
             li.order-item .item-image {
                 padding-bottom: 5px;
+                flex-basis: 82px;
             }
             .item-info {
-                width: 60%;
-                max-width: 202px;
+                flex-basis: 68%;
             }
             .item-name {
                 font-size: 14px;

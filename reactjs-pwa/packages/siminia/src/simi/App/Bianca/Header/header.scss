@@ -477,7 +477,7 @@ $textColor3: #e4e4e4;
     .sub-item{
         display: none;
         position: absolute;
-        top: 60px;
+        top: 59px;
         left: 0;
         right: 0;
         z-index: 9999;
@@ -613,6 +613,7 @@ $textColor3: #e4e4e4;
         opacity: 0;
         visibility: hidden;
         width: 0px;
+        max-height: unset;
         &.sticker{
             position: unset;
             opacity: 1;

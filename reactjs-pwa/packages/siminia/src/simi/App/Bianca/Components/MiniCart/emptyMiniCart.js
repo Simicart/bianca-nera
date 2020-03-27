@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { string, shape } from 'prop-types';
 import Identify from 'src/simi/Helper/Identify';
 import classify from 'src/classify';
-import Trigger from './trigger';
 import defaultClasses from './emptyMiniCart.css';
 import BasketIcon from '../../BaseComponents/Icon/Basket';
+import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
 
 class EmptyMiniCart extends Component {
     static propTypes = {
@@ -15,6 +16,12 @@ class EmptyMiniCart extends Component {
         })
     };
 
+    continueShopping = () => {
+        if (this.props.history) {
+            this.props.history.push('/');
+        }
+    }
+
     render() {
         const { classes } = this.props;
 
@@ -24,12 +31,12 @@ class EmptyMiniCart extends Component {
                 <h3 className={classes.emptyTitle}>
                     {Identify.__('YOUR CART IS EMPTY')}
                 </h3>
-                <Trigger>
+                <button onClick={this.continueShopping}>
                     <span className={classes.continue}>{Identify.__('Continue Shopping')}</span>
-                </Trigger>
+                </button>
             </div>
         );
     }
 }
 
-export default classify(defaultClasses)(EmptyMiniCart);
+export default compose(classify(defaultClasses), withRouter)(EmptyMiniCart);

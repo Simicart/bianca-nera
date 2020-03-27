@@ -98,7 +98,7 @@ const OrderList = props => {
         <div className='customer-recent-orders'>
             {!data|| data.length === 0
                 ? (
-                    <div className="text-center">
+                    <div className="text-left">
                         {Identify.__("You have no items in your order")}
                     </div>
                 ) : (

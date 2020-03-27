@@ -20,17 +20,24 @@ const MySizeChart = props => {
     },[id])
 
     const sizeChartCallback = (data) => {
-        const {totalRecords , items} = data;
-        setSizeData({totalRecords, items});
+        const {totalRecords , items, status} = data;
+        setSizeData({totalRecords, items, status});
     }
 
     return (
         <div className='my-size-chart-area'>
             <PageTitle title={Identify.__('Size Chart History').toUpperCase()}/>
-            {sizeData
-            ?
-                <SizeChart data={sizeData} isPhone={props.isPhone}/>
-            : <Loading/>}
+            {!sizeData && sizeData === '' && 
+                <Loading/>
+            }
+            {sizeData && sizeData.items && sizeData.totalRecords > 0 && 
+                <SizeChart data={sizeData} isPhone={props.isPhone} />
+            }
+            {sizeData && sizeData.status === false && 
+                <div className="text-left">
+                    {Identify.__('There are no results matching the selection.')}
+                </div>
+            }
         </div>
     )
     

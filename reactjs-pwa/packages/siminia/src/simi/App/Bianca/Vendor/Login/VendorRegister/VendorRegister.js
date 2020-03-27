@@ -276,10 +276,6 @@ const VendorRegister = (props) => {
 		setAllowSubmit(false)
 	};
 
-	const handleBack = () => {
-		history.push('/designer_login.html');
-	};
-
 	const handleSendOtp = () => {
 		let phone = phoneRegister;
 		// close get modal
@@ -509,9 +505,6 @@ const VendorRegister = (props) => {
 						<button priority="high" className={classes.submitButton} type="submit">
 							{Identify.__('Register')}
 						</button>
-					</div>
-					<div className={`special-back ${classes['back']}`} onClick={handleBack} id="btn-back">
-						<span>{Identify.__('back').toUpperCase()}</span>
 					</div>
 				</React.Fragment>
 			</Form>

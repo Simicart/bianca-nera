@@ -59,7 +59,7 @@ class VendorDetail extends React.Component {
                     return;
                 }
                 this.props.history && this.props.history.push('/');
-            }, 'GET', null, null);
+            }, 'GET', {}, {});
         }
         window.onresize = () => {
             const isPhone = window.innerWidth < 1024;

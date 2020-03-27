@@ -64,7 +64,7 @@ class GiftcardOptions extends OptionBase {
     }
 
     componentDidMount() {
-        this.updatePrices(this.state.aw_gc_amount);
+        // this.updatePrices(this.state.aw_gc_amount);
         this.props.myRef(this);
     }
 
@@ -269,7 +269,7 @@ class GiftcardOptions extends OptionBase {
 
     round10 = (value, exp) => this.decimalAdjust('round', value, exp);
 
-    renderAmountSelect = (value) => {
+    /* renderAmountSelect = (value) => {
         if (!value) {
             value = Identify.__('Choose an amount');
             return <div className="item-selected-value placeholer-value">{value}</div>
@@ -278,7 +278,7 @@ class GiftcardOptions extends OptionBase {
             return <div className="item-selected-value">{Identify.__('Other Amount...')}</div>
         }
         return <div className="item-selected-value">{this.formatPrice(parseFloat(value))}</div>
-    }
+    } */
 
     renderOptions = () => {
         const { classes } = this;
@@ -420,7 +420,7 @@ class GiftcardOptions extends OptionBase {
         let inclT = 0;
         exclT += parseFloat(amount);
         inclT += parseFloat(amount);
-        this.parentObj.Price && this.parentObj.Price.setCustomPrice(exclT, inclT);
+        this.PriceComponent && this.PriceComponent.setCustomPrice(exclT, inclT);
     };
     
     render() {

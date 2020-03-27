@@ -177,7 +177,7 @@ class Login extends Component {
 			);
 		};
 		this.showVendorRegisterForm();
-		$('#login-background').css('marginTop', '55px')
+		// $('#login-background').css('marginTop', '55px')
 	};
 
 	forgotPassword = () => { };
@@ -196,7 +196,7 @@ class Login extends Component {
 			);
 		};
 		this.showForgotPasswordForm();
-		$('#login-background').css('marginTop', '55px')
+		// $('#login-background').css('marginTop', '55px')
 	};
 
 	hideDesigner = () => {
@@ -284,6 +284,11 @@ class Login extends Component {
 		}
 	};
 
+	handleGoBack = () => {
+		const { history } = this.props;
+        if(history) history.push('/designer_login.html');
+    };
+
 	render() {
 		const {
 			emailLoginForm,
@@ -296,7 +301,9 @@ class Login extends Component {
 		} = this;
 		const { isVendorRegisterOpen, isForgotPasswordOpen, isEmailLogin, isPhoneLogin } = state;
 
-		const { classes, isSignedIn, firstname, history } = props;
+		const { classes } = props;
+
+		const isShowBackBtn = isVendorRegisterOpen || isForgotPasswordOpen;
 
 		return (
 			<React.Fragment>
@@ -304,6 +311,16 @@ class Login extends Component {
 					title: Identify.__('Designer Login')
 				})}
 				<div id="login-background" className={`${classes['login-background']} ${Identify.isRtl() ? classes['rtl-login-background'] : null}`}>
+					<div className="container">
+						{isShowBackBtn ?
+							<div className={`special-back ${classes['login-back']}`} id="btn-back" 
+								onClick={this.handleGoBack} >
+								<span>{Identify.__('back').toUpperCase()}</span>
+							</div>
+							:
+							<div className={`special-back ${classes['login-back']}`}></div>
+						}
+					</div>
 					<div
 						className={` ${this.state.forgotPassSuccess == 'none'
 							? classes['smallSize']

@@ -31,6 +31,7 @@ class Currency extends StoreView {
     
     selectCurrency(currency) {
         showFogLoading()
+        const merchantConfigsBefore = Identify.getStoreConfig();
         let appSettings = Identify.getAppSettings()
         const cartId = storage.getItem('cartId')
         const signin_token = storage.getItem('signin_token')
@@ -47,7 +48,8 @@ class Currency extends StoreView {
             storage.setItem('signin_token', signin_token)
         Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID, simiSessId)
         Identify.storeAppSettings(appSettings);
-        window.location.reload()
+        // window.location.reload()
+        this.setState({changingCurrency: true, merchantConfigs: merchantConfigsBefore})
     }
 
     getSelectedCurrency() {
@@ -72,6 +74,8 @@ class Currency extends StoreView {
                         if (data && data.storeConfig) {
                             Identify.saveStoreConfig(data)
                             saveCategoriesToDict(data.simiRootCate)
+                            window.location.reload()
+                        } else if(data) {
                             window.location.reload()
                         }
                         return null

@@ -24,7 +24,7 @@ const ReviewList = props => {
                     setData([]);
                 }
                 hideFogLoading();
-            }, 'GET', null, null);
+            }, 'GET', {}, {});
             setCurPage(page);
         }
     }

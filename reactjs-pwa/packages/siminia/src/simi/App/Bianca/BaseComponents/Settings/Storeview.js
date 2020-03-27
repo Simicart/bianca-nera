@@ -12,7 +12,16 @@ import { Util } from '@magento/peregrine';
 const { BrowserPersistence } = Util;
 const storage = new BrowserPersistence();
 
+import {saveCategoriesToDict} from 'src/simi/Helper/Url';
+import simiStoreConfigDataQuery from 'src/simi/queries/getStoreConfigData.graphql';
+import { Simiquery } from 'src/simi/Network/Query';
+
 class Storeview extends React.Component {
+
+    state = {
+        changingStore: false,
+        merchantConfigs: {}
+    }
 
     constructor(props) {
         super(props);
@@ -23,6 +32,7 @@ class Storeview extends React.Component {
 
     selectedStore(store) {
         showFogLoading()
+        const merchantConfigsBefore = Identify.getStoreConfig();
         let appSettings = Identify.getAppSettings()
         const cartId = storage.getItem('cartId')
         const signin_token = storage.getItem('signin_token')
@@ -36,7 +46,8 @@ class Storeview extends React.Component {
             storage.setItem('signin_token', signin_token)
         Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID, simiSessId)
         Identify.storeAppSettings(appSettings);
-        window.location.reload()
+        // window.location.reload()
+        this.setState({changingStore: true, merchantConfigs: merchantConfigsBefore})
     }
 
     getSelectedStoreId() {
@@ -44,6 +55,10 @@ class Storeview extends React.Component {
             const merchantConfigs = Identify.getStoreConfig();
             if (merchantConfigs && merchantConfigs.storeConfig)
                 this.selectedStoreId = parseInt(merchantConfigs.storeConfig.id, 10)
+        }
+        if (!this.selectedStoreId) {
+            const {store_id} = Identify.getAppSettings() || {};
+            this.selectedStoreId = parseInt(store_id, 10)
         }
         return this.selectedStoreId
     }
@@ -58,7 +73,24 @@ class Storeview extends React.Component {
     }
 
     renderItem() {
-        const {classes} = this.props
+        if (this.state.changingStore) {
+            const {store_id, currency} = Identify.getAppSettings() || {};
+            return (
+                <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency}}>
+                    {({ data }) => {
+                        if (data && data.storeConfig) {
+                            Identify.saveStoreConfig(data)
+                            saveCategoriesToDict(data.simiRootCate)
+                            window.location.reload()
+                        } else if(data) {
+                            window.location.reload()
+                        }
+                        return null
+                    }}
+                </Simiquery>
+            )
+        }
+        
         if (typeof(storage) !== "undefined") {
             try {
                 const merchantConfigs = Identify.getStoreConfig();

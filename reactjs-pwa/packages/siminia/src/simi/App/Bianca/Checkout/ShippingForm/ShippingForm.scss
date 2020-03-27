@@ -24,13 +24,13 @@
     }
     .order-item .item-image {
       padding-bottom: 5px;
+      flex-basis: 82px;
       img {
-        max-width: 80px;
+        max-width: 82px;
       }
     }
     .item-info {
-      width: 67%;
-      max-width: 202px;
+      flex-basis: 69%;
     }
     .item-name {
       font-size: 14px;

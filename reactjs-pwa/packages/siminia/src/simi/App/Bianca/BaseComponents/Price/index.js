@@ -17,8 +17,7 @@ class PriceComponent extends React.Component {
         if (this.type === "bundle") {
             return <BundlePrice prices={this.prices} parent={this} />
         }
-        else if (this.type === "grouped") { 
-            // for list page group product
+        else if (this.type === "grouped") {
             return <Grouped prices={this.prices} parent={this} />
         }
         else if (this.type === "configurable") {
@@ -28,13 +27,11 @@ class PriceComponent extends React.Component {
             return <Giftcard prices={this.prices} parent={this} />
         }
         else {
-            ////simple, configurable ....
             return <Simple prices={this.prices} parent={this} />
         }
     }
 
     render() {
-        const {props} = this
         return (
             <div className={`price-${this.type}`}>{this.renderView()}</div>
         );

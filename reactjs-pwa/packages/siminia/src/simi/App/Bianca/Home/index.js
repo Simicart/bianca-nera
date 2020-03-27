@@ -12,6 +12,7 @@ import { getOS } from 'src/simi/App/Bianca/Helper';
 import Designers from './Designers';
 import Newcollections from './Newcollections';
 import Instagram from './Instagram';
+import TitleHelper from 'src/simi/Helper/TitleHelper';
 // import Chats from 'src/simi/App/Bianca/BaseComponents/Chats';
 require('./home.scss');
 
@@ -56,6 +57,9 @@ const Home = props => {
 
     return (
         <div className={`home-wrapper ${getOS()}`}>
+            {TitleHelper.renderMetaHeader({
+                    title:Identify.__('Bianca Nera')
+            })}
             <div className={`banner-wrap ${isPhone ? 'mobile':''}`}>
                 <Banner data={data} history={history} isPhone={isPhone} />
             </div>

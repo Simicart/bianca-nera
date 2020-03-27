@@ -82,17 +82,17 @@ const Wishlist = props => {
                     title:Identify.__('Favourites')
             })}
             <div className="account-favourites">
-                <div className="product-grid">
-                    {rows ? rows : (
-                        <div className="no-product">
-                            <p>
-                                {Identify.__(
-                                    "There are no products matching the selection"
-                                )}
-                            </p>
+                <div class="customer-page-title">{Identify.__('Wishlist')}</div>
+                {rows ?
+                    <div className="product-grid">
+                        {rows}
+                    </div> :
+                    <div className="no-product">
+                        <div className="text-left">
+                            {Identify.__("There are no products matching the selection")}
                         </div>
-                    )}
-                </div>
+                    </div>
+                }
                 {(rows && rows.length) && 
                     <div className="wishlist-action">
                         <div role="presentation" className="wishlist-sharing" onClick={() => history.push('/sharewishlist.html')}>{Identify.__('Share wishlist')}</div>

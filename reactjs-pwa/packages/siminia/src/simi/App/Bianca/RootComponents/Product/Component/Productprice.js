@@ -10,6 +10,7 @@ const initState = {
     customPrice: {},
     customOptionPrice: {exclT:0, inclT:0},
     downloadableOptionPrice: {exclT:0, inclT:0},
+    choosedPrice: false
 }
 
 class ProductPrice extends React.Component {
@@ -22,18 +23,21 @@ class ProductPrice extends React.Component {
     
     setCustomPrice(exclT, inclT) {
         this.setState({
-            customPrice: {exclT, inclT}
+            customPrice: {exclT, inclT},
+            choosedPrice: true
         })
     }
 
     setCustomOptionPrice(exclT, inclT) {
         this.setState({
-            customOptionPrice: {exclT, inclT}
+            customOptionPrice: {exclT, inclT},
+            choosedPrice: true
         })
     }
     setDownloadableOptionPrice(exclT, inclT) {
         this.setState({
-            downloadableOptionPrice: {exclT, inclT}
+            downloadableOptionPrice: {exclT, inclT},
+            choosedPrice: true
         })
     }
 
@@ -132,7 +136,7 @@ class ProductPrice extends React.Component {
             <div className='prices-layout'>
                 {
                     (data.type_id !== "grouped") &&
-                    <Price config={1} key={Identify.randomString(5)} prices={prices} type={data.type_id}/>
+                    <Price config={1} key={Identify.randomString(5)} prices={prices} type={data.type_id} choosedPrice={this.state.choosedPrice}/>
                 }
             </div>
         );

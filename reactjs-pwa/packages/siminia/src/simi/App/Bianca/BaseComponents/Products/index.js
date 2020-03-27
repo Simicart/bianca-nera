@@ -229,7 +229,7 @@ class Products extends React.Component {
                         {!this.state.isPhone && this.renderLeftNavigation()}
                         {this.state.isPhone && this.renderBottomFilterSort()}
                         <div className="listing-product">
-                            {!cateEmpty && this.renderList()}
+                            {this.renderList()}
                         </div>
                     </div>
                     <div className="recent-viewed-product">

@@ -3,8 +3,22 @@ import Abstract from './Abstract';
 import Identify from 'src/simi/Helper/Identify'
 
 class Giftcard extends Abstract {
-    renderView=()=>{
-        const price = (<div className="regular">{Identify.__('From ')} {this.formatPrice(this.prices.minimalPrice.amount.value, this.prices.minimalPrice.amount.currency)}</div>);
+    renderView = () => {
+        const choosedPrice = this.parent && this.parent.props.choosedPrice || false;
+
+        const priceVal = this.prices.minimalPrice.amount.value;
+        const currency = this.prices.minimalPrice.amount.currency;
+
+        const price = (
+            choosedPrice ?
+            <div className="regular">
+                {this.formatPrice(priceVal, currency)}
+            </div>
+            :
+            <div className="regular">
+                {Identify.__('From ')} {this.formatPrice(priceVal, currency)}
+            </div>
+        );
         return (
             <div className='product-prices'>
                 {price}

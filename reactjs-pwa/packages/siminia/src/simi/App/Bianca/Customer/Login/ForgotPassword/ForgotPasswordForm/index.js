@@ -9,9 +9,6 @@ import classes from './forgotPasswordForm.css';
 
 const ForgotPasswordForm  =  props => {
     const { history, onSubmit } = props;
-    const handleBack = () => {
-        history.push('/login.html');
-    };
 
     return (
         <Form
@@ -33,13 +30,6 @@ const ForgotPasswordForm  =  props => {
                 >
                     {Identify.__('Submit')}
                 </button>
-            </div>
-            <div 
-                className={`special-back ${classes['back']} ${Identify.isRtl() ? classes['rtl-back'] : null}`}
-                id="btn-back"
-                onClick={handleBack}
-            >
-                <span>{Identify.__('back').toUpperCase()}</span>
             </div>
         </Form>
     )

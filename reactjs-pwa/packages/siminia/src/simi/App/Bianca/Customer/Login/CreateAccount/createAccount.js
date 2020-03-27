@@ -100,10 +100,6 @@ const CreateAccount = props => {
         setAllowSubmit(false)
     }
 
-    const handleBack = () => {
-        history.push('/login.html');
-    };
-
     const handleSendOtp = () => {
         let phone = phoneRegister;
         // close get modal
@@ -292,13 +288,6 @@ const CreateAccount = props => {
                     >
                         {Identify.__('Register')}
                     </button>
-                </div>
-                <div
-                    className={`special-back ${classes['back']}`}
-                    id="btn-back"
-                    onClick={handleBack}
-                >
-                    <span>{Identify.__('back').toUpperCase()}</span>
                 </div>
             </Form>
         </React.Fragment>

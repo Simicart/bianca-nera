@@ -295,7 +295,7 @@ class Login extends Component {
 			);
 		};
 		this.showCreateAccountForm();
-		$('#login-background').css('marginTop', '55px')
+		// $('#login-background').css('marginTop', '55px')
 	};
 
 	forgotPassword = () => { };
@@ -314,7 +314,7 @@ class Login extends Component {
 			);
 		};
 		this.showForgotPasswordForm();
-		$('#login-background').css('marginTop', '55px')
+		// $('#login-background').css('marginTop', '55px')
 	};
 
 	hideBuyer = () => {
@@ -420,6 +420,11 @@ class Login extends Component {
 		}
 	};
 
+	handleGoBack = () => {
+		const { history } = this.props;
+        if(history) history.push('/login.html');
+    };
+
 	render() {
 		const {
 			createAccountForm,
@@ -448,7 +453,7 @@ class Login extends Component {
 			if (this.props.toggleMessages)
 				this.props.toggleMessages([{ type: 'success', message: message, auto_dismiss: true }]);
 		}
-		const showBackBtn = isCreateAccountOpen || isForgotPasswordOpen;
+		const isShowBackBtn = isCreateAccountOpen || isForgotPasswordOpen;
 
 		return (
 			<React.Fragment>
@@ -456,10 +461,19 @@ class Login extends Component {
 					title: Identify.__('Customer Login')
 				})}
 				<div id="login-background" className={classes['login-background']}>
+					<div className="container">
+						{isShowBackBtn ?
+							<div className={`special-back ${classes['login-back']}`} id="btn-back" 
+								onClick={this.handleGoBack} >
+								<span>{Identify.__('back').toUpperCase()}</span>
+							</div>
+							:
+							<div className={`special-back ${classes['login-back']}`}></div>
+						}
+					</div>
 					<div
-						className={` ${this.state.forgotPassSuccess == 'none'
-							? classes['smallSize']
-							: classes['']} ${classes['login-container']}`}
+						className={`${this.state.forgotPassSuccess == 'none'
+							? classes['smallSize'] : ''} ${classes['login-container']}`}
 					>
 						<div
 							className={`${classes['buyer-login']}`}
@@ -469,8 +483,7 @@ class Login extends Component {
 						</div>
 						<div
 							className={`${isCreateAccountOpen || isForgotPasswordOpen
-								? classes['inactive']
-								: classes['']} ${classes['select-type']}`}
+								? classes['inactive'] : ''} ${classes['select-type']}`}
 						>
 							<div
 								onClick={this.showPhoneLoginForm}

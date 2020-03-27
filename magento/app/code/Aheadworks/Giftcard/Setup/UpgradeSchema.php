@@ -182,6 +182,21 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
+        if ($context->getVersion() && version_compare($context->getVersion(), '1.2.11', '<')) {
+            //Modify column to aw_giftcard_product_entity_amounts to accept higher value
+            $setup->getConnection()
+                ->modifyColumn(
+                    $setup->getTable('aw_giftcard_product_entity_amounts'),
+                    'percent',
+                    [
+                        'type' => Table::TYPE_DECIMAL,
+                        'length'    => '12,2',
+                        'nullable' => true,
+                        'default' => 0,
+                        'comment'   => 'Price to sales of the giftcard product',
+                    ]
+                );
+        }
     }
 
     /**

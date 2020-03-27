@@ -186,7 +186,7 @@ const GiftVouchers = props => {
                 </div>
                 {!giftCode || giftCode.length == 0
                 ?
-                    <div className="text-center">
+                    <div className="text-left">
                         {Identify.__("You have no gift voucher")}
                     </div>
                 :   isPhone ? 
@@ -210,7 +210,7 @@ const GiftVouchers = props => {
                 </div>
                 {!historyCodes || historyCodes.length == 0
                 ?
-                    <div className="text-center">
+                    <div className="text-left">
                         {Identify.__("You have no code in your history")}
                     </div>
                 :   isPhone ? 
