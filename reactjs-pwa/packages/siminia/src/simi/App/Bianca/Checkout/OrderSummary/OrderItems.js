@@ -62,7 +62,7 @@ const OrderItems = (props) => {
                             {optionElement}
                             <div className='item-qty-price'>
                                 <span className='qty'>{Identify.__("Quantity")}: {o_item.qty}</span>
-                                <span className='price'><Price currencyCode={cartCurrencyCode} value={o_item.price} /></span>
+                                <span className='price'><Price currencyCode={cartCurrencyCode} value={o_item.row_total_incl_tax} /></span>
                             </div>
                         </React.Fragment>
                     }

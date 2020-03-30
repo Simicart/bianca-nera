@@ -220,7 +220,8 @@
 
 .login-background div[class~="signInAction"] button {
     color: #101820;
-    font-family: "Gotham Medium";
+    font-family: "Gotham Book";
+    font-weight: 600;
     font-size: 16px;
     line-height: 16px;
 }
@@ -298,9 +299,9 @@
 
 .login-background .active .signInDivider .signInWidth {
     color: #101820;
-    font-family: "Gotham Medium";
+    font-family: "Gotham Book";
+    font-weight: 600;
     font-size: 14px;
-    font-weight: 500;
     height: 14px;
     text-transform: uppercase;
 }
@@ -537,7 +538,8 @@
     }
     .login-background div[class~="signInAction"] button {
         margin-top: 25px;
-        font-family: 'Gotham Medium';
+        font-family: 'Gotham Book';
+        font-weight: 600;
         font-size: 14px;
         line-height: 14px;
     }

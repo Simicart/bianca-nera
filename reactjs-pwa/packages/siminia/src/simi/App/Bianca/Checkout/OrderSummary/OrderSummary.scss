@@ -161,6 +161,29 @@
             ul.address-item li {
                 display: block;
             }
+
+            @media screen and (max-width: 1023px) {
+                .item-info{
+                    margin-inline-start: 36px;
+                }
+                .cart-total{
+                    .grand_total {
+                        font-family: 'Gotham Book';
+                        font-weight: 600;
+                        font-size: 20px;
+                        line-height: 20px;
+                        text-transform: uppercase;
+                        .label {
+                            font-size: 20px;
+                            font-weight: 600;
+                        }
+                        .price {
+                            font-weight: 600;
+                            line-height: 20px;
+                        }
+                    }
+                }
+            }
         }
         /*
         pre order

@@ -213,7 +213,7 @@
         background-color: #101820;
     }
     
-    @media (max-width: 1023px) {
+    @media screen and (max-width: 1023px) {
         .checkout-column {
             display: block;
             margin-left: -15px;
@@ -256,6 +256,9 @@
             #submit-voucher, #remove-voucher{
                 max-width: 106px;
             }
+        }
+        .btn-place-order{
+            margin-top: 55px;
         }
     }
 }

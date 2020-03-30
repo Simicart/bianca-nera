@@ -103,21 +103,15 @@
       height: 30px !important;
     }
   }
-
-  @media (min-width: 1024px) {
+  
+  @media (max-width: 1023px) {
     .col-md-6.cart-bottom-left {
       padding: 0;
       padding-top: 40px;
     }
-  }
-
-  @media (max-width: 1023px) {
     .col-md-6.cart-bottom-left {
       padding-top: 20px;
     }
-  }
-
-  @media (max-width: 1023px) {
     .cart-item-header {
       display: none;
     }
@@ -193,18 +187,23 @@
     }
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1023px) {
     .cart-btn-section {
-      margin-top: 20px;
+      margin-top: 20x;
     }
-
     .cart-btn-section .go-checkout {
       margin-top: 8px;
     }
-  }
-  @media (max-width: 1023px) {
     .cart-page-siminia {
       padding: 0;
+    }
+  }
+}
+
+.cart-page{
+  .summary-zone{
+    .cart-btn-section{
+      margin-top: 52px;
     }
   }
 }
@@ -360,6 +359,9 @@
           margin-top: 32px;
           font-size: 20px;
           line-height: 20px;
+          font-family: 'Gotham Book';
+          font-weight: 600!important;
+          text-transform: uppercase;
         }
         .subtotal {
           display: flex;
@@ -367,6 +369,7 @@
           margin-top: 32px;
           font-size: 16px;
           line-height: 16px;
+          font-family: 'Gotham Book';
         }
 
         .go-checkout {
