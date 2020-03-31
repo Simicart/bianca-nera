@@ -206,7 +206,7 @@ class Products extends React.Component {
 
     render() {
         const {props} = this
-        const { data, title, cateEmpty } = props;
+        const { data, title, cateEmpty, foundChild} = props;
         let description = props.description
         if(!description && data&& data.category && data.category.description){
             description = data.category.description ? Identify.__('%t') : Identify.__('%t')
@@ -224,18 +224,22 @@ class Products extends React.Component {
                     {descriptionArea}
                 </h2>
                 {props.underHeader}
-                <React.Fragment>
-                    <div className="product-list-container-siminia">
-                        {!this.state.isPhone && this.renderLeftNavigation()}
-                        {this.state.isPhone && this.renderBottomFilterSort()}
-                        <div className="listing-product">
-                            {this.renderList()}
+                {cateEmpty && foundChild ?
+                    null
+                    :
+                    <React.Fragment>
+                        <div className="product-list-container-siminia">
+                            {!this.state.isPhone && this.renderLeftNavigation()}
+                            {this.state.isPhone && this.renderBottomFilterSort()}
+                            <div className="listing-product">
+                                {this.renderList()}
+                            </div>
                         </div>
-                    </div>
-                    <div className="recent-viewed-product">
-                        <RecentViewed />
-                    </div>
-                </React.Fragment>
+                        <div className="recent-viewed-product">
+                            <RecentViewed />
+                        </div>
+                    </React.Fragment>
+                }
             </article>
         );
     }

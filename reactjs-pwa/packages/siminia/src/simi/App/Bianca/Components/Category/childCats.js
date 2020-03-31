@@ -28,22 +28,22 @@ const childCats = props => {
             }
 
             if (foundChild.children && foundChild.children.length) {
+                if (props.setFoundChild) props.setFoundChild(true);
                 if (cateEmpty) {
                     return (
                         <div className="category-top-images">
                             {
                                 foundChild.children.map((child, index)=> {
                                     const location = {pathname: `/${child.url_path}${cateUrlSuffix()}`}
-                                    return (
-                                        <Link to={location} className="category-top-child-image-ctn" key={index}>
-                                            <div className="category-top-child-image" 
-                                                style={{backgroundImage: `url("${'pub' + resourceUrl(child.image, { type: 'image-category' })}")`}}>
-                                            </div>
-                                            <div className="name-title">
-                                                {child.name}
-                                            </div>
-                                        </Link>
-                                    )
+                                    const image = child.image || '';
+                                    return <Link to={location} className="category-top-child-image-ctn" key={index}>
+                                        <div className="category-top-child-image" 
+                                            style={{backgroundImage: `url("${'pub' + resourceUrl(image, { type: 'image-category' })}")`}}>
+                                        </div>
+                                        <div className="name-title">
+                                            {child.name}
+                                        </div>
+                                    </Link>
                                 })
                             }
                         </div>

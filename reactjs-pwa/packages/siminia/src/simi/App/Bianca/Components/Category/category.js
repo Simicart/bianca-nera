@@ -16,6 +16,7 @@ import ChildCats from './childCats'
 var sortByData = null
 var filterData = null
 let loadedData = null
+let foundChild = false
 
 const Category = props => {
     const { id, foundBrand } = props;
@@ -49,6 +50,10 @@ const Category = props => {
     if (sortByData)
         variables.sort = sortByData
         
+    const setFoundChild = (value) => {
+        foundChild = value
+    }
+
     const cateQuery = simicntrCategoryQuery
     return (
         <Simiquery query={cateQuery} variables={variables}>
@@ -117,8 +122,10 @@ const Category = props => {
                                 underHeader={<ChildCats 
                                     category={data.category} 
                                     cateEmpty={cateEmpty}
+                                    setFoundChild={setFoundChild}
                                     />
                                 }
+                                foundChild={foundChild}
                                 history={props.history}
                                 location={props.location}
                                 currentPage={currentPage}
