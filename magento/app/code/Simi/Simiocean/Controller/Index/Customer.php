@@ -37,7 +37,7 @@ class Customer extends \Magento\Framework\App\Action\Action
             "AreaCode" => 1
         );
 
-        $customers = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Customer')->getCustomer("0509464764");
+        $customers = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Customer')->getCustomer("65555705");
         var_dump($customers);die;
         // $customers = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Customer')->updateCustomer($data);
         // var_dump($customers);die;

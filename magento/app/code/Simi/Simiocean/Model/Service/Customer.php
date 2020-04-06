@@ -205,6 +205,7 @@ class Customer extends \Magento\Framework\Model\AbstractModel
                             $oceanCustomerModel->setLastName(isset($oceanCustomer['LastName']) ? $oceanCustomer['LastName'] : null);
                             $oceanCustomerModel->setHomePhone(isset($oceanCustomer['HomePhone']) ? $oceanCustomer['HomePhone'] : null);
                             $oceanCustomerModel->setMobilePhone($oceanCustomer['MobilePhone']);
+                            $oceanCustomerModel->setAreaCode( isset($oceanCustomer['AreaCode']) ? $oceanCustomer['AreaCode'] : null );
                             $oceanCustomerModel->setBirthDate(isset($oceanCustomer['BirthDate']) ? $oceanCustomer['BirthDate'] : null);
                             $oceanCustomerModel->setEmail(isset($oceanCustomer['Email']) ? $oceanCustomer['Email'] : null);
                             $oceanCustomerModel->setPoints(isset($oceanCustomer['Points']) ? (float)$oceanCustomer['Points'] : null);
@@ -300,6 +301,7 @@ class Customer extends \Magento\Framework\Model\AbstractModel
                         $oceanCustomerModel->setLastName( isset($oceanData['LastName']) ? $oceanData['LastName'] : null );
                         $oceanCustomerModel->setHomePhone( isset($oceanData['HomePhone']) ? $oceanData['HomePhone'] : null );
                         $oceanCustomerModel->setMobilePhone( isset($oceanData['MobilePhone']) ? $oceanData['MobilePhone'] : null );
+                        $oceanCustomerModel->setAreaCode( isset($oceanData['AreaCode']) ? $oceanData['AreaCode'] : null );
                         $oceanCustomerModel->setBirthDate( isset($oceanData['BirthDate']) ? $oceanData['BirthDate'] : null );
                         $oceanCustomerModel->setEmail( isset($oceanData['Email']) ? $oceanData['Email'] : null );
                         $oceanCustomerModel->setPoints( isset($oceanData['Points']) ? (float)$oceanData['Points'] : null );
@@ -541,6 +543,12 @@ class Customer extends \Magento\Framework\Model\AbstractModel
                         $oceanData = $this->customerToOcean($customer);
                         if ($oceanCustomer->getCustomerId() && $oceanCustomer->getStatus() == \Simi\Simiocean\Model\SyncStatus::PENDING) {
                             $oceanData['CustomerID'] = $oceanCustomer->getCustomerId();
+                            $oceanData['AreaCode'] = $oceanCustomer->getAreaCode();
+                            // Remove phone code
+                            if (isset($oceanData['MobilePhone']) && $oceanCustomer->getAreaCode() &&
+                                strpos($oceanData['MobilePhone'], $oceanCustomer->getAreaCode()) == 0) {
+                                $oceanData['MobilePhone'] = substr($oceanData['MobilePhone'], strlen($oceanCustomer->getAreaCode()));
+                            }
                             $result = $this->customerApi->updateCustomer($oceanData);
                         } elseif ($oceanCustomer->getStatus() == \Simi\Simiocean\Model\SyncStatus::MISSING) {
                             $result = $this->customerApi->addCustomer($oceanData);
@@ -608,7 +616,7 @@ class Customer extends \Magento\Framework\Model\AbstractModel
             'Email' => $customerData->getEmail(),
             'StreetEnName' => is_array($street) && !empty($street) ? $street[0] : null,
             'StateEnName' => $address->getCity(),
-            'AreaCode' => (int) str_replace(array('-', '_', ' ', '.'), '', $address->getPostCode()) ?: 1,
+            'AreaCode' => 0, // AreaCode must replace with ocean AreaCode, the customer from magento has code 0
         );
 
         if ($branchEnNames) $data['BranchEnNames'] = $branchEnNames;
@@ -647,7 +655,11 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         $address = $this->convertAddress($customerModel, $dataObject, $isArStore);
         $customerModel->setAddresses(array($address));
 
-        $customerModel->setCustomAttribute('mobilenumber', $dataObject->getPhone());
+        if ($dataObject->getData('AreaCode')) {
+            $customerModel->setCustomAttribute('mobilenumber', $dataObject->getData('AreaCode') . $dataObject->getPhone());
+        } else {
+            $customerModel->setCustomAttribute('mobilenumber', $dataObject->getPhone());
+        }
         $customerModel->setCustomAttribute('branch_en_names', $dataObject->getData('BranchEnNames'));
         $customerModel->setCustomAttribute('branch_ar_names', $dataObject->getData('BranchArNames'));
 
@@ -690,7 +702,13 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         $stateName = $isArStore && $dataObject->getData('StateArName') ? 
             $dataObject->getData('StateArName') : $dataObject->getData('StateEnName') ?: 'NA';
         $address->setCity($stateName);
-        $address->setTelephone($dataObject->getPhone());
+
+        if ($dataObject->getData('AreaCode')) {
+            $address->setTelephone($dataObject->getData('AreaCode') . $dataObject->getPhone());
+        } else {
+            $address->setTelephone($dataObject->getPhone());
+        }
+
         // $address->setCountryId($dataObject->getData('NationalityID'));
         $address->setCountryId('KW');
         if ($dataObject->getData('StateID') && $dataObject->getData('StateArName')) {
@@ -832,7 +850,7 @@ class Customer extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Get ocean customer pending update from website to ocean
+     * Get ocean customer pending update from website to ocean (status pending or missing)
      * @return \Simi\Simiocean\Model\ResourceModel\Customer\Collection
      */
     protected function getPendingUpdate(){
@@ -873,6 +891,7 @@ class Customer extends \Magento\Framework\Model\AbstractModel
                 $oCustomerObject->setLastName($object->getLastName());
                 $oCustomerObject->setHomePhone($object->getHomePhone());
                 $oCustomerObject->setMobilePhone($object->getMobilePhone());
+                $oCustomerObject->setAreaCode($object->getAreaCode());
                 $oCustomerObject->setBirthDate($object->getBirthDate());
                 $oCustomerObject->setEmail($object->getEmail());
                 $oCustomerObject->setPoints((float)$object->getPoints());

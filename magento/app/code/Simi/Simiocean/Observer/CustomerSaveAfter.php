@@ -53,7 +53,13 @@ class CustomerSaveAfter implements \Magento\Framework\Event\ObserverInterface
                         ->setBirthDate(date_format(date_create($customer->getDob()), 'Y-m-d\TH:i:s'))
                         ->setStatus(\Simi\Simiocean\Model\SyncStatus::PENDING)
                         ->setDirection(\Simi\Simiocean\Model\Customer::DIR_WEB_TO_OCEAN);
-                    $oceanCustomer->setMobilePhone($customer->getMobilenumber());
+                    // Remove phone code
+                    if ($customer->getMobilenumber() && $oceanCustomer->getAreaCode() &&
+                        strpos($customer->getMobilenumber(), $oceanCustomer->getAreaCode()) == 0) {
+                        $oceanCustomer->setMobilePhone(
+                            substr($customer->getMobilenumber(), strlen($oceanCustomer->getAreaCode()))
+                        );
+                    }
                     $oceanCustomer->save();
                 }
             } else {

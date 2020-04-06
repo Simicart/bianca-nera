@@ -40,6 +40,7 @@
         <column xsi:type="varchar"  name="last_name" nullable="true" length="256" comment="LastName"/>
         <column xsi:type="varchar"  name="home_phone" nullable="true" length="256" comment="HomePhone"/>
         <column xsi:type="varchar"  name="mobile_phone" nullable="true" length="256" comment="MobilePhone"/>
+        <column xsi:type="varchar"  name="area_code" nullable="true" length="20" comment="Area code of phone number"/>
         <column xsi:type="varchar"  name="birth_date" nullable="true" length="64" comment="BirthDate"/>
         <column xsi:type="varchar"  name="email" nullable="true" length="256" comment="Email"/>
         <column xsi:type="float"    name="points" unsigned="true" nullable="true" comment="Points"/>
