@@ -54,6 +54,9 @@ response:
       pattern: '^/(icons/.+|favicon.ico$|manifest.json$|siminiaClosed.png|robots.txt$|fonts/.+\.[A-z]{3}$|images/.+\.(jpg|png|jpeg|gif)$)'
       use: static
     - matches: request.url.pathname
+      pattern: '^/OneSignalSDK'
+      use: static
+    - matches: request.url.pathname
       pattern: '^/simistatic/.'
       use: static
       #param contain simiforceproxy would use proxy directly to magento site
