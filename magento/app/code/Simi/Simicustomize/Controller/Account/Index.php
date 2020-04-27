@@ -9,6 +9,7 @@ namespace Simi\Simicustomize\Controller\Account;
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
+use Magento\Framework\Controller\ResultFactory;
 
 class Index extends \Magento\Customer\Controller\AbstractAccount implements HttpGetActionInterface
 {
@@ -36,10 +37,14 @@ class Index extends \Magento\Customer\Controller\AbstractAccount implements Http
      */
     public function execute()
     {
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         // Redirect to dashboard pwa studio site
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $linkRedirect = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/url_logout/url');
-        header("Location: {$linkRedirect}account.html");
-        exit;
+        $linkRedirect = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/general/pwa_studio_url');
+        if(isset($linkRedirect)){
+            $resultRedirect->setPath($linkRedirect."account.html");
+            return $resultRedirect;
+        }
     }
 }

@@ -16,6 +16,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Customer\Controller\AbstractAccount;
+use Magento\Framework\Controller\ResultFactory;
 
 /**
  * Sign out a customer.
@@ -93,10 +94,15 @@ class VendorLogout extends AbstractAccount implements HttpGetActionInterface, Ht
             $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
         }
 
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+
         // Redirect to pwa site
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $linkRedirect = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/url_logout/url');
-        header("Location: {$linkRedirect}logout.html");
-        exit;
+        $linkRedirect = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('simiconnector/general/pwa_studio_url');
+        if(isset($linkRedirect)){
+            $resultRedirect->setPath($linkRedirect."logout.html");
+            return $resultRedirect;
+        }
     }
 }

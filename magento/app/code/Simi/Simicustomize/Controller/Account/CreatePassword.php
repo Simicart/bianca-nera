@@ -73,8 +73,9 @@ class CreatePassword extends \Magento\Customer\Controller\AbstractAccount implem
                 $this->session->setRpToken($resetPasswordToken);
                 $link = $this->getRequest()->getParam('link', false);
                 if (isset($link)) {
-                    header("Location: {$link}?token={$resetPasswordToken}");
-                    exit;
+                    $resultRedirect = $this->resultRedirectFactory->create();
+                    $resultRedirect->setPath($link."?token=".$resetPasswordToken);
+                    return $resultRedirect;
                 }
             } else {
                 /** @var \Magento\Framework\View\Result\Page $resultPage */

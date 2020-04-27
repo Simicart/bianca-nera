@@ -166,8 +166,10 @@ class Confirm extends \Magento\Customer\Controller\AbstractAccount
                 $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
             }
             $link = $this->getRequest()->getParam('link', false);
-            header("Location: {$link}");
-            exit;
+            if (isset($link)) {
+                $resultRedirect->setPath($link);
+                return $resultRedirect;
+            }
         } catch (StateException $e) {
             $this->messageManager->addException($e, __('This confirmation key is invalid or has expired.'));
         } catch (\Exception $e) {
