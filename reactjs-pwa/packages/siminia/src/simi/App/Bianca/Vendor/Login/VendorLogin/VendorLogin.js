@@ -6,6 +6,7 @@ import { isRequired } from 'src/util/formValidators';
 import Identify from 'src/simi/Helper/Identify';
 import TitleHelper from 'src/simi/Helper/TitleHelper';
 import Checkbox from 'src/simi/BaseComponents/Checkbox';
+import Cookies from 'universal-cookie';
 
 require('./vendorLogin.scss');
 
@@ -31,18 +32,19 @@ class VendorLogin extends Component {
 	};
 
 	componentDidMount() {
-		var savedUser = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'user_email');
-		var savedPassword = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'user_password');
-		if (savedUser && savedPassword) {
-			this.setState({ isSeleted: true })
-			// Prepare decode password and fill username and password into form (remember me)
-			var crypto = require('crypto-js');
-			var bytes = crypto.AES.decrypt(savedPassword, '@_1_namronaldomessi_privatekey_$');
-			// Decode password to plaintext
-			var plaintextPassword = bytes.toString(crypto.enc.Utf8);
-			this.formApi.setValue('email', savedUser);
-			this.formApi.setValue('password', plaintextPassword);
-		}
+		const cookies = new Cookies();
+        const savedUser = cookies.get('user_email');
+        const savedPassword = cookies.get('user_password');
+        if (savedUser && savedPassword) {
+            this.setState({ isSeleted: true })
+            // Prepare decode password and fill username and password into form (remember me)
+            const crypto = require('crypto-js');
+            const bytes = crypto.AES.decrypt(savedPassword, '@_1_namronaldomessi_privatekey_$');
+            // Decode password to plaintext
+            const plaintextPassword = bytes.toString(crypto.enc.Utf8);
+            this.formApi.setValue('email', savedUser);
+            this.formApi.setValue('password', plaintextPassword);
+        }
 	}
 
 	render() {
@@ -112,31 +114,21 @@ class VendorLogin extends Component {
 	onSignIn() {
 		const username = this.formApi.getValue('email');
 		const password = this.formApi.getValue('password');
-
+		const cookies = new Cookies();
 		if (this.state.isSeleted === true) {
 			// Import extension crypto to encode password
 			var crypto = require('crypto-js');
 			// Encode password
 			var hashedPassword = crypto.AES.encrypt(password, '@_1_namronaldomessi_privatekey_$').toString();
-			// Save username to local storage 
-			Identify.storeDataToStoreage(
-				Identify.LOCAL_STOREAGE,
-				'user_email',
-				username
-			);
-			// Save hashed password to local storage
-			Identify.storeDataToStoreage(
-				Identify.LOCAL_STOREAGE,
-				'user_password',
-				hashedPassword
-			);
+			// Save username to cookies
+            cookies.set('user_email', username, { path: '/' });
+            // Save hashed password to 
+            cookies.set('user_password', hashedPassword, { path: '/' });
 		} else {
-			var savedUser = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'user_email');
-			var savedPassword = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'user_password');
-			if (savedUser && savedPassword) {
-				localStorage.removeItem('user_email');
-				localStorage.removeItem('user_password');
-			}
+			if (cookies.get('user_email') && cookies.get('user_password')) {
+                cookies.remove('user_email');
+                cookies.remove('user_password');
+            }
 		}
 
 		this.props.onSignIn(username, password);

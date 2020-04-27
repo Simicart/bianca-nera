@@ -69,148 +69,60 @@ class Navigation extends React.Component{
 
     hoverActiveItem = (e) => {
         let id = e.currentTarget.id || '';
-        $(`.app-nav .${id} .sub-item`).css({marginTop: $(e.currentTarget).outerHeight()});
-        $(`.app-nav .${id} .sub-item`).addClass('active')
+        $(`.app-nav .${id} .outer-sub-item`).css({background: 'transparent', paddingTop: $(e.currentTarget).outerHeight()});
+        $(`.app-nav .${id} .outer-sub-item`).addClass('active');
     }
     hoverDisableItem = (e) => {
         let id = e.currentTarget.id || '';
-        $(`.app-nav .${id} .sub-item`).css({marginTop: 0});
-        $(`.app-nav .${id} .sub-item`).removeClass('active')
+        $(`.app-nav .${id} .outer-sub-item`).css({background: '', paddingTop: ''});
+        $(`.app-nav .${id} .outer-sub-item`).removeClass('active')
     }
 
     render() {
         const { classes, addClassNames } = this.props
         let menuItems = []
         const showMenuTrigger = false
-        let subItems = []
-        if (window.DESKTOP_MENU) {
-            var menuItemsData = window.DESKTOP_MENU
-            menuItems = menuItems.sort(function(a, b){
-                if (a.position && b.position){
-                    if (a.position > b.position) return 1; 
-                    if (a.position < b.position) return -1;
-                }
-                return 0
+        const storeConfig = Identify.getStoreConfig();
+        if (storeConfig && storeConfig.simiRootCate && storeConfig.simiRootCate.children) {
+            var rootCateChildren  = storeConfig.simiRootCate.children
+            rootCateChildren = rootCateChildren.sort(function(a, b){
+                return a.position - b.position
             });
-            menuItems = menuItemsData.map((item, index) => {
-                var isActive = item.link.indexOf(window.location.pathname) !== -1 ? 'active':'';
+            menuItems = rootCateChildren.map((item, index) => {
+                var isActive = window.location.pathname.indexOf(item.url_path) === 1 ? 'active':'';
+                
                 if(!item.include_in_menu){
                     return null
                 }
+                if (!item.name)
+                    return ''
                 if (item.children && item.children.length > 0) {
-                    let title = item.name
-                    if (item.link) {
-                        const location = {
-                            pathname: item.link,
-                            state: {}
-                        }
-                        title = (
-                            <Link 
-                            className={classes["nav-item"]+' '+isActive}
-                            to={location}
-                            >
-                                {Identify.__(item.name)}
-                            </Link>
-                        )
+                    const location = {
+                        pathname: '/' + item.url_path + cateUrlSuffix(),
+                        state: {}
                     }
-
-                    const navItemContainerId = `nav-item-container-${item.menu_item_id}`
+                    const navItemContainerId = `nav-item-container-${item.id}`
                     return (
                         <div
-                        key={index} 
-                        id={navItemContainerId}
-                        role='button'
-                        tabIndex='0'
-                        onKeyDown={()=>{}}
-                        className={classes['nav-item-container']}
-                        onFocus={this.hoverActiveItem}
-                        onMouseOver={this.hoverActiveItem}
-                        onBlur={this.hoverDisableItem}
-                        onMouseOut={this.hoverDisableItem}
-                        onClick={this.hoverDisableItem}>
-                            {title}
-                            <div className="sub-item">
-                                <div className="container">
-                                    <HeaderNavMegaitem 
-                                    parentId={item.menu_item_id}
-                                    classes={classes}
-                                    data={item} 
-                                    itemAndChild={item}
-                                    toggleMegaItemContainer={()=>this.toggleMegaItemContainer()}
-                                />
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
-                else {
-                    
-                    if (item.link && item.link.includes('http')) {
-                        return (
-                            <a 
-                                className={classes["nav-item"]+' '+isActive}
-                                key={index} 
-                                href={item.link ? item.link : '/'}
-                                style={{textDecoration: 'none'}}
-                            >
-                                {Identify.__(item.name)}
-                            </a>
-                        )
-                    }
-
-                    return (
-                        <Link 
-                            className={classes["nav-item"]+' '+isActive}
                             key={index} 
-                            to={item.link?`${item.link}`:'/'}
-                            style={{textDecoration: 'none'}}
-                        >
-                            {Identify.__(item.name)}
-                        </Link>
-                    )
-                }
-            })
-        } else {
-            const storeConfig = Identify.getStoreConfig();
-            if (storeConfig && storeConfig.simiRootCate && storeConfig.simiRootCate.children) {
-                var rootCateChildren  = storeConfig.simiRootCate.children
-                rootCateChildren = rootCateChildren.sort(function(a, b){
-                    return a.position - b.position
-                });
-                menuItems = rootCateChildren.map((item, index) => {
-                    var isActive = window.location.pathname.indexOf(item.url_path) === 1 ? 'active':'';
-                    
-                    if(!item.include_in_menu){
-                        return null
-                    }
-                    if (!item.name)
-                        return ''
-                    if (item.children && item.children.length > 0) {
-                        const location = {
-                            pathname: '/' + item.url_path + cateUrlSuffix(),
-                            state: {}
-                        }
-                        const navItemContainerId = `nav-item-container-${item.id}`
-                        return (
-                            <div
-                                key={index} 
-                                id={navItemContainerId}
-                                role='button'
-                                tabIndex='0'
-                                onKeyDown={()=>{}}
-                                className={`${classes['nav-item-container']} ${navItemContainerId}`}
-                                onFocus={this.hoverActiveItem}
-                                onMouseOver={this.hoverActiveItem}
-                                onBlur={this.hoverDisableItem}
-                                onMouseOut={this.hoverDisableItem}
-                                onClick={this.hoverDisableItem}
+                            id={navItemContainerId}
+                            role='button'
+                            tabIndex='0'
+                            onKeyDown={()=>{}}
+                            className={`${classes['nav-item-container']} ${navItemContainerId}`}
+                            onFocus={this.hoverActiveItem}
+                            onMouseOver={this.hoverActiveItem}
+                            onBlur={this.hoverDisableItem}
+                            onMouseOut={this.hoverDisableItem}
+                            onClick={this.hoverDisableItem}
+                            >
+                            <Link
+                                className={'nav-item '+ isActive}
+                                to={location}
                                 >
-                                <Link
-                                    className={'nav-item '+ isActive}
-                                    to={location}
-                                    >
-                                    {Identify.__(item.name)}
-                                </Link>
+                                {Identify.__(item.name)}
+                            </Link>
+                            <div className="outer-sub-item">
                                 <div className="sub-item">
                                     <div className="container">
                                         <HeaderNavMegaitem 
@@ -222,23 +134,25 @@ class Navigation extends React.Component{
                                             toggleMegaItemContainer={()=>this.toggleMegaItemContainer()}
                                         />
                                     </div>
+                                    {/* <div className="sub-item-container">
+                                    </div> */}
                                 </div>
                             </div>
-                        )
-                    } else {
-                        return (
-                            <Link 
-                                className={classes["nav-item"]+' '+isActive}
-                                key={index} 
-                                to={'/' + item.url_path + cateUrlSuffix()}
-                                style={{textDecoration: 'none'}}
-                                >
-                                {Identify.__(item.name)}
-                            </Link>
-                        )
-                    }
-                })
-            }
+                        </div>
+                    )
+                } else {
+                    return (
+                        <Link 
+                            className={classes["nav-item"]+' '+isActive}
+                            key={index} 
+                            to={'/' + item.url_path + cateUrlSuffix()}
+                            style={{textDecoration: 'none'}}
+                            >
+                            {Identify.__(item.name)}
+                        </Link>
+                    )
+                }
+            })
         }
         return (
             <div className={`${classes["app-nav"]} ${addClassNames ? addClassNames:''}`}>

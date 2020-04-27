@@ -84,7 +84,7 @@ class Login extends Component {
 	}
 
 	handleVerifyLogin = (phoneNumber) => {
-		let logintotp = localStorage.getItem('login_otp');
+		const logintotp = localStorage.getItem('login_otp');
 		$('#login-input-otp-warning').css({ display: 'none' })
 		showFogLoading();
 		var typeLogin = null;
@@ -103,12 +103,23 @@ class Login extends Component {
 			hideFogLoading();
 			showToastMessage(Identify.__(data[0].message))
 		} else {
-			if (data.status && data.status === 'success' && data.customer_access_token) {
+			if (data.status && data.status === 'success' && data.customer_access_token && data.customer_identity) {
 				hideFogLoading();
 				smoothScrollToView($('#root'));
-				let message = Identify.__('You have succesfully logged in !');
+				const message = Identify.__('Succesfully logged in. Waiting for redirect to dashboard !');
 				if (this.props.toggleMessages)
 					this.props.toggleMessages([{ type: 'success', message: message, auto_dismiss: true }]);
+				storage.removeItem('cartId');
+				storage.removeItem('signin_token');
+				if (data.customer_access_token && data.customer_identity) {
+					Identify.storeDataToStoreage(
+						Identify.LOCAL_STOREAGE,
+						Constants.SIMI_SESS_ID,
+						data.customer_identity
+					);
+					setToken(data.customer_access_token);
+					this.props.simiSignedIn(data.customer_access_token);
+				}
 				window.location.href = data.redirect_url;
 			} else {
 				hideFogLoading();
@@ -271,15 +282,27 @@ class Login extends Component {
 	}
 
 	vendorLoginCallback = (data) => {
-		hideFogLoading();
 		if (data && data.status === 'error') {
-			let message = Identify.__(data.message);
+			hideFogLoading();
+			const message = Identify.__(data.message);
 			showToastMessage(message);
 		} else {
+			showFogLoading();
 			smoothScrollToView($('#root'));
-			let message = Identify.__('You have succesfully logged in !');
+			const message = Identify.__('Succesfully logged in. Waiting for redirect to dashboard !');
 			if (this.props.toggleMessages)
 				this.props.toggleMessages([{ type: 'success', message: message, auto_dismiss: true }]);
+			storage.removeItem('cartId');
+			storage.removeItem('signin_token');
+			if (data.customer_access_token && data.customer_identity) {
+				Identify.storeDataToStoreage(
+					Identify.LOCAL_STOREAGE,
+					Constants.SIMI_SESS_ID,
+					data.customer_identity
+				);
+				setToken(data.customer_access_token);
+				this.props.simiSignedIn(data.customer_access_token);
+			}
 			window.location.href = data.redirect_url;
 		}
 	};
@@ -313,7 +336,9 @@ class Login extends Component {
 				<div id="login-background" className={`${classes['login-background']} ${Identify.isRtl() ? classes['rtl-login-background'] : null}`}>
 					<div className="container">
 						{isShowBackBtn ?
-							<div className={`special-back ${classes['login-back']}`} id="btn-back" 
+							<div 
+								role="presentation"
+								className={`special-back ${classes['login-back']}`} id="btn-back" 
 								onClick={this.handleGoBack} >
 								<span>{Identify.__('back').toUpperCase()}</span>
 							</div>
@@ -338,6 +363,7 @@ class Login extends Component {
 								: classes['']} ${classes['select-type']}`}
 						>
 							<div
+								role="presentation"
 								onClick={this.showPhoneLoginForm}
 								className={`${isPhoneLogin ? classes['active'] : null} ${classes['phone-type']}`}
 							>
@@ -347,6 +373,7 @@ class Login extends Component {
 								</div>
 							</div>
 							<div
+								role="presentation"
 								onClick={this.showEmailLoginForm}
 								className={`${isEmailLogin ? classes['active'] : null} ${classes['email-type']}`}
 							>

@@ -347,7 +347,7 @@ const VendorRegister = (props) => {
 
 	const onChange = (val1, val2) => {
 		$('#verify-opt-area #number_phone-invalid').css({ display: 'none' })
-		let value = val1 + val2
+		const value = val1 + val2
 		setPhone(value)
 		setAllowSubmit(false)
 		localStorage.setItem("numberphone_register", value);
@@ -458,14 +458,6 @@ const VendorRegister = (props) => {
 						/>
 					</Field>
 					<Regions />
-					{/* <Field label="Phone Number *">
-						<TextInput
-							field="vendor.telephone"
-							validate={validators.get('telephone')}
-							placeholder="Phone"
-							validateOnBlur
-						/>
-					</Field> */}
 					<VerifyForm
 						openGetModal={openGetModal}
 						handleVerify={handleVerifyRegister}

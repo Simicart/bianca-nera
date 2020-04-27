@@ -22,7 +22,7 @@ class LoginOTP extends Component {
     }
 
     onChange = (val1, val2) => {
-        let value = val1 + val2
+        const value = val1 + val2
         this.setState({ phone: value });
     }
 
@@ -49,7 +49,7 @@ class LoginOTP extends Component {
         showFogLoading()
         phone = phone.replace(/[- )(]/g, '').replace(/\+/g, "").replace(/\,/g, "");
         this.phoneNB = phone
-        let params = {
+        const params = {
             mobile: phone
         }
         if (this.merchant && this.merchant.hasOwnProperty('storeConfig') && this.merchant.storeConfig) {
@@ -72,7 +72,7 @@ class LoginOTP extends Component {
             // Open modal verify otp
             this.props.openVModal();
             // setTimeout() return an id, we pass it into state
-            let idValue = setTimeout(() => this.props.closeVModal(), 120000)
+            const idValue = setTimeout(() => this.props.closeVModal(), 120000)
             localStorage.setItem('idPopup', idValue)
         } else {
             $('#login-opt-area #number_phone-invalid').css({ display: 'block' })

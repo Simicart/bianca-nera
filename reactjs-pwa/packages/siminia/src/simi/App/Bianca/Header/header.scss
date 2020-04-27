@@ -474,13 +474,20 @@ $textColor3: #e4e4e4;
             }
         }
     }
+    .outer-sub-item{
+      display: none;
+      position: absolute;
+      top: 59px;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: transparent;
+      &.active{
+        display: block;
+      }
+    }
     .sub-item{
-        display: none;
-        position: absolute;
-        top: 59px;
-        left: 0;
-        right: 0;
-        z-index: 9999;
+        
         background: white;
         padding-top: 25px;
         padding-bottom: 10px;
@@ -491,8 +498,9 @@ $textColor3: #e4e4e4;
         overflow-x: auto;
         box-shadow: none;
         border-bottom: solid 1px #f2f2f2;
-        &.active{
-            display: block;
+        
+        .sub-item-container{
+          background: transparent;
         }
         .container{
             background: #FFF;

@@ -31,7 +31,7 @@ const CreateAccount = props => {
     const [idModalPopup, setIdModalPopup] = useState('')
     var registeringEmail = null
     var registeringPassword = null
-
+    
     const initialValues = () => {
         const { initialValues } = props;
         const { email, firstName, lastName, ...rest } = initialValues;
@@ -61,7 +61,6 @@ const CreateAccount = props => {
             $('#must-verify').css('display', 'block')
             $('#createAccount').css('backgroundColor', '#B91C1C')
             $('#verify-opt-area .wrap').css('float', 'unset')
-            // do nothing
         } else {
             $('#must-verify').css('display', 'none')
             $('#createAccount').css('backgroundColor', '#101820')
@@ -81,7 +80,7 @@ const CreateAccount = props => {
                 data.errors.map(error => {
                     errorMsg += error.message
                 })
-                let message = Identify.__(errorMsg);
+                const message = Identify.__(errorMsg);
                 if (errorMsg === 'Account confirmation is required. Please, check your email !') {
                     smoothScrollToView($('#id-message'));
                     showToastMessage(message)
@@ -110,7 +109,7 @@ const CreateAccount = props => {
 
         showFogLoading()
         phone = phone.replace(/[- )(]/g, '').replace(/\+/g, "").replace(/\,/g, "");
-        let params = {
+        const params = {
             mobile: phone
         }
         const merchant = Identify.getStoreConfig();
@@ -150,7 +149,7 @@ const CreateAccount = props => {
     }
 
     const handleVerifyRegister = () => {
-        let logintotp = localStorage.getItem('login_otp');
+        const logintotp = localStorage.getItem('login_otp');
         $('#login-input-otp-warning').css({ display: 'none' })
         showFogLoading();
         verifyOTPForRegister(phoneRegister.substring(1), logintotp, handleCallBackLVerifyRegister);
@@ -170,7 +169,7 @@ const CreateAccount = props => {
 
     const onChange = (val1, val2) => {
         $('#verify-opt-area #number_phone-invalid').css({ display: 'none' })
-        let value = val1 + val2
+        const value = val1 + val2
         setPhone(value)
         setAllowSubmit(false)
         localStorage.setItem("numberphone_register", value);
@@ -194,17 +193,17 @@ const CreateAccount = props => {
             {TitleHelper.renderMetaHeader({
                 title: Identify.__('Create Account')
             })}
-            <GetOtpModal
+            {showModalGet && <GetOtpModal
                 openGetModal={showModalGet}
                 closeGetModal={closeGetModal}
                 senOtpRegister={handleSendOtp}
-            />
-            <VerifyOtpModal
+            />}
+            {showModalVerify && <VerifyOtpModal
                 openVerifyModal={showModalVerify}
                 closeVerifyModal={closeVModal}
                 callApi={(phonenumber) => handleVerifyRegister(phonenumber)}
                 key={Identify.randomString(3)}
-            />
+            />}
             <Form
                 className={`form-create-account ${classes.root} ${Identify.isRtl() ? classes['rtl-rootForm'] : null}`}
                 initialValues={initialValues}

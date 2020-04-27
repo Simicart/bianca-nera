@@ -3,7 +3,6 @@ import Modal from 'react-responsive-modal'
 import Identify from 'src/simi/Helper/Identify'
 require('./getOtpModal.scss');
 
-const $ = window.$
 class GetOtpModal extends React.Component {
     constructor(props) {
         super(props)
@@ -16,7 +15,7 @@ class GetOtpModal extends React.Component {
     render() {
 
         const { openGetModal, closeGetModal } = this.props
-
+        
         return (
             <Modal 
                 modalId="modal-get-otp-register"

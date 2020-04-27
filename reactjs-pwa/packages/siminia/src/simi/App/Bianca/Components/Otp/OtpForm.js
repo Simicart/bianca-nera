@@ -35,16 +35,16 @@ class OtpForm extends Component {
         }
 
         const updateValue = () => {
-            let country_code = $('#phone-form-control').val()
-            let new_val = $('#real-input').val()
+            const country_code = $('.login-opt-area .custom-input .react-tel-input input').val()
+            const new_val = $('#real-input').val()
             this.props.handleChangePhone(country_code, new_val.replace(/^0+/g, ''))
         }
 
         const storeConfig = Identify.getStoreConfig();
         const countries = storeConfig.simiStoreConfig.config.allowed_countries;
         const listAllowedCountry = [];
-        countries.map((country, index) => {
-            let code = country.country_code
+        countries.map((country) => {
+            const code = country.country_code
             listAllowedCountry.push(code.toLowerCase())
         })
 
@@ -58,7 +58,7 @@ class OtpForm extends Component {
                     {Identify.__('phone *').toUpperCase()}
                 </div>
                 <div className="custom-input">
-                    <div className="element-1" onClick={() => showOption()}>
+                    <div role="presentation" className="element-1" onClick={() => showOption()}>
                         <div className="custom-arrow"></div>
                     </div>
                     <ReactPhoneInput
