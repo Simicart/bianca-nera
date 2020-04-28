@@ -40,6 +40,9 @@ export const simiSignOut = ({ history }) => async dispatch => {
     // Now that we're signed out, forget the old (customer) cart
     // and fetch a new guest cart.
     dispatch(removeCart());
+    window.$.ajax({url: SMCONFIGS.merchant_url + 'simiconnector/rest/v2/customers/logout', async: true, success: function(result){
+
+    }});
     dispatch(getCartDetails({ forceRefresh: true }));
 
     // remove address
@@ -53,6 +56,7 @@ export const simiSignOut = ({ history }) => async dispatch => {
     // Finally, go back to the first page of the browser history.
     refresh({ history });
 };
+
 
 export const toggleMessages = value => async dispatch => {
     dispatch(actions.toggleMessages(value));

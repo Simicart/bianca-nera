@@ -72,10 +72,16 @@ export const createCart = () =>
             dispatch(actions.getCart.receive(error));
             //cody logout + reload while getting cart failed (token outdated)
             //if (!cartId) {
+
+            if (
+                error && error.message && (typeof error.message === 'string') &&
+                (error.message.indexOf('401') !== -1)
+            ) {
                 // storage.removeItem('signin_token');
                 // clearCartId();
                 CacheHelper.clearCaches();
                 window.location.reload();
+            }
             //}
             //end cody changing
         }
