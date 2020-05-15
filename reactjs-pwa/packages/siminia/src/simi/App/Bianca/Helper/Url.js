@@ -42,7 +42,7 @@ export const logoUrl = () => {
 		}
 		return logoUrl;
 	}
-	return '/images/logo.png';
+	return ''; // images/logo.png
 };
 export const logoAlt = () => {
 	const { storeConfig } = Identify.getStoreConfig() || { storeConfig: null };
@@ -78,7 +78,7 @@ export const footerLogoUrl = () => {
             return footerLogoUrl
     }
 	
-    return '/images/logo_footer.png'
+    return ''; // /images/logo_footer.png
 };
 
 export const footerLogoAlt = () => {

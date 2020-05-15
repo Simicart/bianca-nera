@@ -1,28 +1,20 @@
 import React, { useState, useEffect } from 'react';
-// import defaultStyle from './style.css'
-// import classify from 'src/classify';
-// import Newsletter from './Newsletter';
 import Identify from 'src/simi/Helper/Identify';
-// import {Link} from 'react-router-dom';
-// import Copyright from './Copyright';
 import Expansion from 'src/simi/App/Bianca/BaseComponents/Expansion';
 import classes from './ProxyClasses';
 import { Link } from 'src/drivers';
-// import { logoUrl, logoAlt } from 'src/simi/App/Bianca/Helper/Url';
 import { footerLogoUrl, footerLogoAlt } from 'src/simi/App/Bianca/Helper/Url';
 import Subscriber from './Subscriber';
 import Chats from 'src/simi/App/Bianca/BaseComponents/Chats';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
-
+import LogoFooter from './Logo';
+import {Visa, MasterCard, Debit, Money, BankTransfer, GhostSnapchat} from './Icons';
 require('./footer.scss');
 
 const Footer = (props) => {
-	// const {classes} = props;
 	const [isPhone, setIsPhone] = useState(window.innerWidth < 1024);
 	const $ = window.$;
 	const [ expanded, setExpanded ] = useState(null);
-	const pagec1 = 1;
-	const pagep2 = 2;
     var footer_customer_service = null
     var footer_information = null
     var services = null
@@ -34,6 +26,7 @@ const Footer = (props) => {
     var footer_twitter = null
     var footer_linkedin = null
     var footer_google = null
+    var footer_snapchat = null
 	var bianca_subcribe_description = null
 	var bianca_android_app = null
 	var bianca_ios_app = null
@@ -54,6 +47,7 @@ const Footer = (props) => {
         footer_twitter = footerConfig.bianca_footer_twitter
         footer_linkedin = footerConfig.bianca_footer_linkedin
         footer_google = footerConfig.bianca_footer_google
+        footer_snapchat = footerConfig.bianca_footer_snapchat
     }
 
     // get customer services and link
@@ -201,30 +195,41 @@ const Footer = (props) => {
 		resizePhone();
 	});
 
+	const footerLogo = footerLogoUrl();
+
 	return (
 		<React.Fragment>
 			<div className={classes['footer-app'] + (isPhone ? ' on-mobile' : '')}>
-				<div className={classes['footer-wrapper']}>
+				<div className="footer-top">
 					<div className={`container`}>
 						<div className={`row`}>
-							<div className={`col-md-4 col-md-offset-4`}>
-								<div onClick={scrollRoot} className="footer-logo">
-									<Link to="/">
-										<img src={footerLogoUrl()} alt={footerLogoAlt()} />
-									</Link>
+							<div className={`col-md-6`}>
+								<div className="logo-group">
+									<div onClick={scrollRoot} className="footer-logo">
+										<Link to="/">
+											{footerLogo ? <img src={footerLogo} alt={footerLogoAlt()} />
+											:
+											<LogoFooter />
+											}
+										</Link>
+									</div>
+									<div className="brands">
+										<img src="/images/brand-logos.png" alt="brands" />
+									</div>
 								</div>
 							</div>
-						</div>
-						<div className={`row`}>
-							<div className={`col-md-4 col-md-offset-4`}>
+							<div className={`col-md-6`}>
 								<div className="footer-subscriber">
 									<h3>{Identify.__('subscribe newsletter')}</h3>
 									<p>{Identify.__(bianca_subcribe_description)}</p>
 									<Subscriber key={Identify.isRtl()}/>
 								</div>
 							</div>
+							
 						</div>
 					</div>
+				</div>
+				<div className={classes['footer-wrapper']}>
 					<div className={`container list-item`}>
 						<div className={`row`}>
 							<div className={`col-md-3`}>
@@ -240,23 +245,33 @@ const Footer = (props) => {
 												);
 											})}
 											<li>
-												<div className={classes['social-icon']}>
+												<div className={'social-icon'}>
 													<a href={footer_facebook} target="__blank">
-														<div className={classes['facebook-icon']} ></div>
+														<span className={"facebook-icon"}></span>
 													</a>
 													<a href={footer_instagram} target="__blank">
-														<div className={classes['instagram-icon']} ></div>
+														<span className={classes['instagram-icon']} ></span>
 													</a>
 													<a href={footer_twitter} target="__blank">
-														<div className={classes['twitter-icon']} ></div>
+														<span className={classes['twitter-icon']} ></span>
 													</a>
 													<a href={footer_linkedin} target="__blank">
-														<div className={classes['linkedin-icon']} ></div>
+														<span className={classes['linkedin-icon']} ></span>
 													</a>
 													<a href={footer_google} target="__blank">
-														<div className={classes['google-icon']} ></div>
+														<span className={classes['google-icon']} ></span>
+													</a>
+													<a href={footer_snapchat} target="__blank">
+														<span className={classes['snapchat-icon']} >
+															<GhostSnapchat />
+														</span>
 													</a>
 												</div>
+											</li>
+											<li>
+												<Link onClick={scrollTop} to={'/designer_login.html'}>
+													{Identify.__('Login as Designer')}
+												</Link>
 											</li>
 										</ul>
 									</React.Fragment>
@@ -323,14 +338,23 @@ const Footer = (props) => {
 												<div className={classes['download-icon']}>
 													<div className="google-play">
 														<a href={bianca_android_app} target="__blank">
-															<img src="/images/google-play.png" alt="google-play" />
+															<img src="/images/get-it-on-google-play.png" alt="google-play" />
 														</a>
 													</div>
 													<div className="app-store">
 														<a href={bianca_ios_app} target="__blank">
-															<img src="/images/app-store.png" alt="app-store" />
+															<img src="/images/download-on-the-app-store.png" alt="app-store" />
 														</a>
 													</div>
+												</div>
+											</li>
+											<li>
+												<div className="card">
+													<Visa />
+													<MasterCard />
+													<Debit />
+													<Money />
+													<BankTransfer />
 												</div>
 											</li>
 										</ul>
@@ -350,14 +374,23 @@ const Footer = (props) => {
 															<div className={classes['download-icon']}>
 																<div className="google-play">
 																	<a href={bianca_android_app} target="__blank">
-																		<img src="/images/google-play.png" alt="google-play" />
+																		<img src="/images/get-it-on-google-play.png" alt="google-play" />
 																	</a>
 																</div>
 																<div className="app-store">
 																	<a href={bianca_ios_app} target="__blank">
-																		<img src="/images/app-store.png" alt="app-store" />
+																		<img src="/images/download-on-the-app-store.png" alt="app-store" />
 																	</a>
 																</div>
+															</div>
+														</li>
+														<li>
+															<div className="card">
+																<Visa />
+																<MasterCard />
+																<Debit />
+																<Money />
+																<BankTransfer />
 															</div>
 														</li>
 													</ul>
@@ -370,22 +403,45 @@ const Footer = (props) => {
 						</div>
 					</div>
 				</div>
-				{/* <Copyright isPhone={isPhone} classes={classes} /> */}
-				<div className={`mobile-social`}>
-						{!isPhone ? (<></>):(
-							<div className={`footer-mobile-social`}>
-									<a href={footer_facebook} target="__blank">
-										<div className={classes['facebook-icon social-icon']} ></div>
-									</a>
-									<a href={footer_twitter} target="__blank">
-										<div className={classes['twitter-icon social-icon']} ></div>
-									</a>
-									<a href={footer_instagram} target="__blank">
-										<div className={classes['instagram-icon social-icon']} ></div>
-									</a>
+				
+				{isPhone && 
+					<div className={`mobile-social`}>
+						<div className="container">
+							<div className="row">
+								<div className="col-md-12">
+									<div className="login">
+										<Link onClick={scrollTop} to={'/designer_login.html'}>
+											{Identify.__('Login as Designer')}
+										</Link>
+									</div>
+									<div className={'social-icon'}>
+										<a href={footer_facebook} target="__blank">
+											<span className={"facebook-icon"}></span>
+										</a>
+										<a href={footer_instagram} target="__blank">
+											<span className={classes['instagram-icon']} ></span>
+										</a>
+										<a href={footer_twitter} target="__blank">
+											<span className={classes['twitter-icon']} ></span>
+										</a>
+										<a href={footer_linkedin} target="__blank">
+											<span className={classes['linkedin-icon']} ></span>
+										</a>
+										<a href={footer_google} target="__blank">
+											<span className={classes['google-icon']} ></span>
+										</a>
+										<a href={footer_snapchat} target="__blank">
+											<span className={classes['snapchat-icon']} >
+												<GhostSnapchat />
+											</span>
+										</a>
+									</div>
+								</div>
 							</div>
-						)}
-				</div>
+						</div>
+					</div>
+				}
+				{/* <Copyright isPhone={isPhone} classes={classes} /> */}
 			</div>
 			<Chats history={history} isPhone={isPhone}/>
 		</React.Fragment>

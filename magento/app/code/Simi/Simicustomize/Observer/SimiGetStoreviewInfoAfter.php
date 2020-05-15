@@ -161,6 +161,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 'bianca_footer_twitter' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_twitter'),
                 'bianca_footer_linkedin' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_linkedin'),
                 'bianca_footer_google' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_google'),
+                'bianca_footer_snapchat' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_snapchat'),
                 'bianca_android_app' => $this->config->getValue('simiconnector/footer_app/bianca_android_app'),
                 'bianca_ios_app' => $this->config->getValue('simiconnector/footer_app/bianca_ios_app')
             );

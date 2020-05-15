@@ -261,6 +261,115 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
+
+        /**
+         * Creating table simiconnector_banner
+         */
+        if ($context->getVersion() && version_compare($context->getVersion(), '1.0.14', '<')) {
+            $table_name = $setup->getTable('simiconnector_homesection');
+            $this->checkTableExist($setup, $table_name, 'simiconnector_homesection');
+            $homesection_table = $setup->getConnection()->newTable(
+                $table_name
+            )->addColumn(
+                'id',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
+                'Section Id'
+            )->addColumn(
+                'section_name',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                255,
+                ['nullable' => true],
+                'Name'
+            )->addColumn(
+                'status',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['unsigned' => true],
+                'Status'
+            )->addColumn(
+                'website_id',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['unsigned' => true],
+                'Web ID'
+            )->addColumn(
+                'sort_order',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['unsigned' => true],
+                'Sort Order'
+            )
+
+            ->addColumn(
+                'image_left_1',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                255,
+                ['nullable' => true],
+                'Section Image 1 URL'
+            )->addColumn(
+                'image_left_1_mobile',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                255,
+                ['nullable' => true],
+                'Section Image 1 URL mobile'
+            )->addColumn(
+                'image_left_2',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                255,
+                ['nullable' => true],
+                'Section Image 2 URL'
+            )->addColumn(
+                'image_left_2_mobile',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                255,
+                ['nullable' => true],
+                'Section Image 2 URL mobile'
+            )
+            
+            ->addColumn(
+                'type',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['unsigned' => true],
+                'Type for images'
+            )->addColumn(
+                'type_value_1',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                null,
+                ['nullable' => true],
+                'Type value 1 for image 1'
+            )->addColumn(
+                'type_value_2',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                null,
+                ['nullable' => true],
+                'Type value 2 for image 2'
+            )
+            
+            ->addColumn(
+                'product_id_1',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['unsigned' => true],
+                'Product ID'
+            )->addColumn(
+                'product_id_2',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['unsigned' => true],
+                'Product ID'
+            )->addColumn(
+                'product_id_3',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['unsigned' => true],
+                'Product ID'
+            );
+
+            $setup->getConnection()->createTable($homesection_table);
+        }
     }
 
     public function checkTableExist($installer, $table_key_name, $table_name)

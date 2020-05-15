@@ -11,6 +11,11 @@ query getProductsBySkus($currentPage: Int, $pageSize: Int, $stringSku: [String],
                 label
                 __typename
             }
+            thumbnail {
+                url
+                label
+                __typename
+            }
             short_description {
                 html
                 __typename

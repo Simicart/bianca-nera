@@ -48,39 +48,45 @@ class Homes extends \Simi\Simiconnector\Model\Api\Apiabstract
         /*
          * Get Categories
          */
-        $categories = $this->simiObjectManager->get('Simi\Simicustomize\Model\Api\Homecategories');
-        $categories->setData($this->getData());
-        $categories->builderQuery = $categories->getCollection();
-        $categories->setPluralKey('homecategories');
-        $categories = $categories->index();
+        // $categories = $this->simiObjectManager->get('Simi\Simicustomize\Model\Api\Homecategories');
+        // $categories->setData($this->getData());
+        // $categories->builderQuery = $categories->getCollection();
+        // $categories->setPluralKey('homecategories');
+        // $categories = $categories->index();
 
         /*
          * Get Product List
          */
-        $productlists = $this->simiObjectManager->get('Simi\Simiconnector\Model\Api\Homeproductlists');
-        $productlists->builderQuery = $productlists->getCollection();
-        if ($data['resourceid'] == 'lite') {
-            $productlists->SHOW_PRODUCT_ARRAY = false;
-        }
-        $productlists->setPluralKey('homeproductlists');
-        $productlists->setData($data);
-        $productlists = $productlists->index();
-
+        // $productlists = $this->simiObjectManager->get('Simi\Simiconnector\Model\Api\Homeproductlists');
+        // $productlists->builderQuery = $productlists->getCollection();
+        // if ($data['resourceid'] == 'lite') {
+        //     $productlists->SHOW_PRODUCT_ARRAY = false;
+        // }
+        // $productlists->setPluralKey('homeproductlists');
+        // $productlists->setData($data);
+        // $productlists = $productlists->index();
 
         /**
          * Get Newcollections items
          */
-        $newcollections = $this->simiObjectManager->get('Simi\Simicustomize\Model\Api\HomeNewcollections');
-        $newcollections->setData($this->getData());
-        $newcollections->setPluralKey('homenewcollections');
-        $newcollections->builderQuery = $newcollections->getCollection();
-        $newcollections = $newcollections->index();
+        // $newcollections = $this->simiObjectManager->get('Simi\Simicustomize\Model\Api\HomeNewcollections');
+        // $newcollections->setData($this->getData());
+        // $newcollections->setPluralKey('homenewcollections');
+        // $newcollections->builderQuery = $newcollections->getCollection();
+        // $newcollections = $newcollections->index();
+
+        $homesections = $this->simiObjectManager->get('Simi\Simicustomize\Model\Api\Homesections');
+        $homesections->setData($this->getData());
+        $homesections->setPluralKey('homesections');
+        $homesections->builderQuery = $homesections->getCollection();
+        $homesections = $homesections->index();
 
         $information = ['home' => [
             'homebanners' => $banners,
-            'homecategories' => $categories,
-            'homeproductlists' => $productlists,
-            'homenewcollections' => $newcollections,
+            // 'homecategories' => $categories,
+            // 'homeproductlists' => $productlists,
+            // 'homenewcollections' => $newcollections,
+            'homesections' => $homesections,
         ]];
         return $information;
     }

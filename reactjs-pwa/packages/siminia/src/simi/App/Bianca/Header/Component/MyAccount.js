@@ -136,16 +136,13 @@ class MyAccount extends React.Component {
 					this.anchorEl = node;
 				}}
 			>
-				<div role="presentation" onClick={this.handleToggle}>
+				<div role="presentation" onClick={() => this.handleClickItem('/login.html')}>
 					<div className={classes['item-icon']} style={{ display: 'flex', justifyContent: 'center' }}>
 						<User />
 					</div>
 					{account}
-					{/* <div className={classes["item-text"]} style={{whiteSpace : 'nowrap'}}>
-                        {account}
-                    </div> */}
 				</div>
-				{!isSignedIn && this.renderOption()}
+				{/* {!isSignedIn && this.renderOption()} */}
 				{isSignedIn && this.renderMyAccount()}
 			</div>
 		);

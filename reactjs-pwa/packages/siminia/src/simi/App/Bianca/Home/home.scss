@@ -17,7 +17,7 @@ $color1: #101820;
         border-radius: unset;
     }
     .title-box{
-        margin-top: 80px;
+        margin-top: 40px;
         text-align: center;
         h3.title{
             font-family: Didot;
@@ -50,7 +50,6 @@ $color1: #101820;
         .banner-homepage{
             .home-container{
                 .carousel-slider{
-                    margin-top: 44px;
                     .control-dots{
                         position: relative;
                         line-height: 10px;
@@ -597,7 +596,7 @@ $color1: #101820;
         }
         //new style instagram update
         .instagram-slider{
-            padding-bottom: 100px;
+            padding-bottom: 0px;
             .instagram-container{
                 .carousel-block{
                     padding: 0px .5px;
@@ -613,8 +612,9 @@ $color1: #101820;
                                     margin-right: 0px!important;
                                 }
                                 .item{
-                                    width: 166px;
-                                    height: 208px;
+                                    // width: 278px;
+                                    width: 100%;
+                                    height: 349px;
                                     .img-responsive{
                                         width: 100%;
                                         height: 100%;
@@ -661,7 +661,7 @@ $color1: #101820;
         }
         &.mobile{
             .instagram-slider{
-                padding-bottom: 50px;
+                padding-bottom: 0px;
                 .title-box{
                     margin-top: 42px;
                 }

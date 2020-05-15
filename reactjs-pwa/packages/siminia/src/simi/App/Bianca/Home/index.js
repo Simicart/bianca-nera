@@ -3,6 +3,7 @@ import { getHomeData } from 'src/simi/Model/Home';
 import Banner from './Banner';
 import HomeCat from "./HomeCat";
 import Brands from "./Brands";
+import HomeSection from "./HomeSection";
 import LoadingSpiner from 'src/simi/BaseComponents/Loading/LoadingSpiner'
 import { withRouter } from 'react-router-dom';
 import ProductList from './ProductList';
@@ -63,24 +64,23 @@ const Home = props => {
             <div className={`banner-wrap ${isPhone ? 'mobile':''}`}>
                 <Banner data={data} history={history} isPhone={isPhone} />
             </div>
-            {
-                brands && 
+
+            <HomeSection data={data} history={history} isPhone={isPhone} />
+
+            {/* {brands && 
                 <div className={`shop-by-brand-wrap ${isPhone ? 'mobile':''}`}>
                     <Brands data={brands} history={history} isPhone={isPhone}/>
                 </div>
-            }
-            <div className={`featured-products-wrap ${isPhone ? 'mobile':''}`}>
+            } */}
+            {/* <div className={`featured-products-wrap ${isPhone ? 'mobile':''}`}>
                 <ProductList homeData={data} history={history}/>
-            </div>
-            <div className={`popular-categories-wrap ${isPhone ? 'mobile':''}`}>
-                <div className="title-box">
-                    <h3 className="title">{Identify.__('Popular Categories')}</h3>
-                </div>
+            </div> */}
+            {/* <div className={`popular-categories-wrap ${isPhone ? 'mobile':''}`}>
                 <HomeCat catData={data} history={history} isPhone={isPhone}/>
-            </div>
-            <div className={`new-collections-wrap ${isPhone ? 'mobile':''}`}>
+            </div> */}
+            {/* <div className={`new-collections-wrap ${isPhone ? 'mobile':''}`}>
                 <Newcollections data={data} history={history} isPhone={isPhone}/>
-            </div>
+            </div> */}
             <div className={`shop-by-designers-wrap ${isPhone ? 'mobile':''}`}>
                 <Designers history={history} isPhone={isPhone}/>
             </div>

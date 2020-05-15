@@ -24,6 +24,7 @@ import { compose } from 'redux';
 import CompareProduct from 'src/simi/App/Bianca/BaseComponents/CompareProducts'
 import TitleHelper from 'src/simi/Helper/TitleHelper';
 require('./header.scss');
+import LogoSvg from './Logo';
 
 const SearchForm = React.lazy(() => import('./Component/SearchForm'));
 const $ = window.$;
@@ -36,6 +37,7 @@ class Header extends React.Component {
 		this.state = {
 			isPhone,
 			openCompareModal: false,
+			brandVisited: ''
 		};
 		// this.classes = mergeClasses(defaultClasses, this.props.classes)
 		this.classes = Object.assign(ProxyClasses, this.props.classes);
@@ -86,12 +88,15 @@ class Header extends React.Component {
 	}
 
 	renderLogo = () => {
-		// const {isPhone} = this.state;
+		let logo = logoUrl();
 		return (
 			<div className={this.classes['header-logo']}>
 				<div className="header-image">
 					<Link to="/">
-						<img src={logoUrl()} alt={logoAlt()} />
+						{logo ? <img src={logo} alt={logoAlt()} />
+						:
+							<LogoSvg />
+						}
 					</Link>
 				</div>
 			</div>
@@ -183,7 +188,7 @@ class Header extends React.Component {
 		}
 	}
 
-	renderViewPhone = (bianca_header_sale_title, bianca_header_sale_link) => {
+	renderViewPhone = (bianca_header_sale_title, bianca_header_sale_link, brandItems) => {
 		const {history} = this.props
 		const compareData = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'compare_product')
 		const compareStyle = compareData && compareData.length > 0 ? 'compare-list' : 'non-compare'
@@ -193,11 +198,18 @@ class Header extends React.Component {
 					<div className="container">
 						<div className="global-site-notice">
 							<div className="notice-inner">
-								<div className="notice-msg">
+								{brandItems.length > 0 &&
+									<div className="left-notice">
+										<div className="brand-names">
+											{brandItems}
+										</div>
+									</div>
+								}
+								{/* <div className="notice-msg">
 									<span>
 										<a href={bianca_header_sale_link}>{Identify.__(bianca_header_sale_title)}</a>
 									</span>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
@@ -248,8 +260,12 @@ class Header extends React.Component {
 		);
 	};
 
+	brandClick = (id) => {
+		this.setState({brandVisited: id})
+	}
+
 	render() {
-		const { user, storeConfig, location } = this.props;
+		const { user, storeConfig, location, history } = this.props;
 		// Check user login to show wish lish
 		var isSignedIn = false;
 		if (user) {
@@ -278,11 +294,29 @@ class Header extends React.Component {
 		const simpleHeader = (location && location.pathname &&
 			((location.pathname.indexOf("/checkout.html") !== -1) || (location.pathname.indexOf("/cart.html") !== -1)))
 
+		const config = storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.config || {};
+		const {brands} = config || [];
+
+		let brandItems = []
+		brands && brands.forEach((item, index)=>{
+			if (index < 5) {
+				brandItems.push(
+					<a className={`${this.state.brandVisited === item.option_id ? 'active':''}`} 
+						href={`/brands.html?filter=%7B"brand"%3A"${item.option_id}"%7D`} key={index}
+						onClick={() => this.brandClick(item.option_id)} >
+						<span >
+							{item.name}
+						</span>
+					</a>
+				);
+			}
+		})
+
 		if (window.innerWidth < 1024) {
 			return (
 				<div className={`header-wrapper mobile ${simpleHeader && 'simple-header'}`}>
 					{this.renderMetaHeader()}
-					{this.renderViewPhone(bianca_header_sale_title, bianca_header_sale_link)}
+					{this.renderViewPhone(bianca_header_sale_title, bianca_header_sale_link, brandItems)}
 				</div>
 			)
 		}
@@ -294,16 +328,23 @@ class Header extends React.Component {
 						<div className="container header-container">
 							<div className="global-site-notice">
 								<div className="notice-inner">
+									{brands &&
+										<div className="left-notice">
+											<div className="brand-names">
+												{brandItems}
+											</div>
+										</div>
+									}
 									<div className="contact-info">
 										<span className="title-phone">
 											{Identify.__('Contact us 24/7')}: {Identify.__(bianca_header_phone)}
 										</span>
 									</div>
-									<div className="notice-msg">
+									{/* <div className="notice-msg">
 										<span>
 											<a href={bianca_header_sale_link}>{Identify.__(bianca_header_sale_title)}</a>
 										</span>
-									</div>
+									</div> */}
 									<div className="store-switch">
 										<div className="storelocator">
 											<div className="storelocator-icon" />

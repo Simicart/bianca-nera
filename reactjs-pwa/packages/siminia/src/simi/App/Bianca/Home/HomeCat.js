@@ -15,12 +15,18 @@ const HomeCat = props => {
         }
         return null;
     }
+    if (categories && categories.length === 0) return null;
     return (
-        <div className={`default-category ${Identify.isRtl() ? 'default-category-rtl' : ''}`}>
-            <div className="container home-container">
-                {renderCat()}
+        <React.Fragment>
+            <div className="title-box">
+                <h3 className="title">{Identify.__('Popular Categories')}</h3>
             </div>
-        </div>
+            <div className={`default-category ${Identify.isRtl() ? 'default-category-rtl' : ''}`}>
+                <div className="container home-container">
+                    {renderCat()}
+                </div>
+            </div>
+        </React.Fragment>
     )
 }
 

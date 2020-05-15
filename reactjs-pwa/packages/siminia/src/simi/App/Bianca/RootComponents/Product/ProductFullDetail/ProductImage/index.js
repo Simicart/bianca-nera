@@ -57,9 +57,12 @@ class ProductImage extends React.Component {
     renderImageLighboxBlock = () => {
         let images = this.images
         images = images.map((item) => {
-            return (item.video_content && item.video_content instanceof Object )? { url : this.convertEmberVideo(item.video_content.video_url), type: 'video', altTag: item.video_content.video_title} : (item.file
-            ? {url: window.location.origin+resourceUrl(item.file, { type: 'image-product', width: 640 }), type: 'photo', altTag: item.label}
-            : {url: window.location.origin+transparentPlaceholder, type: 'photo', altTag: 'no image'})
+            const imageFile = item.file && item.file.url ? item.file.url : item.file;
+            const imageLabel = item.file && item.file.label ? item.file.label : item.label;
+            return (item.video_content && item.video_content instanceof Object ) 
+            ? { url : this.convertEmberVideo(item.video_content.video_url), type: 'video', altTag: item.video_content.video_title} : (imageFile
+            ? { url: window.location.origin+resourceUrl(imageFile, { type: 'image-product', width: 640 }), type: 'photo', altTag: imageLabel}
+            : { url: window.location.origin+transparentPlaceholder, type: 'photo', altTag: 'no image'})
         });
         return (
             <ImageLightbox ref={(lightbox) => {
@@ -72,10 +75,11 @@ class ProductImage extends React.Component {
         const width = $('.left-layout.product-media').width();
         const {product} = this.props;
         return this.images.map(function (item) {
-            const src = item.file
-                ? resourceUrl(item.file, { type: 'image-product', width: 640 })
+            const imageFile = item.file && item.file.url ? item.file.url : item.file;
+            const src = imageFile
+                ? resourceUrl(imageFile, { type: 'image-product', width: 640 })
                 : transparentPlaceholder
-            const noImage = item.file ? 'no-image' : null;
+            const noImage = imageFile ? 'no-image' : null;
             return (
                 <div key={Identify.randomString(5)} style={{cursor: 'pointer', backgroundColor: '#ffffff'}} className="carousel-image-container">
                     {

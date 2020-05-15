@@ -94,8 +94,8 @@ const Instagram = (props) => {
 
     const options = {
         // stagePadding: isPhone ? 35 : 41.5,
-        autoWidth: true,
-        mergeFit: false,
+        autoWidth: isPhone,
+        mergeFit: true,
         margin: isPhone ? 15 : 16,
         nav: true,
         autoplay: false,
@@ -108,13 +108,13 @@ const Instagram = (props) => {
                 items:2
             },
             1024:{
-                items:5
+                items:3
             },
             1366:{
-                items:6
+                items:4
             },
-            1600:{
-                items:7
+            1920:{
+                items:5
             }
         },
         startPosition: 0,

@@ -1,7 +1,54 @@
-// .rtl-root{
-//     .carousel{
-//         .control-dots{
-//             direction: rtl;
-//         }
-//     }
-// }
+$iconpath: './Banner/';
+.banner-homepage{
+    .carousel.carousel-slider{
+        overflow: unset;
+        .control-arrow.control-prev{
+            opacity: 1;
+            left: -54px;
+            background: none;
+        }
+        .control-arrow.control-next{
+            opacity: 1;
+            right: -54px;
+            background: none;
+        }
+        .control-prev:before {
+            content: url($iconpath+'prev.svg') !important;
+            width: 24px;
+            border: none!important;
+            margin: 0px;
+        }
+        [dir='rtl'] .control-prev:before {
+            content: url($iconpath+'prev.svg') !important;
+        }
+        .control-next:before {
+            content: url($iconpath+'next.svg') !important;
+            width: 24px;
+            border: none!important;
+            margin: 0px;
+        }
+        [dir='rtl'] .control-next:before {
+            content: url($iconpath+'next.svg') !important;
+        }
+    }
+}
+.mobile{
+    .banner-homepage{
+        .carousel.carousel-slider{
+            .control-arrow.control-prev{
+                left: 0;
+                padding: 0px;
+            }
+            .control-arrow.control-next{
+                right: 0;
+                padding: 0px;
+            }
+            .control-prev:before {
+                width: 16px;
+            }
+            .control-next:before {
+                width: 16px;
+            }
+        }
+    }
+}

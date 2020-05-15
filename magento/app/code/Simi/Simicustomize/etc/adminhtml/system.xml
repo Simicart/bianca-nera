@@ -218,6 +218,10 @@
                     <label>Google link at footer</label>
                     <comment>Example: https://...</comment>
                 </field>
+                <field id="bianca_footer_snapchat" translate="label" type="text" sortOrder="1807" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Snapchat link at footer</label>
+                    <comment>Example: https://...</comment>
+                </field>
             </group>
             <group id="footer_customer_service" translate="label" type="text" sortOrder="1900" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Customer Services and Informations at Footer</label>

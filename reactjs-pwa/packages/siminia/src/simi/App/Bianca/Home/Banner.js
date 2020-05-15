@@ -11,11 +11,20 @@ const Banner = props => {
     const {homebanners} = home && home.homebanners || [];
     const bannerCount = data.length;
 
+    const Prev = (clickHandler, hasPrev, label) => {
+        return '<';
+    }
+
+    const Next = (clickHandler, hasPrev, label) => {
+        return '>';
+    }
+
     const slideSettings = {
         autoPlay: false,
-        showArrows: false,
+        showArrows: true,
         showThumbs: false,
-        showIndicators: (bannerCount && bannerCount === 1) ? false : true,
+        // showIndicators: (bannerCount && bannerCount === 1) ? false : true,
+        showIndicators: false,
         showStatus: false,
         infiniteLoop: true,
         rtl: Identify.isRtl() === true,
