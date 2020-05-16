@@ -4,9 +4,10 @@ import { getOS } from 'src/simi/App/Bianca/Helper';
 import IconTelephone from "src/simi/App/Bianca/BaseComponents/Icon/Telephone";
 import IconWhatsapp from "src/simi/App/Bianca/BaseComponents/Icon/Whatsapp";
 import IconBubble from "src/simi/App/Bianca/BaseComponents/Icon/Bubble";
-import IconBubble2 from "src/simi/App/Bianca/BaseComponents/Icon/Bubble2";
+// import IconBubble2 from "src/simi/App/Bianca/BaseComponents/Icon/Bubble2";
 import IconCross from "src/simi/App/Bianca/BaseComponents/Icon/Cross";
-// import LiveChat from 'react-livechat';
+import PhoneBubble from "src/simi/App/Bianca/BaseComponents/Icon/PhoneBubble";
+import LiveChat from 'react-livechat';
 import Modal from 'react-responsive-modal';
 import CloseIcon from 'src/simi/App/Bianca/BaseComponents/Icon/Close';
 import {sendRequest} from 'src/simi/Network/RestMagento';
@@ -92,12 +93,15 @@ const Chats = (props) => {
     }
 
     const livechatAction = () => {
-        if (liveChatRef) {
-            liveChatRef.open_chat_window();
-            if($('#chat-widget-container').length){
-                $('#chat-widget-container').css({visibility: 'visible'});
-            }
+        if (window.LC_API) {
+            window.LC_API.open_chat_window();
         }
+        // if (liveChatRef) {
+        //     liveChatRef.open_chat_window();
+        //     if($('#chat-widget-container').length){
+        //         $('#chat-widget-container').css({visibility: 'visible'});
+        //     }
+        // }
     }
 
     const onChatLoaded = (ref) => {
@@ -190,29 +194,34 @@ const Chats = (props) => {
                         </div>
                     </a>
                 }
-                {
+                {/* {
                     livechat && livechat.enabled === '1' &&
                     <a href={`https://direct.lc.chat/${livechatLicense}/`} alt="Live chat" target="_blank" rel="nofollow">
                         <div className="chat-icons livechat bubbleIcons d1" onClick={livechatAction}>
                             <IconBubble style={{width: '20px', height: '20px', fill: '#fff'}}/>
                         </div>
                     </a>
-                }
+                } */}
                 </div>
-                {
-                    ((livechat && livechat.enabled === '1') || 
-                    (contact_us && contact_us.enabled && contact_us.enabled === '1') || 
+                {((contact_us && contact_us.enabled && contact_us.enabled === '1') || 
                     (data && data.phone)) &&
                     <div className="chat-icons chats-menu" onClick={onChatOpen}>
-                        <IconBubble2 style={{width: '20px', height: '20px', fill: '#fff'}}/>
+                        <PhoneBubble style={{width: '24px', height: '24px', fill: '#fff'}}/>
                         <IconCross style={{width: '20px', height: '20px', fill: '#fff'}}/>
                     </div>
                 }
+                {livechat && livechat.enabled === '1' && livechatLicense &&
+                    <div className="chat-icons livechat bubbleIcons d1" onClick={livechatAction}>
+                        <IconBubble style={{width: '20px', height: '20px', fill: '#fff'}}/>
+                    </div>
+                }
             </div>
-            {/* {
-                livechat && livechat.enabled === '1' && livechatLicense &&
+            {/* {livechat && livechat.enabled === '1' && livechatLicense &&
                 <LiveChat className={`${liveChatRef ? 'livechat-active':'livechat-disabled'}`} license={parseInt(livechatLicense)} onChatLoaded={onChatLoaded} onChatWindowMinimized={(e) => onChatWindowMinimized(e)} />
             } */}
+            {livechat && livechat.enabled === '1' && livechatLicense &&
+                <LiveChat className={'live-chat'} license={parseInt(livechatLicense)} />
+            }
 
             <Modal open={openContactModal} onClose={onCloseContact}
                 overlayId={'contact-modal-overlay'}

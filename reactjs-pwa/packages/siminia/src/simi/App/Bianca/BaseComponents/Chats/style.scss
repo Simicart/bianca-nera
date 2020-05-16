@@ -16,11 +16,11 @@ $color1: #101820;
             -webkit-box-shadow: 0 2px 4px 0 #BDBDBD;
             box-shadow: 0 2px 4px 0 #BDBDBD;
             position: fixed;
-            bottom: 30px;
+            bottom: 165px;
             z-index: 9999;
             cursor: pointer;
             &.chats-menu{
-                bottom: 30px;
+                bottom: 165px;
                 right: 35px;
                 width: 65px;
                 height: 65px;
@@ -28,13 +28,19 @@ $color1: #101820;
                     display: none!important;
                 }
                 &.open{
-                    .bubble-icon{
+                    .phone-bubble-icon{
                         display: none!important;
                     }
                     .cross-icon{
                         display: inline-block!important;
                     }
                 }
+            }
+            &.livechat{
+                bottom: 70px;
+                right: 35px;
+                width: 65px;
+                height: 65px;
             }
         }
         .contact,.whatsapp,.livechat{
@@ -43,13 +49,13 @@ $color1: #101820;
         .chats-group{
             &.open{
                 .contact{
-                    bottom: 270px;
+                    bottom: 330px;
                 }
                 .whatsapp{
-                    bottom: 195px;
+                    bottom: 255px;
                 }
                 .livechat{
-                    bottom: 120px;
+                    bottom: 405px;
                 }
                 .chat-icons{
                     @keyframes bubbleIcons {
@@ -122,7 +128,7 @@ $color1: #101820;
             .chat-icons{
                 width: 40px;
                 height: 40px;
-                bottom: 60px;
+                bottom: 110px;
                 svg{
                     width: 18px!important;
                     height: 18px!important;
@@ -137,18 +143,21 @@ $color1: #101820;
                         height: 22px!important;
                     }
                 }
+                &.chats-menu{
+                    bottom: 100px;
+                    right: 16px;
+                    width: 60px;
+                    height: 60px;
+                }
                 &.livechat{
-                    right: 26px;
+                    bottom: 25px;
+                    right: 16px;
+                    width: 60px;
+                    height: 60px;
                     svg{
                         width: 18px!important;
                         height: 20px!important;
                     }
-                }
-                &.chats-menu{
-                    bottom: 50px;
-                    right: 16px;
-                    width: 60px;
-                    height: 60px;
                 }
             }
             .chats-group{
