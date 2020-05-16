@@ -3,14 +3,13 @@ import Identify from "src/simi/Helper/Identify";
 import productBySkus from 'src/simi/queries/catalog/getProductsBySkus.graphql';
 import { Simiquery } from 'src/simi/Network/Query';
 import {productUrlSuffix, cateUrlSuffix} from 'src/simi/Helper/Url';
-import { Link } from 'src/drivers';
-import Image from 'src/simi/BaseComponents/Image';
 import Griditem from './Homesection/Griditem';
 import {applySimiProductListItemExtraField} from 'src/simi/Helper/Product';
 import Loading from 'src/simi/BaseComponents/Loading';
 import ItemsCarousel from 'react-items-carousel';
 import ChevronLeft from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronLeft';
 import ChevronRight from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronRight';
+import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 require('./homesection.scss');
 
 let loadedData = null
@@ -18,11 +17,56 @@ let loadedData = null
 const HomeSection = props => {
     const { history, isPhone, data} = props;
     const {homesections} = data && data.home && data.home.homesections || [];
+    const {storeConfig} = Identify.getStoreConfig() || {};
+    const base_url = storeConfig && storeConfig.base_url || window.location.href || '';
 
     const [activeItemIndex, setActiveItemIndex] = useState(0);
 
+    const scrollTop = () =>{
+		smoothScrollToView($(".header-wrapper"), 300);
+	}
+
     const onClickImage = (item, imageType) => {
         console.log(item)
+        if (!(item instanceof Object)) return false;
+        let valueKey = 'type_value_'+imageType;
+        let url = '';
+        let isNewWindow = false;
+        if (parseInt(item.type) === 1) {
+            //product detail
+            if (item[valueKey]) {
+                url = item[valueKey] + productUrlSuffix();
+            }
+        } else if(parseInt(item.type) === 2){
+            //category
+            if (item[valueKey]) {
+                url = item[valueKey] + cateUrlSuffix();
+            }
+        } else {
+            if (base_url && item[valueKey]) {
+                const hostName = base_url.replace(/^http(s?):\/\//g, '').replace(/\/.*$/g, '');
+                var regExpr = new RegExp(`^${hostName}`);
+                if (item[valueKey].indexOf(hostName) !== -1) {
+                    url = item[valueKey].replace(/^http(s?):\/\//g, '').replace(regExpr, '');
+                }
+            }
+            if(item[valueKey] && item[valueKey].search(/^http(s?):\/\//) !== 0){
+                url = item[valueKey];
+            } else if (item[valueKey]) {
+                url = item[valueKey];
+                isNewWindow = true;
+            }
+        }
+        if (url && !isNewWindow) {
+            scrollTop();
+        }
+        setTimeout(() => {
+            if (isNewWindow) {
+                window.open(item[valueKey]);
+            } else if(url) {
+                history.push(url);
+            }
+        }, 300);
     }
 
     const onClickProduct = (location) => {
@@ -136,9 +180,9 @@ const HomeSection = props => {
     const renderSection = () => {
         return homesections.map((item, index) => {
             let skus = [];
-            if (parseInt(item.product_id_1) !== 0) skus.push(item.product_id_1);
-            if (parseInt(item.product_id_2) !== 0) skus.push(item.product_id_2);
-            if (parseInt(item.product_id_3) !== 0) skus.push(item.product_id_3);
+            if (item.product_id_1 && parseInt(item.product_id_1) !== 0) skus.push(item.product_id_1);
+            if (item.product_id_2 && parseInt(item.product_id_2) !== 0) skus.push(item.product_id_2);
+            if (item.product_id_3 && parseInt(item.product_id_3) !== 0) skus.push(item.product_id_3);
             return (
                 <div className="homesection" key={index}>
                     <div className={`left-sec ${skus.length === 0 ? 'no-products':''}`}>

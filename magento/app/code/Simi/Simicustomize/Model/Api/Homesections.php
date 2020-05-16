@@ -87,11 +87,15 @@ class Homesections extends \Simi\Simiconnector\Model\Api\Apiabstract
                     ->create('\Magento\Catalog\Model\Product')->load($item['type_value_1']);
                 if ($productModel->getId()) {
                     $item['type_value_1'] = $productModel->getData('url_key');
+                } else {
+                    $item['type_value_1'] = '';
                 }
                 $productModel         = $this->simiObjectManager
                     ->create('\Magento\Catalog\Model\Product')->load($item['type_value_2']);
                 if ($productModel->getId()) {
                     $item['type_value_2'] = $productModel->getData('url_key');
+                } else {
+                    $item['type_value_2'] = '';
                 }
             }
 
@@ -122,16 +126,22 @@ class Homesections extends \Simi\Simiconnector\Model\Api\Apiabstract
                 ->create('\Magento\Catalog\Model\Product')->load($item['product_id_1']);
             if ($productModel->getId()) {
                 $item['product_id_1'] = $productModel->getSku();
+            } else {
+                $item['product_id_1'] = '';
             }
             $productModel = $this->simiObjectManager
                 ->create('\Magento\Catalog\Model\Product')->load($item['product_id_2']);
             if ($productModel->getId()) {
                 $item['product_id_2'] = $productModel->getSku();
+            } else {
+                $item['product_id_2'] = '';
             }
             $productModel = $this->simiObjectManager
                 ->create('\Magento\Catalog\Model\Product')->load($item['product_id_3']);
             if ($productModel->getId()) {
                 $item['product_id_3'] = $productModel->getSku();
+            } else {
+                $item['product_id_3'] = '';
             }
 
             $result['homesections'][$index] = $item;

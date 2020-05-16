@@ -31,6 +31,7 @@ class Productgrid extends \Magento\Catalog\Controller\Adminhtml\Product
         $this->productBuilder->build($this->getRequest());
         $resultLayout = $this->resultLayoutFactory->create();
         $resultLayout->getLayout()->getBlock('simicustomize.homesection.edit.tab.productgrid')
+                ->setId($this->getRequest()->getParam('grid_id'))
                 ->setProducts($this->getRequest()->getPost('products', null));
         return $resultLayout;
     }

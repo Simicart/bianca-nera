@@ -209,13 +209,13 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'title'              => __('Product ID (Image 1)'),
                 'required'           => true,
                 'disabled'           => $isElementDisabled,
-                'class' => 'validate-number',
+                // 'class'              => 'validate-number',
                 'after_element_html' => '<a href="#" title="Show Product Grid" onclick="toogleProduct(\'product_grid_type_1\', \'show_product_grid_type_1\');return false;">'
                     . '<img id="show_product_grid_type_1" src="'
                     . $this->getViewFileUrl('Simi_Simiconnector::images/arrow_down.png')
                     . '" title="" /></a>'
-                    . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgrid')
-                    ->setId('product_grid_type_1')
+                    . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgridtype1')
+                    // ->setId('product_grid_type_1')
                     ->toHtml()
             ]
         );
@@ -267,13 +267,13 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'title'              => __('Product ID (Image 2)'),
                 'required'           => false,
                 'disabled'           => $isElementDisabled,
-                'class' => 'validate-number',
+                // 'class'              => 'validate-number',
                 'after_element_html' => '<a href="#" title="Show Product Grid" onclick="toogleProduct(\'product_grid_type_2\', \'show_product_grid_type_2\');return false;">'
                     . '<img id="show_product_grid_type_2" src="'
                     . $this->getViewFileUrl('Simi_Simiconnector::images/arrow_down.png')
                     . '" title="" /></a>'
-                    . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgrid')
-                    ->setId('product_grid_type_2')
+                    . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgridtype2')
+                    // ->setId('product_grid_type_2')
                     ->toHtml()
             ]
         );
@@ -310,12 +310,12 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'required'           => false,
                 'disabled'           => $isElementDisabled,
                 'class' => 'validate-number',
-                'after_element_html' => '<a href="#" title="Show Product Grid" onclick="toogleProduct(\'product_grid_1\', \'show_product_grid_1\');return false;">'
+                'after_element_html' => '<a href="#" title="Show Product Grid" onclick="toogleProduct(\'product_grid\', \'show_product_grid_1\');return false;">'
                     . '<img id="show_product_grid_1" src="'
                     . $this->getViewFileUrl('Simi_Simiconnector::images/arrow_down.png')
                     . '" title="" /></a>'
                     . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgrid')
-                    ->setId('product_grid_1')
+                    // ->setId('product_grid_1')
                     ->toHtml()
             ]
         );
@@ -333,8 +333,8 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                     . '<img id="show_product_grid_2" src="'
                     . $this->getViewFileUrl('Simi_Simiconnector::images/arrow_down.png')
                     . '" title="" /></a>'
-                    . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgrid')
-                    ->setId('product_grid_2')
+                    . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgrid2')
+                    // ->setId('product_grid_2')
                     ->toHtml()
             ]
         );
@@ -352,8 +352,8 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                     . '<img id="show_product_grid_3" src="'
                     . $this->getViewFileUrl('Simi_Simiconnector::images/arrow_down.png')
                     . '" title="" /></a>'
-                    . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgrid')
-                    ->setId('product_grid_3')
+                    . $this->getLayout()->createBlock('Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab\Productgrid3')
+                    // ->setId('product_grid_3')
                     ->toHtml()
             ]
         );

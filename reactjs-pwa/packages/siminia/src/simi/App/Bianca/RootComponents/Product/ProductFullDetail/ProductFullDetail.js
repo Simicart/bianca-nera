@@ -107,7 +107,7 @@ class ProductFullDetail extends Component {
     }
 
     componentDidMount(){
-        smoothScrollToView($('#siminia-main-page'));
+        smoothScrollToView($('.header-wrapper'));
         this.getStoreLocations();
         //get user detail when missing (from refreshing) - fix error
         if (this.props.isSignedIn && !this.props.customerId && this.props.getUserDetails){

@@ -5,7 +5,7 @@ namespace Simi\Simicustomize\Block\Adminhtml\Homesection\Edit\Tab;
 /**
  * @SuppressWarnings(PHPMD.DepthOfInheritance)
  */
-class Productgrid extends \Magento\Backend\Block\Widget\Grid\Extended
+class Productgridtype2 extends \Magento\Backend\Block\Widget\Grid\Extended
 {
 
     /**
@@ -51,7 +51,7 @@ class Productgrid extends \Magento\Backend\Block\Widget\Grid\Extended
     public function _construct()
     {
         parent::_construct();
-        $this->setId('product_grid');
+        $this->setId('product_grid_type_2');
         $this->setDefaultSort('entity_id');
         $this->setUseAjax(true);
     }
@@ -157,7 +157,7 @@ class Productgrid extends \Magento\Backend\Block\Widget\Grid\Extended
             'grid_url'
         ) : $this->getUrl(
             'simicustomize/*/productgrid',
-            ['_current' => true, 'grid_id' => 'product_grid']
+            ['_current' => true, 'grid_id' => 'product_grid_type_2']
         );
     }
 

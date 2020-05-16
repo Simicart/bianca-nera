@@ -130,13 +130,13 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
                 // default: hidden product grid
                 document.getElementById('product_grid_type_1').style.display = 'none';
                 document.getElementById('product_grid_type_2').style.display = 'none';
-                document.getElementById('product_grid_1').style.display = 'none';
+                document.getElementById('product_grid').style.display = 'none';
                 document.getElementById('product_grid_2').style.display = 'none';
                 document.getElementById('product_grid_3').style.display = 'none';
             }, false);
 
             document.body.addEventListener('click', function(e){
-                var product_grid_trs = document.querySelectorAll('#product_grid_1 tbody tr');
+                var product_grid_trs = document.querySelectorAll('#product_grid tbody tr');
                 var trElement;
                 var radioArray = [];
                 for (var i = 0, j = 0; i < product_grid_trs.length; i++) {
@@ -221,18 +221,18 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
                         document.querySelectorAll('.field-type_value_1_category')[0].style.display = 'none';
                         document.querySelectorAll('#type_value_1_category')[0].classList.remove('required-entry');
                         document.querySelectorAll('.field-type_value_2_category')[0].style.display = 'none';
-                        // document.querySelectorAll('#type_value_2_category')[0].classList.remove('required-entry');
+                        document.querySelectorAll('#type_value_2_category')[0].classList.remove('required-entry');
 
                         document.querySelectorAll('.field-type_value_1_url')[0].style.display = 'none';
                         document.querySelectorAll('#type_value_1_category')[0].classList.remove('required-entry');
                         document.querySelectorAll('.field-type_value_2_url')[0].style.display = 'none';
-                        // document.querySelectorAll('#type_value_2_category')[0].classList.remove('required-entry');
+                        document.querySelectorAll('#type_value_2_category')[0].classList.remove('required-entry');
                         break;
                     case '2':
                         document.querySelectorAll('.field-type_value_1_product')[0].style.display = 'none';
                         document.querySelectorAll('#type_value_1_product')[0].classList.remove('required-entry');
                         document.querySelectorAll('.field-type_value_2_product')[0].style.display = 'none';
-                        // document.querySelectorAll('#type_value_2_product')[0].classList.remove('required-entry');
+                        document.querySelectorAll('#type_value_2_product')[0].classList.remove('required-entry');
 
                         document.querySelectorAll('.field-type_value_1_category')[0].style.display = 'block';
                         document.querySelectorAll('#type_value_1_category')[0].classList.add('required-entry');
@@ -242,18 +242,18 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
                         document.querySelectorAll('.field-type_value_1_url')[0].style.display = 'none';
                         document.querySelectorAll('#type_value_1_url')[0].classList.remove('required-entry');
                         document.querySelectorAll('.field-type_value_2_url')[0].style.display = 'none';
-                        // document.querySelectorAll('#type_value_2_url')[0].classList.remove('required-entry');
+                        document.querySelectorAll('#type_value_2_url')[0].classList.remove('required-entry');
                         break;
                     case '3':
                         document.querySelectorAll('.field-type_value_1_product')[0].style.display = 'none';
                         document.querySelectorAll('#type_value_1_product')[0].classList.remove('required-entry');
                         document.querySelectorAll('.field-type_value_2_product')[0].style.display = 'none';
-                        // document.querySelectorAll('#type_value_2_product')[0].classList.remove('required-entry');
+                        document.querySelectorAll('#type_value_2_product')[0].classList.remove('required-entry');
 
                         document.querySelectorAll('.field-type_value_1_category')[0].style.display = 'none';
                         document.querySelectorAll('#type_value_1_category')[0].classList.remove('required-entry');
                         document.querySelectorAll('.field-type_value_2_category')[0].style.display = 'none';
-                        // document.querySelectorAll('#type_value_2_category')[0].classList.remove('required-entry');
+                        document.querySelectorAll('#type_value_2_category')[0].classList.remove('required-entry');
 
                         document.querySelectorAll('.field-type_value_1_url')[0].style.display = 'block';
                         document.querySelectorAll('#type_value_1_url')[0].classList.add('required-entry');
@@ -274,10 +274,10 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
                         // document.querySelectorAll('#type_value_2_product')[0].classList.add('required-entry');
 
                         document.querySelectorAll('.field-type_value_2_category')[0].style.display = 'none';
-                        // document.querySelectorAll('#type_value_2_category')[0].classList.remove('required-entry');
+                        document.querySelectorAll('#type_value_2_category')[0].classList.remove('required-entry');
 
                         document.querySelectorAll('.field-type_value_2_url')[0].style.display = 'none';
-                        // document.querySelectorAll('#type_value_2_url')[0].classList.remove('required-entry');
+                        document.querySelectorAll('#type_value_2_url')[0].classList.remove('required-entry');
                 }
             }
 
