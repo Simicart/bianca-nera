@@ -58,7 +58,7 @@ const Instagram = (props) => {
         return (
             <div className="item" key={index}>
                 <a href={`https://www.instagram.com/p/${item.shortcode}`} target="_blank" rel="noopener noreferrer">
-                    <img className="img-responsive" src={item.thumbnail_src} alt={item.accessibility_caption} />
+                    <img className="img-responsive" src={item.thumbnail_src} alt={item.accessibility_caption || `Instagram image ${index + 1}`} />
                 </a>
             </div>
         );

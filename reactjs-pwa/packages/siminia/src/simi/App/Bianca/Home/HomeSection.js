@@ -27,7 +27,6 @@ const HomeSection = props => {
 	}
 
     const onClickImage = (item, imageType) => {
-        console.log(item)
         if (!(item instanceof Object)) return false;
         let valueKey = 'type_value_'+imageType;
         let url = '';
@@ -183,17 +182,23 @@ const HomeSection = props => {
             if (item.product_id_1 && parseInt(item.product_id_1) !== 0) skus.push(item.product_id_1);
             if (item.product_id_2 && parseInt(item.product_id_2) !== 0) skus.push(item.product_id_2);
             if (item.product_id_3 && parseInt(item.product_id_3) !== 0) skus.push(item.product_id_3);
+
+            const imgLeft1 = isPhone && item.image_left_1_mobile ? item.image_left_1_mobile : item.image_left_1;
+            const imgLeft1_alt = imgLeft1 && imgLeft1.split('/').pop().split('.')[0].replace(/[_-]/g, ' ');
+            const imgLeft2 = isPhone && item.image_left_2_mobile ? item.image_left_2_mobile : item.image_left_2;
+            const imgLeft2_alt = imgLeft2 && imgLeft2.split('/').pop().split('.')[0].replace(/[_-]/g, ' ');
+
             return (
                 <div className="homesection" key={index}>
                     <div className={`left-sec ${skus.length === 0 ? 'no-products':''}`}>
                         {item.image_left_1 && 
                             <div className="image-1" onClick={() => onClickImage(item, '1')}>
-                                <img src={isPhone && item.image_left_1_mobile ? item.image_left_1_mobile : item.image_left_1}/>
+                                <img src={imgLeft1} alt={imgLeft1_alt}/>
                             </div>
                         }
                         {item.image_left_2 && 
                             <div className="image-2" onClick={() => onClickImage(item, '2')}>
-                                <img src={isPhone && item.image_left_2_mobile ? item.image_left_2_mobile : item.image_left_2}/>
+                                <img src={imgLeft2} alt={imgLeft2_alt}/>
                             </div>
                         }
                     </div>

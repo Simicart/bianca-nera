@@ -168,6 +168,13 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
             $object->storeviewInfo['social_login_config'] = array(
                 'firebase_config' => $this->config->getValue('simiconnector/firebase/firebase_config')
             );
+
+            $object->storeviewInfo['seo'] = array(
+                'home_meta' => array(
+                    'title' => $this->config->getValue('simiconnector/seo/home_meta_title'),
+                    'desc' => $this->config->getValue('simiconnector/seo/home_meta_description'),
+                )
+            );
         }
     }
 }

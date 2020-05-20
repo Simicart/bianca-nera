@@ -10,7 +10,7 @@ const NavMegaitem = props => {
     if (props.itemAndChild) {
         const { classes, parentId } = props;
         const rootItem = props.itemAndChild;
-        const childCol = props.childCol || 2;
+        // const childCol = props.childCol || 2;
         if (rootItem.children) {
             const childCats = rootItem.children.map((item, index) => {
                 if (!item.name) return '';
@@ -107,7 +107,7 @@ const NavMegaitem = props => {
                                         ? `/pub/media/catalog/category/${rootItem.image}`
                                         : 'https://www.simicart.com/media/simicart/mockup-ps-simipwa.png'
                                 }
-                                alt={rootItem.image_url}
+                                alt={rootItem.name}
                             />
                         </div>
                     }

@@ -26,7 +26,7 @@ const Home = props => {
     const cached_home = Identify.ApiDataStorage(`home_lite`)
     const storeConfig = Identify.getStoreConfig() || {};
     const config = storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.config || {};
-    const {brands, instagram} = config || [];
+    const {brands, instagram, seo} = config || [];
     const [data, setHomeData] = useState(cached_home);
 
     const resizePhone = () => {
@@ -56,10 +56,13 @@ const Home = props => {
         return <LoadingSpiner />
     } 
 
+    const home_meta = seo.home_meta && seo.home_meta || null;
+    
     return (
         <div className={`home-wrapper ${getOS()}`}>
             {TitleHelper.renderMetaHeader({
-                    title:Identify.__('Bianca Nera')
+                title: Identify.__(home_meta && home_meta.title || 'Bianca Nera'),
+                desc: Identify.__(home_meta && home_meta.desc || '')
             })}
             <div className={`banner-wrap ${isPhone ? 'mobile':''}`}>
                 <Banner data={data} history={history} isPhone={isPhone} />

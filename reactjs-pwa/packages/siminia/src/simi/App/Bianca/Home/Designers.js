@@ -27,6 +27,7 @@ const Designers = props => {
             if (index < 18 && item.logo) {
                 item.url = `/designers/${item.vendor_id}.html`;
                 item.image = item.logo;
+                item.alt = item.logo && item.logo.split('/').pop().split('.')[0].replace(/[_-]/g, ' ');
                 newData.push(item);
             }
             return false;

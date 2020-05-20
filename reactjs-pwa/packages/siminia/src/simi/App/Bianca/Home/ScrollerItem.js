@@ -2,7 +2,7 @@ import React from 'react'
 
 const ScrollerItem = props => {
     const { history, isPhone, renderItem, item, index } = props;
-    const {title, image, image_tablet, url} = item || {};
+    const {title, image, image_tablet, url, alt} = item || {};
 
     const handleClick = (e) => {
         if (url) {
@@ -29,7 +29,7 @@ const ScrollerItem = props => {
     return (
         <div className="item" onClick={handleClick}>
             { title &&  <div className="title">{title}</div>}
-            <img className="img-responsive" src={img} alt={title}/>
+            <img className="img-responsive" src={img} alt={title || alt}/>
         </div>
     )
 }
