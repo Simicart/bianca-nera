@@ -25,7 +25,7 @@ export const addMerchantUrl = (resouceUrl) => {
         !resouceUrl.includes('http://') && !resouceUrl.includes('https://') &&
         window.SMCONFIGS && window.SMCONFIGS.directly_request && window.SMCONFIGS.merchant_url
     ) {
-        return (window.SMCONFIGS.merchant_url + resouceUrl)
+        return (window.SMCONFIGS.merchant_url + resouceUrl.replace(/^\//, ''))
     }
     return resouceUrl
 }

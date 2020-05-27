@@ -31,7 +31,7 @@
     {{> templates/default-font-include}}
     <link href="https://fonts.googleapis.com/css?family=Muli:300" rel="stylesheet">
 
-    <link rel="preconnect" href="{{env.MAGENTO_BACKEND_URL}}">
+    <!-- link rel="preconnect" href="{{env.MAGENTO_BACKEND_URL}}" -->
 
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
