@@ -6,9 +6,10 @@ import OwlCarousel from 'react-owl-carousel2';
 const Instagram = (props) => {
     const {history, isPhone} = props;
     const [insData, setInsData] = useState();
+    const limit = 5;
 
     const getUserInstagram = async (name) => {
-        let response = await fetch(`/rest/V1/simiconnector/proxy/instagram/?path=${name}`);
+        let response = await fetch(`/rest/V1/simiconnector/proxy/instagram/?path=${name}&limit=${limit}`);
         if (response.ok) { // if HTTP-status is 200-299
             // get the response body (the method explained below)
             let resData = await response.json();
@@ -74,7 +75,7 @@ const Instagram = (props) => {
                     let instagramData = [];
                     instagramData = edges.map((ins, index) => {
                         // const limit = isPhone ? 3 : 8;
-                        const limit = 18;
+                        // const limit = 18;
                         if (index < limit) {
                             return renderInsItem(nodeItem(ins), index);
                         }
