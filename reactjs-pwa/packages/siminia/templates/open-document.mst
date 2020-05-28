@@ -25,6 +25,7 @@
     <link async id="rtl-stylesheet" rel="stylesheet" href="/simistatic/rtl.css">
     <script src="/simistatic/config.js"></script>
     {{! <script src="https://www.simicart.com/appdashboard/rest/app_configs?bear_token=daFTRsQRPorHZYAADSoXkYaJlXfzbnBoyhipJ8h&pwa=1&js=1"></script> }}
+    <script src="/simistatic/browser.js"></script>
     <script src="/simistatic/app_configs.js"></script>
     <script src="/simistatic/jquery.min.js"></script>
     <link rel="stylesheet" href="/simistatic/owlcarousel/owl.carousel.min.css" />
