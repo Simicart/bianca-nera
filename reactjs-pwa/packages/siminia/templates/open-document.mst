@@ -19,7 +19,7 @@
         Apple Icons for Homescreen
         Sizes: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/app-icon/
     }}
-    <link rel="apple-touch-icon" href="/icons/favicon512.png">
+    <link rel="apple-touch-icon" href="/icons/favicon64.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/favicon180.png">
     <link rel="stylesheet" href="/simistatic/bootstrap.min.css">
     <link async id="rtl-stylesheet" rel="stylesheet" href="/simistatic/rtl.css">
