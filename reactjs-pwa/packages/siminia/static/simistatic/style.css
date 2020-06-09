@@ -1,7 +1,9 @@
 @import '../fonts/Linearicons.css';
 @import '../fonts/Gotham.css';
 @import '../fonts/Didot.css';
-
+.rtl-root{
+    direction: rtl;
+}
 @media (min-width: 1200px){
     .container {
         width: 1190px;

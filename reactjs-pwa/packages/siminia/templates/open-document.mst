@@ -20,14 +20,8 @@
         Sizes: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/app-icon/
     }}
     <link rel="apple-touch-icon" href="/icons/favicon64.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/favicon180.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/favicon512.png">
     <link rel="stylesheet" href="/simistatic/bootstrap.min.css">
-    <link async id="rtl-stylesheet" rel="stylesheet" href="/simistatic/rtl.css">
-    <script src="/simistatic/config.js"></script>
-    {{! <script src="https://www.simicart.com/appdashboard/rest/app_configs?bear_token=daFTRsQRPorHZYAADSoXkYaJlXfzbnBoyhipJ8h&pwa=1&js=1"></script> }}
-    <script src="/simistatic/browser.js"></script>
-    <script src="/simistatic/app_configs.js"></script>
-    <script src="/simistatic/jquery.min.js"></script>
     <link rel="stylesheet" href="/simistatic/owlcarousel/owl.carousel.min.css" />
     <link rel="stylesheet" href="/simistatic/style.css" />
     {{> templates/default-font-include}}
@@ -59,7 +53,7 @@
     <!-- End OneSignal Notification -->
 
     {{#bundles.prefetch}}
-    <link rel="prefetch script" href="/{{.}}">
+    <link rel="prefetch script" href="/">
     {{/bundles.prefetch}}
     <script type="text/javascript">
         window.addEventListener('error', function (e) {
