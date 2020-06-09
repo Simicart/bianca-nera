@@ -2,7 +2,7 @@ var SMCONFIGS = {
     //magento url, end with slash
     merchant_url: 'https://bianca-nera.com/magento/',
     //for pwastudio, call api directly to merchant instead of calling via upward
-    directly_request: false,
+    directly_request: true,
     simicart_url: "https://www.simicart.com/appdashboard/rest/app_configs/",
     simicart_authorization: "f95d84b5S2IHxHQxbl3HWg3kGQaw9zQpJVDSZOX",
     notification_api: "/rest/V1/simiconnector/",
