@@ -13,7 +13,10 @@ const Instagram = (props) => {
         let response = await fetch(`https://www.instagram.com/${name}?__a=1`);
         if (response.ok) { // if HTTP-status is 200-299
             // get the response body (the method explained below)
-            let resData = await response.json();
+            let resData = {}
+            try{
+                resData = await response.json();
+            }catch(e){}
             if (Array.isArray(resData) && resData[0]){
                 resData = resData[0];
             }
