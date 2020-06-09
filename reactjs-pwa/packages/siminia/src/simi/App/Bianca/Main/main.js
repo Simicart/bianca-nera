@@ -17,7 +17,7 @@ class Main extends Component {
     componentDidMount() {
         const dbConfig = Identify.getAppDashboardConfigs()
         if (!dbConfig) {
-            Connection.connectSimiCartServer('GET', true, this);
+            // Connection.connectSimiCartServer('GET', true, this);
         }
     }
 
