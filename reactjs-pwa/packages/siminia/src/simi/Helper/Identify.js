@@ -95,13 +95,13 @@ class Identify {
             }
         }
         //save store config to session storage
-        window.SIMI_STORE_CONFIG = data;
+        // window.SIMI_STORE_CONFIG = data;
         this.storeDataToStoreage(Identify.SESSION_STOREAGE, Constants.STORE_CONFIG, data)
     }
     static getStoreConfig() {
-        if (window.SIMI_STORE_CONFIG) {
+        /* if (window.SIMI_STORE_CONFIG) {
             return window.SIMI_STORE_CONFIG;
-        }
+        } */
         return this.getDataFromStoreage(this.SESSION_STOREAGE, Constants.STORE_CONFIG);
     }
 
@@ -157,9 +157,6 @@ class Identify {
             //save to storegae
             data = JSON.stringify(data);
             if (type === this.SESSION_STOREAGE) {
-                if (Constants.STORE_CONFIG === key) {
-                    return window.SIMI_STORE_CONFIG;
-                }
                 sessionStorage.setItem(rootConfig, data);
                 return;
             }
