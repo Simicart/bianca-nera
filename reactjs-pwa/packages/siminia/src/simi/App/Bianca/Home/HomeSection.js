@@ -128,7 +128,7 @@ const HomeSection = props => {
             </div>
     }
 
-    const renderProducts = (skus) => {
+    const renderProducts = (skus, index) => {
         if (skus && skus.length) {
             let productItems = productsData && productsData.items && productsData.items.filter((item) => skus.includes(item.sku)) || []
             if (isPhone && productsData && productItems.length) {
@@ -246,7 +246,7 @@ const HomeSection = props => {
                                 <Loading />
                             }
                             {productsData &&
-                                renderProducts(sectionSkus)
+                                renderProducts(sectionSkus, index)
                             }
                         </div>
                     }
