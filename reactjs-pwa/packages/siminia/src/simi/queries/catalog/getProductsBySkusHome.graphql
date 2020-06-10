@@ -1,0 +1,25 @@
+query getProductsBySkus($stringSkus: [String], $sort: ProductSortInput) {
+    products(filter: { sku: { in: $stringSkus }}, sort: $sort) {
+        items {
+            id
+            name
+            sku
+            url_key
+            thumbnail {
+                url
+                label
+                __typename
+            }
+            price {
+                regularPrice {
+                    amount {
+                        currency
+                        value
+                    }
+                }
+            }
+            special_price
+            type_id
+        }
+    }
+}
