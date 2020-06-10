@@ -10,7 +10,8 @@ const Instagram = (props) => {
 
     const getUserInstagram = async (name) => {
         // let response = await fetch(`/rest/V1/simiconnector/proxy/instagram/?path=${name}&limit=${limit}`);
-        let response = await fetch(`https://www.instagram.com/${name}/?__a=1`);
+        // let response = await fetch(`https://www.instagram.com/${name}/?__a=1`);
+        let response = {};
         if (response.ok) { // if HTTP-status is 200-299
             // get the response body (the method explained below)
             let resData = {}
@@ -21,7 +22,7 @@ const Instagram = (props) => {
                 resData = resData[0];
             }
             return resData;
-        } else {
+        } else if (response.status) {
             console.warn("HTTP-Error: " + response.status);
         }
         return false;
