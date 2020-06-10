@@ -50,7 +50,7 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 
 // TODO: Add fallbacks
 
-importScripts('/simistatic/config.js');
+// importScripts('/simistatic/config.js');
 self.addEventListener('push', function(event) {
     return
     var apiPath = SMCONFIGS.notification_api+ 'pwadevices/message?endpoint=';
