@@ -165,7 +165,7 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
         );
 
         /** Add fieldset 2 */
-        $fieldset2 = $form->addFieldset('image_fieldset', ['legend' => __('Left Images')]);
+        $fieldset2 = $form->addFieldset('image_fieldset', ['legend' => __('Images')]);
 
         $fieldset2->addField(
             'type',
@@ -178,25 +178,6 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'disabled' => $isElementDisabled,
                 'options'  => $this->homesectionFactory->create()->toOptionTypeHash(),
                 'onchange' => 'changeType(this.value)',
-            ]
-        );
-
-        $fieldset2->addField('image_left_1', 'image', 
-            [
-                'name'     => 'image_left_1',
-                'label'    => __('Image 1 (width:572px, height:362px), (width:768px, height:362px), (width:375px, height:362px)'),
-                'title'    => __('Image 1 (width:572px, height:362px), (width:768px, height:362px), (width:375px, height:362px)'),
-                'required' => true,
-                'disabled' => $isElementDisabled
-            ]
-        );
-        $fieldset2->addField('image_left_1_mobile', 'image', 
-            [
-                'name'     => 'image_left_1_mobile',
-                'label'    => __('Image 1 mobile (width:343px, height:218px), (width:225px, height:106px), (width:106px, height:106px)'),
-                'title'    => __('Image 1 mobile (width:343px, height:218px), (width:225px, height:106px), (width:106px, height:106px)'),
-                'required' => true,
-                'disabled' => $isElementDisabled
             ]
         );
         /* 1: product + category + url */
@@ -238,25 +219,26 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
             ]
         );
 
+        $fieldset2->addField('image_left_1', 'image', 
+            [
+                'name'     => 'image_left_1',
+                'label'    => __('Image 1 (width x height: 580x362 px)'),
+                'title'    => __('Image 1 (width x height: 580x362 px)'),
+                'required' => true,
+                'disabled' => $isElementDisabled
+            ]
+        );
+        $fieldset2->addField('image_left_1_mobile', 'image', 
+            [
+                'name'     => 'image_left_1_mobile',
+                'label'    => __('Image 1 mobile (width x height: 345x225 px)'),
+                'title'    => __('Image 1 mobile (width x height: 345x225 px)'),
+                'required' => true,
+                'disabled' => $isElementDisabled
+            ]
+        );
         
-        $fieldset2->addField('image_left_2', 'image', 
-            [
-                'name'     => 'image_left_2',
-                'label'    => __('Image 2 (width:572px, height:362px), (width:768px, height:362px), (width:375px, height:362px)'),
-                'title'    => __('Image 2 (width:572px, height:362px), (width:768px, height:362px), (width:375px, height:362px)'),
-                'required' => false,
-                'disabled' => $isElementDisabled
-            ]
-        );
-        $fieldset2->addField('image_left_2_mobile', 'image', 
-            [
-                'name'     => 'image_left_2_mobile',
-                'label'    => __('Image 2 mobile (width:343px, height:218px), (width:225px, height:106px), (width:106px, height:106px)'),
-                'title'    => __('Image 2 mobile (width:343px, height:218px), (width:225px, height:106px), (width:106px, height:106px)'),
-                'required' => false,
-                'disabled' => $isElementDisabled
-            ]
-        );
+
         /* 2: product + category + url */
         $fieldset2->addField(
             'type_value_2_product',
@@ -295,7 +277,24 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'disabled' => $isElementDisabled,
             ]
         );
-
+        $fieldset2->addField('image_left_2', 'image', 
+            [
+                'name'     => 'image_left_2',
+                'label'    => __('Image 2 (width x height: 370x362 px)'),
+                'title'    => __('Image 2 (width x height: 370x362 px)'),
+                'required' => false,
+                'disabled' => $isElementDisabled
+            ]
+        );
+        $fieldset2->addField('image_left_2_mobile', 'image', 
+            [
+                'name'     => 'image_left_2_mobile',
+                'label'    => __('Image 2 mobile (width x height: 104x143 px)'),
+                'title'    => __('Image 2 mobile (width x height: 104x143 px)'),
+                'required' => false,
+                'disabled' => $isElementDisabled
+            ]
+        );
 
         /** Add fieldset 3 */
         $fieldset3 = $form->addFieldset('product_fieldset', ['legend' => __('Products')]);
