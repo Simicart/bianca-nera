@@ -370,6 +370,40 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
             $setup->getConnection()->createTable($homesection_table);
         }
+        /** update home section table add product skus columns */
+        if ($context->getVersion() && version_compare($context->getVersion(), '1.0.15', '<')) {
+            $table_name = $setup->getTable('simiconnector_homesection');
+            $connection->addColumn(
+                    $table_name,
+                    'product_sku_1',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'length' => '255',
+                        'nullable' => true,
+                        'comment' => 'Product sku for product_id_1'
+                    ]
+                );
+            $connection->addColumn(
+                    $table_name,
+                    'product_sku_2',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'length' => '255',
+                        'nullable' => true,
+                        'comment' => 'Product sku for product_id_2'
+                    ]
+                );
+            $connection->addColumn(
+                    $table_name,
+                    'product_sku_3',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'length' => '255',
+                        'nullable' => true,
+                        'comment' => 'Product sku for product_id_3'
+                    ]
+                );
+        }
     }
 
     public function checkTableExist($installer, $table_key_name, $table_name)

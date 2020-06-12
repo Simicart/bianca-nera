@@ -50,6 +50,9 @@ class Save extends \Magento\Backend\App\Action
                     $model->setBannerNameTablet($imageFileTablet);
                 }
             }
+            if (isset($data['type']) && $data['type'] != 3) {
+                $model->setData('banner_url', '');
+            }
             $model->save();
             $this->updateVisibility($simiObjectManager, $model, $data);
             $this->messageManager->addSuccess(__('The Data has been saved.'));

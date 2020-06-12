@@ -49,4 +49,10 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
+    <route url="/V1/simicustomize/home" method="GET">
+        <service class="Simi\Simicustomize\Api\HomeInterface" method="get"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
 </routes>
