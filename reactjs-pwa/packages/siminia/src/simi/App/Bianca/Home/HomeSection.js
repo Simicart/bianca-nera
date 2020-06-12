@@ -3,13 +3,14 @@ import Identify from "src/simi/Helper/Identify";
 import productBySkus from 'src/simi/queries/catalog/getProductsBySkusHome.graphql';
 import { Simiquery } from 'src/simi/Network/Query';
 import {productUrlSuffix, cateUrlSuffix} from 'src/simi/Helper/Url';
-import Griditem from './Homesection/Griditem';
-import {applySimiProductListItemExtraField} from 'src/simi/Helper/Product';
+// import Griditem from './Homesection/Griditem';
+// import {applySimiProductListItemExtraField} from 'src/simi/Helper/Product';
 import Loading from 'src/simi/BaseComponents/Loading';
 import ItemsCarousel from 'react-items-carousel';
 import ChevronLeft from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronLeft';
 import ChevronRight from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronRight';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
+import { Link } from 'src/drivers';
 require('./homesection.scss');
 
 let loadedData = null
@@ -105,9 +106,9 @@ const HomeSection = props => {
                 <div className="grid-item-image" style={{position: "relative"}}>
                     <div className="siminia-product-image" style={{backgroundColor: "white"}}>
                         <div style={{position: "absolute", left: "0px", top: "0px", bottom: "0px", width: "100%"}}>
-                            <a href={`${item.url_key}.html`} title={item.sku}>
+                            <Link to={`/${item.url_key}${productUrlSuffix()}`} title={item.sku}>
                                 <img src={item.thumbnail.url} alt={item.thumbnail.label} />
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
