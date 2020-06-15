@@ -428,8 +428,8 @@ const VendorRegister = (props) => {
 					</Field>
 					<div className={classes.form_row}>
 						<label className={classes.select} htmlFor="input-country">{Identify.__('Country *')}</label>
-						<label className={`${classes.arrow_down1} show`} htmlFor="input-country" />
-						<label className={`${classes.arrow_up1} hidden`} htmlFor="input-country" />
+						<label className={`${classes.arrow_down1} show icon-chevron-down icons`} htmlFor="input-country" />
+						<label className={`${classes.arrow_up1} hidden icon-chevron-up icons`} htmlFor="input-country" />
 						<SimiSelect
 							id="input-country"
 							field="vendor.country_id"

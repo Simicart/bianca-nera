@@ -132,7 +132,7 @@
     top: 14.5px;
     left: 62px;
   }
-  .verify-opt-readonly .custom-input .element-1 .custom-arrow {
+  .verify-opt-readonly .custom-input .element-1 .icon-chevron-down {
     cursor: not-allowed;
     color: #101820;
     font-size: 14px;
@@ -142,9 +142,6 @@
     font-variant: normal;
     text-transform: none;
     font-feature-settings: "liga";
-  }
-  .verify-opt-readonly .custom-input .element-1 .custom-arrow::before {
-    content: "\e93a";
   }
   .verify-opt-readonly .custom-input {
     position: relative;

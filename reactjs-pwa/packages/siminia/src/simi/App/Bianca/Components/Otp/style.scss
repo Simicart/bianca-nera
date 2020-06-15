@@ -118,7 +118,7 @@
   top: 14.5px;
   left: 62px;
 }
-.login-opt-area .custom-input .element-1 .custom-arrow {
+.login-opt-area .custom-input .element-1 .icon-chevron-down {
   cursor: pointer;
   color: #101820;
   font-size: 14px;
@@ -128,9 +128,6 @@
   font-variant: normal;
   text-transform: none;
   font-feature-settings: "liga";
-}
-.login-opt-area .custom-input .element-1 .custom-arrow::before {
-  content: "\e93a";
 }
 .login-opt-area .custom-input {
   position: relative;

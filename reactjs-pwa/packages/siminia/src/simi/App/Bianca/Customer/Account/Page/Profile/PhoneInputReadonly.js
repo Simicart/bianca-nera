@@ -36,7 +36,7 @@ class PhoneInputReadonly extends Component {
                 </div>
                 <div className="custom-input">
                     <div className="element-1">
-                        <div className="custom-arrow"></div>
+                        <div className="icon-chevron-down icons"></div>
                     </div>
                     <ReactPhoneInput
                         country={"vn"}

@@ -215,7 +215,7 @@
 
 .form_row .arrow_down::before, .form_row .arrow_down1::before {
 	color: #101820;
-	content: "\e93a";
+	content: "\e874";
 	font-size: 14px;
 	font-family: 'Linearicons', 'Simple Linearicons';
 	font-style: normal;
@@ -245,7 +245,7 @@
 
 .form_row .arrow_up::before, .form_row .arrow_up1::before {
 	color: #101820;
-	content: "\e93a";
+	content: "\e874";
 	font-size: 14px;
 	font-family: 'Linearicons', 'Simple Linearicons';
 	font-style: normal;
