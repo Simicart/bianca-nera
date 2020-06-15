@@ -1,7 +1,8 @@
 import React from 'react'
 import Identify from 'src/simi/Helper/Identify';
 import defaultClasses from './index.css'
-import { mergeClasses } from 'src/classify'
+import { mergeClasses } from 'src/classify';
+import Check from 'src/simi/BaseComponents/Icon/Check';
 
 export const Checkbox = (props) => {
     const propsClasses = props.classes?props.classes:{}
@@ -12,7 +13,9 @@ export const Checkbox = (props) => {
             className={`${classes['checkbox-item']} checkbox-item ${props.className} ${props.selected?`${classes['selected']} selected`:''}`}
         >
             <div className={`${classes["checkbox-item-icon"]} checkbox-item-icon`}>
-                <div className={`${classes["checkbox-item-icon-inside"]} checkbox-item-icon-inside`}></div>
+                <div className={`${classes["checkbox-item-icon-inside"]} checkbox-item-icon-inside`}>
+                    {props.selected && <Check />}
+                </div>
             </div>
             <span className={`${classes["checkbox-item-text"]} checkbox-item-text`}>
                 {Identify.__(props.label)}
