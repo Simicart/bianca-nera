@@ -63,6 +63,18 @@ class CustomerSessionInit implements ObserverInterface
             }
         }
 
+        //in case of GET graphQL
+        $graphQLVariables = $this->request->getParam('variables');
+        if ($graphQLVariables) {
+            $graphQLVariables = json_decode($graphQLVariables, true);
+            if ($graphQLVariables && is_array($graphQLVariables)) {
+                if (isset($graphQLVariables['simiStoreId']))
+                    $simiStoreId = $graphQLVariables['simiStoreId'];
+                if (isset($graphQLVariables['simiCurrency']))
+                    $simiCurrency = $graphQLVariables['simiCurrency'];
+            }
+        }
+
         if ($simiStoreId && $simiStoreId != '' && (int)$storeManager->getStore()->getId() != (int)$simiStoreId) {
             try {
                 $storeCode = $this->simiObjectManager
