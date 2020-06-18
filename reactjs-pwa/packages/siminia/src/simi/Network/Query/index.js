@@ -1,6 +1,11 @@
 import React from 'react'
 import { Query } from 'react-apollo';
 import { Mutation } from 'react-apollo';
+// import { ApolloClient } from 'apollo-client';
+// import { createHttpLink } from 'apollo-link-http';
+// import { persistCache } from 'apollo-cache-persist';
+// import { InMemoryCache } from 'apollo-cache-inmemory';
+
 import {addRequestVars} from 'src/simi/Helper/Network'
 import { useApolloContext } from '@magento/peregrine'
 import { useQueryResult } from '@magento/peregrine'
@@ -15,7 +20,32 @@ export const Simiquery = props => {
     const variables = props.variables?props.variables:{}
     modProps.variables = addRequestVars(variables)
     modProps = {...modProps, ...props}
-    return <Query {...modProps} >
+
+    /* const apolloLink = (apiBase) => {
+        return createHttpLink({
+            useGETForQueries: true,
+            uri: apiBase
+        });
+    }
+    const apolloCache = () => {
+        const cache = new InMemoryCache();
+        persistCache({
+            cache,
+            storage: window.localStorage
+        });
+        return cache;
+    }
+    const apolloClient = (apiBase) => {
+        return new ApolloClient({
+            link: apolloLink(apiBase),
+            cache: apolloCache()
+        });
+    }
+    return <Query {...modProps} client={apolloClient('/graphql')}>
+        {props.children}
+    </Query> */
+
+    return <Query {...modProps}>
         {props.children}
     </Query>
 }
