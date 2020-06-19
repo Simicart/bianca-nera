@@ -81,7 +81,7 @@ class Identify {
             if (curentVer && curentVer !== pwa_studio_client_ver_number) {
                 console.log('New version released, updating..')
                 CacheHelper.clearCaches()
-                window.location.reload()
+                window.location.reload(true)
             }
             this.storeDataToStoreage(Identify.LOCAL_STOREAGE, Constants.CLIENT_VER, pwa_studio_client_ver_number)
         }
