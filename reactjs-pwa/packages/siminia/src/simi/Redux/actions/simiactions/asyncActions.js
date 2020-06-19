@@ -10,6 +10,7 @@ import isObjectEmpty from 'src/util/isObjectEmpty';
 import Identify from 'src/simi/Helper/Identify';
 import { refresh } from 'src/util/router-helpers';
 import { toggleDrawer } from 'src/actions/app';
+import { sendRequest } from 'src/simi/Network/RestMagento';
 
 //const { request } = RestApi.Magento2;
 import { request } from 'src/simi/Network/RestMagento'
@@ -32,29 +33,29 @@ export const simiSignedIn = response => async dispatch => {
 }
 
 export const simiSignOut = ({ history }) => async dispatch => {
-
-    // Sign the user out in local storage and Redux.
-    await clearToken();
-    dispatch(userActions.signIn.reset());
-
-    // Now that we're signed out, forget the old (customer) cart
-    // and fetch a new guest cart.
-    dispatch(removeCart());
-    window.$.ajax({url: SMCONFIGS.merchant_url + 'simiconnector/rest/v2/customers/logout', async: true, success: function(result){
-
-    }});
-    dispatch(getCartDetails({ forceRefresh: true }));
-
-    // remove address
-    storage.removeItem('cartId');
-    storage.removeItem('signin_token');
-    sessionStorage.removeItem("shipping_address");
-    sessionStorage.removeItem("billing_address");
-    await clearBillingAddress();
-    await clearShippingAddress();
-
-    // Finally, go back to the first page of the browser history.
-    refresh({ history });
+    await sendRequest('/rest/V1/simiconnector/customers/logout', async ()=>{
+        // Sign the user out in local storage and Redux.
+        await clearToken();
+        dispatch(userActions.signIn.reset());
+    
+        // Now that we're signed out, forget the old (customer) cart
+        // and fetch a new guest cart.
+        dispatch(removeCart());
+        // window.$.ajax({url: SMCONFIGS.merchant_url + 'simiconnector/rest/v2/customers/logout', async: true, success: function(result){}});
+        
+        // dispatch(getCartDetails({ forceRefresh: true }));
+        // remove address
+        storage.removeItem('cartId');
+        storage.removeItem('signin_token');
+        sessionStorage.removeItem("shipping_address");
+        sessionStorage.removeItem("billing_address");
+        await clearBillingAddress();
+        await clearShippingAddress();
+    
+        // Finally, go back to the first page of the browser history.
+        history.push('/');
+        refresh({ history });
+    }, 'POST', {}, {})
 };
 
 

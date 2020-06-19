@@ -8,9 +8,9 @@ import Popper from '@material-ui/core/Popper';
 import { connect } from 'src/drivers';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-import { logout as signOutApi } from 'src/simi/Model/Customer';
-import { showFogLoading, hideFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading';
-import {showToastMessage} from 'src/simi/Helper/Message';
+// import { logout as signOutApi } from 'src/simi/Model/Customer';
+// import { showFogLoading, hideFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading';
+// import {showToastMessage} from 'src/simi/Helper/Message';
 
 class MyAccount extends React.Component {
 	state = {
@@ -34,32 +34,19 @@ class MyAccount extends React.Component {
 	};
 
 	handleClickItem = (link) => {
-		this.handleLink(link);
-		this.handleToggle();
+		const { isSignedIn } = this.props;
+		if (!isSignedIn) {
+			this.handleLink(link);
+		} else {
+			this.handleToggle();
+		}
 	};
 
 	executeLogout = () => {
 		// Hide menu
 		this.handleToggle();
 		// Call api logout from backend
-		signOutApi(this.signOutCallback.bind(this), {});
-		showFogLoading();
-	};
-
-	signOutCallback = (data) => {
-		hideFogLoading();
-		if (data.errors) {
-			let errorMsg = '';
-			if (data.errors.length) {
-				data.errors.map((error) => {
-					errorMsg += error.message;
-				});
-				showToastMessage(Identify.__(errorMsg));
-			}
-		} else {
-			// Redirect to page logout pwa
-			this.handleLink('/logout.html');
-		}
+		this.handleLink('/logout.html');
 	};
 
 	renderMyAccount = () => {
@@ -93,6 +80,7 @@ class MyAccount extends React.Component {
 			</Popper>
 		);
 	};
+
 	renderOption = () => {
 		const { open } = this.state;
 		const { classes } = this.props;

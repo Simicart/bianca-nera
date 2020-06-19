@@ -77,7 +77,10 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
                     break;
 
                 case 'logout':
-                    $lastCustomerId     = $this->simiObjectManager->get('Magento\Customer\Model\Session')
+                    $customerSession = $lastCustomerId     = $this->simiObjectManager->get('Magento\Customer\Model\Session');
+                    $customerSession->logout();
+
+                    /* $lastCustomerId     = $this->simiObjectManager->get('Magento\Customer\Model\Session')
                         ->getCustomer()->getId();
                     if ($this->simiObjectManager->get('Simi\Simiconnector\Model\Customer')->logout()) {
                         $this->builderQuery = $this->simiObjectManager
@@ -90,7 +93,7 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
                         $this->simiObjectManager->get('Magento\Customer\Model\Session')->setCustomer($newCustomer);
                     } else {
                         throw new \Simi\Simiconnector\Helper\SimiException(__('Logout Failed'), 4);
-                    }
+                    } */
                     break;
                 case 'checkexisting':
                     $this->builderQuery = $this->simiObjectManager->get('Simi\Simiconnector\Model\Customer')
@@ -120,6 +123,9 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
             $this->builderQuery    = $customer;
             $this->RETURN_MESSAGE = __("Thank you for registering with "
                 . $this->storeManager->getStore()->getName() . " store");
+        }
+        if ($data['resourceid'] == "logout") {
+            return true;
         }
         return $this->show();
     }

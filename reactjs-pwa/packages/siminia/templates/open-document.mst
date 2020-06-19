@@ -38,7 +38,7 @@
     <!-- End Google Tag Manager -->
 
     <!-- OneSignal Notification -->
-    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    {{! <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
     <script>
     var OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
@@ -49,12 +49,12 @@
             },
         });
     });
-    </script>
+    </script> }}
     <!-- End OneSignal Notification -->
 
-    {{#bundles.prefetch}}
-    <link rel="prefetch script" href="/">
-    {{/bundles.prefetch}}
+    {{! #bundles.prefetch}}
+    {{! <link rel="prefetch script" href="/"> }}
+    {{! /bundles.prefetch}}
     <script type="text/javascript">
         window.addEventListener('error', function (e) {
             if (

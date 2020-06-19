@@ -53,6 +53,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
             $object->storeviewInfo['preorder_deposit'] = $this->config->getValue('sales/preorder/deposit_amount'); //get all vendors
             // add brands list to storeview api
             $descriptionArr = array();
+            $brandBannerArr = array();
             $serializer = $this->simiObjectManager->get('Magento\Framework\Serialize\SerializerInterface');
             $brandDetails = $this->config->getValue('simiconnector/product_brands/brand_details');
             if ($brandDetails) {
@@ -60,6 +61,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 if ($brandsDetailsFromConfig && is_array($brandsDetailsFromConfig)) {
                     foreach ($brandsDetailsFromConfig as $brandDetailsFromConfig) {
                         $descriptionArr[$brandDetailsFromConfig['brand_title']] = $brandDetailsFromConfig['brand_description'];
+                        $brandBannerArr[$brandDetailsFromConfig['brand_title']] = $brandDetailsFromConfig['brand_banner'];
                     }
                 }
             }
@@ -84,10 +86,12 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 foreach($optionCollection as $option){
                     $brandName = $option->getData('name');
                     $brandDesc = isset($descriptionArr[$brandName])?$descriptionArr[$brandName]:'';
+                    $brandBanner = isset($brandBannerArr[$brandName])?$brandBannerArr[$brandName]:'';
                     $object->storeviewInfo['brands'][] = [
                         'option_id' => $option->getData('option_id'),
                         'name' => $brandName,
                         'description' => $brandDesc,
+                        'banner' => $brandBanner ? $this->urlBuilder->getBaseUrl().UrlInterface::URL_TYPE_MEDIA . '/' . $brandBanner : '',
                         'image' => $this->swatchMediaHelper->getSwatchMediaUrl() . $option->getData('value'),
                         'attribute_name' => $brand->getData('frontend_label'),
                         'attribute_code' => $brand->getData('attribute_code'),

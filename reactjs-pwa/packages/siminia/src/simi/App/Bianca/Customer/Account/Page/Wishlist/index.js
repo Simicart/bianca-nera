@@ -82,7 +82,7 @@ const Wishlist = props => {
                     title:Identify.__('Favourites')
             })}
             <div className="account-favourites">
-                <div class="customer-page-title">{Identify.__('Wishlist')}</div>
+                <div className="customer-page-title">{Identify.__('Wishlist')}</div>
                 {rows ?
                     <div className="product-grid">
                         {rows}
