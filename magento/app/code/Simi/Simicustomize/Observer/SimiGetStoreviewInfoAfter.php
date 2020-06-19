@@ -60,8 +60,12 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 $brandsDetailsFromConfig = $serializer->unserialize($brandDetails);
                 if ($brandsDetailsFromConfig && is_array($brandsDetailsFromConfig)) {
                     foreach ($brandsDetailsFromConfig as $brandDetailsFromConfig) {
-                        $descriptionArr[$brandDetailsFromConfig['brand_title']] = $brandDetailsFromConfig['brand_description'];
-                        $brandBannerArr[$brandDetailsFromConfig['brand_title']] = $brandDetailsFromConfig['brand_banner'];
+                        if (isset($brandDetailsFromConfig['brand_title']) && isset($brandDetailsFromConfig['brand_description'])) {
+                            $descriptionArr[$brandDetailsFromConfig['brand_title']] = $brandDetailsFromConfig['brand_description'];
+                        }
+                        if (isset($brandDetailsFromConfig['brand_title']) && isset($brandDetailsFromConfig['brand_banner'])) {
+                            $brandBannerArr[$brandDetailsFromConfig['brand_title']] = $brandDetailsFromConfig['brand_banner'];
+                        }
                     }
                 }
             }
