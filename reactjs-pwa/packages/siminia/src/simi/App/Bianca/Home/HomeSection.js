@@ -91,8 +91,8 @@ const HomeSection = props => {
                     <span className="price">{currency === '$' ? `${currency}${item.special_price}` : `${currency} ${item.special_price}`}</span>
                 </div>
                 <div className="special">
-                    <span class="price old">{currency === '$' ? `${currency}${regular}` : `${currency} ${regular}`}</span>
-                    {/* <span class="sale_off">-20%</span> */}
+                    <span className="price old">{currency === '$' ? `${currency}${regular}` : `${currency} ${regular}`}</span>
+                    {/* <span className="sale_off">-20%</span> */}
                 </div>
             </div>
         } else {
@@ -136,7 +136,7 @@ const HomeSection = props => {
                     let carouselIndex = activeItemIndex[index] || 0;
                     if (Identify.isRtl()) {
                         if (carouselIndex === 0) carouselIndex = (productItems.length - 1);
-                        productItems.items.reverse();
+                        productItems.reverse();
                     }
                     return <ItemsCarousel
                         infiniteLoop={false}
