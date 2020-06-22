@@ -56,7 +56,7 @@ const Home = props => {
         return <LoadingSpiner />
     } 
 
-    const home_meta = seo.home_meta && seo.home_meta || null;
+    const home_meta = seo && seo.home_meta && seo.home_meta || null;
     
     return (
         <div className={`home-wrapper ${getOS()}`}>

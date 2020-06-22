@@ -1,10 +1,6 @@
-
-
-</head>
 {{> templates/js-unavailable}}
-{{#urlResolver}}
-<body data-model-type="{{type}}" data-model-id="{{id}}" data-model-relative_url="{{relative_url}}"  data-model-canonical_url="{{canonical_url}}">
-{{/urlResolver}}
+</head>
+<body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN3D27W"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

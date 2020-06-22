@@ -301,13 +301,14 @@ class Header extends React.Component {
 		brands && brands.forEach((item, index)=>{
 			if (index < 5) {
 				brandItems.push(
-					<a className={`${this.state.brandVisited === item.option_id ? 'active':''}`} 
-						href={`/brands.html?filter=%7B"brand"%3A"${item.option_id}"%7D`} key={index}
-						onClick={() => this.brandClick(item.option_id)} >
-						<span >
+					<Link to={`/brands.html?filter=%7B"brand"%3A"${item.option_id}"%7D`}
+						className={`${this.state.brandVisited === item.option_id ? 'active':''}`}
+						onClick={() => this.brandClick(item.option_id)}
+						key={index}>
+						<span>
 							{item.name}
 						</span>
-					</a>
+					</Link>
 				);
 			}
 		})
