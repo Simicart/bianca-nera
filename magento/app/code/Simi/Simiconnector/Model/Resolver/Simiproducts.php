@@ -124,14 +124,14 @@ class Simiproducts implements ResolverInterface
         $this->eventManager = $this->simiObjectManager->get('\Magento\Framework\Event\ManagerInterface');
 
         $products = $searchResult->getProductsSearchResult();
-        foreach ($products as $index => $product) {
+        /* foreach ($products as $index => $product) {
             $sku = $product['sku'];
             $productModel = $this->simiObjectManager->get('Magento\Catalog\Model\Product')
                 ->getCollection()
                 ->addAttributeToFilter('sku', $sku)
                 ->getFirstItem();
             if ($productModel->getId()) {
-                 $productModel = $this->simiObjectManager->create('Magento\Catalog\Model\Product')
+                $productModel = $this->simiObjectManager->create('Magento\Catalog\Model\Product')
                      ->load($productModel->getId());
                 $this->productExtraData = array(
                     'attribute_values' => $productModel->toArray(),
@@ -146,7 +146,7 @@ class Simiproducts implements ResolverInterface
                 $product['extraData'] = json_encode($this->productExtraData);
                 $products[$index] = $product;
             }
-        }
+        } */
         $this->result = [
             'total_count' => $searchResult->getTotalCount(),
             'items' => $products,
@@ -156,7 +156,7 @@ class Simiproducts implements ResolverInterface
                 'total_pages' => $maxPages
             ],
             'layer_type' => $layerType,
-            'simiProductListItemExtraField' => $products,
+            'simiProductListItemExtraField' => [],//$products,
             'simi_filters' => $simiProductFilters?json_decode($simiProductFilters):array()
         ];
 
