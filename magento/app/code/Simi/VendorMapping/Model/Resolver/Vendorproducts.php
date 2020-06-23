@@ -114,7 +114,7 @@ class Vendorproducts implements ResolverInterface
         $this->eventManager = $this->simiObjectManager->get('\Magento\Framework\Event\ManagerInterface');
 
         $products = $searchResult->getProductsSearchResult();
-        foreach ($products as $index => $product) {
+        /* foreach ($products as $index => $product) {
             $sku = $product['sku'];
             $productModel = $this->simiObjectManager->get('Magento\Catalog\Model\Product')
                 ->getCollection()
@@ -136,7 +136,7 @@ class Vendorproducts implements ResolverInterface
                 $product['extraData'] = json_encode($this->productExtraData);
                 $products[$index] = $product;
             }
-        }
+        } */
         $this->result = [
             'total_count' => $searchResult->getTotalCount(),
             'items' => $products,
@@ -146,7 +146,7 @@ class Vendorproducts implements ResolverInterface
                 'total_pages' => $maxPages
             ],
             'layer_type' => $layerType,
-            'simiProductListItemExtraField' => $products,
+            'simiProductListItemExtraField' => [],//$products,
             'simi_filters' => $simiProductFilters?json_decode($simiProductFilters):array()
         ];
 
