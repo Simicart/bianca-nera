@@ -58,10 +58,12 @@
     <script type="text/javascript">
         window.addEventListener('error', function (e) {
             if (
-                e && e.target &&
-                (
+                (e && e.target && (
                     (e.target.src && (typeof e.target.src === 'string') && e.target.src.indexOf('vendor~client') !== -1) ||
                     (e.message && e.message == 'Script error.')
+                )) ||
+                (
+                    e && e.filename && e.filename.includes('client.js')
                 )
             ) {
                 console.log('Version is outdated - old client file not found')
@@ -95,17 +97,5 @@
                     console.log(err)
                 }
             }
-            //if (e && e.filename && e.filename.includes('client.js')) {
-            //    e.message && console.log(e.message)
-            //    e.error && e.error.stack && console.log(e.error.stack)
-            //    try {
-            //        sessionStorage.clear();
-            //        localStorage.setItem("CLIENT_VER", null);
-            //        window.location.reload(true);
-            //    } catch (err) {
-            //        window.location.reload(true);
-            //        console.log(err);
-            //    }
-            //}
         }, true);
     </script>

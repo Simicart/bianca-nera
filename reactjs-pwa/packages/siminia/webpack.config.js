@@ -58,7 +58,7 @@ module.exports = async function(env) {
         output: {
             path: themePaths.output,
             publicPath: '/',
-            filename: 'js/[name].js',
+            filename: 'js/[name]-[hash].js',
             strictModuleExceptionHandling: true,
             chunkFilename: 'js/[name]-[chunkhash].js'
         },
