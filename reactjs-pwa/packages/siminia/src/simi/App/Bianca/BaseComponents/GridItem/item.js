@@ -59,7 +59,7 @@ class Griditem extends React.Component {
 
     addToCart = (pre_order = false) => {
         const {item} = this.props
-        if (item && item.simiExtraField && item.simiExtraField.attribute_values) {
+        /* if (item && item.simiExtraField && item.simiExtraField.attribute_values) {
             const {attribute_values} = item.simiExtraField
             if ((!parseInt(attribute_values.has_options)) && attribute_values.type_id === 'simple') {
                 const params = {product: String(item.id), qty: '1'}
@@ -69,6 +69,15 @@ class Griditem extends React.Component {
                 simiAddToCart(this.addToCartCallBack, params)
                 return
             }
+        } */
+        /* if no simiExtraField and no care custom options */
+        if (item && item.type_id && item.type_id === 'simple') {
+            let params = {product: String(item.id), qty: '1'}
+            if (pre_order)
+                params.pre_order = 1
+            showFogLoading()
+            simiAddToCart(this.addToCartCallBack, params)
+            return
         }
         const { url_key } = item
         const { history } = this.props
