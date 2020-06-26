@@ -16,7 +16,6 @@ import ChildCats from './childCats'
 var sortByData = null
 var filterData = null
 let loadedData = null
-let foundChild = false
 
 const Category = props => {
     const { id, foundBrand } = props;
@@ -50,11 +49,26 @@ const Category = props => {
     if (sortByData)
         variables.sort = sortByData
         
-    const setFoundChild = (value) => {
-        foundChild = value
+    const cateQuery = simicntrCategoryQuery
+
+    let foundChild = false;
+    const hasChild = (catArr, idToFind) => {
+        catArr.forEach(catItem => {
+            if (catItem && catItem.id && catItem.id === idToFind) {
+                if (catItem.children && catItem.children.length) {
+                    foundChild = true;
+                    return true;
+                }
+            }
+            if (catItem.children && catItem.children.length)
+                hasChild(catItem.children, idToFind);
+        })
+        return foundChild;
     }
 
-    const cateQuery = simicntrCategoryQuery
+    const storeConfig = Identify.getStoreConfig();
+    const cateArr = storeConfig && storeConfig.simiRootCate && storeConfig.simiRootCate.children || [];
+
     return (
         <Simiquery query={cateQuery} variables={variables}>
             {({ loading, error, data }) => {
@@ -109,6 +123,7 @@ const Category = props => {
                 let cateEmpty = false
                 if (!appliedFilter && data.simiproducts && data.simiproducts.total_count === 0)
                     cateEmpty = true
+                const _hasChild = hasChild(cateArr, data.category.id);
                 return (
                     <div className="container">
                         <BreadCrumb breadcrumb={breadcrumb} history={props.history}/>
@@ -122,10 +137,9 @@ const Category = props => {
                                 underHeader={<ChildCats 
                                     category={data.category} 
                                     cateEmpty={cateEmpty}
-                                    setFoundChild={setFoundChild}
                                     />
                                 }
-                                foundChild={foundChild}
+                                hasChild={_hasChild}
                                 history={props.history}
                                 location={props.location}
                                 currentPage={currentPage}

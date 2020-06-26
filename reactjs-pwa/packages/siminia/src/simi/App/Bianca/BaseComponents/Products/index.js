@@ -206,7 +206,7 @@ class Products extends React.Component {
 
     render() {
         const {props} = this
-        const { data, title, cateEmpty, foundChild} = props;
+        const { data, title} = props;
         let description = props.description
         if(!description && data&& data.category && data.category.description){
             description = data.category.description ? Identify.__('%t') : Identify.__('%t')
@@ -224,9 +224,8 @@ class Products extends React.Component {
                     {descriptionArea}
                 </h2>
                 {props.underHeader}
-                {cateEmpty && foundChild ?
-                    null
-                    :
+                {props.cateEmpty && props.hasChild ?
+                    null :
                     <React.Fragment>
                         <div className="product-list-container-siminia">
                             {!this.state.isPhone && this.renderLeftNavigation()}
