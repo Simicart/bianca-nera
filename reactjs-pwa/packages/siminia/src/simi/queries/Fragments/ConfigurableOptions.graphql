@@ -12,21 +12,4 @@ fragment ConfigurableOptions on ConfigurableProduct{
             value_index
         }
     }
-    variants {
-        attributes {
-            code
-            value_index
-        }
-        product {
-            id
-            media_gallery_entries {
-                disabled
-                file
-                label
-                position
-            }
-            sku
-            stock_status
-        }
-    }
 }

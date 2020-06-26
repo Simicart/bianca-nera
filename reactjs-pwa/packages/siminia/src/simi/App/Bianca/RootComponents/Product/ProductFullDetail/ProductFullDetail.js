@@ -584,6 +584,12 @@ class ProductFullDetail extends Component {
             }
         }
 
+        let configurable_options_index = [];
+        if (simiExtraField && simiExtraField.app_options && simiExtraField.app_options.configurable_options 
+            && simiExtraField.app_options.configurable_options.attributes) {
+                configurable_options_index = simiExtraField.app_options.configurable_options.attributes;
+        }
+
         // sorting options
         if (configurable_options) {
             let startSortOrder = 3;
@@ -618,6 +624,7 @@ class ProductFullDetail extends Component {
                     <ConfigurableOptions
                         variants={variants}
                         options={configurable_options}
+                        optionsIndex={configurable_options_index}
                         optionSelections={this.state.optionSelections}
                         onSelectionChange={handleConfigurableSelectionChange}
                         onSizeGuideClick={this.onSizeGuideClick}
