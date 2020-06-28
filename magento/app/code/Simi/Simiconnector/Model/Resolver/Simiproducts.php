@@ -142,6 +142,7 @@ class Simiproducts implements ResolverInterface
                 ); */
                 $this->productExtraData = array(
                     'attribute_values' => array(
+                        'is_salable' => $productModel->getIsSalable() ? 1 : 0,
                         'vendor_id' => $productModel->getVendorId(),
                         'pre_order' => $productModel->getPreOrder(),
                     ),
