@@ -63,7 +63,7 @@
                     (e.message && e.message == 'Script error.')
                 )) ||
                 (
-                    e && e.filename && e.filename.includes('client-')
+                    e && e.filename && e.filename.includes('client-') && e.message !== "Uncaught TypeError: Cannot set property 'WebkitTransform' of undefined"
                 )
             ) {
                 console.log('Version is outdated - old client file not found')
