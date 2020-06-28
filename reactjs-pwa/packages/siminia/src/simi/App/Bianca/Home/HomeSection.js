@@ -222,7 +222,7 @@ const HomeSection = props => {
                             </div>
                         }
                     </div>
-                    {allSkus.length > 0 && sectionSkus.length > 0 &&
+                    {allSkus.length > 0 &&
                         <div className="right-sec">
                             {index === 0 && productsData === null &&
                                 <Simiquery query={productBySkus} variables={variables}>
