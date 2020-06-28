@@ -150,7 +150,7 @@ class ProductImage extends React.Component {
             productFiltered.forEach((productId) => {
                 if (configurable_options.images[productId] && configurable_options.images[productId].length){
                     configurable_options.images[productId].forEach((image) => {
-                        image.img && images.push({file: image.img, position: 0, disabled: false});
+                        image.full && images.push({file: image.full, position: 0, disabled: false});
                     });
                 }
             });
