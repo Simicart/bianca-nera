@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { getHomeData } from 'src/simi/Model/Home';
 import Banner from './Banner';
 import HomeCat from "./HomeCat";
-import Brands from "./Brands";
+// import Brands from "./Brands";
 import HomeSection from "./HomeSection";
-import LoadingSpiner from 'src/simi/BaseComponents/Loading/LoadingSpiner'
+// import LoadingSpiner from 'src/simi/BaseComponents/Loading/LoadingSpiner'
 import { withRouter } from 'react-router-dom';
-import ProductList from './ProductList';
+// import ProductList from './ProductList';
 import Identify from 'src/simi/Helper/Identify';
 // import * as Constants from 'src/simi/Config/Constants';
 import { getOS } from 'src/simi/App/Bianca/Helper';
 import Designers from './Designers';
-import Newcollections from './Newcollections';
+// import Newcollections from './Newcollections';
 import Instagram from './Instagram';
 import TitleHelper from 'src/simi/Helper/TitleHelper';
 // import Chats from 'src/simi/App/Bianca/BaseComponents/Chats';
@@ -52,9 +52,9 @@ const Home = props => {
         }
     }
 
-    if(!data) {
-        return <LoadingSpiner />
-    } 
+    // if(!data) {
+    //     return <LoadingSpiner />
+    // } 
 
     const home_meta = seo && seo.home_meta && seo.home_meta || null;
     

@@ -3,13 +3,14 @@ import {Carousel} from "react-responsive-carousel";
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import Identify from "src/simi/Helper/Identify";
 import BannerItem from "./BannerItem";
+import Skeleton from 'react-loading-skeleton';
 require('./banner.scss');
 
 const Banner = props => {
     const { history, isPhone, data} = props;
     const {home} = data || {};
     const {homebanners} = home && home.homebanners || [];
-    const bannerCount = data.length;
+    // const bannerCount = data.length;
 
     const Prev = (clickHandler, hasPrev, label) => {
         return '<';
@@ -58,9 +59,12 @@ const Banner = props => {
     return (
         <div className={`banner-homepage ${Identify.isRtl() ? 'banner-home-rtl' : ''}`} style={{direction: 'ltr'}}>
             <div className={`container home-container`}>
-                <Carousel {...slideSettings}>
-                    {bannerData}
-                </Carousel>
+                {bannerData.length > 0 ?
+                    <Carousel {...slideSettings}>
+                        {bannerData}
+                    </Carousel>:
+                    <Skeleton height={438}/>
+                }
             </div>
         </div>
     ) ;
