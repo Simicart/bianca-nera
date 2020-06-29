@@ -22,7 +22,7 @@ import { addToCart as simiAddToCart } from 'src/simi/Model/Cart';
 import { getProductDetail } from 'src/simi/Model/Product';
 import { withRouter } from 'react-router-dom';
 import { getOS } from 'src/simi/App/Bianca/Helper';
-import { getCartDetails } from 'src/actions/cart';
+import { getCartDetailsCustom } from 'src/actions/cart';
 import { connect } from 'src/drivers';
 import { compose } from 'redux';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
@@ -96,7 +96,7 @@ class Griditem extends React.Component {
         } else {
             if (data.message)
                 showToastMessage(data.message)
-            this.props.getCartDetails()
+            this.props.getCartDetailsCustom()
             const item = prepareProduct(this.props.item)
             analyticAddCartGTM(item.name, item.id, item.price)
         }
@@ -381,7 +381,8 @@ Griditem.contextTypes = {
 
 
 const mapDispatchToProps = {
-    getCartDetails
+    // getCartDetails,
+    getCartDetailsCustom
 };
 
 export default compose(connect(

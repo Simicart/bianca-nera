@@ -220,7 +220,8 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
             }
         }
 
-        await dispatch(getCartDetails({ forceRefresh: true }));
+        // await dispatch(getCartDetails({ forceRefresh: true }));
+        await dispatch(getCartDetailsCustom({ forceRefresh: true })); //Customize remove get payment methods
 
         // Close the options drawer only after the cart is finished updating.
         dispatch(closeOptionsDrawer());
