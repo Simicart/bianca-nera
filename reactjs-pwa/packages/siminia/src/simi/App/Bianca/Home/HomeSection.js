@@ -223,27 +223,20 @@ const HomeSection = props => {
                         }
                     </div>
                     {allSkus.length > 0 &&
+                        <Simiquery query={productBySkus} variables={variables}>
+                            {({ loading, error, data }) => {
+                                if (error) return null;
+                                let products = data && data.products || null;
+                                if (products) {
+                                    setProductsData(products);
+                                }
+                                return null;
+                            }}
+                        </Simiquery>
+                    }
+                    {sectionSkus.length > 0 &&
                         <div className="right-sec">
-                            {index === 0 && productsData === null &&
-                                <Simiquery query={productBySkus} variables={variables}>
-                                    {({ loading, error, data }) => {
-                                        if (error) return null;
-
-                                        if (!data || !data.products) {
-                                            return <Loading />
-                                        }
-                                        if (data.products.items.length === 0){
-                                            return null;
-                                        }
-                                        let products = data && data.products || null;
-                                        if (products) {
-                                            setProductsData(products);
-                                        }
-                                        return null;
-                                    }}
-                                </Simiquery>
-                            }
-                            {index !== 0 && productsData === null &&
+                            {productsData === null &&
                                 <Loading />
                             }
                             {productsData &&
