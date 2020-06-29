@@ -408,6 +408,102 @@ export const getCartDetails = (payload = {}) => {
     };
 };
 
+export const getCartDetailsCustom = (payload = {}) => {
+    const { forceRefresh } = payload;
+
+    return async function thunk(dispatch, getState) {
+        const { cart, user } = getState();
+        const { cartId } = cart;
+        const { isSignedIn } = user;
+
+        // if there isn't a cart, create one
+        // then retry this operation
+        if (!cartId) {
+            await dispatch(createCart());
+            return thunk(...arguments);
+        }
+
+        // Once we have the cart id indicate that we are starting to make
+        // async requests for the details.
+        dispatch(actions.getDetails.request(cartId));
+
+        try {
+            const [
+                imageCache,
+                details,
+                // paymentMethods,
+                totals
+            ] = await Promise.all([
+                retrieveImageCache(),
+                fetchCartPart({
+                    cartId,
+                    forceRefresh,
+                    isSignedIn
+                }),
+                // fetchCartPart({
+                //     cartId,
+                //     forceRefresh,
+                //     isSignedIn,
+                //     subResource: 'payment-methods'
+                // }),
+                fetchCartPart({
+                    cartId,
+                    forceRefresh,
+                    isSignedIn,
+                    subResource: 'totals'
+                })
+            ]);
+
+            const { items } = details;
+
+            // for each item in the cart, look up its image in the cache
+            // and merge it into the item object
+            // then assign its options from the totals subResource
+            console.log(totals)
+            if (imageCache && Array.isArray(items) && items.length) {
+                const validTotals = totals && totals.items;
+                items.forEach(item => {
+                    item.image = item.image || imageCache[item.sku] || {};
+
+                    let options = [];
+                    if (validTotals) {
+                        const matchingItem = totals.items.find(
+                            t => t.item_id === item.item_id
+                        );
+                        if (matchingItem && matchingItem.options) {
+                            options = JSON.parse(matchingItem.options);
+                        }
+                    }
+                    item.options = options;
+                });
+            }
+
+            dispatch(
+                // actions.getDetails.receive({ details, paymentMethods, totals })
+                actions.getDetails.receive({ details, totals })
+            );
+        } catch (error) {
+            const { response } = error;
+
+            dispatch(actions.getDetails.receive(error));
+
+            // check if the cart has expired
+            if (response && response.status === 404) {
+                // if so, then delete the cached ID from local storage.
+                // The reducer handles clearing out the bad ID from Redux.
+                // In contrast to the save, make sure storage deletion is
+                // complete before dispatching the error--you don't want an
+                // upstream action to try and reuse the known-bad ID.
+                await clearCartId();
+                // then create a new one
+                await dispatch(createCart());
+                // then retry this operation
+                return thunk(...arguments);
+            }
+        }
+    };
+};
+
 export const toggleCart = () =>
     async function thunk(dispatch, getState) {
         const { app, cart } = getState();
