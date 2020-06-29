@@ -184,7 +184,7 @@ const FormFields = (props) => {
     const handleActionSignIn = useCallback(
         (value) => {
             simiSignedIn(value);
-            beginCheckout()
+            beginCheckout();
         },
         [simiSignedIn]
     )

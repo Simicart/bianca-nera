@@ -5,7 +5,7 @@ import { getCartDetails, getCartDetailsCustom, updateItemInCart } from 'src/acti
 import {
     editOrder,
 } from 'src/actions/checkout';
-import { isEmptyCartVisible } from 'src/selectors/cart';
+import { isEmptyCartVisibleCustom } from 'src/selectors/cart';
 import BreadCrumb from 'src/simi/BaseComponents/BreadCrumb';
 import Loading from 'src/simi/BaseComponents/Loading';
 
@@ -513,7 +513,7 @@ const mapStateToProps = state => {
     const { firstname, lastname, email } = currentUser;
     return {
         cart,
-        isCartEmpty: isEmptyCartVisible(state),
+        isCartEmpty: isEmptyCartVisibleCustom(state),
         isSignedIn,
         firstname,
         lastname,
