@@ -459,7 +459,6 @@ export const getCartDetailsCustom = (payload = {}) => {
             // for each item in the cart, look up its image in the cache
             // and merge it into the item object
             // then assign its options from the totals subResource
-            console.log(totals)
             if (imageCache && Array.isArray(items) && items.length) {
                 const validTotals = totals && totals.items;
                 items.forEach(item => {
