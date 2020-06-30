@@ -335,6 +335,20 @@ $textColor3: #e4e4e4;
               height: 16px !important;
             }
 
+            /* Loading cart icon */
+            .loading-spiner{
+                position: absolute;
+                top: -8px;
+                left: -10px;
+                width: 36px!important;
+                height: 36px!important;
+                margin-top: 0px!important;
+                svg{
+                    width: 36px!important;
+                    height: 36px!important;
+                }
+            }
+
             .add-to-compare-btn {
               font-family: Linearicons;
               font-size: 16px;
