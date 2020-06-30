@@ -108,7 +108,11 @@ class ProductFullDetail extends Component {
 
     componentDidMount(){
         smoothScrollToView($('.header-wrapper'));
-        this.getStoreLocations();
+        if (this.props.product && this.props.product.simiExtraField 
+        && this.props.product.simiExtraField.attribute_values 
+        && parseInt(this.props.product.simiExtraField.attribute_values.reservable) === 1) {
+            this.getStoreLocations();
+        }
         //get user detail when missing (from refreshing) - fix error
         if (this.props.isSignedIn && !this.props.customerId && this.props.getUserDetails){
             this.props.getUserDetails();
@@ -171,15 +175,39 @@ class ProductFullDetail extends Component {
     }
 
     getStoreLocations = (callback) => {
-        sendRequest('/rest/V1/simiconnector/storelocations', (data) => {
-            if (data && data.storelocations) {
-                this.stores = data.storelocations;
+        const storageKey = 'PRODUCT_DETAIL_Storelocations';
+        const _data = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, storageKey);
+        if (_data && _data.storelocations) {
+            try{
+                this.stores = _data.storelocations;
                 this.storesOptions = this.stores && this.stores.map((item) => {
                     return { label: item.store_name, value: item.simistorelocator_id }
                 }) || []
                 if (callback) callback(this.stores);
+            }catch(e){
+                sendRequest('/rest/V1/simiconnector/storelocations', (data) => {
+                    Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, storageKey, data);
+                    if (data && data.storelocations) {
+                        this.stores = data.storelocations;
+                        this.storesOptions = this.stores && this.stores.map((item) => {
+                            return { label: item.store_name, value: item.simistorelocator_id }
+                        }) || []
+                        if (callback) callback(this.stores);
+                    }
+                });
             }
-        });
+        } else {
+            sendRequest('/rest/V1/simiconnector/storelocations', (data) => {
+                Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, storageKey, data);
+                if (data && data.storelocations) {
+                    this.stores = data.storelocations;
+                    this.storesOptions = this.stores && this.stores.map((item) => {
+                        return { label: item.store_name, value: item.simistorelocator_id }
+                    }) || []
+                    if (callback) callback(this.stores);
+                }
+            });
+        }
         return this.stores;
     }
       
