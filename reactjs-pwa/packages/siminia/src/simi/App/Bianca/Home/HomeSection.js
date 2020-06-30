@@ -328,55 +328,6 @@ const HomeSection = props => {
     return (
         <div className={`section-homepage ${isPhone ? 'mobile':''}`}>
             <div className={`container home-container`}>
-                {/* <div className="homesection">
-                    <div className="left-sec">
-                        <div className="image-1">
-                            <Skeleton height={360}/>
-                        </div>
-                    </div>
-                    <div className="right-sec">
-                        {isPhone ?
-                            <Skeleton height={339}/>
-                            :
-                            <>
-                                <Skeleton height={360} width={176}/>
-                                <Skeleton height={360} width={176}/>
-                                <Skeleton height={360} width={176}/>
-                            </>
-                        }
-                    </div>
-                </div>
-                <div className="homesection">
-                    <div className="left-sec">
-                        <div className="image-1">
-                            <Skeleton height={360}/>
-                        </div>
-                        <div className="image-2">
-                            <Skeleton height={360}/>
-                        </div>
-                    </div>
-                    <div className="right-sec">
-                        {isPhone ?
-                            <Skeleton height={339}/>
-                            :
-                            <>
-                                <Skeleton height={360} width={176}/>
-                                <Skeleton height={360} width={176}/>
-                                <Skeleton height={360} width={176}/>
-                            </>
-                        }
-                    </div>
-                </div>
-                <div className="homesection">
-                    <div className="left-sec no-products">
-                        <div className="image-1">
-                            <Skeleton height={360}/>
-                        </div>
-                        <div className="image-2">
-                            <Skeleton height={360}/>
-                        </div>
-                    </div>
-                </div> */}
                 {renderSection()}
             </div>
         </div>

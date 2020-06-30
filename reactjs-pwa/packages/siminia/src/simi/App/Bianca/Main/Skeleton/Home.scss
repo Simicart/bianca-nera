@@ -21,3 +21,18 @@
         max-width: calc(50% - 16px);
     }
 }
+.section-homepage.mobile .homesection{
+    flex-wrap: wrap;
+    max-height: unset;
+    margin-top: 16px;
+    &:nth-child(1) {
+        margin-top: 20px;
+    }
+    .right-sec {
+        display: initial;
+        max-width: unset;
+        margin-left: unset;
+        width: 100%;
+        margin-top: 16px;
+    }
+}

@@ -22,7 +22,7 @@ const Homeskeleton = () => {
             <div className={`banner-wrap ${isPhone ? 'mobile':''}`}>
                 <div className={`banner-homepage ${Identify.isRtl() ? 'banner-home-rtl' : ''}`} style={{direction: 'ltr'}}>
                     <div className={`container home-container`}>
-                        <Skeleton height={438}/>
+                        <Skeleton height={isPhone ? 161 : 438}/>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@ const Homeskeleton = () => {
                     <div className="homesection">
                         <div className="left-sec">
                             <div className="image-1">
-                                <Skeleton height={360}/>
+                                <Skeleton height={isPhone ? 161 : 360}/>
                             </div>
                         </div>
                         <div className="right-sec">
@@ -49,11 +49,13 @@ const Homeskeleton = () => {
                     <div className="homesection">
                         <div className="left-sec">
                             <div className="image-1">
-                                <Skeleton height={360}/>
+                                <Skeleton height={isPhone ? 225 : 360}/>
                             </div>
-                            <div className="image-2">
-                                <Skeleton height={360}/>
-                            </div>
+                            {!isPhone &&
+                                <div className="image-2">
+                                    <Skeleton height={360}/>
+                                </div>
+                            }
                         </div>
                         <div className="right-sec">
                             {isPhone ?
