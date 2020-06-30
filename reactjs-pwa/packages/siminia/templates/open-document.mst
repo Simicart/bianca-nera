@@ -57,6 +57,7 @@
     {{! /bundles.prefetch}}
     <script type="text/javascript">
         window.addEventListener('error', function (e) {
+            console.warn(e);
             if (
                 (e && e.target && (
                     (e.target.src && (typeof e.target.src === 'string') && e.target.src.indexOf('vendor~client') !== -1) ||
