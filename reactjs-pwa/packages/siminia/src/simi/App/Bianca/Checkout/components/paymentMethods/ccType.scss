@@ -10,6 +10,29 @@
     line-height: 1rem;
     padding: 0.375rem 0.125rem 0.125rem;
   }
+  .form-group {
+    margin-top: 10px;
+    &:first-child{margin-top: 0px;}
+  }
+  .form-control{
+    min-height: 32px;
+    &#cc_number,&#cc_holder_name,&#cc_month{
+      width: 100%;
+    }
+    &#cc_year,&#cc_cvc{
+      min-width: 68px;
+      margin: 0 5px;
+    }
+    &#cc_cvc{
+      width: 68px;
+    }
+  }
+  .form-group-line{
+    display: inline-flex;
+    .form-group {
+      margin-top: 10px;
+    }
+  }
   label {
     font-family: "Gotham";
     margin-bottom: 5px;
