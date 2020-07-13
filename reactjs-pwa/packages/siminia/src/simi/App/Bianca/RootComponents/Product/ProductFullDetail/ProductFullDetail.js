@@ -357,20 +357,22 @@ class ProductFullDetail extends Component {
             if (this.isPreorder) {
                 this.setState({isErrorPreorder: true});
             }
+            hideFogLoading()
         } else {
             this.props.updateItemInCart()
             if (this.isBuy1Click) {
-                showToastMessage(Identify.__('Checkout processing..'));
+                // showToastMessage(Identify.__('Checkout processing..'));
                 (new Promise(resolve => setTimeout(resolve, 2000))).then(() => {
                     hideFogLoading();
                     this.props.history.push('/checkout.html');
                 });
                 return;
+            } else {
+                hideFogLoading()
             }
             this.showSuccess(data)
             analyticAddCartGTM(this.props.product.name, this.props.product.id, this.props.product.price)
         }
-        hideFogLoading()
     }
 
     addToWishlist = () => {
@@ -793,7 +795,7 @@ class ProductFullDetail extends Component {
     render() {
         hideFogLoading()
         const isPhone = this.getIsPhone();
-        const { addToCart, addToCartWithParams, addToCompare, reserveAction, productOptions, props, state, addToWishlist } = this;
+        const { addToCart, addToCompare, reserveAction, productOptions, props, state, addToWishlist } = this;
         const { optionCodes, optionSelections, } = state;
         const storeConfig = Identify.getStoreConfig()
         const { config } = storeConfig && storeConfig.simiStoreConfig || null;
