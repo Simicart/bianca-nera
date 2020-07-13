@@ -304,8 +304,9 @@ const HomeSection = props => {
                         }
                     </div>
                     {allSkus.length > 0 &&
-                        <Simiquery query={productBySkus} variables={variables}>
+                        <Simiquery query={productBySkus} variables={variables} fetchPolicy="no-cache">
                             {({ loading, error, data }) => {
+                                if (loading) return null;
                                 if (error) return null;
                                 let products = data && data.products || null;
                                 if (products) {

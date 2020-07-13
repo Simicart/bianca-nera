@@ -19,7 +19,7 @@ export const Simiquery = props => {
     let modProps = {}
     const variables = props.variables?props.variables:{}
     modProps.variables = addRequestVars(variables)
-    modProps = {...modProps, ...props}
+    modProps = {...props, ...modProps}
 
     /* const apolloLink = (apiBase) => {
         return createHttpLink({
