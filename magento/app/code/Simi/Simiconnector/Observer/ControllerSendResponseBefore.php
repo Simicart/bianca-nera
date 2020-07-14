@@ -45,37 +45,37 @@ class ControllerSendResponseBefore implements ObserverInterface
 
 
                     //set customer and quote to session cause rest does not
-                    $cartId = false;
-                    $customerContext = $this->simiObjectManager->create('Magento\Authorization\Model\UserContextInterface');
-                    $customerId = $customerContext->getUserId();
-                    if ($customerId &&
-                        $customerModel = $this->simiObjectManager->get('Magento\Customer\Model\Customer')->load($customerId)) {
-                        $this->simiObjectManager
-                            ->get('Magento\Customer\Model\Session')
-                            ->setCustomerAsLoggedIn($customerModel);
-                        $inputData = $this->simiObjectManager->create('Magento\Webapi\Controller\Rest\ParamsOverrider')
-                            ->override(array(), array('cartId'=>array('force' => true, 'value' => '%cart_id%')));
-                        if ($inputData && isset($inputData['cartId'])) {
-                            $cartId = $inputData['cartId'];
-                        }
-                    }
-                    if (!$cartId) {
-                        $inputParams = $this->inputParamsResolver->resolve();
-                        if ($inputParams && is_array($inputParams) && isset($inputParams[0])) {
-                            $quoteId = $inputParams[0];
-                            $quoteIdMask = $this->simiObjectManager->get('Magento\Quote\Model\QuoteIdMask');
-                            if ($quoteIdMask->load($quoteId, 'masked_id')) {
-                                if ($quoteIdMask && $maskQuoteId = $quoteIdMask->getData('quote_id'))
-                                    $cartId = $maskQuoteId;
-                            }
-                        }
-                    }
-                    if ($cartId) {
-                        $quoteModel = $this->simiObjectManager->get('Magento\Quote\Model\Quote')->load($cartId);
-                        if ($quoteModel->getId() && $quoteModel->getData('is_active')) {
-                            $this->simiObjectManager->get('Simi\Simiconnector\Helper\Data')->setQuoteToSession($quoteModel);
-                        }
-                    }
+                    // $cartId = false;
+                    // $customerContext = $this->simiObjectManager->create('Magento\Authorization\Model\UserContextInterface');
+                    // $customerId = $customerContext->getUserId();
+                    // if ($customerId &&
+                    //     $customerModel = $this->simiObjectManager->get('Magento\Customer\Model\Customer')->load($customerId)) {
+                    //     $this->simiObjectManager
+                    //         ->get('Magento\Customer\Model\Session')
+                    //         ->setCustomerAsLoggedIn($customerModel);
+                    //     $inputData = $this->simiObjectManager->create('Magento\Webapi\Controller\Rest\ParamsOverrider')
+                    //         ->override(array(), array('cartId'=>array('force' => true, 'value' => '%cart_id%')));
+                    //     if ($inputData && isset($inputData['cartId'])) {
+                    //         $cartId = $inputData['cartId'];
+                    //     }
+                    // }
+                    // if (!$cartId) {
+                    //     $inputParams = $this->inputParamsResolver->resolve();
+                    //     if ($inputParams && is_array($inputParams) && isset($inputParams[0])) {
+                    //         $quoteId = $inputParams[0];
+                    //         $quoteIdMask = $this->simiObjectManager->get('Magento\Quote\Model\QuoteIdMask');
+                    //         if ($quoteIdMask->load($quoteId, 'masked_id')) {
+                    //             if ($quoteIdMask && $maskQuoteId = $quoteIdMask->getData('quote_id'))
+                    //                 $cartId = $maskQuoteId;
+                    //         }
+                    //     }
+                    // }
+                    // if ($cartId) {
+                    //     $quoteModel = $this->simiObjectManager->get('Magento\Quote\Model\Quote')->load($cartId);
+                    //     if ($quoteModel->getId() && $quoteModel->getData('is_active')) {
+                    //         $this->simiObjectManager->get('Simi\Simiconnector\Helper\Data')->setQuoteToSession($quoteModel);
+                    //     }
+                    // }
 
                     $routeData = array(
                         'serviceClass' => $route->getServiceClass(),

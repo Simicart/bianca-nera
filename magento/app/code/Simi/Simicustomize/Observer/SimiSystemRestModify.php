@@ -15,36 +15,37 @@ class SimiSystemRestModify implements ObserverInterface {
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer) {
+        return;
         //$this->simiObjectManager->get('\Simi\Simicustomize\Helper\SpecialOrder')->submitQuotFromRestToSession();
-        $obj = $observer->getObject();
-        $routeData = $observer->getData('routeData');
-        $contentArray = $obj->getContentArray();
-        if ($routeData && isset($routeData['routePath'])){
-            if (
-                strpos($routeData['routePath'], 'V1/guest-carts/:cartId') !== false ||
-                strpos($routeData['routePath'], 'V1/carts/mine') !== false
-            ) {
-                if (
-                    strpos($routeData['routePath'], '/totals') !== false
-                ) {
-                    $this->_addDataToTotal($contentArray);
-                } else if (
-                    strpos($routeData['routePath'], '/shipping-information') !== false &&
-                    isset($contentArray['totals']['total_segments'])
-                ) {
-                    $total = $contentArray['totals'];
-                    $this->_addDataToTotal($total);
-                    $contentArray['totals'] = $total;
-                }
-                if (isset($contentArray['totals']['items'])) {
-                    $totalData = $contentArray['totals'];
-                    $this->_addDataToQuoteItem($totalData);
-                    $contentArray['totals'] = $totalData;
-                } else
-                    $this->_addDataToQuoteItem($contentArray);
-            }
-        }
-        $obj->setContentArray($contentArray);
+        // $obj = $observer->getObject();
+        // $routeData = $observer->getData('routeData');
+        // $contentArray = $obj->getContentArray();
+        // if ($routeData && isset($routeData['routePath'])){
+        //     if (
+        //         strpos($routeData['routePath'], 'V1/guest-carts/:cartId') !== false ||
+        //         strpos($routeData['routePath'], 'V1/carts/mine') !== false
+        //     ) {
+        //         if (
+        //             strpos($routeData['routePath'], '/totals') !== false
+        //         ) {
+        //             $this->_addDataToTotal($contentArray);
+        //         } else if (
+        //             strpos($routeData['routePath'], '/shipping-information') !== false &&
+        //             isset($contentArray['totals']['total_segments'])
+        //         ) {
+        //             $total = $contentArray['totals'];
+        //             $this->_addDataToTotal($total);
+        //             $contentArray['totals'] = $total;
+        //         }
+        //         if (isset($contentArray['totals']['items'])) {
+        //             $totalData = $contentArray['totals'];
+        //             $this->_addDataToQuoteItem($totalData);
+        //             $contentArray['totals'] = $totalData;
+        //         } else
+        //             $this->_addDataToQuoteItem($contentArray);
+        //     }
+        // }
+        // $obj->setContentArray($contentArray);
     }
 
 
