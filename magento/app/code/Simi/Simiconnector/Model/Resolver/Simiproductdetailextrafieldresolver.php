@@ -57,12 +57,13 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
             }
             $productModel = $productCollection->getFirstItem();
             if ($productId = $productModel->getId()) {
-                // $productModel    = $this->simiObjectManager->create('Magento\Catalog\Model\Product')->load($productId);
-                $registry = $this->simiObjectManager->get('\Magento\Framework\Registry');
+                // Optimize speed
+                /* $registry = $this->simiObjectManager->get('\Magento\Framework\Registry');
                 if (!$registry->registry('product') && $productModel->getId()) {
                     $registry->register('product', $productModel);
                     $registry->register('current_product', $productModel);
-                }
+                } */
+                // End
                 $options = $this->simiObjectManager
                     ->get('\Simi\Simiconnector\Helper\Options')->getOptions($productModel);
 
@@ -70,19 +71,23 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                     ->get('\Simi\Simiconnector\Helper\Review')
                     ->getProductReviews($productModel->getId());
 
-                $layout      = $this->simiObjectManager->get('Magento\Framework\View\LayoutInterface');
+                // Optimize speed
+                /* $layout      = $this->simiObjectManager->get('Magento\Framework\View\LayoutInterface');
                 $block_att   = $layout->createBlock('Magento\Catalog\Block\Product\View\Attributes');
                 $_additional = $block_att->getAdditionalData();
 
                 $tierPrice   = $this->simiObjectManager
-                    ->get('\Simi\Simiconnector\Helper\Price')->getProductTierPricesLabel($productModel);
+                    ->get('\Simi\Simiconnector\Helper\Price')->getProductTierPricesLabel($productModel); */
+                // End
 
                 $this->extraFields = array(
-                    'attribute_values' => $productModel->load($productId)->toArray(),
+                    // 'attribute_values' => $productModel->load($productId)->toArray(), // Optimize speed
+                    'attribute_values' => [],
                     'app_options' => $options,
                     'app_reviews' => $app_reviews,
-                    'additional'  => $_additional,
-                    'app_tier_prices' => $tierPrice,
+                    // 'additional'  => $_additional, // Optimize speed
+                    // 'app_tier_prices' => $tierPrice, // Optimize speed
+                    'is_salable' => $productModel->getIsSalable() ? 1 : 0, // Optimize speed
                 );
                 $this->eventManager = $this->simiObjectManager->get('\Magento\Framework\Event\ManagerInterface');
                 $this->eventManager->dispatch(

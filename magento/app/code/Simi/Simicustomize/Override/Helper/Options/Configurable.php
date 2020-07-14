@@ -102,15 +102,15 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
 
         $config = [
             'attributes' => $attributesData['attributes'],
-            'template' => str_replace('%s', '<%- data.price %>', $store->getCurrentCurrency()->getOutputFormat()),
-            'currencyFormat' => $store->getCurrentCurrency()->getOutputFormat(),
-            'optionPrices' => $this->getOptionPrices(),
-            'priceFormat' => $localeFormat->getPriceFormat(),
-            'prices' => $variationPrices->getFormattedPrices($product->getPriceInfo()),
-            'productId' => $currentProduct->getId(),
-            'chooseText' => __('Choose an Option...'),
+            // 'template' => str_replace('%s', '<%- data.price %>', $store->getCurrentCurrency()->getOutputFormat()),
+            // 'currencyFormat' => $store->getCurrentCurrency()->getOutputFormat(),
+            // 'optionPrices' => $this->getOptionPrices(),
+            // 'priceFormat' => $localeFormat->getPriceFormat(),
+            // 'prices' => $variationPrices->getFormattedPrices($product->getPriceInfo()),
+            // 'productId' => $currentProduct->getId(),
+            // 'chooseText' => __('Choose an Option...'),
             'images' => $this->getOptionImages(),
-            'index' => isset($options['index']) ? $options['index'] : [],
+            // 'index' => isset($options['index']) ? $options['index'] : [],
         ];
 
         if ($currentProduct->hasPreconfiguredValues() && !empty($attributesData['defaultValues'])) {
@@ -152,6 +152,14 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
             $product = $this->getProduct();
             $allProducts = $product->getTypeInstance()->getUsedProducts($product, null);
             foreach ($allProducts as $product) {
+                // Optimize speed
+                // Replace magento to check saleable for simple product in a confugurable product
+                $StockState = $this->simiObjectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
+                $stockQty = $StockState->getStockQty($product->getId(), $product->getStore()->getWebsiteId());
+                if ($stockQty <= 0) {
+                    $product->setData('is_salable', false);
+                }
+                // End
                 if ($product->isSaleable() || $skipSaleableCheck) {
                     $products[] = $product;
                 }
@@ -171,14 +179,15 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
     {
         $images = [];
         $helper = $this->simiObjectManager->get('Magento\ConfigurableProduct\Helper\Data');
+        $this->imageUrlBuilder = $this->simiObjectManager->get('Magento\Catalog\Model\Product\Image\UrlBuilder');
         $products = $this->getAllowProducts();
         foreach ($products as $product) {
-            $productImages = $helper->getGalleryImages($product) ?: [];
+            $productImages = $this->getGalleryImages($product) ?: [];
             foreach ($productImages as $image) {
                 $images[$product->getId()][] =
                     [
-                        'thumb' => $image->getData('small_image_url'),
-                        'img' => $image->getData('medium_image_url'),
+                        // 'thumb' => $image->getData('small_image_url'),
+                        // 'img' => $image->getData('medium_image_url'),
                         'full' => $image->getData('large_image_url'),
                         'caption' => $image->getLabel(),
                         'position' => $image->getPosition(),
@@ -188,6 +197,35 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
                     ];
             }
         }
+        return $images;
+    }
+
+    /**
+     * Retrieve collection of gallery images
+     *
+     * @param ProductInterface $product
+     * @return Image[]|null
+     */
+    public function getGalleryImages(\Magento\Catalog\Api\Data\ProductInterface $product)
+    {
+        $images = $product->getMediaGalleryImages();
+        if ($images instanceof \Magento\Framework\Data\Collection) {
+            /** @var $image Image */
+            foreach ($images as $image) {
+                // $smallImageUrl = $this->imageUrlBuilder
+                //     ->getUrl($image->getFile(), 'product_page_image_small');
+                // $image->setData('small_image_url', $smallImageUrl);
+
+                // $mediumImageUrl = $this->imageUrlBuilder
+                //     ->getUrl($image->getFile(), 'product_page_image_medium');
+                // $image->setData('medium_image_url', $mediumImageUrl);
+
+                $largeImageUrl = $this->imageUrlBuilder
+                    ->getUrl($image->getFile(), 'product_page_image_large');
+                $image->setData('large_image_url', $largeImageUrl);
+            }
+        }
+
         return $images;
     }
 
