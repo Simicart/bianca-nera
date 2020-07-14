@@ -108,7 +108,11 @@ class ProductFullDetail extends Component {
 
     componentDidMount(){
         smoothScrollToView($('.header-wrapper'));
-        this.getStoreLocations();
+        if (this.props.product && this.props.product.simiExtraField 
+        && this.props.product.simiExtraField.attribute_values 
+        && parseInt(this.props.product.simiExtraField.attribute_values.reservable) === 1) {
+            this.getStoreLocations();
+        }
         //get user detail when missing (from refreshing) - fix error
         if (this.props.isSignedIn && !this.props.customerId && this.props.getUserDetails){
             this.props.getUserDetails();
@@ -171,15 +175,39 @@ class ProductFullDetail extends Component {
     }
 
     getStoreLocations = (callback) => {
-        sendRequest('/rest/V1/simiconnector/storelocations', (data) => {
-            if (data && data.storelocations) {
-                this.stores = data.storelocations;
+        const storageKey = 'PRODUCT_DETAIL_Storelocations';
+        const _data = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, storageKey);
+        if (_data && _data.storelocations) {
+            try{
+                this.stores = _data.storelocations;
                 this.storesOptions = this.stores && this.stores.map((item) => {
                     return { label: item.store_name, value: item.simistorelocator_id }
                 }) || []
                 if (callback) callback(this.stores);
+            }catch(e){
+                sendRequest('/rest/V1/simiconnector/storelocations', (data) => {
+                    Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, storageKey, data);
+                    if (data && data.storelocations) {
+                        this.stores = data.storelocations;
+                        this.storesOptions = this.stores && this.stores.map((item) => {
+                            return { label: item.store_name, value: item.simistorelocator_id }
+                        }) || []
+                        if (callback) callback(this.stores);
+                    }
+                });
             }
-        });
+        } else {
+            sendRequest('/rest/V1/simiconnector/storelocations', (data) => {
+                Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, storageKey, data);
+                if (data && data.storelocations) {
+                    this.stores = data.storelocations;
+                    this.storesOptions = this.stores && this.stores.map((item) => {
+                        return { label: item.store_name, value: item.simistorelocator_id }
+                    }) || []
+                    if (callback) callback(this.stores);
+                }
+            });
+        }
         return this.stores;
     }
       
@@ -329,20 +357,22 @@ class ProductFullDetail extends Component {
             if (this.isPreorder) {
                 this.setState({isErrorPreorder: true});
             }
+            hideFogLoading()
         } else {
             this.props.updateItemInCart()
             if (this.isBuy1Click) {
-                showToastMessage(Identify.__('Checkout processing..'));
+                // showToastMessage(Identify.__('Checkout processing..'));
                 (new Promise(resolve => setTimeout(resolve, 2000))).then(() => {
                     hideFogLoading();
                     this.props.history.push('/checkout.html');
                 });
                 return;
+            } else {
+                hideFogLoading()
             }
             this.showSuccess(data)
             analyticAddCartGTM(this.props.product.name, this.props.product.id, this.props.product.price)
         }
-        hideFogLoading()
     }
 
     addToWishlist = () => {
@@ -584,6 +614,12 @@ class ProductFullDetail extends Component {
             }
         }
 
+        let configurable_options_index = [];
+        if (simiExtraField && simiExtraField.app_options && simiExtraField.app_options.configurable_options 
+            && simiExtraField.app_options.configurable_options.attributes) {
+                configurable_options_index = simiExtraField.app_options.configurable_options.attributes;
+        }
+
         // sorting options
         if (configurable_options) {
             let startSortOrder = 3;
@@ -618,6 +654,7 @@ class ProductFullDetail extends Component {
                     <ConfigurableOptions
                         variants={variants}
                         options={configurable_options}
+                        optionsIndex={configurable_options_index}
                         optionSelections={this.state.optionSelections}
                         onSelectionChange={handleConfigurableSelectionChange}
                         onSizeGuideClick={this.onSizeGuideClick}
@@ -758,7 +795,7 @@ class ProductFullDetail extends Component {
     render() {
         hideFogLoading()
         const isPhone = this.getIsPhone();
-        const { addToCart, addToCartWithParams, addToCompare, reserveAction, productOptions, props, state, addToWishlist } = this;
+        const { addToCart, addToCompare, reserveAction, productOptions, props, state, addToWishlist } = this;
         const { optionCodes, optionSelections, } = state;
         const storeConfig = Identify.getStoreConfig()
         const { config } = storeConfig && storeConfig.simiStoreConfig || null;
@@ -767,7 +804,7 @@ class ProductFullDetail extends Component {
         const { is_dummy_data, name, simiExtraField } = product;
         const short_desc = (product.short_description && product.short_description.html)?product.short_description.html:'';
         // const hasReview = simiExtraField && simiExtraField.app_reviews && simiExtraField.app_reviews.number;
-        const {attribute_values: {pre_order, try_to_buy, reservable, is_salable}} = simiExtraField;
+        const {attribute_values: {pre_order, try_to_buy, reservable}, is_salable} = simiExtraField;
         let addToCartBtn = (
             <Colorbtn
                 className="add-to-cart-btn btn btn__black"

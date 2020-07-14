@@ -22,7 +22,7 @@ import { addToCart as simiAddToCart } from 'src/simi/Model/Cart';
 import { getProductDetail } from 'src/simi/Model/Product';
 import { withRouter } from 'react-router-dom';
 import { getOS } from 'src/simi/App/Bianca/Helper';
-import { getCartDetails } from 'src/actions/cart';
+import { getCartDetailsCustom } from 'src/actions/cart';
 import { connect } from 'src/drivers';
 import { compose } from 'redux';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
@@ -59,7 +59,7 @@ class Griditem extends React.Component {
 
     addToCart = (pre_order = false) => {
         const {item} = this.props
-        if (item && item.simiExtraField && item.simiExtraField.attribute_values) {
+        /* if (item && item.simiExtraField && item.simiExtraField.attribute_values) {
             const {attribute_values} = item.simiExtraField
             if ((!parseInt(attribute_values.has_options)) && attribute_values.type_id === 'simple') {
                 const params = {product: String(item.id), qty: '1'}
@@ -69,6 +69,15 @@ class Griditem extends React.Component {
                 simiAddToCart(this.addToCartCallBack, params)
                 return
             }
+        } */
+        /* if no simiExtraField and no care custom options */
+        if (item && item.type_id && item.type_id === 'simple') {
+            let params = {product: String(item.id), qty: '1'}
+            if (pre_order)
+                params.pre_order = 1
+            showFogLoading()
+            simiAddToCart(this.addToCartCallBack, params)
+            return
         }
         const { url_key } = item
         const { history } = this.props
@@ -87,7 +96,7 @@ class Griditem extends React.Component {
         } else {
             if (data.message)
                 showToastMessage(data.message)
-            this.props.getCartDetails()
+            this.props.getCartDetailsCustom()
             const item = prepareProduct(this.props.item)
             analyticAddCartGTM(item.name, item.id, item.price)
         }
@@ -372,7 +381,8 @@ Griditem.contextTypes = {
 
 
 const mapDispatchToProps = {
-    getCartDetails
+    // getCartDetails,
+    getCartDetailsCustom
 };
 
 export default compose(connect(

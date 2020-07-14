@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Override magento core to fix function isScopeGlobal not found after clear cache -->
+    <preference for="\Magento\Eav\Model\Entity\Attribute\AbstractAttribute" type="\Simi\Simicustomize\Override\Eav\Model\Entity\Attribute\AbstractAttribute" />
     <preference for="\Simi\Simiconnector\Helper\Products" type="\Simi\Simicustomize\Override\Helper\Products" />
     <preference for="\Simi\Simiconnector\Helper\Customer" type="\Simi\Simicustomize\Override\Helper\Customer" />
+    <preference for="\Simi\Simiconnector\Helper\Options\Configurable" type="\Simi\Simicustomize\Override\Helper\Options\Configurable" />
     <preference for="\Simi\Simiconnector\Model\Api\Customers" type="\Simi\Simicustomize\Model\Api\Customers" />
     <preference for="\Simi\Simiconnector\Model\Customer" type="\Simi\Simicustomize\Model\Customer" />
     <preference for="\Simi\Simicustomize\Api\ReserveInterface" type="\Simi\Simicustomize\Model\Api\Reserve" />

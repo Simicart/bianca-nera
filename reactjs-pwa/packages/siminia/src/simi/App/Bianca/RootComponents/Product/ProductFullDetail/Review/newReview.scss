@@ -62,6 +62,9 @@
             textarea.form-control{
                 height: 208px;
             }
+            input,textarea{
+                width: 100%;
+            }
         }
         .btn-submit-review-ctn{
             margin-top: 50px;

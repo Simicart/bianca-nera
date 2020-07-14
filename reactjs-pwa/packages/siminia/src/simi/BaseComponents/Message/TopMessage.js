@@ -12,8 +12,14 @@ import {
 } from 'src/simi/Redux/actions/simiactions';
 import { compose } from 'redux';
 import classify from 'src/classify';
+import {smoothScrollToView} from 'src/simi/Helper/Behavior';
 
+const $ = window.$;
 class TopMessage extends React.Component {
+
+    componentDidUpdate = () => {
+        smoothScrollToView($('#toast-message-global'));
+    }
 
     removeMessage = (id) => {
         const {simiMessages} = this.props

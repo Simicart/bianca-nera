@@ -109,7 +109,10 @@ class Search
         */
         // simiconnector change
         $searchResult = $this->filterQuery->getResult($args, $searchCriteria, $info, true);
-        $products = $searchResult->getProductsSearchResult();
+
+        return $searchResult;
+
+        // $products = $searchResult->getProductsSearchResult();
 
         /* simiconnector comment this
         $searchCriteria->setPageSize($realPageSize);
@@ -133,7 +136,7 @@ class Search
         }
         */
 
-        return $this->searchResultFactory->create($searchResult->getTotalCount(), $products);
+        // return $this->searchResultFactory->create($searchResult->getTotalCount(), $products);
     }
 
     /**

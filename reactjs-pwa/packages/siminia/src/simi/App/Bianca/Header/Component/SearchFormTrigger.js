@@ -6,7 +6,9 @@ const SearchFormTrigger = props => {
     const trigger = props.searchTrigger || (() => { })
     useEffect(() => {
         window.addEventListener('click', function (e) {
-            if (!document.getElementById('searchFormHeader').contains(e.target) && !document.getElementById('header-search-form').contains(e.target)) {
+            if (document.getElementById('searchFormHeader') 
+            && !document.getElementById('searchFormHeader').contains(e.target) 
+            && !document.getElementById('header-search-form').contains(e.target)) {
                 // click outside
                 if (!$('.header-search').hasClass('waiting')) {
                     // hide search form

@@ -11,17 +11,17 @@ import ChevronLeft from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronLeft';
 import ChevronRight from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronRight';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 import { Link } from 'src/drivers';
+import Skeleton from 'react-loading-skeleton';
 require('./homesection.scss');
 
 let loadedData = null
 
 const HomeSection = props => {
     const { history, isPhone, data} = props;
-    const {homesections} = data && data.home && data.home.homesections || [];
+    const homesections = data && data.home && data.home.homesections && data.home.homesections.homesections || [];
     const {storeConfig} = Identify.getStoreConfig() || {};
     const base_url = storeConfig && storeConfig.base_url || window.location.href || '';
     const [productsData, setProductsData] = useState(null);
-
     const [activeItemIndex, setActiveItemIndex] = useState(0);
 
     const scrollTop = () =>{
@@ -91,8 +91,8 @@ const HomeSection = props => {
                     <span className="price">{currency === '$' ? `${currency}${item.special_price}` : `${currency} ${item.special_price}`}</span>
                 </div>
                 <div className="special">
-                    <span class="price old">{currency === '$' ? `${currency}${regular}` : `${currency} ${regular}`}</span>
-                    {/* <span class="sale_off">-20%</span> */}
+                    <span className="price old">{currency === '$' ? `${currency}${regular}` : `${currency} ${regular}`}</span>
+                    {/* <span className="sale_off">-20%</span> */}
                 </div>
             </div>
         } else {
@@ -131,12 +131,36 @@ const HomeSection = props => {
 
     const renderProducts = (skus, index) => {
         if (skus && skus.length) {
+            if (productsData === null) {
+                if (isPhone) {
+                    <div class="wrapper">
+                        <div class="items-wrapper">
+                            <div class="items-inner-wrapper" style="transform: translateX(0px);">
+                                <div class="item-wrapper" width="166">
+                                    <Skeleton width={166} height={339}/>
+                                </div>
+                                <div class="item-wrapper" width="166">
+                                    <Skeleton width={166} height={339}/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                return (
+                    <>
+                        <Skeleton height={360} width={176}/>
+                        <Skeleton height={360} width={176}/>
+                        <Skeleton height={360} width={176}/>
+                    </>
+                );
+            }
+
             let productItems = productsData && productsData.items && productsData.items.filter((item) => skus.includes(item.sku)) || []
             if (isPhone && productsData && productItems.length) {
                     let carouselIndex = activeItemIndex[index] || 0;
                     if (Identify.isRtl()) {
                         if (carouselIndex === 0) carouselIndex = (productItems.length - 1);
-                        productItems.items.reverse();
+                        productItems.reverse();
                     }
                     return <ItemsCarousel
                         infiniteLoop={false}
@@ -180,6 +204,63 @@ const HomeSection = props => {
     }
 
     const renderSection = () => {
+        /** Skeleton loading */
+        if (homesections.length === 0 && productsData === null) {
+            return (
+                <>
+                    <div className="homesection">
+                        <div className="left-sec">
+                            <div className="image-1">
+                                <Skeleton height={360}/>
+                            </div>
+                        </div>
+                        <div className="right-sec">
+                            {isPhone ?
+                                <Skeleton height={339}/>
+                                :
+                                <>
+                                    <Skeleton height={360} width={176}/>
+                                    <Skeleton height={360} width={176}/>
+                                    <Skeleton height={360} width={176}/>
+                                </>
+                            }
+                        </div>
+                    </div>
+                    <div className="homesection">
+                        <div className="left-sec">
+                            <div className="image-1">
+                                <Skeleton height={360}/>
+                            </div>
+                            <div className="image-2">
+                                <Skeleton height={360}/>
+                            </div>
+                        </div>
+                        <div className="right-sec">
+                            {isPhone ?
+                                <Skeleton height={339}/>
+                                :
+                                <>
+                                    <Skeleton height={360} width={176}/>
+                                    <Skeleton height={360} width={176}/>
+                                    <Skeleton height={360} width={176}/>
+                                </>
+                            }
+                        </div>
+                    </div>
+                    <div className="homesection">
+                        <div className="left-sec no-products">
+                            <div className="image-1">
+                                <Skeleton height={360}/>
+                            </div>
+                            <div className="image-2">
+                                <Skeleton height={360}/>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
         let skus = {};
         homesections.map((item, index) => {
             if (!skus[index]) skus[index] = [];
@@ -222,33 +303,22 @@ const HomeSection = props => {
                             </div>
                         }
                     </div>
-                    {allSkus.length > 0 && sectionSkus.length > 0 &&
+                    {allSkus.length > 0 &&
+                        <Simiquery query={productBySkus} variables={variables} fetchPolicy="no-cache">
+                            {({ loading, error, data }) => {
+                                if (loading) return null;
+                                if (error) return null;
+                                let products = data && data.products || null;
+                                if (products) {
+                                    setProductsData(products);
+                                }
+                                return null;
+                            }}
+                        </Simiquery>
+                    }
+                    {sectionSkus.length > 0 &&
                         <div className="right-sec">
-                            {index === 0 && productsData === null &&
-                                <Simiquery query={productBySkus} variables={variables}>
-                                    {({ loading, error, data }) => {
-                                        if (error) return null;
-
-                                        if (!data || !data.products) {
-                                            return <Loading />
-                                        }
-                                        if (data.products.items.length === 0){
-                                            return null;
-                                        }
-                                        let products = data && data.products || null;
-                                        if (products) {
-                                            setProductsData(products);
-                                        }
-                                        return null;
-                                    }}
-                                </Simiquery>
-                            }
-                            {index !== 0 && productsData === null &&
-                                <Loading />
-                            }
-                            {productsData &&
-                                renderProducts(sectionSkus, index)
-                            }
+                            {renderProducts(sectionSkus, index)}
                         </div>
                     }
                 </div>

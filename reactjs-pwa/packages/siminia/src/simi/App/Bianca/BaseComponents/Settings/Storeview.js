@@ -77,7 +77,9 @@ class Storeview extends React.Component {
             const {store_id, currency} = Identify.getAppSettings() || {};
             return (
                 <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency}}>
-                    {({ data }) => {
+                    {({ loading, data, error }) => {
+                        if (loading) return null;
+                        if (error) window.location.reload();
                         if (data && data.storeConfig) {
                             Identify.saveStoreConfig(data)
                             saveCategoriesToDict(data.simiRootCate)

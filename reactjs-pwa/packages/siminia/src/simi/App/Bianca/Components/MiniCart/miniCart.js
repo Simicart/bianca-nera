@@ -7,6 +7,7 @@ import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing';
 import classify from 'src/classify';
 import {
     getCartDetails,
+    getCartDetailsCustom,
     updateItemInCart,
 } from 'src/actions/cart';
 import { cancelCheckout } from 'src/actions/checkout';
@@ -80,7 +81,8 @@ class MiniCart extends Component {
 
     componentDidMount(){
         document.addEventListener("mousedown", this.handleClickOutside);
-        this.props.getCartDetails();
+        // this.props.getCartDetails();
+        this.props.getCartDetailsCustom();
     }
 
     get cartId() {
@@ -114,7 +116,8 @@ class MiniCart extends Component {
             analyticRemoveCartGTM(item.name, item.item_id, item.price, item.qty);
             removeItemFromCart(
                 () => {
-                    this.props.getCartDetails();
+                    // this.props.getCartDetails();
+                    this.props.getCartDetailsCustom();
                 },
                 item.item_id,
                 this.props.isSignedIn
@@ -245,7 +248,7 @@ class MiniCart extends Component {
     }
 
     couponCode() {
-        const { cart, toggleMessages, getCartDetails } = this.props;
+        const { cart, toggleMessages, getCartDetails, getCartDetailsCustom } = this.props;
         let value = '';
         if (cart.totals.coupon_code) {
             value = cart.totals.coupon_code;
@@ -254,7 +257,8 @@ class MiniCart extends Component {
         const childCPProps = {
             value,
             toggleMessages,
-            getCartDetails
+            // getCartDetails
+            getCartDetailsCustom
         };
         return (
             <div className={`cart-coupon-form`}>
@@ -264,10 +268,11 @@ class MiniCart extends Component {
     }
 
     giftVoucher(giftCartValue) {
-        const { cart, toggleMessages, getCartDetails, isSignedIn } = this.props;
+        const { cart, toggleMessages, getCartDetails, getCartDetailsCustom, isSignedIn } = this.props;
         const childCPProps = {
             toggleMessages,
-            getCartDetails,
+            // getCartDetails,
+            getCartDetailsCustom,
             cart,
             isSignedIn,
             giftCartValue
@@ -446,7 +451,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    getCartDetails,
+    // getCartDetails,
+    getCartDetailsCustom,
     updateItemInCart,
     removeItemFromCart,
     cancelCheckout,

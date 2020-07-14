@@ -41,40 +41,39 @@ class Options extends Component {
     }
 
     mapOptionInStock = () => {
-        const { options, variants, optionSelections } = this.props;
-        let instockVariants = [];
+        const { options, optionsIndex, variants, optionSelections } = this.props;
         let instockColors = [];
+        
         if (optionSelections instanceof Map && optionSelections.size) {
-            optionSelections.forEach((selected_value_index, key) => {
-                const option = options.find((opt) => {
-                    return opt.attribute_id === key;
-                })
-                const attribute_code = option && option.attribute_code || '';
-                if (attribute_code === 'size') {
-                    instockVariants = variants.filter((varItem) => {
-                        if (varItem && varItem.attributes) {
-                            if(varItem.attributes.find((varAttrItem) => {
-                                return varAttrItem.code === attribute_code && varAttrItem.value_index === selected_value_index
-                            })){
-                                if (varItem.product.stock_status === "IN_STOCK") {
-                                    varItem.attributes.map((varAttrItem) => {
-                                        if (varAttrItem.code === 'color') {
-                                            instockColors.push(varAttrItem.value_index);
-                                        }
-                                        return varAttrItem;
-                                    });
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
-                    });
-                }
-            });
-            // remove color selected is out of stock
             const colorOption = options.find((opt) => {
                 return opt.attribute_code === 'color';
-            })
+            });
+            // Show colors is in stock only (Hide the color is out of stock)
+            colorOption && optionSelections.forEach((selected_value_index, key) => {
+                for (let i in optionsIndex) {
+                    if (optionsIndex[i]['code'] !== 'color' && optionsIndex[i]['options'] && optionsIndex[i]['options'].length){
+                        optionsIndex[i]['options'].forEach((option) => {
+                            if(parseInt(option.id) === selected_value_index){
+                                if (option.products && option.products.length) {
+                                    if (optionsIndex[colorOption.attribute_id] && optionsIndex[colorOption.attribute_id]['options']
+                                        && optionsIndex[colorOption.attribute_id]['options'].length){
+                                            optionsIndex[colorOption.attribute_id]['options'].forEach((optionColor) => {
+                                                if(optionColor.products && optionColor.products.length){
+                                                    optionColor.products.forEach((productId) => {
+                                                        if (option.products.includes(productId)) {
+                                                            instockColors.push(parseInt(optionColor.id)); // add value_index of color option to array
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+            
             if (colorOption) {
                 optionSelections.forEach((value_index, attribute_id) => {
                     if (colorOption.attribute_id === attribute_id && instockColors.length && !instockColors.includes(value_index)){
@@ -90,7 +89,7 @@ class Options extends Component {
                 _option.values = _option.values.filter((value) => instockColors.includes(value.value_index));
             }
             //mapping product variants in stock to options
-            if(_option.values && _option.values instanceof Array){
+            /* if(_option.values && _option.values instanceof Array){
                 _option.values.forEach((optionVal) => {
                     let products = [];
                     variants.forEach((variant) => {
@@ -105,7 +104,7 @@ class Options extends Component {
                     });
                     optionVal.products = products;
                 });
-            }
+            } */
             return _option;
         });
     }

@@ -216,25 +216,25 @@ class Header extends React.Component {
 				</div>
 				<div className="container-header">
 					<div className="container-fluid">
-						<div className={`header ${Identify.isRtl() ? 'rtl-header' : null}`}>
+						<div className={`header ${Identify.isRtl() ? 'rtl-header' : ''}`}>
 							<NavTrigger classes={this.classes}>
 								<MenuIcon />
 							</NavTrigger>
 							{this.renderLogo()}
-							<div className={`right-bar ${Identify.isRtl() ? 'rtl-right-bar' : null}`}>
+							<div className={`right-bar ${Identify.isRtl() ? 'rtl-right-bar' : ''}`}>
 								<div className={'right-bar-item'}>
 									<SearchFormTrigger searchTrigger={this.searchTrigger} />
 								</div>
-							<div className={`right-bar-item ${compareStyle}`} id='compare-list-product'>
-								<div>
-									<span
-										role="presentation"
-										className="add-to-compare-btn icon-bench-press"
-										onClick={this.showModalCompare}
-									>
-									</span>
+								<div className={`right-bar-item ${compareStyle}`} id='compare-list-product'>
+									<div>
+										<span
+											role="presentation"
+											className="add-to-compare-btn icon-bench-press"
+											onClick={this.showModalCompare}
+										>
+										</span>
+									</div>
 								</div>
-							</div>
 								<div className={'right-bar-item cart'}>
 									<CartTrigger isPhone={this.state.isPhone} />
 								</div>
@@ -301,13 +301,14 @@ class Header extends React.Component {
 		brands && brands.forEach((item, index)=>{
 			if (index < 5) {
 				brandItems.push(
-					<a className={`${this.state.brandVisited === item.option_id ? 'active':''}`} 
-						href={`/brands.html?filter=%7B"brand"%3A"${item.option_id}"%7D`} key={index}
-						onClick={() => this.brandClick(item.option_id)} >
-						<span >
+					<Link to={`/brands.html?filter=%7B"brand"%3A"${item.option_id}"%7D`}
+						className={`${this.state.brandVisited === item.option_id ? 'active':''}`}
+						onClick={() => this.brandClick(item.option_id)}
+						key={index}>
+						<span>
 							{item.name}
 						</span>
-					</a>
+					</Link>
 				);
 			}
 		})

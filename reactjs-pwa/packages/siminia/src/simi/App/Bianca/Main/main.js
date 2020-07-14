@@ -5,12 +5,15 @@ import Header from 'src/simi/App/Bianca/Header'
 import Footer from 'src/simi/App/Bianca/Footer';
 import Identify from 'src/simi/Helper/Identify'
 import {saveCategoriesToDict} from 'src/simi/Helper/Url'
-import Connection from 'src/simi/Network/SimiConnection'
+// import Connection from 'src/simi/Network/SimiConnection'
 import LoadingComponent  from 'src/simi/BaseComponents/Loading'
 import * as Constants from 'src/simi/Config/Constants';
 import simiStoreConfigDataQuery from 'src/simi/queries/getStoreConfigData.graphql'
 import { Simiquery } from 'src/simi/Network/Query'
 import classes from './main.css';
+import { withRouter } from 'react-router-dom';
+import Homeskeleton from './Skeleton/Home';
+import Skeleton from 'react-loading-skeleton';
 
 class Main extends Component {
 
@@ -35,6 +38,7 @@ class Main extends Component {
     }
 
     mainContent(storeConfig = null) {
+        const { history } = this.props;
         const mageStore = storeConfig && storeConfig.storeConfig || null;
         if (mageStore && mageStore.locale === 'ar_KW') {
             import('src/fonts/Droidkufi.css');
@@ -44,7 +48,10 @@ class Main extends Component {
             <React.Fragment>
                 <Header storeConfig={storeConfig}/>
                 <div id="data-breadcrumb"/>
-                {storeConfig ? <div className={`${classes.page}`} id="siminia-main-page">{this.props.children}</div> : <LoadingComponent />}
+                {storeConfig ? <div className={`${classes.page}`} id="siminia-main-page">{this.props.children}</div> : 
+                    history && history.location && location.pathname === '/' ? <Homeskeleton />:
+                    <Skeleton height={438}/>
+                }
                 <Footer />
             </React.Fragment>
         )
@@ -74,4 +81,4 @@ class Main extends Component {
     }
 }
 
-export default Main;
+export default withRouter(Main);

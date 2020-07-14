@@ -48,7 +48,6 @@ const NoMatch = props => {
     } else if (location && location.pathname) {
         parseFromDoc = false
         const pathname = location.pathname
-console.log('urlResolverurlResolver')
         //load from dict
         const dataFromDict = getDataFromUrl(pathname)
         if (dataFromDict && dataFromDict.id) {

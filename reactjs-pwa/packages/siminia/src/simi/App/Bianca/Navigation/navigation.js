@@ -8,14 +8,16 @@ import * as Constants from 'src/simi/Config/Constants';
 
 const Navigation = props => {
     const { getUserDetails, currentUser, isSignedIn, cartId } = props
-    if (!cartId) {
+    
+    // Don't need get cart detail here be cause it was loaded from minicart
+    /* if (!cartId) {
         if (!isSignedIn) {
             props.createCart() //create cart if empty
         }
         else if (currentUser && currentUser.email) {
             props.getCartDetails() //get cart if empty and logged int
         }
-    }
+    } */
 
     //if not logged in or out of session, clear the old things
     const simiSessId = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID)

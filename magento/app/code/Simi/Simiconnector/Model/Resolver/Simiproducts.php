@@ -126,17 +126,27 @@ class Simiproducts implements ResolverInterface
         $products = $searchResult->getProductsSearchResult();
         foreach ($products as $index => $product) {
             $sku = $product['sku'];
-            $productModel = $this->simiObjectManager->get('Magento\Catalog\Model\Product')
-                ->getCollection()
-                ->addAttributeToFilter('sku', $sku)
-                ->getFirstItem();
+            // $productModel = $this->simiObjectManager->get('Magento\Catalog\Model\Product')
+            //     ->getCollection()
+            //     ->addAttributeToFilter('sku', $sku)
+            //     ->getFirstItem();
+            $productModel = $product['model'];
             if ($productModel->getId()) {
-                 $productModel = $this->simiObjectManager->create('Magento\Catalog\Model\Product')
+                /* $productModel = $this->simiObjectManager->create('Magento\Catalog\Model\Product')
                      ->load($productModel->getId());
                 $this->productExtraData = array(
                     'attribute_values' => $productModel->toArray(),
                     'app_reviews' => $this->simiObjectManager
                         ->get('\Simi\Simiconnector\Helper\Review')
+                        ->getProductReviews($productModel->getId())
+                ); */
+                $this->productExtraData = array(
+                    'attribute_values' => array(
+                        'is_salable' => $productModel->getIsSalable() ? 1 : 0,
+                        'vendor_id' => $productModel->getVendorId(),
+                        'pre_order' => $productModel->getPreOrder(),
+                    ),
+                    'app_reviews' => $this->simiObjectManager->get('\Simi\Simiconnector\Helper\Review')
                         ->getProductReviews($productModel->getId())
                 );
                 $this->eventManager->dispatch(

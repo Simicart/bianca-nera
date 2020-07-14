@@ -52,6 +52,25 @@ class Login extends Component {
 		if (this.stateForgot()) {
 			this.setForgotPasswordForm();
 		}
+		this.redirectAfterLogin();
+	}
+
+	redirectAfterLogin = () => {
+		const { isSignedIn, firstname, history } = this.props;
+		if (isSignedIn) {
+			if (history.location.hasOwnProperty('pushTo') && history.location.pushTo) {
+				const { pushTo } = history.location;
+				history.push(pushTo);
+			} else {
+				history.push('/');
+			}
+			smoothScrollToView($('#root'));
+			const message = firstname
+				? Identify.__('Welcome %s Start shopping now').replace('%s', firstname)
+				: Identify.__('You have succesfully logged in, Start shopping now');
+			if (this.props.toggleMessages)
+				this.props.toggleMessages([{ type: 'success', message: message, auto_dismiss: true }]);
+		}
 	}
 
 	get emailLoginForm() {
@@ -418,6 +437,7 @@ class Login extends Component {
 				}
 			}
 		}
+		this.redirectAfterLogin();
 	};
 
 	handleGoBack = () => {
@@ -440,19 +460,9 @@ class Login extends Component {
 		const { classes, isSignedIn, firstname, history } = props;
 
 		if (isSignedIn) {
-			if (history.location.hasOwnProperty('pushTo') && history.location.pushTo) {
-				const { pushTo } = history.location;
-				history.push(pushTo);
-			} else {
-				history.push('/');
-			}
-			smoothScrollToView($('#root'));
-			const message = firstname
-				? Identify.__('Welcome %s Start shopping now').replace('%s', firstname)
-				: Identify.__('You have succesfully logged in, Start shopping now');
-			if (this.props.toggleMessages)
-				this.props.toggleMessages([{ type: 'success', message: message, auto_dismiss: true }]);
+			return '';
 		}
+
 		const isShowBackBtn = isCreateAccountOpen || isForgotPasswordOpen;
 
 		return (

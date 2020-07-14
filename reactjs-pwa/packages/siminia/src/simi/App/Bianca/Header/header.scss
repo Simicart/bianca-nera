@@ -335,6 +335,20 @@ $textColor3: #e4e4e4;
               height: 16px !important;
             }
 
+            /* Loading cart icon */
+            .loading-spiner{
+                position: absolute;
+                top: -8px;
+                left: -10px;
+                width: 36px!important;
+                height: 36px!important;
+                margin-top: 0px!important;
+                svg{
+                    width: 36px!important;
+                    height: 36px!important;
+                }
+            }
+
             .add-to-compare-btn {
               font-family: Linearicons;
               font-size: 16px;
@@ -428,6 +442,19 @@ $textColor3: #e4e4e4;
             }
             &.cart {
               margin-right: 16px;
+                /* Loading cart icon */
+                .loading-spiner{
+                    position: absolute;
+                    top: -8px;
+                    left: -10px;
+                    width: 36px!important;
+                    height: 36px!important;
+                    margin-top: 0px!important;
+                    svg{
+                        width: 36px!important;
+                        height: 36px!important;
+                    }
+                }
             }
             svg {
               fill: #101820 !important;
@@ -936,8 +963,8 @@ body.fixed-scroll {
   font-weight: 500;
   line-height: 16px;
   text-align: center;
-  padding-top: 23.5px;
-  padding-bottom: 14.5px;
+  padding-top: 17px;
+  padding-bottom: 17px;
   padding-left: 18.5px;
 }
 .before-login .before-login-item-2,
@@ -948,8 +975,8 @@ body.fixed-scroll {
   font-weight: 500;
   line-height: 16px;
   text-align: center;
-  padding-top: 10.5px;
-  padding-bottom: 23.5px;
+  padding-top: 17px;
+  padding-bottom: 17px;
   padding-left: 18.5px;
   padding-right: 18.5px;
   max-width: 143px;

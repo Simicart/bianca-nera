@@ -152,19 +152,21 @@ const PayfortCC = (props) => {
                 </label>
                 {renderMonths()}
             </div>
-            <div className={`cc-field form-group ${hasError === 'exp_year' ? 'has-error' : ''}`}>
-                <label htmlFor="cc_year">
-                    {Identify.__('Year')}
-                    <span className="label-required">*</span>
-                </label>
-                {renderYears()}
-            </div>
-            <div className={`cc-field form-group ${hasError === 'cvc' ? 'has-error' : ''}`}>
-                <label htmlFor="cc_cvc">
-                    {Identify.__('CVV')}
-                    <span className="label-required">*</span>
-                </label>
-                <input name="cc_cvc" id="cc_cvc" ref={cvcRef} defaultValue={initialValues && initialValues.hasOwnProperty('cvc') ? initialValues.cvc : ''} className="form-control" type="text" />
+            <div className="form-group-line">
+                <div className={`cc-field form-group ${hasError === 'exp_year' ? 'has-error' : ''}`}>
+                    <label htmlFor="cc_year">
+                        {Identify.__('Year')}
+                        <span className="label-required">*</span>
+                    </label>
+                    {renderYears()}
+                </div>
+                <div className={`cc-field form-group ${hasError === 'cvc' ? 'has-error' : ''}`}>
+                    <label htmlFor="cc_cvc">
+                        {Identify.__('CVV')}
+                        <span className="label-required">*</span>
+                    </label>
+                    <input name="cc_cvc" id="cc_cvc" ref={cvcRef} defaultValue={initialValues && initialValues.hasOwnProperty('cvc') ? initialValues.cvc : ''} className="form-control" type="text" />
+                </div>
             </div>
             {errorMsg && <div className="cc-msg-error">{errorMsg}</div>}
             {successMsg && <div className="cc-msg-success">{successMsg}</div>}

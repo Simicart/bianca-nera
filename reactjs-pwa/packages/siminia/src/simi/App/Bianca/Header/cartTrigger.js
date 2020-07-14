@@ -8,6 +8,7 @@ import Basket from "src/simi/App/Bianca/BaseComponents/Icon/Basket";
 import classify from 'src/classify';
 import defaultClasses from './cartTrigger.css';
 import { Link, resourceUrl } from 'src/drivers';
+import Loading from 'src/simi/BaseComponents/Loading';
 // import Identify from 'src/simi/Helper/Identify'
 
 
@@ -75,6 +76,9 @@ export class Trigger extends Component {
                         {cartIcon}
                         <CartCounter counter={itemsQty ? itemsQty : 0} />
                     </button>
+                }
+                {this.props.cart && this.props.cart.isLoading &&
+                    <Loading />
                 }
             </div>
         )

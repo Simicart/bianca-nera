@@ -27,8 +27,7 @@ const childCats = props => {
                 findChild(storeConfig.simiRootCate.children, props.category.id)
             }
 
-            if (foundChild.children && foundChild.children.length) {
-                if (props.setFoundChild) props.setFoundChild(true);
+            if (foundChild && foundChild.children && foundChild.children.length) {
                 if (cateEmpty) {
                     return (
                         <div className="category-top-images">

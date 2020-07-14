@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'src/drivers';
 import { bool, object, shape, string } from 'prop-types';
-import { getCartDetails, updateItemInCart } from 'src/actions/cart';
+import { getCartDetails, getCartDetailsCustom, updateItemInCart } from 'src/actions/cart';
 import {
     editOrder,
 } from 'src/actions/checkout';
-import { isEmptyCartVisible } from 'src/selectors/cart';
+import { isEmptyCartVisibleCustom } from 'src/selectors/cart';
 import BreadCrumb from 'src/simi/BaseComponents/BreadCrumb';
 import Loading from 'src/simi/BaseComponents/Loading';
 
@@ -72,7 +72,8 @@ class Cart extends Component {
             }
         }
         this.isLoading = true;
-        this.props.getCartDetails();
+        // this.props.getCartDetails();
+        this.props.getCartDetailsCustom();
         this.setIsPhone();
     }
 
@@ -118,7 +119,8 @@ class Cart extends Component {
     removeAllCallBack = (data) => {
         this.setState({isLoading: false, items: data.quoteitems || []});
         this.isLoading = false;
-        this.props.getCartDetails({forceRefresh: true}); //bug not refresh
+        // this.props.getCartDetails({forceRefresh: true}); //bug not refresh
+        this.props.getCartDetailsCustom({forceRefresh: true}); //bug not refresh
     }
 
     get cartItemList() {
@@ -336,7 +338,8 @@ class Cart extends Component {
             analyticRemoveCartGTM(item.name, item.item_id, item.price, item.qty);
             removeItemFromCart(
                 () => {
-                    this.props.getCartDetails();
+                    // this.props.getCartDetails();
+                    this.props.getCartDetailsCustom();
                 },
                 item.item_id,
                 this.props.isSignedIn
@@ -345,7 +348,7 @@ class Cart extends Component {
     }
 
     couponCode() {
-        const { cart, toggleMessages, getCartDetails } = this.props;
+        const { cart, toggleMessages, getCartDetails, getCartDetailsCustom } = this.props;
         let value = '';
         if (cart.totals.coupon_code) {
             value = cart.totals.coupon_code;
@@ -354,7 +357,8 @@ class Cart extends Component {
         const childCPProps = {
             value,
             toggleMessages,
-            getCartDetails
+            // getCartDetails,
+            getCartDetailsCustom
         };
         return (
             <div className={`cart-coupon-form`}>
@@ -364,10 +368,11 @@ class Cart extends Component {
     }
 
     giftVoucher(giftCartValue) {
-        const { cart, toggleMessages, getCartDetails, isSignedIn } = this.props;
+        const { cart, toggleMessages, getCartDetails, getCartDetailsCustom, isSignedIn } = this.props;
         const childCPProps = {
             toggleMessages,
-            getCartDetails,
+            // getCartDetails,
+            getCartDetailsCustom,
             cart,
             isSignedIn,
             giftCartValue
@@ -508,7 +513,7 @@ const mapStateToProps = state => {
     const { firstname, lastname, email } = currentUser;
     return {
         cart,
-        isCartEmpty: isEmptyCartVisible(state),
+        isCartEmpty: isEmptyCartVisibleCustom(state),
         isSignedIn,
         firstname,
         lastname,
@@ -517,7 +522,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    getCartDetails,
+    // getCartDetails,
+    getCartDetailsCustom,
     toggleMessages,
     updateItemInCart,
     editOrder,

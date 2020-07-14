@@ -2,5 +2,20 @@
         {{! <script src="https://www.simicart.com/appdashboard/rest/app_configs?bear_token=daFTRsQRPorHZYAADSoXkYaJlXfzbnBoyhipJ8h&pwa=1&js=1"></script> }}
         <script src="/simistatic/app_configs.js"></script>
         <script src="/simistatic/jquery.min.js"></script>
+
+        {{! <script type="text/javascript">
+            var scripts = document.getElementsByTagName('script');
+            for (var s in scripts){
+                if (scripts[s].src && scripts[s].src.includes('client.js')) {
+                    var src = scripts[s].src && scripts[s].src.split('?') || null;
+                    if (src) {
+                        var parentNode = scripts[s].parentNode;
+                        var scriptNew = document.createElement('script');
+                        scriptNew.src = src[0] + '?' + new Date().getTime();
+                        parentNode.replaceChild(scriptNew, scripts[s]);
+                    }
+                }
+            }
+        </script> }}
     </body>
 </html>

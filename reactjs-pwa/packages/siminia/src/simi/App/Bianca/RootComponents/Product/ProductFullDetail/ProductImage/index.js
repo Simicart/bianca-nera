@@ -114,31 +114,49 @@ class ProductImage extends React.Component {
             })
     );
 
-    findMatchingVariant = ({ variants, optionCodes, optionSelections }) => {
-        const findCode = 'color';
-        let codeValue = '';
-        for (const [id, value] of optionSelections) {
-            const code = optionCodes.get(id);
-            if (code === findCode) { //fix bug change option is size and change image
-                codeValue = value;
-                break;
-            }
+    findMatchingVariant = ({ optionSelections, product }) => {
+        let images = [];
+        let products = [];
+        let productFiltered = [];
+        const configurable_options = product && product.simiExtraField 
+            && product.simiExtraField.app_options
+            && product.simiExtraField.app_options.configurable_options || null;
+        if (configurable_options && configurable_options.attributes) {
+                const attributes = configurable_options.attributes;
+                optionSelections.forEach((selected_value_index, key) => {
+                    if (attributes[key] && attributes[key]['options'] && attributes[key]['options'].length) {
+                        const option = attributes[key]['options'].find((option) => {
+                            if (parseInt(option.id) === selected_value_index) return true;
+                            return false;
+                        });
+                        if (option) {
+                            products.push(option.products);
+                        }
+                    }
+
+                });
         }
-        let productItem;
-        if(codeValue){
-            variants.forEach((item) => {
-                const { attributes, product } = item;
-                const attrCodeValues = (attributes || []).reduce(
-                    (map, { code, value_index }) => new Map(map).set(code, value_index),
-                    new Map()
-                );
-                if(attrCodeValues && attrCodeValues.size && attrCodeValues.get(findCode) === codeValue){
-                    productItem = item;
+        if (products.length) {
+            productFiltered = products[0];
+            products.forEach((productArray) => {
+                productFiltered = productArray.filter((product_id) => {
+                    if (productFiltered.includes(product_id)) return true;
                     return false;
+                })
+            });
+        }
+
+        if (productFiltered && productFiltered.length && configurable_options && configurable_options.images) {
+            productFiltered.forEach((productId) => {
+                if (configurable_options.images[productId] && configurable_options.images[productId].length){
+                    configurable_options.images[productId].forEach((image) => {
+                        image.full && images.push({file: image.full, position: 0, disabled: false});
+                    });
                 }
             });
         }
-        return productItem;
+
+        return images;
     };
 
     mediaGalleryEntries = () => {
@@ -158,18 +176,17 @@ class ProductImage extends React.Component {
             return media_gallery_entries;
         }
 
-        const item = this.findMatchingVariant({
-            optionCodes,
+        const varianImages = this.findMatchingVariant({
             optionSelections,
-            variants
+            product
         });
 
-        if (!item) {
+        if (!varianImages) {
             return media_gallery_entries;
         }
 
         const images = [
-            ...item.product.media_gallery_entries,
+            ...varianImages,
             ...media_gallery_entries
         ];
         const returnedImages = []
