@@ -39,6 +39,7 @@ class Checkout extends Component {
     }
 
     shouldComponentUpdate(nextProps){
+        hideFogLoading()
         if (this.showAPIloading(nextProps)) {
             showFogLoading()
             return false
@@ -286,13 +287,18 @@ class Checkout extends Component {
         let is_all_gift_card = true //cart only contains giftcard wont show coupon/giftcard to checkout
         if (cart && cart.totals && cart.totals.items && isArray(cart.totals.items)) {
             cart.totals.items.forEach(cartTotalItem => {
-                if (cartTotalItem.attribute_values && cartTotalItem.attribute_values.type_id !== "aw_giftcard") {
-                    is_all_gift_card = false
-                }
                 if (cartTotalItem.simi_pre_order_option && cartTotalItem.simi_pre_order_option!== '[]') {
                     is_pre_order = true
                 } else if (cartTotalItem.simi_trytobuy_option && cartTotalItem.simi_trytobuy_option!== '[]') {
                     is_try_to_buy = true
+                }
+            });
+        }
+
+        if (cart && cart.details && cart.details.items && isArray(cart.details.items)) {
+            cart.details.items.forEach(cartDetailItem => {
+                if (cartDetailItem.attribute_values && cartDetailItem.attribute_values.type_id !== "aw_giftcard") {
+                    is_all_gift_card = false
                 }
             });
         }
