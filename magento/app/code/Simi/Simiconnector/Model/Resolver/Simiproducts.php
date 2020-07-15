@@ -145,6 +145,8 @@ class Simiproducts implements ResolverInterface
                         'is_salable' => $productModel->getIsSalable() ? 1 : 0,
                         'vendor_id' => $productModel->getVendorId(),
                         'pre_order' => $productModel->getPreOrder(),
+                        'salable_qty_by_sku' => $this->simiObjectManager->get('Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku')
+                            ->execute($sku),
                     ),
                     'app_reviews' => $this->simiObjectManager->get('\Simi\Simiconnector\Helper\Review')
                         ->getProductReviews($productModel->getId())
