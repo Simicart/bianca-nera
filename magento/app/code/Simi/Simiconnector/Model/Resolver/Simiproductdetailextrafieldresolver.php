@@ -49,7 +49,8 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
     ){
         try {
             $productCollection = $this->simiObjectManager->get('Magento\Catalog\Model\Product')->getCollection()
-                ->addAttributeToSelect('*');
+                ->addAttributeToSelect('entity_id'); // Optimize speed
+                // ->addAttributeToSelect('*');
             if ($args && isset($args['filter'])) {
                 foreach ($args['filter'] as $key => $filter) {
                     $productCollection->addAttributeToFilter($key, $filter);
@@ -79,10 +80,15 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                 $tierPrice   = $this->simiObjectManager
                     ->get('\Simi\Simiconnector\Helper\Price')->getProductTierPricesLabel($productModel); */
                 // End
-
+                $productModel->load($productId);
                 $this->extraFields = array(
                     // 'attribute_values' => $productModel->load($productId)->toArray(), // Optimize speed
-                    'attribute_values' => [],
+                    'attribute_values' => [
+                        'aw_gc_allow_open_amount' => $productModel->getAwGcAllowOpenAmount(),
+                        'aw_gc_open_amount_max'  => $productModel->getData('aw_gc_open_amount_max'),
+                        'aw_gc_open_amount_min' => $productModel->getData('aw_gc_open_amount_min'),
+                        'aw_gc_amounts'  => $productModel->getAwGcAmounts()
+                    ],
                     'app_options' => $options,
                     'app_reviews' => $app_reviews,
                     // 'additional'  => $_additional, // Optimize speed
@@ -92,7 +98,7 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                 $this->eventManager = $this->simiObjectManager->get('\Magento\Framework\Event\ManagerInterface');
                 $this->eventManager->dispatch(
                     'simi_simiconnector_graphql_product_detail_extra_field_after',
-                    ['object' => $this, 'data' => $this->extraFields]
+                    ['object' => $this, 'data' => $this->extraFields, 'product' => $productModel]
                 );
                 return json_encode($this->extraFields);
             }
