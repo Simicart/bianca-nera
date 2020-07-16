@@ -22,7 +22,7 @@ const OrderSummary = (props) => {
     const totalLabel = details && details.hasOwnProperty('items_count') && details.items_count + Identify.__(' items in cart');
     const orderItem = useMemo(() => details && details.items &&
                 <OrderItems totals={cart.totals} cartCurrencyCode={cartCurrencyCode} 
-                    is_try_to_buy={is_try_to_buy} is_pre_order={is_pre_order} />, [details.items]);
+                    is_try_to_buy={is_try_to_buy} is_pre_order={is_pre_order} details={details}/>, [details.items]);
 
     const handleToggleItems = (e) => {
         const parent = $(e.currentTarget);

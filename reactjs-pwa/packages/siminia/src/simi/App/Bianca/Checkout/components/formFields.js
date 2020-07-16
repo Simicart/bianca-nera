@@ -185,6 +185,9 @@ const FormFields = (props) => {
         (value) => {
             simiSignedIn(value);
             beginCheckout();
+            //delay 1s to reload page
+            setTimeout(() => window.location.reload(false) , 1000);
+
         },
         [simiSignedIn]
     )
