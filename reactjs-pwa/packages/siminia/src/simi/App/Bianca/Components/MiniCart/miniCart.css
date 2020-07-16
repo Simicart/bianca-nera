@@ -173,6 +173,16 @@
     margin: 52px 7px 50px;
 }
 
+.minicartAction a{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.minicartAction a button:hover{
+    font-weight: bold;
+}
+
 .viewCartBtn{
     padding: 16px 47.5px;
     background-color: #F2F2F2;

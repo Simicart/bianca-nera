@@ -383,7 +383,7 @@ const ProfileForm = props => {
                         <TextBox
                             id={'readOnlyInput'}
                             label={Identify.__("Current phone number*")}
-                            defaultValue={'+' + telephone}
+                            defaultValue={telephone ? '+' + telephone : ''}
                             readOnly
                         />
                         {/* <PhoneInputReadonly

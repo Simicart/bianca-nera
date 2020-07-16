@@ -9,6 +9,7 @@ import Chats from 'src/simi/App/Bianca/BaseComponents/Chats';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 import LogoFooter from './Logo';
 import {Visa, MasterCard, Debit, Money, BankTransfer, GhostSnapchat} from './Icons';
+import { connect } from 'src/drivers';
 require('./footer.scss');
 
 const Footer = (props) => {
@@ -268,11 +269,13 @@ const Footer = (props) => {
 													</a>
 												</div>
 											</li>
-											<li>
-												<Link onClick={scrollTop} to={'/designer_login.html'}>
-													{Identify.__('Login as Designer')}
-												</Link>
-											</li>
+											{!props.isSignedIn &&
+												<li>
+													<Link onClick={scrollTop} to={'/designer_login.html'}>
+														{Identify.__('Login as Designer')}
+													</Link>
+												</li>
+											}
 										</ul>
 									</React.Fragment>
 								) : (
@@ -447,4 +450,13 @@ const Footer = (props) => {
 		</React.Fragment>
 	);
 };
-export default Footer;
+
+const mapStateToProps = state => {
+    const { user } = state;
+    const { isSignedIn } = user;
+    return {
+        isSignedIn,
+    };
+};
+
+export default connect(mapStateToProps)(Footer);

@@ -6,14 +6,13 @@ import Image from 'src/simi/BaseComponents/Image'
 import { configColor } from 'src/simi/Config'
 // import { Price } from '@magento/peregrine'
 import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing'
-import { resourceUrl, logoUrl } from 'src/simi/Helper/Url';
+import { resourceUrl, logoUrl, productUrlSuffix } from 'src/simi/Helper/Url';
 import {
     showFogLoading,
     hideFogLoading
 } from 'src/simi/BaseComponents/Loading/GlobalLoading';
 import ReactHTMLParse from 'react-html-parser';
 import SpecialCartItem from './SpecialCartItem'
-import { productUrlSuffix } from 'src/simi/Helper/Url';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 
 require('./cartItem.scss')
@@ -22,7 +21,7 @@ const CartItem = props => {
     const inputQty = useRef(null)
     const { currencyCode, item, isPhone, itemTotal, handleLink, history } = props
     if (itemTotal && (itemTotal.simi_pre_order_option || itemTotal.simi_trytobuy_option))
-        return <SpecialCartItem itemTotal={itemTotal} item={item}
+        return <SpecialCartItem itemTotal={itemTotal}
             handleLink={handleLink} currencyCode={currencyCode} isPhone={isPhone} isOpen={props.isOpen}/>
     const tax_cart_display_price = 3; // 1 - exclude, 2 - include, 3 - both
 
@@ -56,7 +55,8 @@ const CartItem = props => {
         try{
             smoothScrollToView($('#siminia-main-page'));
         }catch(err){}
-        history.push(`/designers/${vendorId}.html`);
+        // history.push(`/designers/${vendorId}.html`);
+        handleLink(`/designers/${vendorId}.html`);
     }
 
     const getVendorName = (vendorId) => {
@@ -77,9 +77,9 @@ const CartItem = props => {
             vendorName = profile && profile.store_name || vendorName;
             if(vendor && vendorName){
                 if (vendor.vendor_id) {
-                    return <span onClick={(e)=>{e.preventDefault(); redirectToVendorPage(vendor.vendor_id)}}>{vendorName}</span>
+                    return <span role="presentation" onClick={(e)=>{e.preventDefault(); redirectToVendorPage(vendor.vendor_id)}}>{vendorName}</span>
                 }
-                return <span onClick={(e)=>{e.preventDefault(); redirectToVendorPage(vendor.entity_id)}}>{vendorName}</span>
+                return <span role="presentation" onClick={(e)=>{e.preventDefault(); redirectToVendorPage(vendor.entity_id)}}>{vendorName}</span>
             }
             // if (vendorName) return vendorName;
         }
@@ -130,9 +130,10 @@ const CartItem = props => {
                     </React.Fragment>
                     : null
                 }
-                {/* Designer name does not display in minicart */}
-                {!props.isOpen && !isPhone && 
-                    <div className='designer-name'>{item.attribute_values && getVendorName(item.attribute_values.vendor_id)}</div>
+                {
+                    <div className='designer-name'>
+                        {item.attribute_values && getVendorName(item.attribute_values.vendor_id)}
+                    </div>
                 }
             </div>
         </div>

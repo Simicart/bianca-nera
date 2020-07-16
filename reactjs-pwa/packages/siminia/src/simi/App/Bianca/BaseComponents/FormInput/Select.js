@@ -97,6 +97,7 @@ class Select extends React.Component {
         const placeholder = <div className="placeholder">{this.props.placeholder || Identify.__('Please select')}</div>;
         return (
             <div className={`simi-input-select ${className}`} onClick={(e) => this.onToggle(e)}>
+                {this.props.useDropDownicon && <i className="icon-chevron-down"></i>}
                 {this.props.icon && 
                     <div className="icon">{this.props.icon}</div>
                 }

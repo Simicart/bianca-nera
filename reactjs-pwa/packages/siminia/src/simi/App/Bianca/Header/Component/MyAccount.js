@@ -61,7 +61,7 @@ class MyAccount extends React.Component {
 								<div className={classes['list-menu-account']}>
 									<MenuItem
 										className={classes['my-account-item-1']}
-										onClick={() => this.handleClickItem('/account.html')}
+										onClick={() => this.handleLink('/account.html')}
 									>
 										{Identify.__('My Account')}
 									</MenuItem>

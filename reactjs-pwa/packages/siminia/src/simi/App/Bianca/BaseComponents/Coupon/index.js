@@ -9,22 +9,18 @@ import Identify from 'src/simi/Helper/Identify';
 import { Colorbtn } from 'src/simi/BaseComponents/Button';
 import ArrowDown from 'src/simi/BaseComponents/Icon/TapitaIcons/ArrowDown';
 import ArrowUp from 'src/simi/BaseComponents/Icon/TapitaIcons/ArrowUp';
+import { showToastMessage } from 'src/simi/Helper/Message';
+import { showToastSuccess } from 'src/simi/Helper/MessageSuccess';
 require('./style.scss');
 
 const Coupon = props => {
-    const { value, toggleMessages, getCartDetails } = props;
+    const { value, getCartDetailsCustom } = props;
     const [isCouponOpen, setOpen] = useState(false);
     const [coupon, setCoupon] = useState('');
     const [clearCoupon, setClearCoupon] = useState(false)
     const handleCoupon = (type = '') => {
         if (!coupon && type !== 'clear') {
-            toggleMessages([
-                {
-                    type: 'error',
-                    message: 'Please enter coupon code',
-                    auto_dismiss: true
-                }
-            ]);
+            showToastMessage(Identify.__('Please enter coupon code'));
             return null;
         }
         if (type === 'clear') {
@@ -42,7 +38,7 @@ const Coupon = props => {
         let success = false;
         if (data.message) {
             const messages = data.message;
-            for (let i in messages) {
+            for (const i in messages) {
                 const msg = messages[i];
                 text += msg + ' ';
             }
@@ -54,16 +50,20 @@ const Coupon = props => {
             setClearCoupon(false)
             success = true;
             setCoupon('')
-        }
-        if (text)
-            toggleMessages([
-                {
-                    type: success ? 'success' : 'error',
-                    message: text,
-                    auto_dismiss: true
+        };
+
+        if (text){
+            if(success){
+                getCartDetailsCustom();
+                showToastSuccess(Identify.__(text))
+            }else{
+                if (text === 'Coupon code was canceled. ') {
+                    setClearCoupon(false);
+                    showToastSuccess(Identify.__(text));
+                    getCartDetailsCustom();
                 }
-            ]);
-        getCartDetails();
+            }
+        }
         hideFogLoading();
     };
 
@@ -110,6 +110,6 @@ const Coupon = props => {
 Coupon.propTypes = {
     value: string,
     toggleMessages: func,
-    getCartDetails: func
+    getCartDetailsCustom: func
 };
 export default Coupon;

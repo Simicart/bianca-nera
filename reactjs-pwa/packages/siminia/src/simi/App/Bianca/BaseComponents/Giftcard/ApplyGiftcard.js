@@ -6,6 +6,8 @@ import Identify from 'src/simi/Helper/Identify';
 import { Colorbtn } from 'src/simi/BaseComponents/Button'
 import ChevronDownIcon from 'react-feather/dist/icons/chevron-down';
 import Icon from 'src/components/Icon';
+import { showToastMessage } from 'src/simi/Helper/Message';
+import { showToastSuccess } from 'src/simi/Helper/MessageSuccess';
 require('./ApplyGiftcard.scss');
 
 const arrow = <Icon src={ChevronDownIcon} size={18} />;
@@ -43,10 +45,9 @@ class ApplyGiftcard extends Component {
     }
 
     handleVoucher() {
-        const {toggleMessages} = this.props
         const voucher = this.couponFieldInput.value;
         if (!voucher) {
-            toggleMessages([{ type: 'error', message: Identify.__('Please enter gift code'), auto_dismiss: true }]);
+            showToastMessage(Identify.__('Please enter gift code'));
             return null;
         }
         this.applyVoucher(voucher)
@@ -67,22 +68,22 @@ class ApplyGiftcard extends Component {
 
     processData(data) {
         this.applyingGiftCard = false
-        const {getCartDetails, toggleMessages} = this.props
+        const {getCartDetailsCustom} = this.props
         hideFogLoading();
         if(this.clearVoucher){
             if (!data || data.errors) {
-                toggleMessages([{ type: 'error', message: Identify.__('Something went wrong'), auto_dismiss: true }]);
+                showToastMessage(Identify.__('Something went wrong'));
             } else {
-                this.clearVoucher = false
-                toggleMessages([{ type: 'success', message: Identify.__('Gift Card code has been removed'), auto_dismiss: true }]);
-                this.couponFieldInput.value = ''
+                this.clearVoucher = false;
+                showToastSuccess(Identify.__('Gift Card code has been removed'));
+                this.couponFieldInput.value = '';
             }
         } else if (!data || data.errors) {
-            toggleMessages([{ type: 'error', message: Identify.__('Gift Cart is invalid'), auto_dismiss: true }]);
+            showToastMessage(Identify.__('Gift Cart is invalid'));
         } else {
-            toggleMessages([{ type: 'success', message: Identify.__('Gift Card code has been applied'), auto_dismiss: true }]);
+            showToastSuccess(Identify.__('Gift Card code has been applied'));
         }
-        getCartDetails();
+        getCartDetailsCustom();
     }
 
     render() {

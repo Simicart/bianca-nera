@@ -251,19 +251,25 @@ $color1: #101820;
                             position: relative;
                             display: flex;
                             align-items: center;
-                            &:before{
+                            // &:before{
+                            //     position: absolute;
+                            //     right: 16px;
+                            //     color: $color1;
+                            //     content: "\e93a";
+                            //     font-size: 14px;
+                            //     font-family: 'Linearicons', 'Simple Linearicons';
+                            //     font-style: normal;
+                            //     font-weight: normal;
+                            //     font-variant: normal;
+                            //     text-transform: none;
+                            //     font-feature-settings: "liga";
+                            //     z-index: 9;
+                            // }
+                            i {
                                 position: absolute;
                                 right: 16px;
                                 color: $color1;
-                                content: "\e93a";
                                 font-size: 14px;
-                                font-family: 'Linearicons', 'Simple Linearicons';
-                                font-style: normal;
-                                font-weight: normal;
-                                font-variant: normal;
-                                text-transform: none;
-                                font-feature-settings: "liga";
-                                z-index: 9;
                             }
                             select{
                                 width: 100%;
@@ -316,17 +322,20 @@ $color1: #101820;
                             // left: 18px;
                             top: 0;
                             margin: 0;
-                            &:before{
+                            i:before {
                                 color: $color1;
-                                content: "\e93a";
-                                font-size: 14px;
-                                font-family: 'Linearicons', 'Simple Linearicons';
-                                font-style: normal;
-                                font-weight: normal;
-                                font-variant: normal;
-                                text-transform: none;
-                                font-feature-settings: "liga";
                             }
+                            // &:before{
+                            //     color: $color1;
+                            //     content: "\e93a";
+                            //     font-size: 14px;
+                            //     font-family: 'Linearicons', 'Simple Linearicons';
+                            //     font-style: normal;
+                            //     font-weight: normal;
+                            //     font-variant: normal;
+                            //     text-transform: none;
+                            //     font-feature-settings: "liga";
+                            // }
                         }
                         input{
                             border: none;
@@ -440,6 +449,10 @@ $color1: #101820;
                 left: 32px;
             }
             .contact-wrap .contact-form{
+                .form-row.time .contact-input i {
+                    right: unset;
+                    left: 16px;
+                }
                 .contact-input.phone-input{
                     .arrow-down{
                         right: 0;

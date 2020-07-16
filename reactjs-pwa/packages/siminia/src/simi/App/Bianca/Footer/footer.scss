@@ -510,6 +510,26 @@ $errorFormBgColor: #ece2e2;
 }
 .rtl-root{
     .footer-app{
+        .footer-top {
+            .container {
+                .row {
+                    .col-md-6 {
+                        float: right;
+                        
+                    }
+                }
+            }
+
+            .footer-subscriber {
+                margin-left: unset;
+                margin-right: auto;
+                .subscriber-form {
+                    label {
+                        order: 1;
+                    }
+                }
+            }
+        }
         .footer-wrapper{
             .list-item{
                 .row{
