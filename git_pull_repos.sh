@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Reset and pull lastest code
+git reset --hard HEAD
+git pull
+
 # Pull siminia
 if [ !-d ./siminia ]; then
     git clone -b customize/2980-basmajiramez@gmail.com-Bianca-Nera https://github.com/Simicart/siminia
