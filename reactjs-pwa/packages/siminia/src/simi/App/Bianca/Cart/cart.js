@@ -20,7 +20,7 @@ import {
     showFogLoading,
     hideFogLoading
 } from 'src/simi/BaseComponents/Loading/GlobalLoading';
-import { toggleMessages } from 'src/simi/Redux/actions/simiactions';
+import { toggleMessages, toggleCart } from 'src/simi/Redux/actions/simiactions';
 import { removeItemFromCart, removeAllItems } from 'src/simi/Model/Cart';
 import Coupon from 'src/simi/App/Bianca/BaseComponents/Coupon';
 import GiftVoucher from 'src/simi/App/Bianca/Cart/Components/GiftVoucher';
@@ -325,6 +325,7 @@ class Cart extends Component {
 
     handleBack = () => {
         this.props.history.push('/');
+
     };
 
     handleGoCheckout() {
@@ -525,6 +526,7 @@ const mapDispatchToProps = {
     // getCartDetails,
     getCartDetailsCustom,
     toggleMessages,
+    toggleCart,
     updateItemInCart,
     editOrder,
 };

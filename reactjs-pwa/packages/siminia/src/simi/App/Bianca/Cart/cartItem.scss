@@ -1,8 +1,8 @@
 .cart-siminia-item {
     font-size: 16px;
     .cart-item-value, .item-edit, .item-delete {
-        cursor: pointer;
         font-weight: 600;
+        cursor: pointer;
     }
     .cart-item-info{
         display: inline-block;
@@ -26,6 +26,10 @@
             .item-name{
                 font-family: Gotham Book;
                 font-size: 14px;
+                cursor: pointer;
+            }
+            .designer-name{
+                cursor: pointer;
             }
         }
     }
@@ -35,6 +39,14 @@
         }
         .item-subtotal-action{
             padding-top: 9px;
+        }
+    }
+}
+
+@media(min-width: 1024px)and (max-width: 1199px){
+    .cart-page{
+        .cart-siminia-item{
+            padding-left: 10px !important;
         }
     }
 }
@@ -395,11 +407,11 @@
 @media(max-width: 1023px) {
     .cart-siminia-item .item-delete {
         width: 40%;
+        align-items: center;
     }
 
     .cart-siminia-item .item-delete svg {
         margin-left: auto;
-        margin-top: 5px;
     }
 }
 @media(min-width: 1024px) {
@@ -480,6 +492,7 @@
                 padding: 25px 0 0 51px;
                 height: 36px;
                 width: 100%;
+                align-items: center;
                 div{
                     padding-right: 0;
                     padding-left: 0;

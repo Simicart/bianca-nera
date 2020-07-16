@@ -303,6 +303,22 @@
       }
     }
   }
+
+
+  @media(min-width: 1024px)and (max-width: 1199px){
+    .body{
+      .cart-list{
+
+      }
+      .summary-zone {
+        max-width: 320px !important;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-left: 15px;
+    
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {

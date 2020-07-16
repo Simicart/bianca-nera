@@ -23,7 +23,7 @@ class SocialShare extends React.PureComponent{
             const btn = $('.social-share .at-share-btn-elements').children('a');
             btn.each(function () {
                 $(this).click(function () {
-                    const a = $(this).attr('class');
+                    let a = $(this).attr('class');
                     a = 'a.' + a.split(" ")[2];
                     a = $('#social-share').find(a);
                     a[0].click();

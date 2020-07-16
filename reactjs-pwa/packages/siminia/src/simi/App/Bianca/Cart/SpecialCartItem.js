@@ -25,7 +25,7 @@ const getVendorName = (vendorId) => {
 }
 
 const SpecialCartItem = props => {
-    const {itemTotal, handleLink, currencyCode, isPhone, item} = props
+    const {itemTotal, handleLink, currencyCode, isPhone} = props
     let subItems = null
     if (itemTotal.simi_pre_order_option) {
         subItems = JSON.parse(itemTotal.simi_pre_order_option)
@@ -35,7 +35,7 @@ const SpecialCartItem = props => {
     if (!subItems)
         return ''
         
-    const {simi_image, name} = item
+    const {simi_image, name} = itemTotal
 
     const removeFromCart = (subProductSku) => {
         if (confirm(Identify.__('Are you sure?')) === true) {

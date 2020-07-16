@@ -340,18 +340,12 @@ class MiniCart extends Component {
                 {grandTotal}
 
                 <div className={classes.minicartAction}>
-                    <Link to="/cart.html" onClick={() => {
-                        closeDrawer();
-                        document.body.classList.remove('minicart-open');
-                    }}>
-                        <button className={`mini-cart-view-cart-btn ${classes.viewCartBtn}`}>
-                            {Identify.__('VIEW & EDIT CART')}
-                        </button>
-                    </Link>
                     <Link to="/checkout.html" onClick={() => {
                         closeDrawer();
                         document.body.classList.remove('minicart-open');
-                    }}>
+                    }}
+                    className=""
+                    >
                         <button className={classes.checkoutBtn}>
                             {Identify.__('PROCEED TO CHECKOUT')}
                         </button>
@@ -363,10 +357,10 @@ class MiniCart extends Component {
 
     get miniCartInner() {
         const { checkout, productList, props } = this;
-        const { classes, isCartEmpty, isMiniCartMaskOpen } = props;
+        const { classes, isCartEmpty, isMiniCartMaskOpen, closeDrawer } = props;
 
         if (isCartEmpty) {
-            return <EmptyMiniCart />;
+            return <EmptyMiniCart closeDrawer={closeDrawer}/>;
         }
 
         const footer = checkout;
@@ -441,7 +435,7 @@ const mapStateToProps = state => {
     return {
         cart,
         drawer,
-        isCartEmpty: isEmptyCartVisible(state),
+        isCartEmpty: !cart.details.items || cart.details.items.length === 0,
         isMiniCartMaskOpen: isMiniCartMaskOpen(state),
         isSignedIn,
         firstname,

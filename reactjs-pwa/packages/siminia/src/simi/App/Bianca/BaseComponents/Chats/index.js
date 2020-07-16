@@ -252,7 +252,9 @@ const Chats = (props) => {
                             <div className="form-row phone">
                                 <label htmlFor="contact-phone">{Identify.__('Phone Number')}</label>
                                 <div className="contact-input phone-input">
-                                    <label className="arrow-down" htmlFor="contact-phone" ref={TriggerPhoneSelectRef}></label>
+                                    <label className="arrow-down" htmlFor="contact-phone" ref={TriggerPhoneSelectRef}>
+                                        <i className="icon-chevron-down"></i>
+                                    </label>
                                     <input id='contact-phone' name="contact-phone" type="tel" onChange={onChangeContactPhone} 
                                         value={contactPhone} 
                                         placeholder={contactPhoneCode} />
@@ -271,6 +273,7 @@ const Chats = (props) => {
                                         items={timeItems} onChange={onChangeContactTime} 
                                         showSelected={true}
                                         selected={timeItems[0]}
+                                        useDropDownicon={true}
                                         placeholder={Identify.__('Time')} 
                                         hiddenInput={{name: 'time', id: 'contact-time', defaultValue: timeItems[0] ? timeItems[0].value : ''}}
                                     />

@@ -49,12 +49,15 @@ export class Trigger extends Component {
         const {
             classes,
             toggleCart,
-            cart: { details },
+            cart: { details, totals },
             isPhone
         } = this.props;
         
         const { cartIcon } = this;
         const itemsQty = details.items_qty;
+
+        console.log(totals);
+
         return (
             <div>
                 {isPhone
@@ -65,7 +68,7 @@ export class Trigger extends Component {
                         aria-label="Open cart page"
                     >
                         {cartIcon}
-                        <CartCounter counter={itemsQty ? itemsQty : 0} />
+                        <CartCounter counter={itemsQty ? itemsQty : 0} totals={totals} />
                     </Link>
                 :
                     <button
@@ -74,7 +77,7 @@ export class Trigger extends Component {
                         onClick={toggleCart}
                     >
                         {cartIcon}
-                        <CartCounter counter={itemsQty ? itemsQty : 0} />
+                        <CartCounter counter={itemsQty ? itemsQty : 0} totals={totals}/>
                     </button>
                 }
                 {this.props.cart && this.props.cart.isLoading &&
