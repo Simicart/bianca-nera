@@ -33,7 +33,7 @@ class SalesModelServiceQuoteSubmitBefore implements ObserverInterface
             $specialOrderHelper = $this->simiObjectManager->get('Simi\Simicustomize\Helper\SpecialOrder');
             $specialOrderHelper->submitQuotFromRestToSession($order->getData('quote_id'));
             $quote = $this->_getQuote();
-            $isPreOrder = $specialOrderHelper->isQuotePreOrder();
+            $isPreOrder = $specialOrderHelper->isQuotePreOrder($quote);
             if ($isPreOrder) {
                 $order->setOrderType(\Simi\Simicustomize\Ui\Component\Sales\Order\Column\OrderType::ORDER_TYPE_PRE_ORDER_WAITING);
             }

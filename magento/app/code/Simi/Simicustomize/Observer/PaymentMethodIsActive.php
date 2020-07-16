@@ -18,9 +18,10 @@ class PaymentMethodIsActive implements ObserverInterface {
     public function execute(\Magento\Framework\Event\Observer $observer) {
         $method = $observer['method_instance'];
         $result = $observer->getEvent()->getResult();
+        $quote = $observer['quote'];
         if (
-            $this->simiObjectManager->get('Simi\Simicustomize\Helper\SpecialOrder')->isQuotePreOrder() ||
-            $this->simiObjectManager->get('Simi\Simicustomize\Helper\SpecialOrder')->isQuoteTryToBuy()
+            $this->simiObjectManager->get('Simi\Simicustomize\Helper\SpecialOrder')->isQuotePreOrder($quote) ||
+            $this->simiObjectManager->get('Simi\Simicustomize\Helper\SpecialOrder')->isQuoteTryToBuy($quote)
         ) {
             if ($method->getCode() == 'cashondelivery') {
                 $result->setData('is_available', false);
