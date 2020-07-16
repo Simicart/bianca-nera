@@ -80,7 +80,7 @@ class SystemRestModify implements ObserverInterface
             foreach ($contentArray['items'] as $index => $item) {
                 $quoteItem = $this->simiObjectManager
                     ->get('Magento\Quote\Model\Quote\Item')->load($item['item_id']);
-                if ($quoteItem->getId()) {
+                if ($quoteItem->getId() && !$isTotal) {
                     $product = $this->simiObjectManager
                         ->create('Magento\Catalog\Model\Product')
                         ->load($quoteItem->getData('product_id'));
@@ -114,8 +114,8 @@ class SystemRestModify implements ObserverInterface
                     $product = $this->simiObjectManager
                         ->create('Magento\Catalog\Model\Product')
                         ->load($quoteItem->getData('product_id'));
-                    //if(!$isTotal)
-                        $contentArray['items'][$index]['attribute_values'] = $product->toArray();
+                    if(!$isTotal)
+                        $contentArray['items'][$index]['attribute_values'] = $product->toArray(array('type_id', 'vendor_id'));
                     $contentArray['items'][$index]['is_buy_service'] = $quoteItem->getData('is_buy_service');
                     //add giftcard info to quote item
                     if ($product->getTypeId() == 'aw_giftcard'){

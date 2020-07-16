@@ -22,7 +22,7 @@ const CartItem = props => {
     const inputQty = useRef(null)
     const { currencyCode, item, isPhone, itemTotal, handleLink, history } = props
     if (itemTotal && (itemTotal.simi_pre_order_option || itemTotal.simi_trytobuy_option))
-        return <SpecialCartItem itemTotal={itemTotal}
+        return <SpecialCartItem itemTotal={itemTotal} item={item}
             handleLink={handleLink} currencyCode={currencyCode} isPhone={isPhone} isOpen={props.isOpen}/>
     const tax_cart_display_price = 3; // 1 - exclude, 2 - include, 3 - both
 

@@ -305,7 +305,14 @@ class Griditem extends React.Component {
                 text={Identify.__('Add to Cart')} />
         )
         if (item.simiExtraField && item.simiExtraField.attribute_values) {
-            if (!parseInt(item.simiExtraField.attribute_values.is_salable)) {
+            if (
+                !parseInt(item.simiExtraField.attribute_values.is_salable) ||
+                (
+                    item.simiExtraField.attribute_values.salable_qty_by_sku &&
+                    item.simiExtraField.attribute_values.salable_qty_by_sku[0] &&
+                    item.simiExtraField.attribute_values.salable_qty_by_sku[0].qty === 0
+                )
+            ) {
                 if (parseInt(item.simiExtraField.attribute_values.pre_order)) {
                     addToCartBtn = (
                         <Colorbtn

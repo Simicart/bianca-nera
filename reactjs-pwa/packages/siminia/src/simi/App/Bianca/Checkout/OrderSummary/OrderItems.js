@@ -9,15 +9,25 @@ import { isArray } from 'util';
 import Childproducts from './Childproducts'
 
 const OrderItems = (props) => {
-    const { cartCurrencyCode, totals, is_pre_order, is_try_to_buy } = props;
+    const { cartCurrencyCode, totals, is_pre_order, is_try_to_buy, details } = props;
     let items = []
     if (totals && totals.items)
         items = totals.items
     return items && items.length ? items.map((o_item, o_index) => {
+        if (details && details.items) {
+            details.items.every(cartDetailItem => {
+                if (cartDetailItem.item_id === o_item.item_id) {
+                    o_item.cartDetailItem = cartDetailItem
+                    return false
+                }
+                return true
+            }
+            )
+        }
         let itemsOption = '';
         let optionElement = ''
-        o_item.options = (o_item.options)?(isArray(o_item.options)?o_item.options:JSON.parse(o_item.options)):[]
-        
+        o_item.options = (o_item.options) ? (isArray(o_item.options) ? o_item.options : JSON.parse(o_item.options)) : []
+
         if (o_item.simi_pre_order_option) {
             optionElement = <Childproducts childProducts={o_item.simi_pre_order_option} cartCurrencyCode={cartCurrencyCode} />
         } else if (o_item.simi_trytobuy_option) {
@@ -38,7 +48,8 @@ const OrderItems = (props) => {
                 </div>
             );
         }
-        const image = (o_item.image && o_item.image.file) ? o_item.image.file : o_item.simi_image
+        const image = (o_item.cartDetailItem) ? (o_item.cartDetailItem.image && o_item.cartDetailItem.image.file) ?
+            o_item.cartDetailItem.image.file : o_item.cartDetailItem.simi_image : false
 
         return (
             <li key={o_index} className='order-item'>
