@@ -23,9 +23,9 @@ const listState = (states) => {
     let html = null;
     if (states && states.length) {
         html = states.map(itemState => {
-            return { value: itemState.code, label: itemState.name, key: Identify.randomString(3)};
+            return { value: itemState.code, label: itemState.name, key: Identify.randomString(3) };
         });
-        const ctoState = { value: '', label: Identify.__('Please choose'), key: Identify.randomString(3)};
+        const ctoState = { value: '', label: Identify.__('Please choose'), key: Identify.randomString(3) };
         html.unshift(ctoState);
     }
     return html;
@@ -42,14 +42,14 @@ const renderRegionField = (selectedCountry, initialCountry, countries, configFie
             <div className={`address-field-label ${configFields.region_id_show === 'req' ? 'req' : ''}`}>{Identify.__("State")}</div>
             {
                 (country.available_regions && Array.isArray(regions) && regions.length) ?
-                <Select
-                    initialValue={initialValues.region_code}
-                    key={Identify.randomString(3) + initialValues.region_code}
-                    field="region_code" items={listState(regions)}
-                    isrequired={(!configFields || (configFields && configFields.hasOwnProperty('region_id_show') && configFields.region_id_show === 'req')) ? 'isrequired' : ''}
-                /> :
-                <input type="text" id='region_code' name='region_code'
-                className={configFields.region_id_show === 'req' ? 'isrequired' : ''} defaultValue={initialValues.region_code}></input>
+                    <Select
+                        initialValue={initialValues.region_code}
+                        key={Identify.randomString(3) + initialValues.region_code}
+                        field="region_code" items={listState(regions)}
+                        isrequired={(!configFields || (configFields && configFields.hasOwnProperty('region_id_show') && configFields.region_id_show === 'req')) ? 'isrequired' : ''}
+                    /> :
+                    <input type="text" id='region_code' name='region_code'
+                        className={configFields.region_id_show === 'req' ? 'isrequired' : ''} defaultValue={initialValues.region_code}></input>
             }
         </div>
     )
@@ -157,7 +157,7 @@ const FormFields = (props) => {
                 values.save_in_address_book = 0;
             }
             // fix country no region
-            if (values.region && !values.region.region_id){
+            if (values.region && !values.region.region_id) {
                 values.region = "";
             }
             submit(values);
@@ -186,7 +186,7 @@ const FormFields = (props) => {
             simiSignedIn(value);
             beginCheckout();
             //delay 1s to reload page
-            setTimeout(() => window.location.reload(false) , 1000);
+            setTimeout(() => window.location.reload(false), 1000);
 
         },
         [simiSignedIn]
@@ -205,7 +205,7 @@ const FormFields = (props) => {
             }
         } else {
             smoothScrollToView($("#id-message"));
-            if (props.toggleMessages){
+            if (props.toggleMessages) {
                 props.toggleMessages([{ type: 'error', message: Identify.__('The account sign-in was incorrect or your account is disabled temporarily. Please wait and try again later.'), auto_dismiss: true }])
             }
         }
@@ -216,7 +216,7 @@ const FormFields = (props) => {
         const password = $(`#${formId} input[name=password]`).val()
         if (!email || !password || !email.trim() || !password.trim()) {
             smoothScrollToView($("#id-message"));
-            if (props.toggleMessages){
+            if (props.toggleMessages) {
                 props.toggleMessages([{ type: 'error', message: Identify.__('Email and password is required to login!'), auto_dismiss: true }])
             }
             return;
@@ -240,10 +240,10 @@ const FormFields = (props) => {
 
     const listOptionsAddress = (addresses) => {
         let html = null;
-        if (addresses){
+        if (addresses) {
             if (addresses.length) {
                 html = addresses.map((address, idx) => {
-                    const labelA = address.firstname + ' ' + address.lastname + ', ' + address.city + (address.region.region?(', ' + address.region.region):'')
+                    const labelA = address.firstname + ' ' + address.lastname + ', ' + address.city + (address.region.region ? (', ' + address.region.region) : '')
                     return <option value={address.id} key={idx}>{labelA}</option>
                 });
             }
@@ -263,17 +263,41 @@ const FormFields = (props) => {
     const isFieldShow = (field_id) => {
         return !configFields || (configFields && !configFields.hasOwnProperty(field_id)) || (configFields && configFields.hasOwnProperty(field_id) && configFields[field_id] !== false)
     }
+
+    //get init value
+    let initDefaultValue = null;
+
+    if (billingForm) {
+        if (initialBilling)
+            initDefaultValue = initialBilling
+    } else {
+        if (initialShipping)
+            initDefaultValue = initialShipping
+        else {
+            if (addresses && addresses.length && addresses[0] && addresses[0].id) {
+                const initAddressToSave = addresses[0]
+                Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'shipping_address', initAddressToSave.id)
+                if (!initAddressToSave.email) initAddressToSave.email = currentUser.email;
+                initAddressToSave.save_in_address_book = 0
+                handleSubmit(initAddressToSave);
+                if (!billingAddressSaved) {
+                    handleSubmitBillingSameFollowShipping();
+                }
+            }
+        }
+    }
+
     const viewFields = (!usingSameAddress || is_virtual) ? (
         <Fragment>
-            {isSignedIn && 
+            {isSignedIn &&
                 <div className='shipping_address'>
                     <div className={`address-field-label ${(!configFields || configFields.country_id_show === 'req') ? 'req' : ''}`}>{billingForm ? Identify.__("Select Billing") : Identify.__("Select Shipping")}</div>
                     <span className="selectSavedAddress">
                         <span className="selectSavedAddressInput">
                             <select name="selected_address_field"
-                            defaultValue={billingForm ? initialBilling : initialShipping}
-                            onChange={() => handleChooseAddedAddress()}
-                            onBlur={() => handleChooseAddedAddress()}>
+                                defaultValue={initDefaultValue}
+                                onChange={() => handleChooseAddedAddress()}
+                                onBlur={() => handleChooseAddedAddress()}>
                                 {listOptionsAddress(addresses)}
                             </select>
                         </span>
@@ -290,8 +314,8 @@ const FormFields = (props) => {
                     ) ||
                     (addresses && !addresses.length) //logged in but has no address
                 ) ?
-                <Fragment>
-                    {!isSignedIn && <div className='email'>
+                    <Fragment>
+                        {!isSignedIn && <div className='email'>
                             <div className={`address-field-label req`}>{Identify.__("Email")}</div>
                             <input
                                 type="email" name="emailaddress" className="isrequired" id='email'
@@ -300,132 +324,132 @@ const FormFields = (props) => {
                             />
                             {handlingEmail && <LoadingImg divStyle={{ marginTop: 5 }} />}
                         </div>}
-                    {(!isSignedIn && existCustomer) && <Fragment>
-                        <div className='password'>
-                            <div className={`address-field-label req`}>{Identify.__("Password")}</div>
-                            <input id="password" type="password" name="password" className="isrequired"/>
-                            <span className="existed-account-label">{Identify.__('You already have an account with us. Sign in or continue as guest')}</span>
+                        {(!isSignedIn && existCustomer) && <Fragment>
+                            <div className='password'>
+                                <div className={`address-field-label req`}>{Identify.__("Password")}</div>
+                                <input id="password" type="password" name="password" className="isrequired" />
+                                <span className="existed-account-label">{Identify.__('You already have an account with us. Sign in or continue as guest')}</span>
+                            </div>
+                            <div className='btn_login_exist'>
+                                <Colorbtn
+                                    style={{ backgroundColor: '#101820', color: '#FFF' }}
+                                    className="address-signin-button"
+                                    onClick={() => handleSignIn()}
+                                    text={Identify.__('Login')} />
+                                <Link to={forgotPasswordLocation} className="address-forgot-pw-link">{Identify.__('Forgot password?')}</Link>
+                            </div>
+                        </Fragment>
+                        }
+                        <div className='firstname'>
+                            <div className={`address-field-label req`}>{Identify.__("First Name")}</div>
+                            <input type="text" id='firstname' name='firstname' className="isrequired"
+                                placeholder={Identify.__("First Name")} defaultValue={initialValues.firstname}></input>
                         </div>
-                        <div className='btn_login_exist'>
-                            <Colorbtn
-                                style={{ backgroundColor: '#101820', color: '#FFF' }}
-                                className="address-signin-button"
-                                onClick={() => handleSignIn()}
-                                text={Identify.__('Login')} />
-                            <Link to={forgotPasswordLocation} className="address-forgot-pw-link">{Identify.__('Forgot password?')}</Link>
+                        <div className='lastname'>
+                            <div className={`address-field-label req`}>{Identify.__("Last Name")}</div>
+                            <input type="text" id='lastname' name='lastname' className="isrequired"
+                                placeholder={Identify.__("Last Name")} defaultValue={initialValues.lastname}></input>
                         </div>
-                    </Fragment>
-                    }
-                    <div className='firstname'>
-                        <div className={`address-field-label req`}>{Identify.__("First Name")}</div>
-                        <input type="text" id='firstname' name='firstname' className="isrequired"
-                            placeholder={Identify.__("First Name")} defaultValue={initialValues.firstname}></input>
-                    </div>
-                    <div className='lastname'>
-                        <div className={`address-field-label req`}>{Identify.__("Last Name")}</div>
-                        <input type="text" id='lastname' name='lastname' className="isrequired"
-                            placeholder={Identify.__("Last Name")} defaultValue={initialValues.lastname}></input>
-                    </div>
-                    {configFields && configFields.hasOwnProperty('company_show') && configFields.company_show ?
-                        <div className='company'>
-                            <div className={`address-field-label ${configFields.company_show === 'req' ? 'req' : ''}`}>{Identify.__("Company")}</div>
-                            <input type="text" id='company' name='company' className={configFields.company_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("Company")} defaultValue={initialValues.company}></input>
+                        {configFields && configFields.hasOwnProperty('company_show') && configFields.company_show ?
+                            <div className='company'>
+                                <div className={`address-field-label ${configFields.company_show === 'req' ? 'req' : ''}`}>{Identify.__("Company")}</div>
+                                <input type="text" id='company' name='company' className={configFields.company_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("Company")} defaultValue={initialValues.company}></input>
+                            </div>
+                            : null}
+                        {isFieldShow('street_show') &&
+                            <div className='street0'>
+                                <div className={`address-field-label ${configFields.street_show === 'req' ? 'req' : ''}`}>{Identify.__("Street")}</div>
+                                <input type="text" id='street[0]' name='street[0]' className={configFields.street_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("Street 1")} defaultValue={(initialValues.street && initialValues.street[0]) ? initialValues.street[0] : ''}></input>
+                                <input type="text" id='street[1]' name='street[1]'
+                                    placeholder={Identify.__("Street 2")} defaultValue={(initialValues.street && initialValues.street[1]) ? initialValues.street[1] : ''}></input>
+                            </div>}
+                        {isFieldShow('city_show') &&
+                            <div className='city'>
+                                <div className={`address-field-label ${configFields.city_show === 'req' ? 'req' : ''}`}>{Identify.__("City")}</div>
+                                <input type="text" id='city' name='city' className={configFields.city_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("City")} defaultValue={initialValues.city}></input>
+                            </div>}
+                        {isFieldShow('zipcode_show') &&
+                            <div className='postcode'>
+                                <div className={`address-field-label ${configFields.zipcode_show === 'req' ? 'req' : ''}`}>{Identify.__("ZIP")}</div>
+                                <input type="text" id='postcode' name='postcode' className={configFields.zipcode_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("ZIP")} defaultValue={initialValues.postcode}></input>
+                            </div>}
+                        {isFieldShow('country_id_show') &&
+                            <div className='country'>
+                                <div className={`address-field-label ${(!configFields || configFields.country_id_show === 'req') ? 'req' : ''}`}>{Identify.__("Country")}</div>
+                                <Select
+                                    field="country_id"
+                                    key={initialCountry /*change key to change initial value*/}
+                                    initialValue={initialCountry}
+                                    onChange={() => onHandleSelectCountry()} onBlur={() => onHandleSelectCountry()}
+                                    items={selectableCountries}
+                                    isrequired={(!configFields || (configFields && configFields.hasOwnProperty('country_id_show') && configFields.country_id_show === 'req')) ? 'isrequired' : ''}
+                                />
+                            </div>}
+                        {isFieldShow('region_id_show') && renderRegionField(selectedCountry, initialCountry, countries, configFields, initialValues)}
+                        {isFieldShow('telephone_show') &&
+                            <div className='telephone'>
+                                <div className={`address-field-label ${configFields.telephone_show === 'req' ? 'req' : ''}`}>{Identify.__("Phone")}</div>
+                                <input type="tel" id='telephone' name='telephone' className={configFields.telephone_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("Phone")} defaultValue={initialValues.telephone}></input>
+                            </div>}
+                        {configFields && configFields.hasOwnProperty('fax_show') && configFields.fax_show ?
+                            <div className='fax'>
+                                <div className={`address-field-label ${configFields.fax_show === 'req' ? 'req' : ''}`}>{Identify.__("Fax")}</div>
+                                <input type="tel" id='fax' name='fax' className={configFields.fax_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("Fax")} defaultValue={initialValues.fax}></input>
+                            </div>
+                            : null}
+                        {configFields && configFields.hasOwnProperty('prefix_show') && configFields.prefix_show ?
+                            <div className='prefix'>
+                                <div className={`address-field-label ${configFields.prefix_show === 'req' ? 'req' : ''}`}>{Identify.__("Prefix")}</div>
+                                <input type="text" id='prefix' name='prefix' className={configFields.prefix_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("Prefix")} defaultValue={initialValues.prefix}></input>
+                            </div>
+                            : null}
+                        {configFields && configFields.hasOwnProperty('suffix_show') && configFields.suffix_show ?
+                            <div className='suffix'>
+                                <div className={`address-field-label ${configFields.suffix_show === 'req' ? 'req' : ''}`}>{Identify.__("Suffix")}</div>
+                                <input type="text" id='suffix' name='suffix' className={configFields.suffix_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("Suffix")} defaultValue={initialValues.suffix}></input>
+                            </div>
+                            : null}
+                        {configFields && configFields.hasOwnProperty('taxvat_show') && configFields.taxvat_show ?
+                            <div className='vat_id'>
+                                <div className={`address-field-label ${configFields.taxvat_show === 'req' ? 'req' : ''}`}>{Identify.__("VAT")}</div>
+                                <input type="text" id='vat_id' name='vat_id' className={configFields.taxvat_show === 'req' ? 'isrequired' : ''}
+                                    placeholder={Identify.__("VAT")} defaultValue={initialValues.vat_id}></input>
+                            </div>
+                            : null}
+                        <div className='save_in_address_book'>
+                            <Checkbox field="save_in_address_book" label={Identify.__('Save in address book.')}
+                                classes={{
+                                    label: 'save_in_address_book_label',
+                                    icon: 'save_in_address_book_icon'
+                                }} />
                         </div>
-                        : null}
-                    {isFieldShow('street_show') &&
-                        <div className='street0'>
-                            <div className={`address-field-label ${configFields.street_show === 'req' ? 'req' : ''}`}>{Identify.__("Street")}</div>
-                            <input type="text" id='street[0]' name='street[0]' className={configFields.street_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("Street 1")} defaultValue={(initialValues.street && initialValues.street[0])?initialValues.street[0]:''}></input>
-                            <input type="text" id='street[1]' name='street[1]'
-                                placeholder={Identify.__("Street 2")} defaultValue={(initialValues.street && initialValues.street[1])?initialValues.street[1]:''}></input>
-                        </div>}
-                    {isFieldShow('city_show') &&
-                        <div className='city'>
-                            <div className={`address-field-label ${configFields.city_show === 'req' ? 'req' : ''}`}>{Identify.__("City")}</div>
-                            <input type="text" id='city' name='city' className={configFields.city_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("City")} defaultValue={initialValues.city}></input>
-                        </div>}
-                    {isFieldShow('zipcode_show') &&
-                        <div className='postcode'>
-                            <div className={`address-field-label ${configFields.zipcode_show === 'req' ? 'req' : ''}`}>{Identify.__("ZIP")}</div>
-                            <input type="text" id='postcode' name='postcode' className={configFields.zipcode_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("ZIP")} defaultValue={initialValues.postcode}></input>
-                        </div>}
-                    {isFieldShow('country_id_show') &&
-                        <div className='country'>
-                            <div className={`address-field-label ${(!configFields || configFields.country_id_show === 'req') ? 'req' : ''}`}>{Identify.__("Country")}</div>
-                            <Select
-                                field="country_id"
-                                key={initialCountry /*change key to change initial value*/}
-                                initialValue={initialCountry}
-                                onChange={() => onHandleSelectCountry()} onBlur={() => onHandleSelectCountry()}
-                                items={selectableCountries}
-                                isrequired={(!configFields || (configFields && configFields.hasOwnProperty('country_id_show') && configFields.country_id_show === 'req')) ? 'isrequired' : ''}
-                            />
-                        </div>}
-                    {isFieldShow('region_id_show') && renderRegionField(selectedCountry, initialCountry, countries, configFields, initialValues)}
-                    {isFieldShow('telephone_show') &&
-                        <div className='telephone'>
-                            <div className={`address-field-label ${configFields.telephone_show === 'req' ? 'req' : ''}`}>{Identify.__("Phone")}</div>
-                            <input type="tel" id='telephone' name='telephone' className={configFields.telephone_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("Phone")} defaultValue={initialValues.telephone}></input>
-                        </div>}
-                    {configFields && configFields.hasOwnProperty('fax_show') && configFields.fax_show ?
-                        <div className='fax'>
-                            <div className={`address-field-label ${configFields.fax_show === 'req' ? 'req' : ''}`}>{Identify.__("Fax")}</div>
-                            <input type="tel" id='fax' name='fax' className={configFields.fax_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("Fax")} defaultValue={initialValues.fax}></input>
-                        </div>
-                        : null}
-                    {configFields && configFields.hasOwnProperty('prefix_show') && configFields.prefix_show ?
-                        <div className='prefix'>
-                            <div className={`address-field-label ${configFields.prefix_show === 'req' ? 'req' : ''}`}>{Identify.__("Prefix")}</div>
-                            <input type="text" id='prefix' name='prefix' className={configFields.prefix_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("Prefix")} defaultValue={initialValues.prefix}></input>
-                        </div>
-                        : null}
-                    {configFields && configFields.hasOwnProperty('suffix_show') && configFields.suffix_show ?
-                        <div className='suffix'>
-                            <div className={`address-field-label ${configFields.suffix_show === 'req' ? 'req' : ''}`}>{Identify.__("Suffix")}</div>
-                            <input type="text" id='suffix' name='suffix' className={configFields.suffix_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("Suffix")} defaultValue={initialValues.suffix}></input>
-                        </div>
-                        : null}
-                    {configFields && configFields.hasOwnProperty('taxvat_show') && configFields.taxvat_show ?
-                        <div className='vat_id'>
-                            <div className={`address-field-label ${configFields.taxvat_show === 'req' ? 'req' : ''}`}>{Identify.__("VAT")}</div>
-                            <input type="text" id='vat_id' name='vat_id' className={configFields.taxvat_show === 'req' ? 'isrequired' : ''}
-                                placeholder={Identify.__("VAT")} defaultValue={initialValues.vat_id}></input>
-                        </div>
-                        : null}
-                    <div className='save_in_address_book'>
-                        <Checkbox field="save_in_address_book" label={Identify.__('Save in address book.')}
-                            classes={{
-                                label: 'save_in_address_book_label',
-                                icon:'save_in_address_book_icon'
-                                }}/>
-                    </div>
-                    <div className='validation'>{validationMessage}</div>
-                </Fragment> : null}
+                        <div className='validation'>{validationMessage}</div>
+                    </Fragment> : null}
         </Fragment>
     ) : null;
-    const viewSubmit = 
+    const viewSubmit =
         (
-            !usingSameAddress || is_virtual) && 
+            !usingSameAddress || is_virtual) &&
             (!isSignedIn || shippingNewForm || ((billingForm && storageBilling === 'new_address') || (!billingForm && storageShipping === 'new_address'))
-        ) ? (
-        <div className='footer'>
-            <Button
-                className='button save-address-btn'
-                style={{ marginTop: 10, float: 'right' }}
-                type="submit"
-                priority="high"
-                disabled={submitting}
-            >{Identify.__('Save Address')}</Button>
-        </div>
-    ) : null;
+            ) ? (
+                <div className='footer'>
+                    <Button
+                        className='button save-address-btn'
+                        style={{ marginTop: 10, float: 'right' }}
+                        type="submit"
+                        priority="high"
+                        disabled={submitting}
+                    >{Identify.__('Save Address')}</Button>
+                </div>
+            ) : null;
 
     const toggleSameShippingAddress = () => {
         const sameAsShippingAddress = !usingSameAddress
@@ -444,12 +468,12 @@ const FormFields = (props) => {
                 {(billingForm && !is_virtual) &&
                     <div className="billing-same">
                         {(billingForm && !is_virtual) && <Checkbox
-                            fieldState={{value: usingSameAddress}}
+                            fieldState={{ value: usingSameAddress }}
                             field="addresses_same" label={Identify.__("Billing address same as shipping address")}
                             classes={{
                                 label: 'addresses_same_label',
-                                icon:'addresses_same_icon'
-                                }}
+                                icon: 'addresses_same_icon'
+                            }}
                             onChange={() => toggleSameShippingAddress()} />}
                     </div>}
                 {viewFields}

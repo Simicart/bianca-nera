@@ -11,6 +11,7 @@ import { beginCheckout, cancelCheckout, editOrder,
     submitPaymentMethod
 } from 'src/actions/checkout';
 import { getOS } from 'src/simi/App/Bianca/Helper';
+import Loading from 'src/simi/BaseComponents/Loading';
 
 require('./checkout.scss')
 
@@ -308,20 +309,20 @@ class Checkout extends Component {
             {pageTitle}
             <div className='checkout-column'>
                 <div className='checkout-col-1'>
-                    {!is_virtual && <Panel title={<div className='checkout-section-title'>{Identify.__('Shipping Address')}</div>}
+                    {(!is_virtual && cart && cart.cartId) && <Panel title={<div className='checkout-section-title'>{Identify.__('Shipping Address')}</div>}
                         className='checkout-panel'
                         renderContent={<EditableForm {...stepProps} beginCheckout={beginCheckout} editing='address' />}
                         isToggle={true}
                         expanded={true}
                         headerStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
                     />}
-                    <Panel title={<div className='checkout-section-title'>{Identify.__('Billing Information')}</div>}
+                    {(cart && cart.cartId) ? <Panel title={<div className='checkout-section-title'>{Identify.__('Billing Information')}</div>}
                         className='checkout-panel'
                         renderContent={<EditableForm {...stepProps} editing='billingAddress' />}
                         isToggle={true}
                         expanded={true}
                         headerStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                    />
+                    /> : <Loading />}
                 </div>
                 <div className='checkout-col-2'>
                     {(!is_virtual && shippingAddress) && 

@@ -228,8 +228,8 @@ class Identify {
     }
 
     static formatAddress(address = {}, countries = []) {
-        const country = countries.find(({ id }) => id === address.country_id);
-
+        let country = countries.find(({ id }) => id === address.country_id);
+        country = country ? country : {}
         const { available_regions: regions } = country;
         if (!country.available_regions) {
             return address
