@@ -10,7 +10,7 @@ import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing'
 import {updateSubProductSpecialItem} from 'src/simi/Model/Cart'
 import { getCartDetails } from 'src/actions/cart';
 import { connect } from 'src/drivers';
-import { showFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading';
+import { showFogLoading, hideFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading';
 
 require('./SpecialCartItem.scss')
 
@@ -41,6 +41,7 @@ const SpecialCartItem = props => {
             showFogLoading();
             updateSubProductSpecialItem(
                 () => {
+                    hideFogLoading();
                     props.getCartDetails();
                 },
                 itemTotal.item_id,
