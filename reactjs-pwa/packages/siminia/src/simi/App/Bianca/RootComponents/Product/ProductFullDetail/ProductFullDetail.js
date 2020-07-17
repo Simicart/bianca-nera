@@ -132,7 +132,8 @@ class ProductFullDetail extends Component {
             const extraAttributes = product.simiExtraField && product.simiExtraField.attribute_values || {};
             const reviewRating = product.simiExtraField && product.simiExtraField.app_reviews || {};
             const { brands } = config;
-            const { brand, url_key, pre_order, is_salable } = extraAttributes;
+            const { is_salable } = product.simiExtraField || {};
+            const { brand, url_key, pre_order } = extraAttributes;
             const pBrand = brands.find((br)=>br.option_id === brand);
             const price = product.price && (product.price.minimalPrice || product.price.regularPrice) || {};
             const sellerName = this.getVendorStoreName();
@@ -601,7 +602,7 @@ class ProductFullDetail extends Component {
     get productOptions() {
         const { fallback, handleConfigurableSelectionChange, props } = this;
         const { configurable_options, simiExtraField, type_id, is_dummy_data, variants } = props.product;
-        const {attribute_values: {pre_order, try_to_buy, reservable, is_salable}} = simiExtraField;
+        const {attribute_values: {pre_order, try_to_buy, reservable}, is_salable} = simiExtraField;
         // map color options in simiExtraField to configurable_options
         if (simiExtraField && simiExtraField.app_options && simiExtraField.app_options.configurable_options && simiExtraField.app_options.configurable_options.attributes) {
             let optionColors = Object.values(simiExtraField.app_options.configurable_options.attributes);
