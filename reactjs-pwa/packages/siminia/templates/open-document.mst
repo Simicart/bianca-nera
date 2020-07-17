@@ -61,6 +61,7 @@
             if (
                 (e && e.target && (
                     (e.target.src && (typeof e.target.src === 'string') && e.target.src.indexOf('vendor~client') !== -1) ||
+                    (e.target.src && (typeof e.target.src === 'string') && e.target.src.indexOf('js/client') !== -1) ||
                     (e.message && e.message == 'Script error.')
                 )) ||
                 (
