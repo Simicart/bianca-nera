@@ -31,7 +31,7 @@ const NewReview = props => {
                     return {
                         type: 'error',
                         message: error.message,
-                        auto_dismiss: false
+                        auto_dismiss: true
                     }
                 })
                 props.toggleMessages(errors)
@@ -41,7 +41,7 @@ const NewReview = props => {
                 props.toggleMessages([{
                     type: 'success',
                     message: Array.isArray(data.message)?data.message[0]:data.message,
-                    auto_dismiss: false
+                    auto_dismiss: true
                 }])
                 $('#new-rv-nickname').val('')
                 $('#new-rv-title').val('')

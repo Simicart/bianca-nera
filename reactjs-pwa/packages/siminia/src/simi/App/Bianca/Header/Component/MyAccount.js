@@ -33,21 +33,26 @@ class MyAccount extends React.Component {
 		this.setState({ open: false });
 	};
 
-	handleClickItem = (link) => {
+	handleClickCustomerDropdown = (link) => {
 		const { isSignedIn } = this.props;
 		if (!isSignedIn) {
 			this.handleLink(link);
 		} else {
-			this.handleToggle();
+            this.handleToggle();
 		}
-	};
+    };
+    
+    handleClickItem = (link) => {
+        this.handleToggle()
+        this.handleLink(link)
+    }
 
 	executeLogout = () => {
 		// Hide menu
 		this.handleToggle();
 		// Call api logout from backend
 		this.handleLink('/logout.html');
-	};
+    };
 
 	renderMyAccount = () => {
 		const { open } = this.state;
@@ -61,7 +66,7 @@ class MyAccount extends React.Component {
 								<div className={classes['list-menu-account']}>
 									<MenuItem
 										className={classes['my-account-item-1']}
-										onClick={() => this.handleLink('/account.html')}
+										onClick={() => this.handleClickItem('/account.html')}
 									>
 										{Identify.__('My Account')}
 									</MenuItem>
@@ -124,7 +129,7 @@ class MyAccount extends React.Component {
 					this.anchorEl = node;
 				}}
 			>
-				<div role="presentation" onClick={() => this.handleClickItem('/login.html')}>
+				<div role="presentation" onClick={() => this.handleClickCustomerDropdown('/login.html')}>
 					<div className={classes['item-icon']} style={{ display: 'flex', justifyContent: 'center' }}>
 						<User />
 					</div>

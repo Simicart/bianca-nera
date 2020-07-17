@@ -362,10 +362,14 @@ class ProductFullDetail extends Component {
             this.props.updateItemInCart()
             if (this.isBuy1Click) {
                 // showToastMessage(Identify.__('Checkout processing..'));
-                (new Promise(resolve => setTimeout(resolve, 2000))).then(() => {
+                // (new Promise(resolve => setTimeout(resolve, 2000))).then(() => {
+                    const location = {
+                        pathname: '/checkout.html',
+                        state: {is_buy_1_click: true}
+                    }
                     hideFogLoading();
-                    this.props.history.push('/checkout.html');
-                });
+                    this.props.history.push(location);
+                // });
                 return;
             } else {
                 hideFogLoading()
