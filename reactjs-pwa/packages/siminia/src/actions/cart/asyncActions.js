@@ -6,6 +6,10 @@ import actions from './actions';
 
 // const { request } = RestApi.Magento2;
 import { request } from 'src/simi/Network/RestMagento'
+import {
+    showFogLoading,
+    hideFogLoading
+} from 'src/simi/BaseComponents/Loading/GlobalLoading';
 
 const { BrowserPersistence } = Util;
 const storage = new BrowserPersistence();
@@ -186,6 +190,8 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
                 body: JSON.stringify({ cartItem })
             });
 
+            hideFogLoading() // Fix hide loading
+
             dispatch(
                 actions.updateItem.receive({
                     cartItem: response,
@@ -194,6 +200,7 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
                 })
             );
         } catch (error) {
+            hideFogLoading()  // Fix hide loading when error
             const { response, noCartId } = error;
 
             dispatch(actions.updateItem.receive(error));

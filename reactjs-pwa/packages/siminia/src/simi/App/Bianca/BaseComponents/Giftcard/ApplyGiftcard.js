@@ -8,6 +8,8 @@ import ChevronDownIcon from 'react-feather/dist/icons/chevron-down';
 import Icon from 'src/components/Icon';
 import { showToastMessage } from 'src/simi/Helper/Message';
 import { showToastSuccess } from 'src/simi/Helper/MessageSuccess';
+import { connect } from 'src/drivers';
+import { getCartDetailsCustom } from 'src/actions/cart';
 require('./ApplyGiftcard.scss');
 
 const arrow = <Icon src={ChevronDownIcon} size={18} />;
@@ -162,4 +164,13 @@ class ApplyGiftcard extends Component {
     }
 }
 
-export default ApplyGiftcard
+const mapStateToProps = () =>  {
+    return {
+    }
+}
+
+const mapDispatchToProps = {
+    getCartDetailsCustom,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ApplyGiftcard);

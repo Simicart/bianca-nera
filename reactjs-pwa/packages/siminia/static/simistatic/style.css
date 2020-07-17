@@ -84,27 +84,52 @@ div#app-loading {
 
 #toast-message-global {
     position: fixed;
-    top: 40%;
-    z-index: 9999999;
-    opacity: .9;
-    width: 75%;
-    left: 50%;
-    margin-left: -37.5%;
-    display: flex;
-    justify-content: center;
+	top: 40%;
+	z-index: 9999999;
+	width: 75%;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: center
 }
 
 #toast-message-content {
-    border-radius: 25px;
     color: #fff;
-    font-size: 18px;
-    font-weight: lighter;
-    max-width: 400px;
-    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
-    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
-    background: #1b1b1b;
-    padding: 6px 25px;
-    text-align: center;
+	font-size: 18px;
+	line-height: 19px;
+	max-width: 536px;
+	padding: 11px 38px 10px;
+	border-radius: 4px;
+	background-color: #1b1b1b;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .11);
+	position: relative;
+	text-align: center;
+}
+
+/* Success Message */
+
+#toast-success-global {
+	position: fixed;
+	top: 40%;
+	z-index: 9999999;
+	width: 75%;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	justify-content: center
+}
+
+#toast-success-content {
+	color: #fff;
+	font-size: 18px;
+	line-height: 19px;
+	max-width: 536px;
+	padding: 11px 38px 10px;
+	border-radius: 4px;
+	background-color: #5faf4b;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .11);
+	position: relative;
+	text-align: center;
 }
 
 /** 
@@ -148,4 +173,19 @@ lightbox react-image-lightbox/style.css
 
 #siminia-main-page{
     min-height: 1142px;
+}
+
+@media (max-width:480px) {
+	#toast-message-global,
+	#toast-success-global {
+		width: 100%
+	}
+	#toast-message-content,
+	#toast-success-content {
+		padding: 10px 14px;
+		width: 100%;
+		margin-left: 9px;
+		margin-right: 9px;
+		line-height: 16px
+	}
 }

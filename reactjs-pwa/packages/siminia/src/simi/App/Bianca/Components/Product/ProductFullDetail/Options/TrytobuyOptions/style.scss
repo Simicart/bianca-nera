@@ -55,3 +55,23 @@ $cbColor2: #fff;
         }
     } 
 }
+
+.rtl-root {
+    .try-to-buy {
+        label{
+            padding-left: 0;
+            padding-right: 33px;
+            &::before{
+                left: unset;
+                right: 0;
+            }
+        }
+
+        input:checked {
+            &+label::after{
+                left: 0;
+                right: 8px;
+            }
+        }
+    }
+}

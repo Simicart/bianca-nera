@@ -1,5 +1,5 @@
 import React from 'react'
-import { resourceUrl, logoUrl } from 'src/simi/Helper/Url';
+import { resourceUrl, logoUrl, productUrlSuffix } from 'src/simi/Helper/Url';
 import Identify from 'src/simi/Helper/Identify'
 import { configColor } from 'src/simi/Config'
 import Deleteicon from 'src/simi/App/Bianca/BaseComponents/Icon/Trash'
@@ -10,7 +10,6 @@ import Price from 'src/simi/App/Bianca/BaseComponents/Price/Pricing'
 import {updateSubProductSpecialItem} from 'src/simi/Model/Cart'
 import { getCartDetails } from 'src/actions/cart';
 import { connect } from 'src/drivers';
-import { productUrlSuffix } from 'src/simi/Helper/Url';
 import { showFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading';
 
 require('./SpecialCartItem.scss')

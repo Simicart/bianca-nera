@@ -87,7 +87,10 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                         'aw_gc_allow_open_amount' => $productModel->getAwGcAllowOpenAmount(),
                         'aw_gc_open_amount_max'  => $productModel->getData('aw_gc_open_amount_max'),
                         'aw_gc_open_amount_min' => $productModel->getData('aw_gc_open_amount_min'),
-                        'aw_gc_amounts'  => $productModel->getAwGcAmounts()
+                        'aw_gc_amounts'  => $productModel->getAwGcAmounts(),
+                        'pre_order'  => $productModel->getData('pre_order'),
+                        'try_to_buy'  => $productModel->getData('try_to_buy'),
+                        'reservable'  => $productModel->getData('reservable'),
                     ],
                     'app_options' => $options,
                     'app_reviews' => $app_reviews,

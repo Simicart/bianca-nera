@@ -238,6 +238,7 @@ class Login extends Component {
 				this.props.simiSignedIn(data.customer_access_token);
 			}
 		}
+		this.redirectAfterLogin();
 	};
 
 

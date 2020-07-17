@@ -94,9 +94,10 @@ class Checkout extends Component {
 
     get cartDetail() {
         const { cart, history } = this.props;
+        
         const hasCart = cart && cart.details && cart.details.items
         if (hasCart) {
-            if (!cart.details.items.length)
+            if (!cart.details.items.length && !(history.location.state && history.location.state.is_buy_1_click))
                 history.push('/')
             return true
         }

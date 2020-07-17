@@ -340,6 +340,7 @@ class Cart extends Component {
             removeItemFromCart(
                 () => {
                     // this.props.getCartDetails();
+                    hideFogLoading()
                     this.props.getCartDetailsCustom();
                 },
                 item.item_id,
@@ -425,8 +426,11 @@ class Cart extends Component {
             }
         }
 
-        if (isLoading) showFogLoading();
-        else hideFogLoading();
+        if (isLoading) {
+            showFogLoading()
+        } else {
+            hideFogLoading();
+        };
 
         let is_pre_order = false
         let is_try_to_buy = false
@@ -485,7 +489,6 @@ class Cart extends Component {
     }
 
     render() {
-        hideFogLoading();
         return (
             <div className="container cart-page">
                 {TitleHelper.renderMetaHeader({

@@ -153,8 +153,9 @@ class MapBranch extends React.Component {
                 html = <MakerComponent
                         lat={data.latitude}
                         lng={data.longitude}
-                        className="store-maker"
-                        text={1}
+                        className="store-maker active"
+                        text={''}
+                        // color="#101820"
                     />
             }
         }
@@ -364,7 +365,7 @@ class MapBranch extends React.Component {
                     options={mapOptions}
                 >
                     {this.listMaker()}
-                    {this.currentMaker()}
+                    {/* {this.currentMaker()} */}
                 </GoogleMapReact>
             </div>
         );

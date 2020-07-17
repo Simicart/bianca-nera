@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- fix bug guest quote auto add customer id -->
+    <type name="Magento\Checkout\Model\Session">
+        <plugin name="simicart_plugin_checkout_model_session" type="Simi\Simicustomize\Plugin\CheckoutSession" />
+    </type>
+</config>

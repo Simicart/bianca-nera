@@ -56,8 +56,6 @@ export class Trigger extends Component {
         const { cartIcon } = this;
         const itemsQty = details.items_qty;
 
-        console.log(totals);
-
         return (
             <div>
                 {isPhone

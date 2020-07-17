@@ -17,12 +17,15 @@ const Shopbybrand = props => {
             if (foundBrand && foundBrand.name) {
                 breadcrumb = [
                     {name: Identify.__("Home"), link: '/'},
-                    {name: foundBrand.name},
+                    {name: foundBrand.name, link: `/brands.html?filter=%7B"brand"%3A"${foundBrand.option_id}"%7D`},
                 ];
             }
+          
         } catch (err) {
             console.warn(err)
         }
+
+        
         return <Category {...props} 
                 id={storeConfig.simiRootCate.id}
                 foundBrand={foundBrand} breadcrumb={breadcrumb}

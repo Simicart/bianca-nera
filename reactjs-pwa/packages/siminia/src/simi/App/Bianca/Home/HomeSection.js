@@ -10,6 +10,7 @@ import ItemsCarousel from 'react-items-carousel';
 import ChevronLeft from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronLeft';
 import ChevronRight from 'src/simi/App/Bianca/BaseComponents/Icon/ChevronRight';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
+import { formatPrice } from 'src/simi/Helper/Pricing';
 import { Link } from 'src/drivers';
 import Skeleton from 'react-loading-skeleton';
 require('./homesection.scss');
@@ -83,22 +84,29 @@ const HomeSection = props => {
     const ItemRender = (props) => {
         const {item} = props
         let price = '';
-        const currency = item.price.regularPrice.amount.currency || '$';
-        const regular = item.price.regularPrice.amount.value || '$';
+        // const currency = currency_symbol || item.price.regularPrice.amount.currency || '';
+        const regular = item.price.regularPrice.amount.value || 0;
+
         if (item && item.special_price) {
             price = <div className="product-prices">
                 <div className="regular">
-                    <span className="price">{currency === '$' ? `${currency}${item.special_price}` : `${currency} ${item.special_price}`}</span>
+                    <span className="price">
+                        {formatPrice(item.special_price)}
+                    </span>
                 </div>
                 <div className="special">
-                    <span className="price old">{currency === '$' ? `${currency}${regular}` : `${currency} ${regular}`}</span>
+                    <span className="price old">
+                        {formatPrice(regular)}
+                    </span>
                     {/* <span className="sale_off">-20%</span> */}
                 </div>
             </div>
         } else {
             price = <div className="product-prices">
                 <div className="regular">
-                    <span className="price">{currency === '$' ? `${currency}${regular}` : `${currency} ${regular}`}</span>
+                    <span className="price">
+                        {formatPrice(regular)}
+                    </span>
                 </div>
             </div>
         }

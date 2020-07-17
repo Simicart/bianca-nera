@@ -25,7 +25,6 @@
         <plugin name="Simicart_Quote_Quantityvalidator_Plugin" type="\Simi\Simicustomize\Plugin\QuoteItemQuantityValidator" sortOrder="10" disabled="false"  />
     </type>
     <!-- end cody -->
-    Magento\CatalogInventory\Model\Quote\Item
     <type name="Magento\Quote\Model\Quote\Item\Repository">
         <plugin name="simi_cart_plugin_quote_item_repository" type="Simi\Simicustomize\Plugin\QuoteItemRepository" />
     </type>
