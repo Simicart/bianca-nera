@@ -61,6 +61,10 @@ const Coupon = props => {
                     setClearCoupon(false);
                     showToastSuccess(Identify.__(text));
                     getCartDetailsCustom();
+                }else{
+                    setClearCoupon(true)
+                    showToastMessage(Identify.__(text));
+                    getCartDetailsCustom();
                 }
             }
         }

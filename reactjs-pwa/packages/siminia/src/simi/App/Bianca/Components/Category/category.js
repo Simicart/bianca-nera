@@ -98,8 +98,7 @@ const Category = props => {
                 }
                 if (loadedData && loadedData.category && parseInt(loadedData.category.id) === parseInt(id))
                     data = loadedData
-
-                if (!data || !data.category || loading) {
+                if (!data || !data.category) {
                     return <LoadingSpiner />
                 }
 

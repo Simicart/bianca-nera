@@ -1,6 +1,8 @@
 import { addRequestVars, addMerchantUrl } from 'src/simi/Helper/Network'
 import Identify from 'src/simi/Helper/Identify'
 import { Util, RestApi } from '@magento/peregrine';
+import CacheHelper from 'src/simi/Helper/CacheHelper';
+
 const { BrowserPersistence } = Util;
 const peregrinRequest = RestApi.Magento2.request;
 
@@ -82,7 +84,8 @@ export async function sendRequest(endPoint, callBack, method='GET', getData= {},
                 return response.json();
             }
             /** Allow response for status 401 Unauthorized */
-            if (response.ok === false && response.statusText === 'Unauthorized') {
+            /** Allow response for error */
+            if (response.ok === false) {
                 let data = {};
                 data.errors = [];
                 data.status = response.status;
@@ -96,6 +99,12 @@ export async function sendRequest(endPoint, callBack, method='GET', getData= {},
             }
         })
         .then(function (data) {
+            if (data && data.status === 401 && data.statusText === "Unauthorized") {
+                console.log('data response: ', data)
+                callBack(result);
+                CacheHelper.clearCaches()
+                window.location.reload()
+            }
             if (data) {
                 if (Array.isArray(data) && data.length === 1 && data[0])
                     result = data[0]
