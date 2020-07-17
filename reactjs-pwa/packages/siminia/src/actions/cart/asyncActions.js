@@ -190,6 +190,8 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
                 body: JSON.stringify({ cartItem })
             });
 
+            hideFogLoading() // Fix hide loading
+
             dispatch(
                 actions.updateItem.receive({
                     cartItem: response,
@@ -198,6 +200,7 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
                 })
             );
         } catch (error) {
+            hideFogLoading()  // Fix hide loading when error
             const { response, noCartId } = error;
 
             dispatch(actions.updateItem.receive(error));
@@ -229,7 +232,6 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
 
         // Close the options drawer only after the cart is finished updating.
         dispatch(closeOptionsDrawer());
-        hideFogLoading()
     };
 };
 

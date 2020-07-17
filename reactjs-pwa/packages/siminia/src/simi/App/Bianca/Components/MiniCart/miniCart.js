@@ -117,9 +117,8 @@ class MiniCart extends Component {
             removeItemFromCart(
                 () => {
                     // this.props.getCartDetails();
-                    hideFogLoading()
+                    hideFogLoading();
                     this.props.getCartDetailsCustom();
-                    hideFogLoading()
                 },
                 item.item_id,
                 this.props.isSignedIn
