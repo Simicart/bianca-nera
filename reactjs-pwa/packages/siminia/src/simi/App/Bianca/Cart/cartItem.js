@@ -146,6 +146,13 @@ const CartItem = props => {
         </div>
     )
 
+    const handleUpdateQty = (event) => {
+        if (parseInt(event.target.value, 10) !== parseInt(item.qty, 10)){
+            showFogLoading();
+            props.updateCartItem(item, parseInt(event.target.value, 10));
+        }
+    }
+
     const itemQty = (
         <div className='sub-item item-qty'>
             {/* {isPhone && <div className='item-label'>{Identify.__('Qty')}</div>} */}
@@ -156,13 +163,7 @@ const CartItem = props => {
                 type="number"
                 pattern="[1-9]*"
                 defaultValue={item.qty}
-                onBlur={(event) => {
-                    showFogLoading()
-                    if (parseInt(event.target.value, 10) !== parseInt(item.qty, 10)){
-                        props.updateCartItem(item,parseInt(event.target.value, 10))
-                    }
-                }
-                }
+                onBlur={handleUpdateQty}
             />
             {isPhone && 
                 <div

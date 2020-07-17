@@ -144,7 +144,7 @@ class MiniCart extends Component {
                     });
                 }
                 if (itemTotal) {
-                    const element = (
+                    obj.push(
                         <CartItem
                             key={Identify.randomString(5)}
                             removeFromCart={this.removeFromCart.bind(this)}
@@ -158,7 +158,6 @@ class MiniCart extends Component {
                             history={history}
                         />
                     );
-                    obj.push(element);
                 }
             }
             return <div className="cart-list">{obj}</div>;
