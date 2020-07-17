@@ -334,8 +334,8 @@ class MiniCart extends Component {
                 <h2 className={classes.titleSummary}>
                     <span>{Identify.__('Summary')}</span>
                 </h2>
-                {(!is_all_gift_card && !giftCartValue && !is_try_to_buy && !is_pre_order) && this.couponCode()}
-                {(!is_all_gift_card && !cpValue && !is_try_to_buy && !is_pre_order) && this.giftVoucher(giftCartValue)}
+                {(!giftCartValue && !is_try_to_buy && !is_pre_order) && this.couponCode()}
+                {(!cpValue && !is_try_to_buy && !is_pre_order) && this.giftVoucher(giftCartValue)}
                 {totalsSummary}
                 {grandTotal}
 
@@ -363,7 +363,7 @@ class MiniCart extends Component {
             return <EmptyMiniCart closeDrawer={closeDrawer}/>;
         }
 
-        const footer = checkout;
+        // const footer = checkout;
 
         const footerClassName = isMiniCartMaskOpen
             ? classes.footerMaskOpen
@@ -375,7 +375,7 @@ class MiniCart extends Component {
                     <div className={classes.body}>
                         {productList}
                     </div>
-                    <div className={footerClassName}>{footer}</div>
+                    <div className={footerClassName}>{checkout}</div>
                 </div>
             </Fragment>
         );
@@ -406,7 +406,6 @@ class MiniCart extends Component {
             document.body.removeAttribute('style');
         }
 
-        hideFogLoading()
         return (
             <aside className={`${className} minicart`} ref={this.wrapperMiniCart}>
                 {isCartEmpty

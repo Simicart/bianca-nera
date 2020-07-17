@@ -6,6 +6,10 @@ import actions from './actions';
 
 // const { request } = RestApi.Magento2;
 import { request } from 'src/simi/Network/RestMagento'
+import {
+    showFogLoading,
+    hideFogLoading
+} from 'src/simi/BaseComponents/Loading/GlobalLoading';
 
 const { BrowserPersistence } = Util;
 const storage = new BrowserPersistence();
@@ -225,6 +229,7 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
 
         // Close the options drawer only after the cart is finished updating.
         dispatch(closeOptionsDrawer());
+        hideFogLoading()
     };
 };
 

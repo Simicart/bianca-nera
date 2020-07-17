@@ -157,17 +157,12 @@ const CartItem = props => {
                 pattern="[1-9]*"
                 defaultValue={item.qty}
                 onBlur={(event) => {
+                    showFogLoading()
                     if (parseInt(event.target.value, 10) !== parseInt(item.qty, 10)){
                         props.updateCartItem(item,parseInt(event.target.value, 10))
                     }
                 }
                 }
-                onKeyUp={e => {
-                    // if (e.keyCode === 13) {
-                    //     if (parseInt(event.target.value, 10) !== parseInt(item.qty, 10))
-                    //         updateCartItem(parseInt(event.target.value, 10))
-                    // }
-                }}
             />
             {isPhone && 
                 <div
@@ -251,7 +246,7 @@ const CartItem = props => {
             </div>
         </div>
     )
-    hideFogLoading()
+    
     return (
         <Fragment>
             {isPhone

@@ -20,37 +20,39 @@ class SalesQuoteAddressSaveBefore implements ObserverInterface
         $this->simiObjectManager = $simiObjectManager;
     }
 
-    public function _getCart()
+    /* public function _getCart()
     {
         return $this->simiObjectManager->get('Magento\Checkout\Model\Cart');
-    }
+    } */
 
-    public function _getQuote()
+    /* public function _getQuote()
     {
         $cart = $this->_getCart();
         if(!$cart)
             return;
         return $cart->getQuote();
-    }
+    } */
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         try {
-            $quote = $this->_getQuote();
-            $coupon = $quote->getCouponCode();
-            if ($coupon && $coupon != '') {
-                $isApp = strpos($this->simiObjectManager
-                    ->get('\Magento\Framework\Url')->getCurrentUrl(), 'simiconnector');
-                $pre_fix = (string)$this->simiObjectManager->create('Simi\Simiconnector\Helper\Data')
-                    ->getStoreConfig('simiconnector/general/app_dedicated_coupon');
-                if ($pre_fix && ($pre_fix != '') && ($isApp === false) && $coupon) {
-                    if (strpos(strtolower($coupon), strtolower($pre_fix)) !== false) {
-                        $quote->setCouponCode('')->collectTotals()->save();
+            // $quote = $this->_getQuote();
+            $quote = $observer->getQuoteAddress()->getQuote(); // Fix bug load customer from checkout session to quote, see Magento\Checkout\Model\Session::getQuote():288
+            if ($quote) {
+                $coupon = $quote->getCouponCode();
+                if ($coupon && $coupon != '') {
+                    $isApp = strpos($this->simiObjectManager
+                        ->get('\Magento\Framework\Url')->getCurrentUrl(), 'simiconnector');
+                    $pre_fix = (string)$this->simiObjectManager->create('Simi\Simiconnector\Helper\Data')
+                        ->getStoreConfig('simiconnector/general/app_dedicated_coupon');
+                    if ($pre_fix && ($pre_fix != '') && ($isApp === false) && $coupon) {
+                        if (strpos(strtolower($coupon), strtolower($pre_fix)) !== false) {
+                            $quote->setCouponCode('')->collectTotals()->save();
+                        }
                     }
                 }
             }
         } catch (\Exception $e) {
-
         }
     }
 }

@@ -205,10 +205,22 @@ class GiftcardCartService implements GiftcardCartManagementInterface
             ->setBaseGiftcardAmount($giftcard->getBalance());
 
         $giftcards = [$giftcardQuoteObject];
+        // Comment this to apply one giftcard at the sample time
+        /*
         if ($extensionAttributes->getAwGiftcardCodes()) {
             $giftcards = array_merge($giftcards, $extensionAttributes->getAwGiftcardCodes());
         }
-        $giftcards = $this->sortGiftcards($giftcards);
+        $giftcards = $this->sortGiftcards($giftcards); 
+        */
+        // Remove other giftcard code
+        if ($extensionAttributes->getAwGiftcardCodes()) {
+            $giftcardsInQuote = $extensionAttributes->getAwGiftcardCodes();
+            foreach ($giftcardsInQuote as $giftcardInQuote) {
+                if ($giftcardInQuote->getGiftcardCode() != $giftcard->getCode()) {
+                    $giftcardInQuote->setIsRemove(true);
+                }
+            }
+        }
         $extensionAttributes->setAwGiftcardCodes($giftcards);
 
         $quote->setExtensionAttributes($extensionAttributes);
@@ -244,12 +256,13 @@ class GiftcardCartService implements GiftcardCartManagementInterface
             $giftcards = $quote->getExtensionAttributes()->getAwGiftcardCodes();
             /** @var GiftcardQuoteInterface $giftcard */
             foreach ($giftcards as $giftcard) {
-                if ($giftcard->getGiftcardCode() == $giftcardCode) {
+                /* if ($giftcard->getGiftcardCode() == $giftcardCode) {
                     $giftcard->setIsRemove(true);
                     return true;
-                }
+                } */
+                $giftcard->setIsRemove(true); // Remove all giftcard codes
             }
         }
-        return false;
+        return true;
     }
 }
