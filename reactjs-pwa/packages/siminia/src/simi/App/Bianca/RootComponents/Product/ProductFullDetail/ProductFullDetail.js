@@ -541,6 +541,11 @@ class ProductFullDetail extends Component {
             }
         }, 'POST', null, regData);
         this.setState({reserveSubmitting: true});
+        setTimeout(() => {
+            if (this.state.reserveSubmitting) {
+                this.setState({reserveSubmitting: false});
+            }
+        }, 15000);
     }
 
     onSizeGuideClick = (optionId, code) => {

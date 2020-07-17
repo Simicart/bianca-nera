@@ -59,7 +59,6 @@ class Cart extends Component {
             showFogLoading()
             return false
         }
-        console.log(nextProps)
         hideFogLoading()
         return true
     }
