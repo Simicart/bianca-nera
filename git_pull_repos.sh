@@ -5,7 +5,7 @@ git reset --hard HEAD
 git pull
 
 # Pull siminia
-if [ !-d ./siminia ]; then
+if [ ! -d ./siminia ]; then
     git clone -b customize/2980-basmajiramez@gmail.com-Bianca-Nera https://github.com/Simicart/siminia
 else
     pushd ./siminia
@@ -16,7 +16,7 @@ else
 fi
 
 # Pull server
-if [ !-d ./Server-Customization ]; then
+if [ ! -d ./Server-Customization ]; then
     git clone -b 2980-basmajiramez@gmail.com-Bianca-Nera https://github.com/Simicart/Server-Customization
 else
     pushd ./Server-Customization
