@@ -5,20 +5,21 @@ import { Colorbtn } from 'src/simi/BaseComponents/Button';
 require('./payfortcc.scss');
 const $ = window.$;
 
-const ListMonth = {
-    "01": Identify.__("January"),
-    '02': Identify.__("February"),
-    '03': Identify.__("March"),
-    "04": Identify.__("April"),
-    "05": Identify.__("May"),
-    "06": Identify.__("June"),
-    "07": Identify.__("July"),
-    "08": Identify.__("August"),
-    "09": Identify.__("September"),
-    "10": Identify.__("October"),
-    "11": Identify.__("November"),
-    "12": Identify.__("December")
-}
+const ListMonth = [
+    0,
+    Identify.__("January"),
+    Identify.__("February"),
+    Identify.__("March"),
+    Identify.__("April"),
+    Identify.__("May"),
+    Identify.__("June"),
+    Identify.__("July"),
+    Identify.__("August"),
+    Identify.__("September"),
+    Identify.__("October"),
+    Identify.__("November"),
+    Identify.__("December")
+]
 
 const PayfortCC = (props) => {
 
@@ -101,11 +102,13 @@ const PayfortCC = (props) => {
 
     const renderMonths = () => {
         let months = [];
-        for (var key in ListMonth) {
+        ListMonth.map((value, key) => {
+            if (key === 0)
+                return
             months.push(
-                <option key={Identify.randomString()} value={key}>{ListMonth[key] + " - " + key}</option>
+                <option key={Identify.randomString()} value={key}>{value + " - " + key}</option>
             );
-        }
+        })
         return <select name="cc_month" id="cc_month" ref={monthRef} key={Identify.randomString(5)} defaultValue={initialValues && initialValues.hasOwnProperty('exp_month') ? initialValues.exp_month : ''} className="form-control">
             {months}
         </select>

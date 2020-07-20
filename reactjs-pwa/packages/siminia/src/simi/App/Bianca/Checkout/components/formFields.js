@@ -187,8 +187,8 @@ const FormFields = (props) => {
         (value) => {
             simiSignedIn(value);
             beginCheckout();
-            //delay 1s to reload page
-            setTimeout(() => window.location.reload(false), 1000);
+            //delay 500ms to reload page
+            setTimeout(() => window.location.reload(false), 500);
 
         },
         [simiSignedIn]
@@ -276,8 +276,13 @@ const FormFields = (props) => {
             initDefaultValue = initialShipping
             if (!storageShipping) {
                 Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'shipping_address', initDefaultValue)
-                if (initDefaultValue !== 'new_address' && !props.initialValues && !props.initialValues.firstname) {
-                    handleSubmit(initDefaultValue);
+                console.log(props.initialValues)
+                if (initDefaultValue !== 'new_address' && (!props.initialValues || !props.initialValues.firstname)) {
+
+                    //delay 500ms to set default option
+                    setTimeout(() => {
+                        handleChooseAddedAddress()
+                    }, 500);
                 }
             }
         } else {
