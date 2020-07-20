@@ -124,6 +124,7 @@ class Simiproducts implements ResolverInterface
         $this->eventManager = $this->simiObjectManager->get('\Magento\Framework\Event\ManagerInterface');
 
         $products = $searchResult->getProductsSearchResult();
+        $stockModel = $this->simiObjectManager->get('Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku');
         foreach ($products as $index => $product) {
             $sku = $product['sku'];
             // $productModel = $this->simiObjectManager->get('Magento\Catalog\Model\Product')
@@ -140,13 +141,20 @@ class Simiproducts implements ResolverInterface
                         ->get('\Simi\Simiconnector\Helper\Review')
                         ->getProductReviews($productModel->getId())
                 ); */
+                $isSalable = $productModel->getIsSalable();
+                if ($productModel->getIsSalable()) {
+                    try{
+                        $salable_qty_by_sku = $stockModel->execute($sku);
+                        if (isset($salable_qty_by_sku[0]['qty']) && $salable_qty_by_sku[0]['qty'] == 0) {
+                            $isSalable = false;
+                        }
+                    }catch(\Exception $e){}
+                }
                 $this->productExtraData = array(
                     'attribute_values' => array(
-                        'is_salable' => $productModel->getIsSalable() ? 1 : 0,
+                        'is_salable' => $isSalable ? 1 : 0,
                         'vendor_id' => $productModel->getVendorId(),
                         'pre_order' => $productModel->getPreOrder(),
-                        'salable_qty_by_sku' => $this->simiObjectManager->get('Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku')
-                            ->execute($sku),
                     ),
                     'app_reviews' => $this->simiObjectManager->get('\Simi\Simiconnector\Helper\Review')
                         ->getProductReviews($productModel->getId())

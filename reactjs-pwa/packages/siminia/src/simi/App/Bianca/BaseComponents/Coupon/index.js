@@ -14,7 +14,7 @@ import { showToastSuccess } from 'src/simi/Helper/MessageSuccess';
 require('./style.scss');
 
 const Coupon = props => {
-    const { value, getCartDetailsCustom } = props;
+    const { value, getCartDetailsCustom, getCartDetails } = props;
     const [isCouponOpen, setOpen] = useState(false);
     const [coupon, setCoupon] = useState('');
     const [clearCoupon, setClearCoupon] = useState(false)
@@ -54,17 +54,17 @@ const Coupon = props => {
 
         if (text){
             if(success){
-                getCartDetailsCustom();
+                getCartDetailsCustom ? getCartDetailsCustom() : getCartDetails();
                 showToastSuccess(Identify.__(text))
             }else{
                 if (text === 'Coupon code was canceled. ') {
                     setClearCoupon(false);
                     showToastSuccess(Identify.__(text));
-                    getCartDetailsCustom();
+                    getCartDetailsCustom ? getCartDetailsCustom() : getCartDetails();
                 }else{
                     setClearCoupon(true)
                     showToastMessage(Identify.__(text));
-                    getCartDetailsCustom();
+                    getCartDetailsCustom ? getCartDetailsCustom() : getCartDetails();
                 }
             }
         }

@@ -100,7 +100,6 @@ export async function sendRequest(endPoint, callBack, method='GET', getData= {},
         })
         .then(function (data) {
             if (data && data.status === 401 && data.statusText === "Unauthorized") {
-                console.log('data response: ', data)
                 callBack(result);
                 CacheHelper.clearCaches()
                 window.location.reload()
