@@ -16,19 +16,19 @@ require('./style.scss');
 const Coupon = props => {
     const { value, getCartDetailsCustom, getCartDetails } = props;
     const [isCouponOpen, setOpen] = useState(false);
-    const [coupon, setCoupon] = useState('');
-    const [clearCoupon, setClearCoupon] = useState(false)
+    const [coupon, setCoupon] = useState(value || '');
+    // const [clearCoupon, setClearCoupon] = useState(false)
     const handleCoupon = (type = '') => {
         if (!coupon && type !== 'clear') {
             showToastMessage(Identify.__('Please enter coupon code'));
             return null;
         }
-        if (type === 'clear') {
-            setClearCoupon(true)
-        }
+        // if (type === 'clear') {
+        //     setClearCoupon(true)
+        // }
         showFogLoading();
         const params = {
-            coupon_code: coupon
+            coupon_code: type === 'clear' ? '' : coupon
         };
         updateCoupon(processData, params);
     };
@@ -46,11 +46,11 @@ const Coupon = props => {
         if (data.total && data.total.coupon_code) {
             success = true;
         }
-        if (clearCoupon) {
-            setClearCoupon(false)
-            success = true;
-            setCoupon('')
-        };
+        // if (clearCoupon) {
+        //     setClearCoupon(false)
+        //     success = true;
+        //     setCoupon('')
+        // };
 
         if (text){
             if(success){
@@ -58,11 +58,11 @@ const Coupon = props => {
                 showToastSuccess(Identify.__(text))
             }else{
                 if (text === 'Coupon code was canceled. ') {
-                    setClearCoupon(false);
+                    // setClearCoupon(false);
                     showToastSuccess(Identify.__(text));
                     getCartDetailsCustom ? getCartDetailsCustom() : getCartDetails();
                 }else{
-                    setClearCoupon(true)
+                    // setClearCoupon(true)
                     showToastMessage(Identify.__(text));
                     getCartDetailsCustom ? getCartDetailsCustom() : getCartDetails();
                 }
@@ -91,12 +91,13 @@ const Coupon = props => {
                     type="text"
                     placeholder={Identify.__('Coupon Code')}
                     defaultValue={value}
+                    value={coupon}
                     onChange={e => setCoupon(e.target.value)}
                 />
                 {value ? (
                     <Colorbtn
                         className={`submit-coupon ${ Identify.isRtl() && 'submit-coupon-rtl' }`}
-                        onClick={() => handleCoupon('clear')}
+                        onClick={() => {setCoupon(''); handleCoupon('clear')}}
                         text={Identify.__('Cancel')}
                     />
                 ) : (

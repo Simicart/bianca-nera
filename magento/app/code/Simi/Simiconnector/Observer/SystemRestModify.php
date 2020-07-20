@@ -8,6 +8,7 @@ use Magento\Framework\Event\ObserverInterface;
 class SystemRestModify implements ObserverInterface
 {
     private $simiObjectManager;
+    public $simiItemQuote = false;
 
     public function __construct(
         \Magento\Framework\ObjectManagerInterface $simiObjectManager
@@ -53,6 +54,21 @@ class SystemRestModify implements ObserverInterface
 	       } else if (strpos($routeData['routePath'], 'integration/customer/token') !== false) {
 		       $this->_addCustomerIdentity($contentArray, $requestContent, $request);
 	       }
+
+           if ($this->_getQuote() && $this->_getQuote()->getId()) {
+               if (
+                    strpos($routeData['routePath'], '/totals') !== false
+                ) {
+                    $this->_addDataToTotal($contentArray);
+                } else if (
+                    strpos($routeData['routePath'], '/shipping-information') !== false &&
+                    isset($contentArray['totals']['total_segments'])
+                ) {
+                    $total = $contentArray['totals'];
+                    $this->_addDataToTotal($total);
+                    $contentArray['totals'] = $total;
+                }
+            }
        }
        $obj->setContentArray($contentArray);
     }
@@ -72,6 +88,40 @@ class SystemRestModify implements ObserverInterface
         }
     }
 
+    public function _getQuote()
+    {
+        return $this->simiItemQuote;
+    }
+
+    private function _addDataToTotal(&$contentArray) {
+        $depositDiscount = $this->_getQuote()->getPreorderDepositDiscount();
+        $serviceSupportFee = $this->_getQuote()->getServiceSupportFee();
+        if (isset($contentArray['total_segments']) && is_array($contentArray['total_segments'])) {
+            $newTotalSegments = array();
+            foreach ($contentArray['total_segments'] as $total_segment) {
+                $newTotalSegments[] = $total_segment;
+                if (isset($total_segment['code']) && $total_segment['code'] == 'subtotal') {
+                    if ($depositDiscount) {
+                        $newTotalSegments[] = array(
+                            'code' => 'preorder_deposit_discount',
+                            'title' => __('Pre-order Deposit Discount'),
+                            'value' => (float)$depositDiscount,
+                        );
+                    }
+                    if ($serviceSupportFee) {
+                        $newTotalSegments[] = array(
+                            'code' => 'service_support_fee',
+                            'title' => __('Service Support'),
+                            'value' => (float)$serviceSupportFee,
+                        );
+                    }
+                }
+            }
+            $contentArray['total_segments'] = $newTotalSegments;
+        }
+    }
+
+
     //modify quote item
     private function _addDataToQuoteItem(&$contentArray, $isTotal) {
         // if ($isTotal)
@@ -80,6 +130,11 @@ class SystemRestModify implements ObserverInterface
             foreach ($contentArray['items'] as $index => $item) {
                 $quoteItem = $this->simiObjectManager
                     ->get('Magento\Quote\Model\Quote\Item')->load($item['item_id']);
+
+                if (!$this->_getQuote() && $quoteItem->getQuoteId() && $isTotal) {
+                    $this->simiItemQuote = $this->simiObjectManager->create('Magento\Quote\Model\Quote')->load($quoteItem->getData('quote_id'));
+                }
+
                 if ($quoteItem->getId() && !$isTotal) {
                     $product = $this->simiObjectManager
                         ->create('Magento\Catalog\Model\Product')
