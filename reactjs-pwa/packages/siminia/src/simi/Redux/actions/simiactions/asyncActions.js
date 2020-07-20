@@ -67,6 +67,12 @@ export const submitShippingAddress = payload =>
     async function thunk(dispatch, getState) {
         dispatch(checkoutActions.shippingAddress.submit(payload));
         const { cart, directory, user } = getState();
+
+        const { cartId } = cart;
+        if (!cartId) {
+            throw new Error('Missing required information: cartId');
+        }
+
         const { countries } = directory;
         let { formValues: address } = payload;
         try {
@@ -83,16 +89,9 @@ export const submitShippingAddress = payload =>
         await saveShippingAddress(address);
         dispatch(checkoutActions.shippingAddress.accept(address));
 
-        const { cartId } = cart;
-        if (!cartId) {
-            console.warn('Missing required information: cartId');
-            return null;
-            // throw new Error('Missing required information: cartId');
-        }
         const guestEndpoint = `/rest/V1/guest-carts/${cartId}/estimate-shipping-methods`;
         const authedEndpoint = '/rest/V1/carts/mine/estimate-shipping-methods';
         const endpoint = user.isSignedIn ? authedEndpoint : guestEndpoint;
-        address.hasOwnProperty('id') && delete address['id'];
         const response = await request(endpoint, {
             method: 'POST',
             body: JSON.stringify({address})
@@ -104,7 +103,14 @@ export const submitShippingAddress = payload =>
 export const submitBillingAddress = payload =>
     async function thunk(dispatch, getState) {
         dispatch(checkoutActions.billingAddress.submit(payload));
-        const { directory } = getState();
+
+        const { cart, directory } = getState();
+
+        const { cartId } = cart;
+        if (!cartId) {
+            throw new Error('Missing required information: cartId');
+        }
+
         let desiredBillingAddress = payload;
         if (!payload.sameAsShippingAddress) {
             const { countries } = directory;
@@ -236,8 +242,8 @@ export const submitShippingMethod = payload =>
         dispatch(checkoutActions.shippingMethod.accept(desiredShippingMethod));
 
         // try to update shipping totals
-        let billing_address = (({id, ...address}) => address)(await retrieveBillingAddress() || {});
-        const shipping_address = (({id, ...address}) => address)(await retrieveShippingAddress() || {});
+        let billing_address = await retrieveBillingAddress();
+        const shipping_address = await retrieveShippingAddress();
 
         if (!billing_address || billing_address.sameAsShippingAddress) {
             billing_address = shipping_address;
@@ -260,7 +266,7 @@ export const submitShippingMethod = payload =>
             const shippingEndpoint = isSignedIn
                 ? authedShippingEndpoint
                 : guestShippingEndpoint;
-            // Fix bug not allow id in object
+
             const response = await request(shippingEndpoint, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -290,9 +296,9 @@ export const submitOrder = () =>
             throw new Error('Missing required information: cartId');
         }
 
-        let billing_address = (({id, ...address}) => address)(await retrieveBillingAddress() || {});
+        let billing_address = await retrieveBillingAddress();
         const paymentMethod = await retrievePaymentMethod();
-        const shipping_address = (({id, ...address}) => address)(await retrieveShippingAddress() || {});
+        const shipping_address = await retrieveShippingAddress();
 
         if (!billing_address || billing_address.sameAsShippingAddress) {
             billing_address = shipping_address;
@@ -374,7 +380,7 @@ async function saveShippingAddress(address) {
         address = (({ region, ...others }) => ({ ...others }))(address)
     }
 
-    address = (({ default_billing, default_shipping, ...others }) => ({ ...others }))(address); // no remove id
+    address = (({ id, default_billing, default_shipping, ...others }) => ({ ...others }))(address);
     return storage.setItem('shipping_address', address);
 }
 

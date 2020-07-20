@@ -9,7 +9,6 @@ import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 require('./AddressForm.scss')
 
 const fields = [
-    'id',
     'city',
     'email',
     'firstname',
@@ -160,7 +159,7 @@ const AddressForm = props => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        let submitValues = JSON.parse(JSON.stringify(values))
+        const submitValues = JSON.parse(JSON.stringify(values))
         let formValid = true
         $(`#${formId} input, #${formId} select`).each(function () {
             const inputField = $(this)
@@ -192,10 +191,7 @@ const AddressForm = props => {
         if (!formValid)
             return
         if (submitValues.hasOwnProperty('addresses_same')) delete submitValues.addresses_same
-        if (submitValues.hasOwnProperty('selected_address_field')) {
-            submitValues.id = submitValues.selected_address_field;
-            delete submitValues.selected_address_field
-        }
+        if (submitValues.hasOwnProperty('selected_address_field')) delete submitValues.selected_address_field
         if (submitValues.hasOwnProperty('password')) delete submitValues.password
         
         if (parseInt(submitValues.save_in_address_book) && !submitValues.id) {

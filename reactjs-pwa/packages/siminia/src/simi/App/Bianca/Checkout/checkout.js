@@ -266,6 +266,8 @@ class Checkout extends Component {
         if (checkout.step && checkout.step === 'receipt') {
             sessionStorage.removeItem('cc_card_data');
             sessionStorage.removeItem('cc_3DSecure_stripe');
+            sessionStorage.removeItem('shipping_address');
+            sessionStorage.removeItem('billing_address');
             localStorage.removeItem('M2_VENIA_BROWSER_PERSISTENCE__shipping_address');
             localStorage.removeItem('M2_VENIA_BROWSER_PERSISTENCE__billing_address');
             // from payment type 3
