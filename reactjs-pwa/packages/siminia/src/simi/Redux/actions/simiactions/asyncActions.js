@@ -236,8 +236,8 @@ export const submitShippingMethod = payload =>
         dispatch(checkoutActions.shippingMethod.accept(desiredShippingMethod));
 
         // try to update shipping totals
-        let billing_address = await retrieveBillingAddress();
-        const shipping_address = await retrieveShippingAddress();
+        let billing_address = (({id, ...address}) => address)(await retrieveBillingAddress() || {});
+        const shipping_address = (({id, ...address}) => address)(await retrieveShippingAddress() || {});
 
         if (!billing_address || billing_address.sameAsShippingAddress) {
             billing_address = shipping_address;
@@ -260,7 +260,7 @@ export const submitShippingMethod = payload =>
             const shippingEndpoint = isSignedIn
                 ? authedShippingEndpoint
                 : guestShippingEndpoint;
-
+            // Fix bug not allow id in object
             const response = await request(shippingEndpoint, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -290,9 +290,9 @@ export const submitOrder = () =>
             throw new Error('Missing required information: cartId');
         }
 
-        let billing_address = await retrieveBillingAddress();
+        let billing_address = (({id, ...address}) => address)(await retrieveBillingAddress() || {});
         const paymentMethod = await retrievePaymentMethod();
-        const shipping_address = await retrieveShippingAddress();
+        const shipping_address = (({id, ...address}) => address)(await retrieveShippingAddress() || {});
 
         if (!billing_address || billing_address.sameAsShippingAddress) {
             billing_address = shipping_address;
