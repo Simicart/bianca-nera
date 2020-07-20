@@ -302,6 +302,7 @@ export const submitOrder = () =>
 
         if (!billing_address || billing_address.sameAsShippingAddress) {
             billing_address = shipping_address;
+            billing_address.save_in_address_book = 0
         } else {
             if (shipping_address && shipping_address.email) {
                 const { email, firstname, lastname, telephone } = shipping_address;

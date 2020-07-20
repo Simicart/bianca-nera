@@ -111,9 +111,11 @@ const FormFields = (props) => {
         [submitBilling]
     )
 
-    const handleChooseAddedAddress = () => {
+    const handleChooseAddedAddress = (defaultValue) => {
         const selected_address_field = $(`#${formId} select[name=selected_address_field]`).val()
         if (selected_address_field !== 'new_address' && addresses) {
+            if ((parseInt(selected_address_field) === parseInt(defaultValue)))
+                return
             setShippingNewForm(false);
             const shippingFilter = addresses.find(
                 ({ id }) => id === parseInt(selected_address_field, 10)
@@ -266,16 +268,22 @@ const FormFields = (props) => {
 
     //get init value
     let initDefaultValue = null;
-
     if (billingForm) {
         if (initialBilling)
             initDefaultValue = initialBilling
     } else {
-        if (initialShipping)
+        if (initialShipping) {
             initDefaultValue = initialShipping
-        else {
+            if (!storageShipping) {
+                Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'shipping_address', initDefaultValue)
+                if (initDefaultValue !== 'new_address' && !props.initialValues && !props.initialValues.firstname) {
+                    handleSubmit(initDefaultValue);
+                }
+            }
+        } else {
             if (addresses && addresses.length && addresses[0] && addresses[0].id) {
                 const initAddressToSave = addresses[0]
+                initDefaultValue = initAddressToSave.id
                 Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'shipping_address', initAddressToSave.id)
                 if (!initAddressToSave.email) initAddressToSave.email = currentUser.email;
                 initAddressToSave.save_in_address_book = 0
@@ -286,6 +294,7 @@ const FormFields = (props) => {
             }
         }
     }
+    
 
     const viewFields = (!usingSameAddress || is_virtual) ? (
         <Fragment>
@@ -296,8 +305,8 @@ const FormFields = (props) => {
                         <span className="selectSavedAddressInput">
                             <select name="selected_address_field"
                                 defaultValue={initDefaultValue}
-                                onChange={() => handleChooseAddedAddress()}
-                                onBlur={() => handleChooseAddedAddress()}>
+                                onChange={() => handleChooseAddedAddress(initDefaultValue)}
+                                onBlur={() => handleChooseAddedAddress(initDefaultValue)}>
                                 {listOptionsAddress(addresses)}
                             </select>
                         </span>
