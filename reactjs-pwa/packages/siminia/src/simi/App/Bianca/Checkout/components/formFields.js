@@ -1,4 +1,4 @@
-import React, { useCallback, Fragment, useState } from 'react';
+import React, { useCallback, Fragment, useState, useEffect } from 'react';
 import { Util } from '@magento/peregrine';
 import Checkbox from 'src/components/Checkbox';
 import Button from 'src/components/Button';
@@ -82,7 +82,10 @@ const FormFields = (props) => {
 
     const checkCustomer = false;
 
-    const [shippingNewForm, setShippingNewForm] = useState(false);
+    const defaultShippingAddress = initialValues || addresses && addresses.length && addresses.find((addr) => !!addr.default_shipping ) || null
+
+    const [selectedAddress, setSelectedAddress] = useState(defaultShippingAddress);
+    const [shippingNewForm, setShippingNewForm] = useState(defaultShippingAddress && defaultShippingAddress.id === 'new_address' ? true:false);
     const [handlingEmail, setHandlingEmail] = useState(false)
     const [existCustomer, setExistCustomer] = useState(checkCustomer);
     const [selectedCountry, setSelectedCountry] = useState(-1);
@@ -91,8 +94,8 @@ const FormFields = (props) => {
     const storageShipping = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, 'shipping_address');
     const storageBilling = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, 'billing_address');
 
-    const initialShipping = !billingForm && isSignedIn && storageShipping ? storageShipping : default_shipping ? default_shipping : null;
-    const initialBilling = billingForm && isSignedIn && storageBilling ? storageBilling : default_billing ? default_billing : null;
+    // const initialShipping = !billingForm && isSignedIn && storageShipping ? storageShipping : default_shipping ? default_shipping : null;
+    // const initialBilling = billingForm && isSignedIn && storageBilling ? storageBilling : default_billing ? default_billing : null;
 
     const resetForm = useCallback(
         () => {
@@ -119,6 +122,7 @@ const FormFields = (props) => {
                 ({ id }) => id === parseInt(selected_address_field, 10)
             );
             if (shippingFilter) {
+                setSelectedAddress(shippingFilter);
                 if (!shippingFilter.email) shippingFilter.email = currentUser.email;
 
                 if (shippingFilter.id) {
@@ -240,13 +244,11 @@ const FormFields = (props) => {
 
     const listOptionsAddress = (addresses) => {
         let html = null;
-        if (addresses) {
-            if (addresses.length) {
-                html = addresses.map((address, idx) => {
-                    const labelA = address.firstname + ' ' + address.lastname + ', ' + address.city + (address.region.region ? (', ' + address.region.region) : '')
-                    return <option value={address.id} key={idx}>{labelA}</option>
-                });
-            }
+        if (addresses && addresses.length){
+            html = addresses.map((address, idx) => {
+                const labelA = address.firstname + ' ' + address.lastname + ', ' + address.city + (address.region.region?(', ' + address.region.region):'')
+                return <option value={address.id} key={idx}>{labelA}</option>
+            });
         } else {
             /* comment due to continuously calling simiSignedIn
             const signin_token = storage.getItem('signin_token')
@@ -265,8 +267,8 @@ const FormFields = (props) => {
     }
 
     //get init value
-    let initDefaultValue = null;
-
+    // Don't need this code
+    /* let initDefaultValue = null;
     if (billingForm) {
         if (initialBilling)
             initDefaultValue = initialBilling
@@ -285,7 +287,7 @@ const FormFields = (props) => {
                 }
             }
         }
-    }
+    } */
 
     const viewFields = (!usingSameAddress || is_virtual) ? (
         <Fragment>
@@ -295,9 +297,8 @@ const FormFields = (props) => {
                     <span className="selectSavedAddress">
                         <span className="selectSavedAddressInput">
                             <select name="selected_address_field"
-                                defaultValue={initDefaultValue}
-                                onChange={() => handleChooseAddedAddress()}
-                                onBlur={() => handleChooseAddedAddress()}>
+                                value={!shippingNewForm && selectedAddress ? selectedAddress.id || default_shipping : 'new_address'}
+                                onChange={() => handleChooseAddedAddress()}>
                                 {listOptionsAddress(addresses)}
                             </select>
                         </span>
@@ -321,6 +322,7 @@ const FormFields = (props) => {
                                 type="email" name="emailaddress" className="isrequired" id='email'
                                 onBlur={() => (!billingForm || is_virtual) && !user.isSignedIn && checkMailExist()}
                                 defaultValue={initialValues.email}
+                                placeholder={'example@domain.com'}
                             />
                             {handlingEmail && <LoadingImg divStyle={{ marginTop: 5 }} />}
                         </div>}

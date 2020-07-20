@@ -39,7 +39,7 @@ export const editOrder = section =>
 
 export const getShippingMethods = () => {
     return async function thunk(dispatch, getState) {
-        const { cart, user } = getState();
+        const { cart, user, checkout } = getState();
         const { cartId } = cart;
 
         try {
@@ -57,13 +57,22 @@ export const getShippingMethods = () => {
                 '/rest/V1/carts/mine/estimate-shipping-methods';
             const endpoint = user.isSignedIn ? authedEndpoint : guestEndpoint;
 
+            const { currentUser } = user || {};
+            const { addresses } = currentUser || {};
+            const { shippingAddress } = checkout || {}
+            const defaultShippingAddress = shippingAddress || addresses && addresses.length && addresses.find((addr) => !!addr.default_shipping ) || null
+            let address = defaultShippingAddress || {
+                country_id: 'US',
+                postcode: null
+            };
+            address.hasOwnProperty('default_billing') && delete  address['default_billing'];
+            address.hasOwnProperty('default_shipping') && delete address['default_shipping'];
+            address.region = address.region && address.region.region_code || '';
+            const { id, ...addrFields } = address;
             const response = await request(endpoint, {
                 method: 'POST',
                 body: JSON.stringify({
-                    address: {
-                        country_id: 'US',
-                        postcode: null
-                    }
+                    address: addrFields
                 })
             });
 

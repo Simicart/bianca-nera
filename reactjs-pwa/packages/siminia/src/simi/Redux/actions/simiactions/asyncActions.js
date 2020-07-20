@@ -67,12 +67,6 @@ export const submitShippingAddress = payload =>
     async function thunk(dispatch, getState) {
         dispatch(checkoutActions.shippingAddress.submit(payload));
         const { cart, directory, user } = getState();
-
-        const { cartId } = cart;
-        if (!cartId) {
-            throw new Error('Missing required information: cartId');
-        }
-
         const { countries } = directory;
         let { formValues: address } = payload;
         try {
@@ -89,9 +83,16 @@ export const submitShippingAddress = payload =>
         await saveShippingAddress(address);
         dispatch(checkoutActions.shippingAddress.accept(address));
 
+        const { cartId } = cart;
+        if (!cartId) {
+            console.warn('Missing required information: cartId');
+            return null;
+            // throw new Error('Missing required information: cartId');
+        }
         const guestEndpoint = `/rest/V1/guest-carts/${cartId}/estimate-shipping-methods`;
         const authedEndpoint = '/rest/V1/carts/mine/estimate-shipping-methods';
         const endpoint = user.isSignedIn ? authedEndpoint : guestEndpoint;
+        address.hasOwnProperty('id') && delete address['id'];
         const response = await request(endpoint, {
             method: 'POST',
             body: JSON.stringify({address})
@@ -103,14 +104,7 @@ export const submitShippingAddress = payload =>
 export const submitBillingAddress = payload =>
     async function thunk(dispatch, getState) {
         dispatch(checkoutActions.billingAddress.submit(payload));
-
-        const { cart, directory } = getState();
-
-        const { cartId } = cart;
-        if (!cartId) {
-            throw new Error('Missing required information: cartId');
-        }
-
+        const { directory } = getState();
         let desiredBillingAddress = payload;
         if (!payload.sameAsShippingAddress) {
             const { countries } = directory;
@@ -380,7 +374,7 @@ async function saveShippingAddress(address) {
         address = (({ region, ...others }) => ({ ...others }))(address)
     }
 
-    address = (({ id, default_billing, default_shipping, ...others }) => ({ ...others }))(address);
+    address = (({ default_billing, default_shipping, ...others }) => ({ ...others }))(address); // no remove id
     return storage.setItem('shipping_address', address);
 }
 
