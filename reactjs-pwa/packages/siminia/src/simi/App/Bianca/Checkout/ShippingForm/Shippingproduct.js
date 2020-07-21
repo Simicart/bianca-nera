@@ -8,11 +8,11 @@ import Checkbox from 'src/components/Checkbox';
 import { switchServiceSupport } from 'src/simi/Model/Servicesupport'
 import { showFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading';
 
-
 const Shippingproduct = props => {
-    const { cart, designer, getCartDetails } = props
+    const { cart, designer, getCartDetails, methodSelecteHandle } = props
 
     const switchedServiceCallback = () => {
+        methodSelecteHandle()
         getCartDetails()
     }
 

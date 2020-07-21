@@ -157,7 +157,8 @@ const ShippingForm = (props) => {
                 }
             }
         }
-        selecteds[action.vendor_id] = action.method_code;
+        if (action && action.vendor_id && action.method_code)
+            selecteds[action.vendor_id] = action.method_code;
         setMethodCodesSelected(selecteds);
         handleSubmit2(selecteds);
     }
@@ -188,7 +189,7 @@ const ShippingForm = (props) => {
                         return (
                             <div key={vendor_key} className="shipping-vendor">
                                 <span className="shipping-vendor-name">{vendorName}</span>
-                                <div className="items"><Shippingproduct designer={designer} cart={cart} getCartDetails={getCartDetails}/></div>
+                                <div className="items"><Shippingproduct designer={designer} cart={cart} getCartDetails={getCartDetails} methodSelecteHandle={methodSelecteHandle} /></div>
                                 {rates.map((rate) => {
                                     if(!rate.id){
                                         return null;

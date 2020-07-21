@@ -269,8 +269,27 @@ const FormFields = (props) => {
     //get init value
     let initDefaultValue = null;
     if (billingForm) {
-        if (initialBilling)
+        if (initialBilling) {
             initDefaultValue = initialBilling
+            if (!storageBilling) {
+                Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'billing_address', initDefaultValue)
+                if (initDefaultValue !== 'new_address' && (!props.initialValues || !props.initialValues.firstname)) {
+                    //delay 500ms to set default option
+                    setTimeout(() => {
+                        handleChooseAddedAddress()
+                    }, 500);
+                }
+            }
+        } else {
+            if (addresses && addresses.length && addresses[0] && addresses[0].id) {
+                const initAddressToSave = addresses[0]
+                initDefaultValue = initAddressToSave.id
+                Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'billing_address', initAddressToSave.id)
+                if (!initAddressToSave.email) initAddressToSave.email = currentUser.email;
+                initAddressToSave.save_in_address_book = 0
+                handleSubmit(initAddressToSave);
+            }
+        }
     } else {
         if (initialShipping) {
             initDefaultValue = initialShipping
