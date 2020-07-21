@@ -15,10 +15,13 @@ import Edit from './edit';
 import defaultClasses from './style.scss';
 import { withRouter } from 'react-router-dom';
 import Pencil from 'src/simi/BaseComponents/Icon/Pencil';
+import { smoothScrollToView } from 'src/simi/Helper/Behavior';
+
+const $ = window.$
 
 const AddressBook = props => {
     
-    const {user, history} = props;
+    const {user, history, isPhone} = props;
     
     const [queryResult, queryApi] = simiUseQuery(CUSTOMER_ADDRESS, false);
     const { data } = queryResult;
@@ -35,7 +38,9 @@ const AddressBook = props => {
     // const runQueryCountries = queryApiCountries.runQuery;
 
     const getAddresses = () => {
-        runQuery({});
+        runQuery({
+            fetchPolicy:"no-cache"
+        });
     }
 
     const [ addressesState, setAddressesState ] = useState(addresses);
@@ -179,6 +184,7 @@ const AddressBook = props => {
 
     //add new address
     const addNewAddress = () => {
+        smoothScrollToView($('#root'));
         // setAddressEditing({
         //     addressType: 'new',
         //     street: ['', '', ''], 
@@ -314,7 +320,7 @@ const AddressBook = props => {
             {addressEditing ? 
                 <Edit dispatchEdit={dispatch} addressData={addressEditing} countries={countries}
                     address_fields_config={addressConfig} address_option={address_option}
-                    user={user}/>
+                    user={user} isPhone={isPhone} />
             :
             <>
                 {TitleHelper.renderMetaHeader({title:Identify.__('Address Book')})}

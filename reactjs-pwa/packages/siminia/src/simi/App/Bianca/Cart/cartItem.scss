@@ -31,6 +31,7 @@
             .designer-name{
                 margin-top: 5px;
                 cursor: pointer;
+                font-weight: bold;
             }
         }
     }
@@ -182,7 +183,7 @@
             .designer-name{
                 color: #101820;
                 font-size: 14px;
-                font-weight: 600;
+                font-weight: bold;
                 span{
                     display: inline-block;
                     cursor: pointer;

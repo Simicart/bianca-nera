@@ -291,7 +291,7 @@ class GiftcardOptions extends OptionBase {
             const aw_gc_email_templates = options.aw_gc_email_templates || null;
             const mediaUrlPath = this.extraField.aw_gc_template_image_url_path || null;
             let amountsOptions = aw_gc_amounts.map((amount) => {
-                return {label: this.formatPrice(parseFloat(amount.percent)), value: amount.percent}
+                return {label: this.formatPrice(parseFloat(amount.price)), value: amount.percent}
             })
             if (parseInt(aw_gc_allow_open_amount)) {
                 amountsOptions.push({label: Identify.__('Other Amount...'), value: 'other_amount'});

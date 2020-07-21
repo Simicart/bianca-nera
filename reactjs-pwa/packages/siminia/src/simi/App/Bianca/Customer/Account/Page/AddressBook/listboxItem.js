@@ -2,6 +2,8 @@ import React, { useCallback } from 'react';
 import Identify from 'src/simi/Helper/Identify';
 import Pencil from 'src/simi/BaseComponents/Icon/Pencil';
 import Trash from 'src/simi/App/Bianca/BaseComponents/Icon/Trash';
+import { smoothScrollToView } from 'src/simi/Helper/Behavior';
+const $ = window.$
 
 const ListItem = props => {
 
@@ -18,6 +20,7 @@ const ListItem = props => {
 
     const editAddressHandle = (e) => {
         e.preventDefault();
+        smoothScrollToView($('#root'));
         props.editAddress(id);
     }
 

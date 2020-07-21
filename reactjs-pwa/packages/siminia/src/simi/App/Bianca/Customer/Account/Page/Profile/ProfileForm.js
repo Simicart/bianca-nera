@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import TextBox from 'src/simi/BaseComponents/TextBox';
 import Identify from 'src/simi/Helper/Identify';
-import Checkbox from 'src/simi/BaseComponents/Checkbox';
+import Checkbox from 'src/simi/App/Bianca/BaseComponents/CustomCheckbox';
 import { Whitebtn } from 'src/simi/BaseComponents/Button';
 import { editCustomer } from 'src/simi/Model/Customer';
 import { showFogLoading, hideFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading'

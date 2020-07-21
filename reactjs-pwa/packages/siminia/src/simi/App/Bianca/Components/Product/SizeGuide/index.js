@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Identify from "src/simi/Helper/Identify";
 import Modal from 'react-responsive-modal';
 import CloseIcon from 'src/simi/App/Bianca/BaseComponents/Icon/Close';
@@ -21,12 +21,21 @@ const SizeGuide = (props) => {
     const storeConfig = Identify.getStoreConfig();
     const { size_guide } = storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.config || {};
 
+    useEffect(()=>{
+        const localSizeguideData = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE,'sizeguide_personal');
+        if(localSizeguideData&&localSizeguideData.hasOwnProperty('customer_id')&&localSizeguideData.customer_id === customerId){
+            $('.size-guide #bust').val(localSizeguideData.bust);
+            $('.size-guide #waist').val(localSizeguideData.waist);
+            $('.size-guide #hip').val(localSizeguideData.hip);
+        }
+    })
+
     const submitForm = () => {
         if (!isSignedIn) {
             history && history.push({pathname: '/login.html', pushTo: history.location.pathname});
             return;
         }
-        let postData = {
+        const postData = {
             bust: $('.size-guide #bust').val(),
             waist: $('.size-guide #waist').val(),
             hip: $('.size-guide #hip').val(),
@@ -37,7 +46,7 @@ const SizeGuide = (props) => {
         }
         const validateField = ['bust', 'waist', 'hip'];
         let validated = true;
-        for(let i in validateField){
+        for(const i in validateField){
             if (!postData[validateField[i]] && validateField[i]) {
                 $(`.size-guide #${validateField[i]}`).addClass('error');
                 validated = false;
@@ -57,6 +66,7 @@ const SizeGuide = (props) => {
                 }
                 setSubmitting(false);
             }, 'POST', null, postData);
+            Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE, 'sizeguide_personal', postData);
             setSubmitting(true);
         }
     }
@@ -103,7 +113,7 @@ const SizeGuide = (props) => {
                             <input id="hip" name="hip" placeholder={Identify.__('Hip (in cm)')}/>
                         </div>
                         <div className="form-submit">
-                            <div className={`btn ${submitting ? 'disabled':''}`} onClick={submitForm}>
+                            <div role="presentation" className={`btn ${submitting ? 'disabled':''}`} onClick={submitForm}>
                                 <span className="_text_ios">{Identify.__('Submit')}</span>
                             </div>
                         </div>

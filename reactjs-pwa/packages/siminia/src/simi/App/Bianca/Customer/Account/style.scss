@@ -79,6 +79,9 @@
     max-width: 970px;
     max-width: unset;
     margin-right: 0;
+    @media(max-width: 1024px){
+        margin-left: 30px;
+    }
     .text-left{
         text-align: start;
         font-family: 'Gotham Book';
@@ -156,6 +159,9 @@
 .rtl-root .dashboard-content{
     margin-left: 0px;
     margin-right: 114px;
+    @media(max-width: 1024px){
+        margin-right: 30px;
+    }
 }
 .sidebar-item .sidebar-title {
     font-size: 28px;
