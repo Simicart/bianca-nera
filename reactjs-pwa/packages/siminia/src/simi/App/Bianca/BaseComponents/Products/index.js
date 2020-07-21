@@ -254,7 +254,7 @@ class Products extends React.Component {
                 </section>
                 <div className="product-grid-pagination" style={{marginBottom: 22}}>
                     <ProductsPageQuery setQueryApi={this.setQueryApi} queryCallback={this.loadMoreCallback} />
-                    {isShowLoadMore &&
+                    {(isShowLoadMore || this.state.isLoadingMore) &&
                         <LoadMore 
                             updateSetPage={this.updateSetPage.bind(this)}
                             itemCount={data.products.total_count}

@@ -90,7 +90,6 @@ const Coupon = props => {
                     className="coupon_field"
                     type="text"
                     placeholder={Identify.__('Coupon Code')}
-                    defaultValue={value}
                     value={coupon}
                     onChange={e => setCoupon(e.target.value)}
                 />
