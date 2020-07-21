@@ -21,8 +21,7 @@ class GalleryItems extends Component {
         const { small_image } = item;
         return {
             ...item,
-            small_image:
-                typeof small_image === 'object' ? small_image.url : small_image
+            small_image: typeof small_image === 'object' ? small_image.url : small_image
         };
     }
 
@@ -38,9 +37,9 @@ class GalleryItems extends Component {
             return ''
         }
 
-        return items.map(item => (
-            <GridItem key={item.id} openCompareModal={openCompareModal} item={this.mapGalleryItem(item)} handleLink={this.handleLink.bind(this)} />
-        ));
+        return items.map(item => {
+            return <GridItem key={item.id} openCompareModal={openCompareModal} item={this.mapGalleryItem(item)} handleLink={this.handleLink.bind(this)} />
+        });
     }
 }
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Identify from 'src/simi/Helper/Identify';
-import simicntrCategoryQuery from 'src/simi/queries/catalog/getCategory.graphql'
 
 class Pagination extends React.Component {
     constructor(props) {

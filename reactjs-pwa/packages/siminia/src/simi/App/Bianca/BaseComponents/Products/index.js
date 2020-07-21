@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Gallery from './Gallery';
 import Identify from 'src/simi/Helper/Identify'
 import Sortby from './Sortby'
@@ -10,9 +10,32 @@ import RecentViewed from './recentViewed'
 import Modal from 'react-responsive-modal'
 import CompareProduct from '../CompareProducts/index'
 import { analyticImpressionsGTM } from 'src/simi/Helper/Analytics';
+import { simiUseQuery } from 'src/simi/Network/Query';
+import cateQueryGraphql from 'src/simi/queries/catalog/getCategory.graphql';
+import {applySimiProductListItemExtraField} from 'src/simi/Helper/Product';
 require('./products.scss')
 
 const $ = window.$;
+
+const ProductsPageQuery = (props) => {
+    const [queryResult, queryApi] = simiUseQuery(cateQueryGraphql, false); // No use cache
+    let { data } = queryResult;
+    if (props.setQueryApi) {
+        props.setQueryApi(queryApi);
+    }
+
+    useEffect(() => {
+        if (data && props.queryCallback) {
+            data.products = applySimiProductListItemExtraField(data.simiproducts)
+            if (data.products.simi_filters){
+                data.products.filters = data.products.simi_filters
+            }
+            props.queryCallback(data);
+        }
+    }, [data]);
+    
+    return null;
+}
 
 class Products extends React.Component {
     constructor(props) {
@@ -21,9 +44,13 @@ class Products extends React.Component {
         this.state = ({
             isPhone: isPhone,
             openMobileModel : false,
-            openCompareModal: false
+            openCompareModal: false,
+            dataMorePage: {},
+            isLoadingMore: false
         })
         this.setIsPhone()
+        this.currentPage = props.currentPage;
+        this.queryApi = null;
     }
 
     setIsPhone(){
@@ -89,14 +116,36 @@ class Products extends React.Component {
             )
         }
     }
+
+    setQueryApi = (api) => {
+        this.queryApi = api;
+    }
     
-    updateSetPage = (newPage)=>{
-        const { pageSize, data, currentPage} = this.props
-        if (newPage !== currentPage) {
-            if (this.props.setCurrentPage && ((newPage-1)*pageSize < data.products.total_count))
-                this.props.setCurrentPage(newPage)
+    updateSetPage = (newPage) => {
+        const { pageSize, data, variables} = this.props
+        if (newPage !== this.currentPage) {
+            if (this.currentPage && ((newPage-1)*pageSize < data.products.total_count)){
+                if (this.queryApi) {
+                    this.queryApi.runQuery({variables: {...variables, currentPage: newPage}});
+                    this.setState({isLoadingMore: true});
+                    setTimeout(()=>{
+                        this.setState({isLoadingMore: false});
+                    }, 10000)
+                }
+            }
+            this.currentPage = newPage;
         }
     };
+
+    // Callback after query get products complete
+    loadMoreCallback = (data) => {
+        let newDataMorePage = {};
+        newDataMorePage[this.currentPage] = data;
+        this.setState({
+            dataMorePage: {...this.state.dataMorePage, ...newDataMorePage}, 
+            isLoadingMore: false
+        });
+    }
 
     
     renderBottomFilterSort() {
@@ -171,6 +220,18 @@ class Products extends React.Component {
         if (!data.products || !data.products.total_count)
             return(<div className="no-product">{Identify.__('No Product')}</div>)
         analyticImpressionsGTM(items, title, pageType || 'Category');
+
+        let morePage = [];
+        for(let page in this.state.dataMorePage){
+            const pageData = this.state.dataMorePage[page];
+            const pageDataItems = pageData.products && pageData.products.items || [];
+            morePage.push(
+                <Gallery key={page} openCompareModal={this.showModalCompare} data={pageDataItems} pageSize={pageSize} history={history} location={location} />
+            );
+        }
+
+        const isShowLoadMore = this.currentPage * pageSize < data.products.total_count ? true : false;
+
         return (
             <React.Fragment>
                 {!this.state.isPhone ? 
@@ -189,16 +250,20 @@ class Products extends React.Component {
                 <section className="gallery">
                     <CompareProduct history={history} openModal={this.state.openCompareModal} closeModal={this.closeCompareModal}/>
                     <Gallery openCompareModal={this.showModalCompare} data={items} pageSize={pageSize} history={history} location={location} />
+                    { morePage }
                 </section>
                 <div className="product-grid-pagination" style={{marginBottom: 22}}>
-                    <LoadMore 
-                        updateSetPage={this.updateSetPage.bind(this)}
-                        itemCount={data.products.total_count}
-                        items={data.products.items}
-                        limit={pageSize}
-                        currentPage={currentPage}
-                        loading={this.props.loading}
+                    <ProductsPageQuery setQueryApi={this.setQueryApi} queryCallback={this.loadMoreCallback} />
+                    {isShowLoadMore &&
+                        <LoadMore 
+                            updateSetPage={this.updateSetPage.bind(this)}
+                            itemCount={data.products.total_count}
+                            items={data.products.items}
+                            limit={pageSize}
+                            currentPage={currentPage}
+                            loading={this.state.isLoadingMore}
                         />
+                    }
                 </div>
             </React.Fragment>
         )
