@@ -190,48 +190,75 @@ class Products extends \Magento\Framework\App\Helper\AbstractHelper
                     $maxPrice = $value[1];
                     $select->$whereFunction('price_index.final_price < ' . $maxPrice . " OR ( price_index.final_price = '0.0000' AND price_index.min_price >=" . $maxPrice . ')');
                 }
-            } else {
-                if ($key == 'category_id') {
-                    $cat_filtered = true;
-                    if ($this->category) {
-                        if (is_array($value)) {
-                            $value[] = $this->category->getId();
-                        } else {
-                            $value = [$this->category->getId(), $value];
-                        }
+            } elseif ($key == 'category_id') {
+                $cat_filtered = true;
+                if ($this->category) {
+                    if (is_array($value)) {
+                        $value[] = $this->category->getId();
+                    } else {
+                        $value = [$this->category->getId(), $value];
                     }
-                    $this->filteredAttributes[$key] = $value;
-                    $collection->addCategoriesFilter(['in' => $value]);
-                }elseif ($key == 'size' || $key == 'color') {
-                    $this->filteredAttributes[$key] = $value;                    
-                    # code...
-                    $productIds = [];
+                }
+                $this->filteredAttributes[$key] = $value;
+                $collection->addCategoriesFilter(['in' => $value]);
+            }elseif ($key == 'size' || $key == 'color') {
+                $this->filteredAttributes[$key] = $value;  // add filtered key => value
+                // Get parent product ids
+                $productCollection = clone $collection;
+                $productCollection->getSelect()->reset(\Zend_Db_Select::COLUMNS)
+                    ->columns([
+                        'entity_id'
+                    ]);
+                $parentProductIds = [];
+                foreach($productCollection as $entity){
+                    $parentProductIds[] = $entity->getId();
+                }
+                # Filter with child products
+                $productIds = [];
+                if (count($parentProductIds)) {
                     $collectionChid         = $this->simiObjectManager
                         ->create('Magento\Catalog\Model\ResourceModel\Product\Collection');
-                  
-                    $collectionChid->addAttributeToSelect('*')
-                        ->addStoreFilter()
+                    
+                    $collectionChid->getSelect()->reset(\Zend_Db_Select::COLUMNS)
+                        ->columns([
+                            'entity_id'
+                        ]);
+                    $collectionChid->addStoreFilter()
                         ->addAttributeToFilter('status', 1)
                         ->addFinalPrice();
-                    $collectionChid->addAttributeToFilter($key, ['finset' => $value]);                    
+                    $collectionChid->addAttributeToFilter($key, $value);
                     $collectionChid->getSelect()
                         ->joinLeft(
                             array('link_table' => 'catalog_product_super_link'),
                             'link_table.product_id = e.entity_id',
                             array('product_id', 'parent_id')
-                        );
-
-                    $collectionChid->getSelect()->group('link_table.parent_id');
-
+                        )
+                        ->where('link_table.parent_id in (?)', $parentProductIds);
+                    // $collectionChid->getSelect()->group('link_table.parent_id'); // error with sql when group
                     foreach ($collectionChid as $product) {
-                        $productIds[] = $product->getParentId();
+                        $productIds[$product->getParentId()] = $product->getParentId();
                     }
-
-                    $collection->addAttributeToFilter('entity_id', array('in' => $productIds));                                        
-                } else {
-                    $this->filteredAttributes[$key] = $value;                    
-                    $collection->addAttributeToFilter($key, ['finset' => $value]);                    
+    
+                    // Get parent simple product id with this attribute value
+                    $collectionChid         = $this->simiObjectManager
+                        ->create('Magento\Catalog\Model\ResourceModel\Product\Collection');
+                    $collectionChid->getSelect()->reset(\Zend_Db_Select::COLUMNS)
+                        ->columns([
+                            'entity_id'
+                        ]);
+                    $collectionChid->addStoreFilter()
+                        ->addAttributeToFilter('type_id', 'simple')
+                        ->addAttributeToFilter('status', 1)
+                        ->addAttributeToFilter($key, $value)
+                        ->addAttributeToFilter('entity_id', array('in' => $parentProductIds));
+                    foreach ($collectionChid as $product) {
+                        $productIds[$product->getEntityId()] = $product->getEntityId();
+                    }
                 }
+                $collection->addAttributeToFilter('entity_id', array('in' => array_values($productIds)));
+            } else {
+                $this->filteredAttributes[$key] = $value;                    
+                $collection->addAttributeToFilter($key, ['finset' => $value]);                    
             }
         }
     }
