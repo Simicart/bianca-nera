@@ -105,6 +105,8 @@ class Giftcard extends AbstractType
      */
     protected $_canConfigure = true;
 
+    protected $_amountOptionsAll = [];
+
     /**
      * @param CatalogProductOption $catalogProductOption
      * @param EavConfig $eavConfig
@@ -216,7 +218,7 @@ class Giftcard extends AbstractType
     {
         $amounts = [];
         $websiteId = $product->getStore()->getWebsiteId();
-        $amountsData = $this->getAttribute($product, ProductAttributeInterface::CODE_AW_GC_AMOUNTS);
+        $amountsData = $this->getAmountOptionsAll($product);
         foreach ($amountsData as $data) {
             if (in_array($data['website_id'], [$websiteId, 0])) {
                 if (!empty($data['percent'])) {
@@ -227,6 +229,20 @@ class Giftcard extends AbstractType
             }
         }
         return $amounts;
+    }
+
+    /**
+     * Retrieves amounts with percent, price
+     *
+     * @param Product $product
+     * @return []
+     */
+    public function getAmountOptionsAll(Product $product)
+    {
+        if (!$this->_amountOptionsAll || empty($this->_amountOptionsAll)) {
+            $this->_amountOptionsAll = $this->getAttribute($product, ProductAttributeInterface::CODE_AW_GC_AMOUNTS);
+        }
+        return $this->_amountOptionsAll;
     }
 
     /**
@@ -435,6 +451,18 @@ class Giftcard extends AbstractType
         $senderName = $buyRequest->getData(OptionInterface::SENDER_NAME);
         $recipientName = $buyRequest->getData(OptionInterface::RECIPIENT_NAME);
 
+        $optionsAll = $this->getAmountOptionsAll($product);
+        $giftcardValue = $amount;
+        foreach($optionsAll as $option){
+            if (isset($option['price']) && isset($option['percent']) && 
+                $option['percent'] == $amount
+            ) {
+                $giftcardValue = $option['price'];
+                break;
+            }
+        }
+
+        $product->addCustomOption('aw_gc_value', $giftcardValue, $product); // Add amount is gitfcard value for cart item
         $product->addCustomOption(OptionInterface::AMOUNT, $amount, $product);
         $product->addCustomOption(OptionInterface::SENDER_NAME, $senderName, $product);
         $product->addCustomOption(OptionInterface::RECIPIENT_NAME, $recipientName, $product);

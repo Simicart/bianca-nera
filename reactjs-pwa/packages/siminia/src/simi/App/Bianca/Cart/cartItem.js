@@ -104,11 +104,11 @@ const CartItem = props => {
                 }
                 {item.giftcard_values ?
                     <React.Fragment>
-                    {item.giftcard_values.aw_gc_amount && 
+                    {item.giftcard_values.aw_gc_value && 
                         <div className='item-options-extra' key={1}>
                             <span>{Identify.__('Card Value')}</span>:&nbsp;<Price
                                     currencyCode={currencyCode}
-                                    value={parseFloat(item.giftcard_values.aw_gc_amount)}
+                                    value={parseFloat(item.giftcard_values.aw_gc_value)}
                                 />
                         </div>
                     }

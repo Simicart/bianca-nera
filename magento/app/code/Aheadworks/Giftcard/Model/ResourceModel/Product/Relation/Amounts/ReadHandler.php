@@ -88,8 +88,10 @@ class ReadHandler implements ExtensionInterface
             ProductAttributeInterface::CODE_AW_GC_AMOUNTS
         );
         $websiteId = null;
+        $store = $this->storeManager->getStore();
         if (isset($entityData['store_id'])) {
-            $websiteId = $this->storeManager->getStore($entityData['store_id'])->getWebsiteId();
+            $store = $this->storeManager->getStore($entityData['store_id']);
+            $websiteId = $store->getWebsiteId();
         }
         $amounts = $this->getAmountsByProduct($entityData['entity_id'], $websiteId);
         $entityData[$attribute->getAttributeCode()] = $amounts;

@@ -4,16 +4,24 @@
 namespace Simi\Simiconnector\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Store\Model\StoreManagerInterface as StoreManager;
 
 class SystemRestModify implements ObserverInterface
 {
     private $simiObjectManager;
     public $simiItemQuote = false;
+    protected $storeManager;
+    protected $priceCurrency;
 
     public function __construct(
-        \Magento\Framework\ObjectManagerInterface $simiObjectManager
+        \Magento\Framework\ObjectManagerInterface $simiObjectManager,
+        PriceCurrencyInterface $priceCurrency,
+        StoreManager $storeManager
     ) {
         $this->simiObjectManager = $simiObjectManager;
+        $this->storeManager = $storeManager;
+        $this->priceCurrency = $priceCurrency;
     }
 
 
@@ -126,6 +134,12 @@ class SystemRestModify implements ObserverInterface
     private function _addDataToQuoteItem(&$contentArray, $isTotal) {
         // if ($isTotal)
         //     return;
+
+        $store = $this->storeManager->getStore();
+        $currency = $this->priceCurrency->getCurrency($store->getId());
+        $baseCurrency = $store->getBaseCurrency();
+        $currencyRate = $baseCurrency->getRate($currency);
+
         if (isset($contentArray['items']) && is_array($contentArray['items'])) {
             foreach ($contentArray['items'] as $index => $item) {
                 $quoteItem = $this->simiObjectManager
@@ -178,7 +192,14 @@ class SystemRestModify implements ObserverInterface
                         $quoteItemCollection->addFieldToFilter('item_id', $quoteItem->getId());
                         $requestData = [];
                         foreach ($quoteItemCollection as $option) {
-                            $requestData[$option->getCode()] = $option->getValue();
+                            if ($option->getCode() == 'aw_gc_value') {
+                                try{
+                                    $requestData[$option->getCode()] = round($option->getValue() * $currencyRate, 2); // convert price with rate
+                                    // $requestData[$option->getCode()] = $option->getValue();
+                                }catch(\Exception $e){}
+                            } else {
+                                $requestData[$option->getCode()] = $option->getValue();
+                            }
                         }
                         $contentArray['items'][$index]['giftcard_values'] = $requestData;
                     }
