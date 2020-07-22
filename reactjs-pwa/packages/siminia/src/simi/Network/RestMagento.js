@@ -148,8 +148,9 @@ export const request = (resourceUrl, opts) => {
             // An M2ApiRequest will reject, passing server errors
             // to the client, in the event of an HTTP error code.
             if (!response.ok) {
+                let status = response.status;
                 try{
-                    if (response.status === 401 && response.statusText === "Unauthorized") {
+                    if (status === 401 && response.statusText === "Unauthorized") {
                         CacheHelper.clearCaches()
                         window.location.reload()
                     }
@@ -163,7 +164,15 @@ export const request = (resourceUrl, opts) => {
                         // includes the original context of the request,
                         // and formats the server response.
                         .then(bodyText => {
-                            return bodyText;
+                            let data = '';
+                            try{
+                                data = JSON.parse(bodyText);
+                            }catch(error){}
+                            if (status === 401 && data && data.message && data.message.includes(`The consumer isn't authorized`)) {
+                                CacheHelper.clearCaches()
+                                window.location.reload()
+                            }
+                            return data;
                         })
                 );
             }
