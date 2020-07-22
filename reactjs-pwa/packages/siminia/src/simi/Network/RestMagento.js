@@ -1,10 +1,12 @@
 import { addRequestVars, addMerchantUrl } from 'src/simi/Helper/Network'
 import Identify from 'src/simi/Helper/Identify'
 import { Util, RestApi } from '@magento/peregrine';
+// import M2ApiRequest from '@magento/peregrine/RestApi/Magento2/M2ApiRequest';
 import CacheHelper from 'src/simi/Helper/CacheHelper';
 
 const { BrowserPersistence } = Util;
 const peregrinRequest = RestApi.Magento2.request;
+const M2ApiRequest = RestApi.Magento2.default;
 
 const prepareData = (endPoint, getData, method, header, bodyData) => {
     let requestMethod = method
@@ -132,5 +134,44 @@ export const request = (resourceUrl, opts) => {
         if (dataGetString)
             newResourceUrl += "?" + dataGetString;
     }
-    return peregrinRequest(newResourceUrl, opts)
+
+    // Modify request network to apply auto logout after session timeout
+    try{
+        const req = new M2ApiRequest(newResourceUrl, {...opts, multicast: false});
+        // Replace run M2ApiRequest
+        return window.fetch(req.resourceUrl, req.opts).then(response => {
+            // WHATWG fetch will only reject in the unlikely event
+            // of an error prior to opening the HTTP request.
+            // It pays no attention to HTTP status codes.
+            // But the response object does have an `ok` boolean
+            // corresponding to status codes in the 2xx range.
+            // An M2ApiRequest will reject, passing server errors
+            // to the client, in the event of an HTTP error code.
+            if (!response.ok) {
+                try{
+                    if (response.status === 401 && response.statusText === "Unauthorized") {
+                        CacheHelper.clearCaches()
+                        window.location.reload()
+                    }
+                } catch (error){}
+                return (
+                    response
+                        // The response may or may not be JSON.
+                        // Let M2ApiResponseError handle it.
+                        .text()
+                        // Throw a specially formatted error which
+                        // includes the original context of the request,
+                        // and formats the server response.
+                        .then(bodyText => {
+                            return bodyText;
+                        })
+                );
+            }
+            return response;
+        }).then(res => res.json());
+        
+    }catch(error){
+        console.warn(error)
+    }
+    // return peregrinRequest(newResourceUrl, opts)
 }
