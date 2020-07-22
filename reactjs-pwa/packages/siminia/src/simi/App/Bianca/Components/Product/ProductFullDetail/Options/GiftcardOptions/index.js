@@ -101,7 +101,7 @@ class GiftcardOptions extends OptionBase {
         // this.setState({aw_gc_delivery_date: this.deliveryDateRef.current.value});
     };
 
-    gcAmountChange = (value) => {
+    gcAmountChange = (value, gcAmounts) => {
         jQuery('form [name="aw_gc_amount"]').val(value)
         if (this.isCheckOptionRequired) {
             this.checkOptionRequired()
@@ -109,7 +109,8 @@ class GiftcardOptions extends OptionBase {
         this.setState({
             aw_gc_amount: value
         })
-        this.updatePrices(value)
+        const gcOption = gcAmounts.find((o) => (o.percent === value)) || {}
+        this.updatePrices(gcOption.current_percent || value)
     };
 
     onGcCustomAmountChange = (event) => {
@@ -305,7 +306,7 @@ class GiftcardOptions extends OptionBase {
                                 <div data-input-bounded-for={"aw_gc_amount"}>
                                     <Select className="aw_gc_amount"
                                         showSelected={true} placeholder={Identify.__('Choose an amount')} 
-                                        items={amountsOptions} onChange={this.gcAmountChange} 
+                                        items={amountsOptions} onChange={(value) => this.gcAmountChange(value, aw_gc_amounts)} 
                                         icon={<ArrowDown />}
                                         hiddenInput={{name: 'aw_gc_amount'}}
                                     />

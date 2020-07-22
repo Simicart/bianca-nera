@@ -3,16 +3,17 @@ import Identify from "src/simi/Helper/Identify";
 import Modal from 'react-responsive-modal';
 import CloseIcon from 'src/simi/App/Bianca/BaseComponents/Icon/Close';
 import { getOS } from 'src/simi/App/Bianca/Helper';
-import {sendRequest} from 'src/simi/Network/RestMagento';
+import { sendRequest } from 'src/simi/Network/RestMagento';
 import useWindowSize from 'src/simi/App/Bianca/Hooks';
 import Loading from 'src/simi/BaseComponents/Loading';
+import { getSizeChart } from 'src/simi/Model/Customer';
 
 require('./style.scss');
 if (["MacOS", "iOS"].includes(getOS())) require('./style-ios.scss');
 
 const SizeGuide = (props) => {
     const $ = window.$;
-    const {product, customerId, customerFirstname, customerLastname, history, isSignedIn, isPopup, onClose} = props;
+    const { product, customerId, customerFirstname, customerLastname, history, isSignedIn, isPopup, onClose } = props;
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState(null);
     const size = useWindowSize();
@@ -21,18 +22,27 @@ const SizeGuide = (props) => {
     const storeConfig = Identify.getStoreConfig();
     const { size_guide } = storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.config || {};
 
-    useEffect(()=>{
-        const localSizeguideData = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE,'sizeguide_personal');
-        if(localSizeguideData&&localSizeguideData.hasOwnProperty('customer_id')&&localSizeguideData.customer_id === customerId){
-            $('.size-guide #bust').val(localSizeguideData.bust);
-            $('.size-guide #waist').val(localSizeguideData.waist);
-            $('.size-guide #hip').val(localSizeguideData.hip);
+    useEffect(() => {
+        if (customerId) {
+            getSizeChart(sizeChartCallback, customerId);
         }
     })
 
+    const sizeChartCallback = (data) => {
+        const { items } = data;
+        if (items && Array.isArray(items) && items.length > 0) {
+            const lastItem = items[items.length - 1];
+            if (lastItem) {
+                $('.size-guide #bust').val(lastItem.bust);
+                $('.size-guide #waist').val(lastItem.waist);
+                $('.size-guide #hip').val(lastItem.hip);
+            }
+        }
+    }
+
     const submitForm = () => {
         if (!isSignedIn) {
-            history && history.push({pathname: '/login.html', pushTo: history.location.pathname});
+            history && history.push({ pathname: '/login.html', pushTo: history.location.pathname });
             return;
         }
         const postData = {
@@ -46,7 +56,7 @@ const SizeGuide = (props) => {
         }
         const validateField = ['bust', 'waist', 'hip'];
         let validated = true;
-        for(const i in validateField){
+        for (const i in validateField) {
             if (!postData[validateField[i]] && validateField[i]) {
                 $(`.size-guide #${validateField[i]}`).addClass('error');
                 validated = false;
@@ -66,13 +76,12 @@ const SizeGuide = (props) => {
                 }
                 setSubmitting(false);
             }, 'POST', null, postData);
-            Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE, 'sizeguide_personal', postData);
             setSubmitting(true);
         }
     }
 
     const onCloseModal = () => {
-        if(onClose && typeof onClose === 'function'){
+        if (onClose && typeof onClose === 'function') {
             onClose();
         }
         setSubmitting(false);
@@ -80,40 +89,40 @@ const SizeGuide = (props) => {
 
     return (
         <Modal open={isPopup} onClose={onCloseModal}
-                overlayId={'size_guide-modal-overlay'}
-                modalId={'size_guide-modal'}
-                closeIconId={'size_guide-modal-close'}
-                closeIconSize={16}
-                closeIconSvgPath={<CloseIcon style={{fill: '#101820'}}/>}
-                classNames={{overlay: Identify.isRtl()?"rtl-root":""}}
-            >
-            <div className={`size-guide ${isPhone ? 'mobile':''}`}>
+            overlayId={'size_guide-modal-overlay'}
+            modalId={'size_guide-modal'}
+            closeIconId={'size_guide-modal-close'}
+            closeIconSize={16}
+            closeIconSvgPath={<CloseIcon style={{ fill: '#101820' }} />}
+            classNames={{ overlay: Identify.isRtl() ? "rtl-root" : "" }}
+        >
+            <div className={`size-guide ${isPhone ? 'mobile' : ''}`}>
                 <div className="title"><h3 className="_text_ios">{Identify.__('Size Guide')}</h3></div>
                 <div className="header"><span className="_text">{Identify.__('Enter your measurement to get your personalized product.')}</span></div>
                 {
-                    success === true && 
+                    success === true &&
                     <div className="header"><span className="_text">{Identify.__('Thank you for submitting information. We will contact you soon.')}</span></div>
                 }
                 {
-                    success === false && 
+                    success === false &&
                     <div className="header"><span className="_text error">{Identify.__('There was an error. Please try again')}</span></div>
                 }
                 <div className="form-your-size">
                     <div className="form">
                         <div className="form-row">
                             <span className="_text_ios">{Identify.__('BUST')}</span>
-                            <input id="bust" name="bust" placeholder={Identify.__('Bust (in cm)')}/>
+                            <input id="bust" name="bust" placeholder={Identify.__('Bust (in cm)')} />
                         </div>
                         <div className="form-row">
                             <span className="_text_ios">{Identify.__('WAIST')}</span>
-                            <input id="waist" name="waist" placeholder={Identify.__('Waist (in cm)')}/>
+                            <input id="waist" name="waist" placeholder={Identify.__('Waist (in cm)')} />
                         </div>
                         <div className="form-row">
                             <span className="_text_ios">{Identify.__('HIP')}</span>
-                            <input id="hip" name="hip" placeholder={Identify.__('Hip (in cm)')}/>
+                            <input id="hip" name="hip" placeholder={Identify.__('Hip (in cm)')} />
                         </div>
                         <div className="form-submit">
-                            <div role="presentation" className={`btn ${submitting ? 'disabled':''}`} onClick={submitForm}>
+                            <div role="presentation" className={`btn ${submitting ? 'disabled' : ''}`} onClick={submitForm}>
                                 <span className="_text_ios">{Identify.__('Submit')}</span>
                             </div>
                         </div>
@@ -129,9 +138,9 @@ const SizeGuide = (props) => {
                             size_guide && size_guide.image_file && size_guide.image_file.path &&
                             (
                                 isPhone && size_guide.image_file_mobile && size_guide.image_file_mobile.path ?
-                                <img className="img-responsive" src={`${window.SMCONFIGS.media_url_prefix}${size_guide.image_file_mobile.path}`} alt="Size guide"/>
-                                :
-                                <img className="img-responsive" src={`${window.SMCONFIGS.media_url_prefix}${size_guide.image_file_mobile.path}`} alt="Size guide"/>
+                                    <img className="img-responsive" src={`${window.SMCONFIGS.media_url_prefix}${size_guide.image_file_mobile.path}`} alt="Size guide" />
+                                    :
+                                    <img className="img-responsive" src={`${window.SMCONFIGS.media_url_prefix}${size_guide.image_file_mobile.path}`} alt="Size guide" />
                             )
                         }
                         {/* <div className="chart-t-row row-header">

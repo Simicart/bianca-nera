@@ -12,6 +12,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
+use Magento\Store\Model\StoreManagerInterface as StoreManager;
 
 /**
  * @inheritdoc
@@ -23,16 +24,19 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
      */
     private $metadataPool;
     public $extraFields;
+    protected $storeManager;
 
     /**
      * @param MetadataPool $metadataPool
      */
     public function __construct(
+        \Magento\Framework\ObjectManagerInterface $simiObjectManager,
         MetadataPool $metadataPool,
-        \Magento\Framework\ObjectManagerInterface $simiObjectManager
+        StoreManager $storeManager
     ) {
         $this->metadataPool = $metadataPool;
         $this->simiObjectManager = $simiObjectManager;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -81,13 +85,31 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                     ->get('\Simi\Simiconnector\Helper\Price')->getProductTierPricesLabel($productModel); */
                 // End
                 $productModel->load($productId);
+
+                // Convert giftcard currency reate
+                $gcAmounts = $productModel->getAwGcAmounts();
+                if ($gcAmounts) {
+                    $store = $this->storeManager->getStore();
+                    $currency = $store->getCurrentCurrency();
+                    $baseCurrency = $store->getBaseCurrency();
+                    $currencyRate = $baseCurrency->getRate($currency);
+                    foreach($gcAmounts as &$gcAmountOption){
+                        if (isset($gcAmountOption['price'])) {
+                            $gcAmountOption['price'] = round((float) $gcAmountOption['price'] * (float) $currencyRate, 2);
+                        }
+                        if (isset($gcAmountOption['price'])) {
+                            $gcAmountOption['current_percent'] = round((float) $gcAmountOption['percent'] * (float) $currencyRate, 2);
+                        }
+                    }
+                }
+
                 $this->extraFields = array(
                     // 'attribute_values' => $productModel->load($productId)->toArray(), // Optimize speed
                     'attribute_values' => [
                         'aw_gc_allow_open_amount' => $productModel->getAwGcAllowOpenAmount(),
                         'aw_gc_open_amount_max'  => $productModel->getData('aw_gc_open_amount_max'),
                         'aw_gc_open_amount_min' => $productModel->getData('aw_gc_open_amount_min'),
-                        'aw_gc_amounts'  => $productModel->getAwGcAmounts(),
+                        'aw_gc_amounts'  => $gcAmounts,
                         'pre_order'  => $productModel->getData('pre_order'),
                         'try_to_buy'  => $productModel->getData('try_to_buy'),
                         'reservable'  => $productModel->getData('reservable'),
