@@ -601,6 +601,9 @@ class Quoteitems extends \Simi\Simiconnector\Model\Api\Apiabstract
                                             foreach ($selectedTryToBuyOptions as $selectedTryToBuyOption) {
                                                 if (isset($selectedTryToBuyOption['option_title']) && $selectedTryToBuyOption['option_title'] == self::TRY_TO_BUY_OPTION_TITLE) {
                                                     $tryToBuyProducts = json_decode(base64_decode($selectedTryToBuyOption['option_value']), true);
+                                                    if ($tryToBuyProducts && count($tryToBuyProducts) >= 3) {
+                                                        throw new \Simi\Simiconnector\Helper\SimiException(__('You have already tried to by 3 products'), 4);
+                                                    }
                                                 }
                                             }
                                         }
@@ -619,9 +622,6 @@ class Quoteitems extends \Simi\Simiconnector\Model\Api\Apiabstract
                                     if ($tryToBuyProduct['sku'] == $sku) {
                                         $updatedTryToBuyProduct = true;
                                     }
-                                }
-                                if (count($tryToBuyProducts) >= 3) {
-                                    throw new \Simi\Simiconnector\Helper\SimiException(__('You have already tried to by 3 products'), 4);
                                 }
                                 if (!$updatedTryToBuyProduct)
                                     $tryToBuyProducts[] = array(
