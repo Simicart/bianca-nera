@@ -25,20 +25,58 @@ class Simistoreconfigdataprovider extends DataProviderInterface
     public function getSimiStoreConfigData($args){
         $storeApi = $this->simiObjectManager->get('Simi\Simiconnector\Model\Api\Storeviews');
         $storeManager = $this->simiObjectManager->get('\Magento\Store\Model\StoreManagerInterface');
-        $quoteId = $this->simiObjectManager->get('Magento\Checkout\Model\Session')->getQuoteId();
-        if ($quoteId) {
-            $quoteModel = $this->simiObjectManager->create('\Magento\Quote\Model\Quote')->load($quoteId);
-            if ($quoteModel->getId()) {
-                $storeId = $storeManager->getStore()->getId();
-                $currencyCode   = $this->storeManager->getStore()->getCurrentCurrencyCode();
-                if ($storeId && $quoteModel->getData('store_id') !== $storeId) {
-                    $quoteModel->setStoreId($storeId)->collectTotals()->save();
-                }
-                if ($currencyCode && $quoteModel->getQuoteCurrencyCode() !== $currencyCode) {
-                    $quoteModel->setQuoteCurrencyCode($currencyCode)->collectTotals()->save();
+
+        $cartId = false;
+        $this->request = $this->simiObjectManager->get('\Magento\Framework\App\Request\Http');
+
+        $contents            = $this->request->getContent();
+        $contents_array      = [];
+        if ($contents && ($contents != '')) {
+            $contents_parser = urldecode($contents);
+            $contents_array = json_decode($contents_parser, true);
+        }
+
+        if ($contents_array) {
+            if (isset($contents_array['variables']['cartId'])) {
+                $cartId = $contents_array['variables']['cartId'];
+            }
+        }
+
+        //in case of GET graphQL
+        $graphQLVariables = $this->request->getParam('variables');
+        if ($graphQLVariables) {
+            $graphQLVariables = json_decode($graphQLVariables, true);
+            if ($graphQLVariables && is_array($graphQLVariables)) {
+                if (isset($graphQLVariables['cartId']))
+                    $cartId = $graphQLVariables['cartId'];
+            }
+        }
+
+        if ($cartId) {
+            $quoteIdMask = $this->simiObjectManager->get('Magento\Quote\Model\QuoteIdMask');
+            if ($quoteIdMask->load($cartId, 'masked_id')) {
+                if ($quoteIdMask && $maskQuoteId = $quoteIdMask->getData('quote_id'))
+                    $cartId = $maskQuoteId;
+            }
+            if ($cartId) {
+                $quoteModel = $this->simiObjectManager->create('\Magento\Quote\Model\Quote')->load($cartId);
+                if ($quoteModel->getId()) {
+                    $storeId = $storeManager->getStore()->getId();
+                    $currencyCode   = $this->storeManager->getStore()->getCurrentCurrencyCode();
+                    if ($storeId && $quoteModel->getData('store_id') !== $storeId) {
+                        $quoteModel->setStoreId($storeId)->collectTotals()->save();
+
+                        if ($_SERVER['REMOTE_ADDR'] == '27.72.60.252' || $_SERVER['REMOTE_ADDR']  =='118.70.146.183') {
+                            die('1');
+                        }
+                    }
+                    if ($currencyCode && $quoteModel->getQuoteCurrencyCode() !== $currencyCode) {
+                        $quoteModel->setQuoteCurrencyCode($currencyCode)->collectTotals()->save();
+                    }
                 }
             }
         }
+
         $params = array();
         if ($args) {
             $params = $args;

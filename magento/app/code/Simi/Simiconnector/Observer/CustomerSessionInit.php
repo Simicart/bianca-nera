@@ -68,8 +68,12 @@ class CustomerSessionInit implements ObserverInterface
         if ($graphQLVariables) {
             $graphQLVariables = json_decode($graphQLVariables, true);
             if ($graphQLVariables && is_array($graphQLVariables)) {
+                if (isset($graphQLVariables['storeId']))
+                    $simiCurrency = $graphQLVariables['storeId'];
                 if (isset($graphQLVariables['simiStoreId']))
                     $simiStoreId = $graphQLVariables['simiStoreId'];
+                if (isset($graphQLVariables['currency']))
+                    $simiCurrency = $graphQLVariables['currency'];
                 if (isset($graphQLVariables['simiCurrency']))
                     $simiCurrency = $graphQLVariables['simiCurrency'];
             }
