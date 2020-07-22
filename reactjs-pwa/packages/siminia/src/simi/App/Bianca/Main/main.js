@@ -15,6 +15,10 @@ import { withRouter } from 'react-router-dom';
 import Homeskeleton from './Skeleton/Home';
 import Skeleton from 'react-loading-skeleton';
 
+import { Util } from '@magento/peregrine';
+const { BrowserPersistence } = Util;
+const storage = new BrowserPersistence();
+
 class Main extends Component {
 
     componentDidMount() {
@@ -58,6 +62,7 @@ class Main extends Component {
     }
     render() {
         const {store_id, currency} = Identify.getAppSettings() || {};
+        const cartId = storage.getItem('cartId')
         return (
             <main className={classes.root}>
                 <div className="app-loading" style={{display:'none'}} id="app-loading">
@@ -65,7 +70,7 @@ class Main extends Component {
                 </div>
                 { Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, Constants.STORE_CONFIG) ?
                     this.mainContent(Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, Constants.STORE_CONFIG)) :
-                    <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency}}>
+                    <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency, cartId: cartId?cartId:0}}>
                         {({ data }) => {
                             if (data && data.storeConfig) {
                                 Identify.saveStoreConfig(data)

@@ -75,8 +75,9 @@ class Storeview extends React.Component {
     renderItem() {
         if (this.state.changingStore) {
             const {store_id, currency} = Identify.getAppSettings() || {};
+            const cartId = storage.getItem('cartId')
             return (
-                <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency}}>
+                <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency, cartId: cartId?cartId:0}}>
                     {({ loading, data, error }) => {
                         if (loading) return null;
                         if (error) window.location.reload();

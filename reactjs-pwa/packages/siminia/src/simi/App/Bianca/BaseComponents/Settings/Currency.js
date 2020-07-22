@@ -67,9 +67,10 @@ class Currency extends StoreView {
 
     renderItem() {
         const {store_id, currency} = Identify.getAppSettings() || {};
+        const cartId = storage.getItem('cartId')
         if (this.state.changingCurrency) {
             return (
-                <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency}}>
+                <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency, cartId: cartId?cartId:0}}>
                     {({ loading, data, error }) => {
                         if (loading) return null;
                         if (error) window.location.reload();

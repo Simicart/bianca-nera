@@ -105,8 +105,11 @@ const PayfortCC = (props) => {
         ListMonth.map((value, key) => {
             if (key === 0)
                 return
+            let monthIndex = key
+            if (key < 10)
+                monthIndex = `0${key}`
             months.push(
-                <option key={Identify.randomString()} value={key}>{value + " - " + key}</option>
+                <option key={Identify.randomString()} value={monthIndex}>{value + " - " + monthIndex}</option>
             );
         })
         return <select name="cc_month" id="cc_month" ref={monthRef} key={Identify.randomString(5)} defaultValue={initialValues && initialValues.hasOwnProperty('exp_month') ? initialValues.exp_month : ''} className="form-control">
