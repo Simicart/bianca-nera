@@ -24,6 +24,9 @@
     <type name="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator">
         <plugin name="Simicart_Quote_Quantityvalidator_Plugin" type="\Simi\Simicustomize\Plugin\QuoteItemQuantityValidator" sortOrder="10" disabled="false"  />
     </type>
+    <type name="Magento\InventoryConfiguration\Model\GetLegacyStockItem">
+        <plugin name="Simicart_GetLegacyStockItem_Plugin" type="\Simi\Simicustomize\Plugin\GetLegacyStockItem" sortOrder="10" disabled="false"  />
+    </type>
     <!-- end cody -->
     <type name="Magento\Quote\Model\Quote\Item\Repository">
         <plugin name="simi_cart_plugin_quote_item_repository" type="Simi\Simicustomize\Plugin\QuoteItemRepository" />
