@@ -121,6 +121,7 @@ class Quoteitems extends \Simi\Simiconnector\Model\Api\Apiabstract
     public function store()
     {
         $this->addToCart();
+        $this->_getQuote()->collectTotals()->save();
         return array(
             'message' => $this->RETURN_MESSAGE,
         );
