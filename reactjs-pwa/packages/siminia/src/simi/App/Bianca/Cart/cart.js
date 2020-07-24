@@ -70,6 +70,7 @@ class Cart extends Component {
                     props.toggleMessages([{ type: 'error', message: Identify.__('An error occurred while making the transaction. Please try again.'), auto_dismiss: false }])
                 }
             }
+            props.history.push('/');
         }
         this.isLoading = true;
         // this.props.getCartDetails();

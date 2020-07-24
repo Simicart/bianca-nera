@@ -232,6 +232,7 @@ class Identify {
 
         const { available_regions: regions } = country;
         if (!country.available_regions) {
+            address.region = (address.region && address.region.region) ?  address.region.region : ''
             return address
         } else {
             let region = {};
@@ -254,13 +255,12 @@ class Identify {
                 //fake region to accept current shipping address
                 region = { region: "Mississippi", region_code: "MS", region_id: 35 };
             }
-
+            address.region = region.name ? region.name : (region.region ? region.region : '')
+            address.region_code = region.region_code
             return {
                 ...address,
                 country_id: address.country_id,
-                region_id: parseInt(region.id, 10),
-                region_code: region.code,
-                region: region.name
+                region_id: parseInt(region.id, 10)
             }
         }
         /* let region = {};

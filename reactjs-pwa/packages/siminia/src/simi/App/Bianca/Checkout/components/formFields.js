@@ -282,7 +282,13 @@ const FormFields = (props) => {
             }
         } else {
             if (addresses && addresses.length && addresses[0] && addresses[0].id) {
-                const initAddressToSave = addresses[0]
+                let initAddressToSave = addresses[0]
+                if (currentUser && currentUser.default_billing) {
+                    addresses.map(address => {
+                        if (parseInt(address.id) === parseInt(currentUser.default_billing))
+                            initAddressToSave = address
+                    })
+                }
                 initDefaultValue = initAddressToSave.id
                 Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'billing_address', initAddressToSave.id)
                 if (!initAddressToSave.email) initAddressToSave.email = currentUser.email;
@@ -306,7 +312,13 @@ const FormFields = (props) => {
             }
         } else {
             if (addresses && addresses.length && addresses[0] && addresses[0].id) {
-                const initAddressToSave = addresses[0]
+                let initAddressToSave = addresses[0]
+                if (currentUser && currentUser.default_shipping) {
+                    addresses.map(address => {
+                        if (parseInt(address.id) === parseInt(currentUser.default_shipping))
+                            initAddressToSave = address
+                    })
+                }
                 initDefaultValue = initAddressToSave.id
                 Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'shipping_address', initAddressToSave.id)
                 if (!initAddressToSave.email) initAddressToSave.email = currentUser.email;
