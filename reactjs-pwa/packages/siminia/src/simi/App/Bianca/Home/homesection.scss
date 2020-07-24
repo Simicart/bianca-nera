@@ -2,7 +2,7 @@
     .homesection{
         display: flex;
         grid-template-columns: 50% 50%;
-        grid-column-gap: 16px;
+        grid-column-gap: 0px;
         margin-top: 16px;
         max-height: 362px;
         &:nth-child(n+2){
