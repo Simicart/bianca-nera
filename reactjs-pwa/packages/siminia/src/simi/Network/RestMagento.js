@@ -103,8 +103,12 @@ export async function sendRequest(endPoint, callBack, method='GET', getData= {},
         .then(function (data) {
             if (data && data.status === 401 && data.statusText === "Unauthorized") {
                 callBack(result);
-                CacheHelper.clearCaches()
-                window.location.reload()
+                CacheHelper.clearCaches();
+                // window.location.reload();
+                window.location.href = '/login.html';
+                setTimeout(()=>{
+                    window.location.href = '/login.html';
+                }, 1000);
             }
             if (data) {
                 if (Array.isArray(data) && data.length === 1 && data[0])
@@ -169,8 +173,11 @@ export const request = (resourceUrl, opts) => {
                                 data = JSON.parse(bodyText);
                             }catch(error){}
                             if (status === 401 && data && data.message && data.message.includes(`The consumer isn't authorized`)) {
-                                CacheHelper.clearCaches()
-                                window.location.reload()
+                                CacheHelper.clearCaches();
+                                // window.location.reload();
+                                setTimeout(()=>{
+                                    window.location.href = '/login.html';
+                                }, 1000);
                             }
                             return data;
                         })
@@ -181,6 +188,7 @@ export const request = (resourceUrl, opts) => {
         
     }catch(error){
         console.warn(error)
+        throw new Error(error)
     }
     // return peregrinRequest(newResourceUrl, opts)
 }

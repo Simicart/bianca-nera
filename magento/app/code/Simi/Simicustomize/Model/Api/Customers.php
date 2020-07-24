@@ -77,7 +77,7 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
                     break;
 
                 case 'logout':
-                    $customerSession = $lastCustomerId     = $this->simiObjectManager->get('Magento\Customer\Model\Session');
+                    $customerSession = $this->simiObjectManager->get('Magento\Customer\Model\Session');
                     $customerSession->logout();
 
                     /* $lastCustomerId     = $this->simiObjectManager->get('Magento\Customer\Model\Session')
