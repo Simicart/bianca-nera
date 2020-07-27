@@ -79,21 +79,8 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
                 case 'logout':
                     $customerSession = $this->simiObjectManager->get('Magento\Customer\Model\Session');
                     $customerSession->logout();
-
-                    /* $lastCustomerId     = $this->simiObjectManager->get('Magento\Customer\Model\Session')
-                        ->getCustomer()->getId();
-                    if ($this->simiObjectManager->get('Simi\Simiconnector\Model\Customer')->logout()) {
-                        $this->builderQuery = $this->simiObjectManager
-                            ->get('Magento\Customer\Model\Customer')->load($lastCustomerId);
-                        //fix bug logout not clear old quote
-                        $cart = $this->simiObjectManager->get('Magento\Checkout\Model\Cart');
-                        $quote = $this->simiObjectManager->create('Magento\Quote\Model\Quote');
-                        $cart->setQuote($quote);
-                        $newCustomer = $this->simiObjectManager->create('Magento\Customer\Model\Customer');
-                        $this->simiObjectManager->get('Magento\Customer\Model\Session')->setCustomer($newCustomer);
-                    } else {
-                        throw new \Simi\Simiconnector\Helper\SimiException(__('Logout Failed'), 4);
-                    } */
+                    $this->builderQuery = $this->simiObjectManager
+                            ->create('Magento\Customer\Model\Customer');
                     break;
                 case 'checkexisting':
                     $this->builderQuery = $this->simiObjectManager->get('Simi\Simiconnector\Model\Customer')
