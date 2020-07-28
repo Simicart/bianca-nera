@@ -75,6 +75,7 @@ const AddressForm = props => {
 
     const formId = props.id?props.id:Identify.randomString()
     const validationMessage = isAddressInvalid ? invalidAddressMessage : null;
+    let formIsValidOnce = false
 
     let initialFormValues = initialValues;
 
@@ -158,8 +159,11 @@ const AddressForm = props => {
     );
 
     const handleSubmit = (e) => {
+        let showNotValidWarning = true
         if (typeof e !== 'string')
             e.preventDefault()
+        else if (e === 'formFieldChanged')
+            showNotValidWarning = false
         const submitValues = JSON.parse(JSON.stringify(values))
         let formValid = true
         $(`#${formId} input, #${formId} select`).each(function () {
@@ -167,9 +171,15 @@ const AddressForm = props => {
             if (inputField) {
                 const value = inputField.val()
                 if ((inputField.hasClass('isrequired') || inputField.attr('isrequired') === 'isrequired') && !value) {
-                    inputField.addClass('warning')
                     formValid = false
-                    smoothScrollToView(inputField, 350, 50)
+                    console.log(inputField)
+                    console.log(formIsValidOnce)
+                    if (showNotValidWarning || formIsValidOnce) {
+                        console.log('a')
+                        inputField.addClass('warning')
+                        smoothScrollToView(inputField, 350, 50)
+                    }
+                    console.log('b')
                     return false
                 }
                 inputField.removeClass('warning')
@@ -191,6 +201,7 @@ const AddressForm = props => {
         });
         if (!formValid)
             return
+        formIsValidOnce = true
         if (submitValues.hasOwnProperty('addresses_same')) delete submitValues.addresses_same
         if (submitValues.hasOwnProperty('selected_address_field')) delete submitValues.selected_address_field
         if (submitValues.hasOwnProperty('password')) delete submitValues.password
