@@ -158,7 +158,8 @@ const AddressForm = props => {
     );
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        if (typeof e !== 'string')
+            e.preventDefault()
         const submitValues = JSON.parse(JSON.stringify(values))
         let formValid = true
         $(`#${formId} input, #${formId} select`).each(function () {
@@ -231,7 +232,7 @@ const AddressForm = props => {
             onSubmit={handleSubmit}
             style={{ display: 'inline-block', width: '100%' }}
         >
-            <FormFields {...formChildrenProps} initialValues={values}/>
+            <FormFields {...formChildrenProps} initialValues={values} onSubmit={handleSubmit} />
         </form>
     );
 };
