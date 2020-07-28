@@ -60,6 +60,8 @@ class SystemRestModify implements ObserverInterface
                    $this->_addDataToQuoteItem($contentArray, false);
                 }
 	       } else if (strpos($routeData['routePath'], 'integration/customer/token') !== false) {
+               //_mergeCart must be run before _addCustomerIdentity because _addCustomerIdentity is changing contentArray
+               $this->_mergeCart($contentArray, $requestContent, $request);
 		       $this->_addCustomerIdentity($contentArray, $requestContent, $request);
 	       }
 
@@ -301,6 +303,32 @@ class SystemRestModify implements ObserverInterface
                     'simi_hash' => $hash,
                 );
             }
+        }
+    }
+
+    private function _mergeCart($contentArray, $requestContent, $request) {
+        try {
+            if (is_string($contentArray) && isset($requestContent['quote_id']) && $requestContent['username']) {
+                $storeManager = $this->simiObjectManager->get('\Magento\Store\Model\StoreManagerInterface');
+                $requestCustomer = $this->simiObjectManager->get('Magento\Customer\Model\Customer')
+                                           ->setWebsiteId($storeManager->getStore()->getWebsiteId())
+                                           ->loadByEmail($requestContent['username']);
+                $guestQuoteId = $requestContent['quote_id'];
+                $quoteIdMask  = $this->simiObjectManager->create('Magento\Quote\Model\QuoteIdMask')->load( $guestQuoteId, 'masked_id');
+                $guestQuote   = $this->simiObjectManager->create('Magento\Quote\Api\CartRepositoryInterface')->get($quoteIdMask->getQuoteId());
+                $quote        = $this->simiObjectManager->create('Magento\Quote\Model\Quote')->loadByCustomer($requestCustomer->getId());
+                if (
+                    !$this->simiObjectManager->get('Simi\Simicustomize\Helper\SpecialOrder')->isQuotePreOrder($quote) &&
+                    !$this->simiObjectManager->get('Simi\Simicustomize\Helper\SpecialOrder')->isQuoteTryToBuy($quote)
+                ) {
+                    if ($quote->merge($guestQuote)) {
+                        $this->simiObjectManager->get('Magento\Quote\Model\QuoteRepository\SaveHandler')->save( $quote );
+                        $quote->collectTotals();
+                    }
+                }
+            }
+        }
+        catch ( \Exception $e ) {
         }
     }
 }
