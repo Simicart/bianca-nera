@@ -1,5 +1,9 @@
 import { sendRequest } from 'src/simi/Network/RestMagento';
 
+import { Util } from '@magento/peregrine';
+const { BrowserPersistence } = Util;
+const storage = new BrowserPersistence();
+
 export const createAccount = (callBack, accountInfo) => {
     sendRequest('/rest/V1/simiconnector/customers', callBack, 'POST', {}, accountInfo)
 }
@@ -17,6 +21,10 @@ export const createPassword = (callBack, passwordInfo) => {
 }
 
 export const simiSignIn = (callBack, postData) => {
+    const cartId = storage.getItem('cartId');
+    if (cartId) {
+        postData.quote_id = cartId
+    }
     sendRequest('/rest/V1/integration/customer/token', callBack, 'POST', {getSessionId: 1}, postData)
 }
 
@@ -35,6 +43,10 @@ export const forgotPassword = (callBack, email) => {
 }
 
 export const vendorLogin = (callBack, postData) => {
+    const cartId = storage.getItem('cartId');
+    if (cartId) {
+        postData.quote_id = cartId
+    }
     sendRequest('/rest/V1/simiconnector/vendor/login',callBack, 'POST',{getSessionId: 1},postData)
 }
 

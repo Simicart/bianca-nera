@@ -74,7 +74,9 @@ export const submitShippingAddress = payload =>
         }
 
         const { countries } = directory;
-        let { formValues: address } = payload;
+        //clone address to avoid mutating original data
+        let { formValues: oriaddress } = payload;
+        let address = JSON.parse(JSON.stringify(oriaddress))
         try {
             address = Identify.formatAddress(address, countries);
         } catch (error) {

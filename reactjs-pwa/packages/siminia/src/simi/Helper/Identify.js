@@ -249,14 +249,15 @@ class Identify {
                     if (!region)
                         region = { region: region_code, region_code: region_code, region_id: region_code };
                 } else {
-                    region = { region: "Mississippi", region_code: "MS", region_id: 35 };
+                    //region = { region: "Mississippi", region_code: "MS", region_id: 35 };
                 }
             } else {
                 //fake region to accept current shipping address
-                region = { region: "Mississippi", region_code: "MS", region_id: 35 };
+                //region = { region: "Mississippi", region_code: "MS", region_id: 35 };
             }
-            address.region = region.name ? region.name : (region.region ? region.region : '')
-            address.region_code = region.region_code
+            console.log(address)
+            address.region = region.name ? region.name : (region.region ? region.region : (address.region && address.region.region) ? address.region.region :'')
+            address.region_code = region.region_code ? region.region_code : (address.region_code ? address.region_code : '')
             return {
                 ...address,
                 country_id: address.country_id,
