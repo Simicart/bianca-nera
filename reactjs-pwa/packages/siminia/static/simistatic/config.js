@@ -24,6 +24,10 @@ function isIE(){
     // Blink engine detection
     var isBlink = (isChrome || isOpera) && !!window.CSS;
 
+    if (navigator && navigator.userAgent && navigator.userAgent.includes('Chrome')) {
+        return false;
+    }
+
     if (isIE || isEdge || isEdgeChromium) {
         return true;
     }

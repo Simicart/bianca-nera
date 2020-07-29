@@ -27,6 +27,8 @@
 .icon-chevron-up:before{content:"\e873"}
 .icon-chevron-down:before{content:"\e874"}
 .icon-arrow-right:before{content:"\e87a"}
+.icon-arrow-up:before {content: "\e941"}
+.icon-arrow-down:before {content: "\e942"}
 .icon-magnifier:before{content:"\e86f"}
 .icon-chef:before{content:"\e813"}
 .icon-bench-press:before{content:"\e862"}

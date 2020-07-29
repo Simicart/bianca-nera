@@ -68,9 +68,9 @@ class VendorDetail extends React.Component {
     }
     
     componentDidUpdate(){
-        if (this.clickActiveContent) {
-            smoothScrollToView($('.vendor-body .cont-right'));
-        }
+        // if (this.clickActiveContent) {
+        //     smoothScrollToView($('.vendor-body .cont-right'));
+        // }
         this.clickActiveContent = false;
     }
 

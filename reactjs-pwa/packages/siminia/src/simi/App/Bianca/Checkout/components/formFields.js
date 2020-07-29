@@ -508,7 +508,7 @@ const FormFields = (props) => {
                 <div className='footer'>
                     <Button
                         className='button save-address-btn'
-                        style={{ marginTop: 10, float: 'right' }}
+                        style={{ marginTop: 10, float: 'right', height: 48 }}
                         type="submit"
                         priority="high"
                         disabled={submitting}

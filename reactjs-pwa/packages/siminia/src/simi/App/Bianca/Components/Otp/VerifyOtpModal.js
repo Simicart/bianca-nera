@@ -132,7 +132,7 @@ class VerifyOtpModal extends React.Component {
                     {Identify.__('verify your mobile number').toUpperCase()}
                 </div>
                 <div className="description">
-                    {Identify.__('A text message with 6-digit verifycation code has been sent to ')}
+                    {Identify.__('A text message with 6-digit verification code has been sent to ')}
                     <span className="bold-number">
                         {localStorage.getItem('numberphone_otp') ? localStorage.getItem('numberphone_otp') : localStorage.getItem('numberphone_register')}
                     </span>
