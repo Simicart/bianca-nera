@@ -24,7 +24,7 @@ function isIE(){
     // Blink engine detection
     var isBlink = (isChrome || isOpera) && !!window.CSS;
 
-    if (navigator && navigator.userAgent && navigator.userAgent.includes('Chrome')) {
+    if (navigator && navigator.userAgent && navigator.userAgent.search('Chrome') !== -1) {
         return false;
     }
 
@@ -50,7 +50,7 @@ var SMCONFIGS = {
     simicart_authorization: "f95d84b5S2IHxHQxbl3HWg3kGQaw9zQpJVDSZOX",
     notification_api: "/rest/V1/simiconnector/",
     base_name: "",
-    logo_url: "https://www.simicart.com/skin/frontend/default/simicart2.0/images/simicart/new_logo_small.png",
+    logo_url: "/images/logo_footer.png",
     //eg. url is https://codymap.com/magento23 and media url must include pub, value should be 'magento23/pub/'
     media_url_prefix :'pub/'
 };
