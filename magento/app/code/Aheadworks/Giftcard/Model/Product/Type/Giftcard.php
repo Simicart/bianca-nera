@@ -239,9 +239,9 @@ class Giftcard extends AbstractType
      */
     public function getAmountOptionsAll(Product $product)
     {
-        if (!$this->_amountOptionsAll || empty($this->_amountOptionsAll)) {
+        //if (!$this->_amountOptionsAll || empty($this->_amountOptionsAll)) {
             $this->_amountOptionsAll = $this->getAttribute($product, ProductAttributeInterface::CODE_AW_GC_AMOUNTS);
-        }
+        //}
         return $this->_amountOptionsAll;
     }
 
