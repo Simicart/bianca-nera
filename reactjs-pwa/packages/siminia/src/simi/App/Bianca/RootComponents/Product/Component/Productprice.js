@@ -51,33 +51,63 @@ class ProductPrice extends React.Component {
     }
 
     calcConfigurablePrice = (price) => {
-        const {sltdConfigOption} = this.state
-        const {data, configurableOptionSelection} = this.props
-        const {simiExtraField} = data
+        // const {sltdConfigOption} = this.state
+        const {data, configurableOptionSelection: optionSelection} = this.props
+        const {simiExtraField} = data || {}
+        const {app_options} = simiExtraField || {}
+        const {configurable_options: options} = app_options || {}
+        const {attributes, optionPrices} = options || {}
 
-        if (configurableOptionSelection && simiExtraField && simiExtraField.app_options) {
-            const {configurable_options} = simiExtraField.app_options
-            if (configurable_options && configurable_options.index && configurable_options.optionPrices) {
-                let sub_product_id = null
-                for (const index_id in configurable_options.index) {
-                    const index = configurable_options.index[index_id] 
-                    if (ObjectHelper.shallowEqual(index, sltdConfigOption)) {
-                        sub_product_id = index_id;
-                        break;
+        if (optionSelection && attributes && optionPrices) {
+            let products = []; // product id array
+            // get sub product id
+            for(let attrId in attributes){
+                const {options} = attributes[attrId] || {};
+                options && options.every((opt) => {
+                    // compare id of option value selected
+                    if (parseInt(opt.id) === optionSelection.get(attrId)){
+                        if (!products.length) {
+                            products = opt.products; // add products of option in first attribute
+                        } else {
+                            if (products.length && opt.products.length) {
+                                let _products = [];
+                                products.every((productId) => {
+                                    if (opt.products.includes(productId)) {
+                                        _products.push(productId);
+                                        return false;
+                                    }
+                                    return true;
+                                });
+                                products = _products; // replace the first products with new matched products
+                            }
+                        }
+                        return false; // break
                     }
+                    return true; // continue
+                });
+            }
+            let sub_product_id = '';
+            if (products.length) {
+                sub_product_id = products[0]; // get first product id in array
+            }
+            /* for (const index_id in options.index) {
+                const index = options.index[index_id] 
+                if (ObjectHelper.shallowEqual(index, sltdConfigOption)) {
+                    sub_product_id = index_id;
+                    break;
                 }
-                if (sub_product_id) {
-                    let sub_product_price = configurable_options.optionPrices[sub_product_id]
-                    if (!sub_product_price)
-                        sub_product_price = configurable_options.optionPrices[parseInt(sub_product_id, 10)]
-                    if (sub_product_price) {
-                        price.minimalPrice.excl_tax_amount.value = sub_product_price.basePrice.amount
-                        price.minimalPrice.amount.value = sub_product_price.finalPrice.amount
-                        price.regularPrice.excl_tax_amount.value = sub_product_price.basePrice.amount
-                        price.regularPrice.amount.value = sub_product_price.finalPrice.amount
-                        price.maximalPrice.excl_tax_amount.value = sub_product_price.basePrice.amount
-                        price.maximalPrice.amount.value = sub_product_price.finalPrice.amount
-                    }
+            } */
+            if (sub_product_id) {
+                let sub_product_price = optionPrices[sub_product_id]
+                if (!sub_product_price)
+                    sub_product_price = optionPrices[parseInt(sub_product_id, 10)]
+                if (sub_product_price) {
+                    price.minimalPrice.excl_tax_amount.value = sub_product_price.basePrice.amount
+                    price.minimalPrice.amount.value = sub_product_price.finalPrice.amount
+                    price.regularPrice.excl_tax_amount.value = sub_product_price.basePrice.amount
+                    price.regularPrice.amount.value = sub_product_price.finalPrice.amount
+                    price.maximalPrice.excl_tax_amount.value = sub_product_price.basePrice.amount
+                    price.maximalPrice.amount.value = sub_product_price.finalPrice.amount
                 }
             }
         }
@@ -94,7 +124,7 @@ class ProductPrice extends React.Component {
 
     calcPrices(price) {
         const {customOptionPrice, downloadableOptionPrice} = this.state
-        const calculatedPrices = JSON.parse(JSON.stringify(price))
+        let calculatedPrices = JSON.parse(JSON.stringify(price))
         const {data} = this.props
         if (data.type_id === 'configurable')
             this.calcConfigurablePrice(calculatedPrices)
@@ -123,7 +153,6 @@ class ProductPrice extends React.Component {
         const {data} = this.props
         const {simiExtraField} = data
         const prices = this.calcPrices(data.price)
-
         let stockLabel = ''
         if (simiExtraField) {
             if (parseInt(simiExtraField.attribute_values.is_salable, 10) !== 1)

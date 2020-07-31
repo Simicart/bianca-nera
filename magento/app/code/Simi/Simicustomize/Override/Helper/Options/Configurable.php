@@ -126,7 +126,7 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
             'attributes' => $options, //$attributesData['attributes'],
             // 'template' => str_replace('%s', '<%- data.price %>', $store->getCurrentCurrency()->getOutputFormat()),
             // 'currencyFormat' => $store->getCurrentCurrency()->getOutputFormat(),
-            // 'optionPrices' => $this->getOptionPrices(),
+            'optionPrices' => $this->getOptionPrices(),
             // 'priceFormat' => $localeFormat->getPriceFormat(),
             // 'prices' => $variationPrices->getFormattedPrices($product->getPriceInfo()),
             // 'productId' => $product->getId(),

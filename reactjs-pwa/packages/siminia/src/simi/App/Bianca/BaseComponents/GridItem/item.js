@@ -316,9 +316,11 @@ class Griditem extends React.Component {
                     )
                     const storeConfig = Identify.getStoreConfig()
                     const { config } = storeConfig && storeConfig.simiStoreConfig || {};
-                    const { preorder_deposit } = config;
-                    if (preorder_deposit)
-                        depositText = (<p className="item-deposit">{Identify.__('Deposit')+' '+preorder_deposit+'%'}</p>)
+                    if (config) {
+                        const { preorder_deposit } = config;
+                        if (preorder_deposit)
+                            depositText = (<p className="item-deposit">{Identify.__('Deposit')+' '+preorder_deposit+'%'}</p>)
+                    }
                 } else
                     addToCartBtn = (
                         <Colorbtn
