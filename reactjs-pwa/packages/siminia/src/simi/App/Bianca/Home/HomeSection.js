@@ -211,7 +211,7 @@ const HomeSection = props => {
                 );
             }
 
-            if (productItems) {
+            if (productItems && productItems.length) {
                 return (
                     <div className="right-sec">
                         {
