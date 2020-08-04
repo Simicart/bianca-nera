@@ -131,11 +131,20 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                     continue;
                 }
 
+                $orderId = '';
+                try{
+                    $orderId = $oInvoice->getOrder()->getIncrementId();
+                } catch(\Exception $e) {
+                    $this->logger->debug(array(
+                        'Warning! Save ocean invoice failed. ', $e->getMessage()
+                    ));
+                }
+
                 $data = array(
                     'CustomerID' => $customerId ?: null,
                     'CustomerName' => $oInvoice->getCustomerName(),
                     'CurrencyRate' => 1.0,
-                    'Notes' => $oInvoice->getNotes(),
+                    'Notes' =>  'Order #'.$orderId . ' ' . $oInvoice->getNotes(),
                     'TotalVal' => $total,
                     'FinalValue' => $total,
                     'TotalQty' => (int) $totalQty,
