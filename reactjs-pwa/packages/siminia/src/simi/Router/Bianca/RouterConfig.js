@@ -5,6 +5,10 @@ const Home = (props) => {
     return <LazyComponent component={() => import(/* webpackChunkName: "Home"*/'src/simi/App/Bianca/Home')} {...props}/>
 }
 
+const Instagram = (props) => {
+    return <LazyComponent component={() => import(/* webpackChunkName: "Home"*/'src/simi/App/Bianca/Home/InstagramAuth')} {...props}/>
+}
+
 const Checkout = (props) => {
     return <LazyComponent component={() => import(/* webpackChunkName: "SimiBiancaCheckout"*/'src/simi/App/Bianca/Checkout')} {...props}/>
 }
@@ -98,6 +102,10 @@ const router = {
     home : {
         path: '/',
         render : (location) => <Home {...location}/>
+    },
+    instagram : {
+        path: '/instagram_auth',
+        render : (location) => <Instagram {...location}/>
     },
     search_page: {
         path: '/search.html',

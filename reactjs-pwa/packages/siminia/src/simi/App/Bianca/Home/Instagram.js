@@ -5,13 +5,14 @@ import OwlCarousel from 'react-owl-carousel2';
 // import {sendRequest} from 'src/simi/Network/RestMagento';
 const Instagram = (props) => {
     const {history, isPhone} = props;
-    const [insData, setInsData] = useState();
+    const instagramStored = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, 'instagram');
+    const [insData, setInsData] = useState(instagramStored);
     const limit = 5;
 
-    const getUserInstagram = async (name) => {
-        // let response = await fetch(`/rest/V1/simiconnector/proxy/instagram/?path=${name}&limit=${limit}`);
+    const getUserInstagram = async () => {
+        let response = await fetch(`/rest/V1/simiconnector/proxy/instagram/?limit=${limit}`);
         // let response = await fetch(`https://www.instagram.com/${name}/?__a=1`);
-        let response = {};
+        // let response = {};
         if (response.ok) { // if HTTP-status is 200-299
             // get the response body (the method explained below)
             let resData = {}
@@ -25,28 +26,22 @@ const Instagram = (props) => {
         } else if (response.status) {
             console.warn("HTTP-Error: " + response.status);
         }
-        return false;
+        return response;
     }
 
     useEffect(() => {
-        const {data} = props;
-        if (data) {
+        const instagramStored = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, 'instagram');
+        if (!instagramStored) {
             // sendRequest(`/rest/V1/simiconnector/proxy/instagram/?path=${data}/?__a=1`, (resData) => {
             //     if (resData) {
             //         Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'instagram', resData);
             //         setInsData(resData);
             //     }
             // }, 'GET');
-            
-            getUserInstagram(data).then(resData => {
+            getUserInstagram().then(resData => {
                 Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'instagram', resData);
                 setInsData(resData);
             });
-        } else {
-            const instagramStored = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, 'instagram');
-            if (instagramStored) {
-                setInsData(instagramStored);
-            }
         }
     }, []);
 
@@ -63,14 +58,17 @@ const Instagram = (props) => {
     const renderInsItem = (item, index) => {
         return (
             <div className="item" key={index}>
-                <a href={`https://www.instagram.com/p/${item.shortcode}`} target="_blank" rel="noopener noreferrer">
-                    <img className="img-responsive" src={item.thumbnail_src} alt={item.accessibility_caption || `Instagram image ${index + 1}`} />
+                <a href={`${item.permalink}`} target="_blank" rel="noopener noreferrer">
+                    <img className="img-responsive" src={item.media_url} alt={item.caption || `Instagram image ${index + 1}`} />
                 </a>
             </div>
         );
     }
 
-    const renderInsView = () => {
+    /**
+     * v1
+     */
+    /* const renderInsView = () => {
         let html = null;
         if (insData && ((insData.graphql && insData.graphql.user) || insData.data && insData.data.user)) {
             const user = insData.data && insData.data.user || insData.graphql && insData.graphql.user || null;
@@ -89,6 +87,23 @@ const Instagram = (props) => {
                     html = instagramData;
                 }
             }
+        }
+        return html;
+    } */
+
+    /**
+     * v2
+     */
+    const renderInsView = () => {
+        let html = [];
+        if (insData && insData.data && insData.data instanceof Array) {
+            insData.data.every((data, index) => {
+                if (index >= limit) return false; // break
+                if (data.media_type === 'IMAGE') {
+                    html.push(renderInsItem(data, index));
+                }
+                return true; // continue
+            });
         }
         return html;
     }
