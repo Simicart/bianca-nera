@@ -158,6 +158,13 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 $oInvoice->setItemsQty($totalQty);
                 $oInvoice->setHit($oInvoice->getHit() + 1);
 
+                // Force debug log
+                $dataLog = array(
+                    'message' => 'Forced log: Invoice created for order: #'.$orderId,
+                    'data' => $data
+                );
+                $this->logger->debug($dataLog, true);
+
                 $result = $this->invoiceApi->addInvoice($data);
                 $invoiceNo = (int) $result;
             }catch(\Exception $e){
