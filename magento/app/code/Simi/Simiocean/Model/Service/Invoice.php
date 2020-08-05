@@ -133,7 +133,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
 
                 $orderId = '';
                 try{
-                    $orderId = $oInvoice->getOrder()->getIncrementId();
+                    $orderId = $invoice->getOrder()->getIncrementId();
                 } catch(\Exception $e) {
                     $this->logger->debug(array(
                         'Warning! Save ocean invoice failed. ', $e->getMessage()
