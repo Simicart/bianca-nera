@@ -32,14 +32,10 @@ const Instagram = (props) => {
     useEffect(() => {
         const instagramStored = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, 'instagram');
         if (!instagramStored) {
-            // sendRequest(`/rest/V1/simiconnector/proxy/instagram/?path=${data}/?__a=1`, (resData) => {
-            //     if (resData) {
-            //         Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'instagram', resData);
-            //         setInsData(resData);
-            //     }
-            // }, 'GET');
             getUserInstagram().then(resData => {
-                Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'instagram', resData);
+                if (resData && resData.data) {
+                    Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'instagram', resData);
+                }
                 setInsData(resData);
             });
         }

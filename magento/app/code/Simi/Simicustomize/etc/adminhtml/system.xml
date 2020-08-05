@@ -287,6 +287,12 @@
                         <field id="*/*/enable">1</field>
                     </depends>
                 </field>
+                <!-- <field id="token_expires_in" translate="label" type="text" sortOrder="114" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Access Token Expires In</label>
+                    <depends>
+                        <field id="*/*/enable">1</field>
+                    </depends>
+                </field> -->
                 <!-- <field id="access_token" translate="label" type="text" sortOrder="113" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Access Token</label>
                     <depends>

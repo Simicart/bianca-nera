@@ -5,16 +5,19 @@ class ProxyInstagram implements \Simi\Simicustomize\Api\ProxyInstagramInterface
 {
     public $simiObjectManager;
     public $config;
+    public $configWriter;
 
     public function __construct(
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\ObjectManagerInterface $simiObjectManager,
-        \Magento\Framework\App\Config\ScopeConfigInterface $config
+        \Magento\Framework\App\Config\ScopeConfigInterface $config,
+        \Magento\Framework\App\Config\Storage\WriterInterface $configWriter
     )
     {
         $this->request = $request;
         $this->simiObjectManager = $simiObjectManager;
         $this->config = $config;
+        $this->configWriter = $configWriter;
         return $this;
     }
 
@@ -32,16 +35,22 @@ class ProxyInstagram implements \Simi\Simicustomize\Api\ProxyInstagramInterface
             $limit = $rqLimit;
         }
 
-        $apiUrl = 'https://api.instagram.com/';
-        // $access_token = 'IGQVJWVEFkTjgxa0s3N2Jtd2diRVJXQnhTVE5DOXlDNm1ZAVmZALd2wtbU5iWTN0SE1YV1JDYjJPVHowY2R4Szh5UmdEVUVGdDhmbmFheUQ3bnpCQldENjhNenNoZAUx4dlZAsYVRxcmZAn';
+        $apiUrl = 'https://graph.instagram.com/';
         $access_token = $this->config->getValue('simiconnector/instagram/access_token');
         $userInfoJson = false;
         if ($access_token) {
             $graphqlApi = $apiUrl.'me/media?fields=id,media_type,media_url,permalink,caption,username,timestamp&access_token=';
             $userInfoJson = $proxy->query($graphqlApi.$access_token."&variables={\"first\":\"${limit}\"}");
-            // Refresh access_token
-            // $graphqlApi = $apiUrl.'refresh_access_token?grant_type=ig_refresh_token&access_token='.$access_token;
-            // $proxy->query($graphqlApi.$access_token."&variables={\"first\":\"${limit}\"}");
+            
+            $expiresIn = $this->config->getValue('simiconnector/instagram/token_expires_in');
+            if ($expiresIn && (time() + 216000) >= $expiresIn) { // refresh before 3 days to be expired
+                // Refresh access_token
+                $tokenData = $proxy->query($apiUrl.'refresh_access_token?grant_type=ig_refresh_token&access_token='.$access_token);
+                if (isset($tokenData['access_token']) && isset($tokenData['expires_in'])) {
+                    $this->configWriter->save('simiconnector/instagram/access_token', $tokenData['access_token']);
+                    $this->configWriter->save('simiconnector/instagram/token_expires_in', $tokenData['expires_in']);
+                }
+            }
         }
 
         if ($userInfoJson) {
