@@ -171,6 +171,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 $invoiceNo = false;
                 $result = $e->getMessage();
                 $isSyncSuccess = false;
+                $this->logger->debug($result);
             }
             // Skipping error message by check strlen((string)$invoiceNo) == strlen((string)$result)
             if ((int)$invoiceNo && strlen((string)$invoiceNo) == strlen((string)$result)) {
