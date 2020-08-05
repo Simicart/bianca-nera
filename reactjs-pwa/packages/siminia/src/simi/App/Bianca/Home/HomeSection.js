@@ -110,31 +110,33 @@ const HomeSection = props => {
                 </div>
             </div>
         }
-        return <div className="siminia-product-grid-item">
-                <div className="grid-item-image" style={{position: "relative"}}>
-                    <div className="siminia-product-image" style={{backgroundColor: "white"}}>
-                        <div style={{position: "absolute", left: "0px", top: "0px", bottom: "0px", width: "100%"}}>
-                            <Link to={`/${item.url_key}${productUrlSuffix()}`} title={item.sku}>
+        return (
+            <div className="siminia-product-grid-item">
+                <Link to={`/${item.url_key}${productUrlSuffix()}`} title={item.sku}>
+                    <div className="grid-item-image" style={{position: "relative"}}>
+                        <div className="siminia-product-image" style={{backgroundColor: "white"}}>
+                            <div style={{position: "absolute", left: "0px", top: "0px", bottom: "0px", width: "100%"}}>
                                 <img src={item.thumbnail.url} alt={item.thumbnail.label} />
-                            </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="siminia-product-des">
-                    <div className="product-des-info">
-                        <div className="product-name">
-                            <div className="product-name small">{item.name}</div>
-                        </div>
-                        <div className="vendor-and-price">
-                            <div className="prices-layout " id="price-2204">
-                                <div className="price-configurable">
-                                    {price}
+                    <div className="siminia-product-des">
+                        <div className="product-des-info">
+                            <div className="product-name">
+                                <div className="product-name small">{item.name}</div>
+                            </div>
+                            <div className="vendor-and-price">
+                                <div className="prices-layout " id="price-2204">
+                                    <div className="price-configurable">
+                                        {price}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </Link>
             </div>
+        );
     }
 
     const renderProducts = (skus, index) => {

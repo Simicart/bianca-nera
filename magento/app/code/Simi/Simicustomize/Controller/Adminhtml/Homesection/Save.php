@@ -69,6 +69,20 @@ class Save extends \Magento\Backend\App\Action
             $data['type_value_2'] = $data['type_value_2_url'];
         }
 
+        // save product sku
+        if (isset($data['product_id_1'])) {
+            $product = $simiObjectManager->get('Magento\Catalog\Model\Product')->load($data['product_id_1']);
+            $data['product_sku_1'] = $product->getSku();
+        }
+        if (isset($data['product_id_2'])) {
+            $product = $simiObjectManager->get('Magento\Catalog\Model\Product')->load($data['product_id_2']);
+            $data['product_sku_2'] = $product->getSku();
+        }
+        if (isset($data['product_id_3'])) {
+            $product = $simiObjectManager->get('Magento\Catalog\Model\Product')->load($data['product_id_3']);
+            $data['product_sku_3'] = $product->getSku();
+        }
+
         $model->addData($data);
 
         try {
@@ -120,8 +134,6 @@ class Save extends \Magento\Backend\App\Action
         } catch (\Exception $e) {
             $this->messageManager->addException($e, __('Something went wrong while saving the data.'));
         }
-
-        echo '<pre>';var_dump($data);die;
 
         $this->_getSession()->setFormData($data);
         $this->_redirect('*/*/edit', ['id' => $this->getRequest()->getParam('id')]);
