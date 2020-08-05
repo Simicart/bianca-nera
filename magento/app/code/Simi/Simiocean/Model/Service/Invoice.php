@@ -161,7 +161,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 // Force debug log
                 $dataLog = array(
                     'message' => 'Forced log: Invoice created for order: #'.$orderId,
-                    'data' => $data
+                    'data' => json_encode($data)
                 );
                 $this->logger->debug($dataLog, true);
 
