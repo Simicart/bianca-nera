@@ -36,7 +36,8 @@ class ProxyInstagram implements \Simi\Simicustomize\Api\ProxyInstagramInterface
         }
 
         $apiUrl = 'https://graph.instagram.com/';
-        $access_token = $this->config->getValue('simiconnector/instagram/access_token');
+        // $access_token = $this->config->getValue('simiconnector/instagram/access_token');
+        $access_token = 'IGQVJXVjVwbTlib0RCZA0JueXp0bC1Id3ZAQMEZAfQ3dBMHlnX084UV9GQklaaXcxT1QtdS1hQXMxbW1SLV92NUJIa2NHM3Q4RUUweHJBTDdRaG9fVkpBOU1CRmJhc011RWdYc2FhZATdB';
         $userInfoJson = false;
         if ($access_token) {
             $graphqlApi = $apiUrl.'me/media?fields=id,media_type,media_url,permalink,caption,username,timestamp&access_token=';
@@ -54,7 +55,8 @@ class ProxyInstagram implements \Simi\Simicustomize\Api\ProxyInstagramInterface
         }
 
         if ($userInfoJson) {
-            return [json_decode($userInfoJson, true)];
+            die($userInfoJson);
+            // return [json_decode($userInfoJson, true)];
         }
         return false;
     }
