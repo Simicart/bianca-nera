@@ -145,7 +145,7 @@ const Instagram = (props) => {
             </div>
             <div className="container instagram-container">
                 <div className="carousel-block">
-                    { items && 
+                    { items && items.length && 
                         <OwlCarousel options={options}>
                             {items}
                         </OwlCarousel>
