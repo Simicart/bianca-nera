@@ -25,7 +25,7 @@ class ProxyInstagram implements \Simi\Simicustomize\Api\ProxyInstagramInterface
      * V2
      * Example: api?limit=10
      * Save Reserve request
-     * @return boolean
+     * @return array|boolean
      */
     public function index() {
         $limit = 18; //default
