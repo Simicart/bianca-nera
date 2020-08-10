@@ -35,6 +35,7 @@ class Invoicesync
         if ($this->config->isSyncEnabled()) {
             try{
                 $this->invoiceService->syncPush();
+                $this->invoiceService->syncCancel();
                 $this->logger->debug(array('Cron: Invoice push run success!'));
             } catch (\Exception $e) {
                 $this->logger->debug(array('Cron: Invoice push run error.', $e->getMessage()));
