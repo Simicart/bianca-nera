@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <columns name="sales_order_columns">
-        <column name="ocean_sync" class="\Simi\Simiocean\Ui\Component\Listing\Column\OrderInvoice">
+        <column name="ocean_sync" class="\Simi\Simiocean\Ui\Component\Listing\Column\Order">
             <settings>
                 <label translate="true">Ocean Sync</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="ocean_invoice_no" class="\Simi\Simiocean\Ui\Component\Listing\Column\Order">
+            <settings>
+                <label translate="true">Ocean Invoice No</label>
                 <bodyTmpl>ui/grid/cells/html</bodyTmpl>
                 <sortable>false</sortable>
             </settings>

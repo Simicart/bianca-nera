@@ -66,4 +66,12 @@ class Invoice
         }
         return false;
     }
+
+    /**
+     * Get payments from Ocean
+     * @return array|false
+     */
+    public function getPayment(){
+        return $this->api->call("api/PaymentType");
+    }
 }

@@ -32,9 +32,9 @@ class OrderInvoice extends Column
      */
     protected $_requestInterface;
     /**
-     * @var \Magento\Sales\Model\OrderFactory
+     * @var \Magento\Sales\Model\Order\InvoiceFactory
      */
-    protected $_orderFactory;
+    protected $_invoiceFactory;
 
     protected $oceanInvoice;
     
@@ -56,7 +56,7 @@ class OrderInvoice extends Column
         \Magento\Framework\View\Asset\Repository $assetRepository,
         \Magento\Framework\App\RequestInterface $requestInterface,
         // SearchCriteriaBuilder $criteria,
-        \Magento\Sales\Model\OrderFactory $orderFactory,
+        \Magento\Sales\Model\Order\InvoiceFactory $invoiceFactory,
         \Simi\Simiocean\Model\Invoice $oceanInvoice,
         array $components = [],
         array $data = []
@@ -65,7 +65,7 @@ class OrderInvoice extends Column
         // $this->_searchCriteria   = $criteria;
         $this->_assetRepository  = $assetRepository;
         $this->_requestInterface = $requestInterface;
-        $this->_orderFactory     = $orderFactory;
+        $this->_invoiceFactory     = $invoiceFactory;
         $this->oceanInvoice      = $oceanInvoice;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
@@ -75,67 +75,22 @@ class OrderInvoice extends Column
         if (isset($dataSource['data']['items'])) {
             $params = ['_secure' => $this->_requestInterface->isSecure()];
             foreach ($dataSource['data']['items'] as &$item) {
-                $order = $this->_orderFactory->create()->loadByIncrementId($item['increment_id']);
-                $invoices = $order->getInvoiceCollection();
-                if ($invoices->count()) {
-                    $invoiceId = null;
-                    $status = null;
-                    foreach($invoices as $invoice){
-                        $status = $this->oceanInvoice->getStatusByInvoiceId($invoice->getId());
-                        if ($status) break;
-                    }
-                    switch ($status) {
-                        case \Simi\Simiocean\Model\SyncStatus::SUCCESS:
-                            $url = $this->_assetRepository->getUrlWithParams(
-                                'Simi_Simiocean::images/yes.png',
-                                $params
-                            );
-                            $text = __('Synced');
-                            break;
-                        case \Simi\Simiocean\Model\SyncStatus::PENDING:
-                            $url = $this->_assetRepository->getUrlWithParams(
-                                'Simi_Simiocean::images/waiting.png',
-                                $params
-                            );
-                            $text = __('Waiting');
-                            break;
-                        case \Simi\Simiocean\Model\SyncStatus::CONFLICT:
-                            $url = $this->_assetRepository->getUrlWithParams(
-                                'Simi_Simiocean::images/error.png',
-                                $params
-                            );
-                            $text = __('Error');
-                            break;
-                        case \Simi\Simiocean\Model\SyncStatus::FAILED:
-                            $url = $this->_assetRepository->getUrlWithParams(
-                                'Simi_Simiocean::images/resync.png',
-                                $params
-                            );
-                            $text = __('Resyncing');
-                            break;
-                        // case '':
-                        //     $url = $this->_assetRepository->getUrlWithParams(
-                        //         'Simi_Simiocean::images/never.png',
-                        //         $params
-                        //     );
-                        //     $text = __('With error');
-                        //     $alt = $syncData->getMailchimpSyncError();
-                        //     break;
-                        default:
-                            $url = $this->_assetRepository->getUrlWithParams(
-                                    'Simi_Simiocean::images/no.png',
-                                    $params
-                                );;
-                            $text = '';
-                    }
-                    if ($status) {
-                        $item['ocean_sync'] = 
-                            "<div style='width: 80%;margin: 0 auto;text-align: center'><img src='".$url."' style='border: none; width: 5rem; text-align: center; max-width: 100%' title='' />$text</div>";
+
+                
+
+                if (isset($item['entity_id'])) {
+                    // $invoice = $this->_invoiceFactory->create()->loadByIncrementId($item['entity_id']);
+                    // var_dump('get_class($invoice)');die;
+                //     var_dump($invoice->getBaseGrandTotal());die;
+                // var_dump($item['increment_id']);die;
+
+                    $oInvoice = $this->oceanInvoice->loadByInvoiceId($item['entity_id']);
+                    if ($oInvoice) {
+                        $item['ocean_no'] = $oInvoice->getInvoiceNo();
                     }
                 }
             }
         }
-
         return $dataSource;
     }
 }
