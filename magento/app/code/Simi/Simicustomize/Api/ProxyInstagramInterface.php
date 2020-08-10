@@ -8,7 +8,7 @@ namespace Simi\Simicustomize\Api;
 interface ProxyInstagramInterface
 {
     /**
-     * @return string
+     * @return array|boolean
      */
     public function index();
 }

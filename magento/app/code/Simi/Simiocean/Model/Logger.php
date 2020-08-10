@@ -28,14 +28,15 @@ class Logger
     /**
      * Logs payment related information used for debug
      *
-     * @param array $data
+     * @param mixed $data
      * @param bool|null $forceDebug
      * @return void
      */
-    public function debug(array $data, $forceDebug = null)
+    public function debug($data, $forceDebug = null)
     {
         $debugOn = $forceDebug !== null ? $forceDebug : $this->isDebugOn();
         if ($debugOn === true) {
+            if (!is_array($data)) $data = array($data);
             $this->logger->debug(var_export($data, true));
         }
     }

@@ -76,6 +76,11 @@ const CompareProduct = props => {
 
     const renderImgItem = () => {
         const imgItem = listItem.map(item => {
+            const {app_options} = item || {};
+            const {configurable_options} = app_options || {};
+            const {prices} = configurable_options || {};
+            const {basePrice} = prices || {};
+
             const addToCart = (pre_order = false) => {
                 if (item) {
                     if ((!parseInt(item.has_options)) && item.type_id === 'simple') {
@@ -166,9 +171,9 @@ const CompareProduct = props => {
                                                 {storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.currency}&nbsp;
                                             </span>
                                             <span>
-                                                {item.app_options && item.app_options.configurable_options
+                                                {basePrice && basePrice.amount
                                                 ?
-                                                    item.app_options.configurable_options.prices.basePrice.amount
+                                                    basePrice.amount
                                                 :   
                                                     parseFloat(item.price).toFixed(2)
                                                 }
@@ -181,10 +186,10 @@ const CompareProduct = props => {
                                             {storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.currency}&nbsp;
                                         </span>
                                         <span>
-                                            {item.app_options && item.app_options.configurable_options
+                                            {basePrice && basePrice.amount
                                             ?
                                                 <Fragment>
-                                                    {addZeroes(item.app_options.configurable_options.prices.basePrice.amount)}
+                                                    {addZeroes(basePrice.amount)}
                                                 </Fragment>
                                             :   
                                                 parseFloat(item.price).toFixed(2)

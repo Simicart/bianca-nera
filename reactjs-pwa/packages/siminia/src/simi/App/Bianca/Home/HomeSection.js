@@ -110,105 +110,128 @@ const HomeSection = props => {
                 </div>
             </div>
         }
-        return <div className="siminia-product-grid-item">
-                <div className="grid-item-image" style={{position: "relative"}}>
-                    <div className="siminia-product-image" style={{backgroundColor: "white"}}>
-                        <div style={{position: "absolute", left: "0px", top: "0px", bottom: "0px", width: "100%"}}>
-                            <Link to={`/${item.url_key}${productUrlSuffix()}`} title={item.sku}>
+        return (
+            <div className="siminia-product-grid-item">
+                <Link to={`/${item.url_key}${productUrlSuffix()}`} title={item.sku}>
+                    <div className="grid-item-image" style={{position: "relative"}}>
+                        <div className="siminia-product-image" style={{backgroundColor: "white"}}>
+                            <div style={{position: "absolute", left: "0px", top: "0px", bottom: "0px", width: "100%"}}>
                                 <img src={item.thumbnail.url} alt={item.thumbnail.label} />
-                            </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="siminia-product-des">
-                    <div className="product-des-info">
-                        <div className="product-name">
-                            <div className="product-name small">{item.name}</div>
-                        </div>
-                        <div className="vendor-and-price">
-                            <div className="prices-layout " id="price-2204">
-                                <div className="price-configurable">
-                                    {price}
+                    <div className="siminia-product-des">
+                        <div className="product-des-info">
+                            <div className="product-name">
+                                <div className="product-name small">{item.name}</div>
+                            </div>
+                            <div className="vendor-and-price">
+                                <div className="prices-layout " id="price-2204">
+                                    <div className="price-configurable">
+                                        {price}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </Link>
             </div>
+        );
     }
 
     const renderProducts = (skus, index) => {
         if (skus && skus.length) {
             if (productsData === null) {
                 if (isPhone) {
-                    <div class="wrapper">
-                        <div class="items-wrapper">
-                            <div class="items-inner-wrapper" style="transform: translateX(0px);">
-                                <div class="item-wrapper" width="166">
-                                    <Skeleton width={166} height={339}/>
-                                </div>
-                                <div class="item-wrapper" width="166">
-                                    <Skeleton width={166} height={339}/>
+                    return (
+                        <div className="right-sec">
+                            <div className="wrapper">
+                                <div className="items-wrapper">
+                                    <div className="items-inner-wrapper" style={{
+                                            transform: "translateX(0px)", 
+                                            display: 'flex',
+                                            justifyContent: 'space-between'
+                                        }}>
+                                        <div className="item-wrapper" style={{width: "166px"}}>
+                                            <Skeleton width={166} height={339}/>
+                                        </div>
+                                        <div className="item-wrapper" style={{width: "166px"}}>
+                                            <Skeleton width={166} height={339}/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    );
                 }
                 return (
-                    <>
+                    <div className="right-sec">
                         <Skeleton height={360} width={176}/>
                         <Skeleton height={360} width={176}/>
                         <Skeleton height={360} width={176}/>
-                    </>
+                    </div>
                 );
             }
 
             let productItems = productsData && productsData.items && productsData.items.filter((item) => skus.includes(item.sku)) || []
             if (isPhone && productsData && productItems.length) {
-                    let carouselIndex = activeItemIndex[index] || 0;
-                    if (Identify.isRtl()) {
-                        if (carouselIndex === 0) carouselIndex = (productItems.length - 1);
-                        productItems.reverse();
-                    }
-                    return <ItemsCarousel
-                        infiniteLoop={false}
-                        gutter={13} //Space between cards.
-                        firstAndLastGutter={false}
-                        activePosition={'center'}
-                        disableSwipe={false}
-                        alwaysShowChevrons={false}
-                        numberOfCards={2}
-                        slidesToScroll={1}
-                        outsideChevron={true}
-                        showSlither={false}
-                        activeItemIndex={carouselIndex}
-                        requestToChangeActive={(num) => carouselOnChange(num, index)}
-                        chevronWidth={16}
-                        leftChevron={<ChevronLeft className="chevron-left" style={{width: `16px`, height: `16px`}} />}
-                        rightChevron={<ChevronRight className="chevron-right" style={{width: `16px`, height: `16px`}} />}
-                        classes={{ wrapper: "wrapper", itemsWrapper: 'items-wrapper', itemsInnerWrapper: 'items-inner-wrapper', itemWrapper: 'item-wrapper', rightChevronWrapper: 'right-chevron-wrapper', leftChevronWrapper: 'left-chevron-wrapper' }}
-                    >
-                        {productItems.map((item, index) => {
-                                return <ItemRender
-                                    item={item}
-                                    handleLink={onClickProduct}
-                                    lazyImage={true}
-                                    key={index} />
+                let carouselIndex = activeItemIndex[index] || 0;
+                if (Identify.isRtl()) {
+                    if (carouselIndex === 0) carouselIndex = (productItems.length - 1);
+                    productItems.reverse();
+                }
+                return (
+                    <div className="right-sec">
+                        <ItemsCarousel
+                            infiniteLoop={false}
+                            gutter={13} //Space between cards.
+                            firstAndLastGutter={false}
+                            activePosition={'center'}
+                            disableSwipe={false}
+                            alwaysShowChevrons={false}
+                            numberOfCards={2}
+                            slidesToScroll={1}
+                            outsideChevron={true}
+                            showSlither={false}
+                            activeItemIndex={carouselIndex}
+                            requestToChangeActive={(num) => carouselOnChange(num, index)}
+                            chevronWidth={16}
+                            leftChevron={<ChevronLeft className="chevron-left" style={{width: `16px`, height: `16px`}} />}
+                            rightChevron={<ChevronRight className="chevron-right" style={{width: `16px`, height: `16px`}} />}
+                            classes={{ wrapper: "wrapper", itemsWrapper: 'items-wrapper', itemsInnerWrapper: 'items-inner-wrapper', itemWrapper: 'item-wrapper', rightChevronWrapper: 'right-chevron-wrapper', leftChevronWrapper: 'left-chevron-wrapper' }}
+                        >
+                            {productItems.map((item, index) => {
+                                    return <ItemRender
+                                        item={item}
+                                        handleLink={onClickProduct}
+                                        lazyImage={true}
+                                        key={index} />
+                                })
+                            }
+                        </ItemsCarousel>
+                    </div>
+                );
+            }
+
+            if (productItems && productItems.length) {
+                return (
+                    <div className="right-sec">
+                        {
+                            productItems.map((item, index) => {
+                                return (
+                                    <ItemRender
+                                        item={item}
+                                        handleLink={onClickProduct}
+                                        lazyImage={true}
+                                        key={index} />
+                                );
                             })
                         }
-                    </ItemsCarousel>
-                }
-
-                return (productItems && productItems.map((item, index) => {
-                        return <ItemRender
-                            item={item}
-                            handleLink={onClickProduct}
-                            lazyImage={true}
-                            key={index} />
-                    })
+                    </div>
                 );
+            }
         }
-        return '';
+        return null;
     }
 
     const renderSection = () => {
@@ -324,11 +347,7 @@ const HomeSection = props => {
                             }}
                         </Simiquery>
                     }
-                    {sectionSkus.length > 0 &&
-                        <div className="right-sec">
-                            {renderProducts(sectionSkus, index)}
-                        </div>
-                    }
+                    {sectionSkus.length > 0 && renderProducts(sectionSkus, index)}
                 </div>
             );
         });

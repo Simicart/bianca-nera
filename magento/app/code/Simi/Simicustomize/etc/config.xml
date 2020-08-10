@@ -19,10 +19,13 @@
                 <email_template_customer>send_email_service_customer</email_template_customer>
             </service>
         </sales>
-         <simiconnector>
+        <simiconnector>
             <url_logout>                                               
                 <url>https://biancanera.pwa-commerce.com/</url>
             </url_logout>
+            <instagram>                                               
+                <redirect_uri>https://bianca-nera.com/instagram_auth/</redirect_uri>
+            </instagram>
         </simiconnector>
     </default>
 </config>

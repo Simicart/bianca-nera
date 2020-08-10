@@ -49,6 +49,18 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
+    <route url="/V1/simiconnector/instagram/auth" method="GET">
+        <service class="Simi\Simicustomize\Api\InstagramInterface" method="auth"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/simiconnector/instagram/auth" method="POST">
+        <service class="Simi\Simicustomize\Api\InstagramInterface" method="getAccessToken"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
     <route url="/V1/simicustomize/home" method="GET">
         <service class="Simi\Simicustomize\Api\HomeInterface" method="get"/>
         <resources>

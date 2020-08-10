@@ -113,6 +113,7 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                         'pre_order'  => $productModel->getData('pre_order'),
                         'try_to_buy'  => $productModel->getData('try_to_buy'),
                         'reservable'  => $productModel->getData('reservable'),
+                        'vendor_id'  => $productModel->getData('vendor_id'),
                     ],
                     'app_options' => $options,
                     'app_reviews' => $app_reviews,

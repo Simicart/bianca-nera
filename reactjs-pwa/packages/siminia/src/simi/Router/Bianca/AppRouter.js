@@ -14,6 +14,7 @@ class AppRouter extends Abstract{
         return (
             <Switch>
                 <Route exact {...router.home}/>
+                <Route exact {...router.instagram}/>
                 <Route exact {...router.search_page}/>
                 <Route exact {...router.cart}/>
                 <Route exact {...router.product_detail}/>

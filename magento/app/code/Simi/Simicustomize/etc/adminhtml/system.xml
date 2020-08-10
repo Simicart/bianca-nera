@@ -261,6 +261,44 @@
                         <field id="*/*/enable">1</field>
                     </depends>
                 </field>
+                <field id="client_id" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client ID</label>
+                    <depends>
+                        <field id="*/*/enable">1</field>
+                    </depends>
+                </field>
+                <field id="client_secret" translate="label" type="text" sortOrder="111" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client Secret</label>
+                    <depends>
+                        <field id="*/*/enable">1</field>
+                    </depends>
+                </field>
+                <field id="redirect_uri" translate="label" type="text" sortOrder="112" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Redirect Uri to process authorization.</label>
+                    <depends>
+                        <field id="*/*/enable">1</field>
+                    </depends>
+                    <comment>https://bianca-nera.com/instagram_auth/</comment>
+                </field>
+                <field id="auth_button" translate="label" type="button" sortOrder="113" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Get Access Token</label>
+                    <frontend_model>Simi\Simicustomize\Block\Adminhtml\System\Config\InstagramAuth</frontend_model>
+                    <depends>
+                        <field id="*/*/enable">1</field>
+                    </depends>
+                </field>
+                <!-- <field id="token_expires_in" translate="label" type="text" sortOrder="114" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Access Token Expires In</label>
+                    <depends>
+                        <field id="*/*/enable">1</field>
+                    </depends>
+                </field> -->
+                <!-- <field id="access_token" translate="label" type="text" sortOrder="113" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Access Token</label>
+                    <depends>
+                        <field id="*/*/enable">1</field>
+                    </depends>
+                </field> -->
             </group>
             <group id="product_brands" translate="label" type="text" sortOrder="2100" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Brand Details</label>

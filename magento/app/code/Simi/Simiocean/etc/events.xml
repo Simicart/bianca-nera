@@ -9,6 +9,9 @@
     <event name="sales_order_invoice_save_after">
         <observer name="simi_simiocean_sales_order_invoice_save_after" instance="Simi\Simiocean\Observer\SalesOrderInvoicePay" />
     </event>
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="simi_simiocean_sales_order_creditmemo_save_after" instance="Simi\Simiocean\Observer\SalesOrderInvoiceRefund" />
+    </event>
     <event name="customer_save_after">
         <observer name="simi_simiocean_customer_save_after" instance="Simi\Simiocean\Observer\CustomerSaveAfter" />
     </event>

@@ -8,11 +8,11 @@ namespace Simi\Simiocean\Model;
 
 use Magento\Framework\Model\AbstractModel;
 
-class Invoice extends AbstractModel
+class InvoiceCancel extends AbstractModel
 {
     protected function _construct()
     {
-        $this->_init(\Simi\Simiocean\Model\ResourceModel\Invoice::class);
+        $this->_init(\Simi\Simiocean\Model\ResourceModel\InvoiceCancel::class);
     }
 
     /**
@@ -32,15 +32,5 @@ class Invoice extends AbstractModel
             return $connection->fetchOne($select, $bind);
         }
         return '';
-    }
-
-    /**
-     * Load object by invoice id
-     * @param int $invoiceId
-     * @return $this
-     */
-    public function loadByInvoiceId($invoiceId){
-        $this->load($invoiceId, 'invoice_id');
-        return $this;
     }
 }
