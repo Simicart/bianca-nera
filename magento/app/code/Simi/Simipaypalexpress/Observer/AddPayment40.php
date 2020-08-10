@@ -24,7 +24,7 @@ class AddPayment40 implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $object = $observer->getObject();
-        $object->addPaymentMethod('paypal_express', 3);
+        $object->addPaymentMethod('paypal_express', 0);
         return;
     }
 
