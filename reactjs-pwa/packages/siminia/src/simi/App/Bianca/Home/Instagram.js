@@ -7,7 +7,7 @@ const Instagram = (props) => {
     const {history, isPhone} = props;
     const instagramStored = Identify.getDataFromStoreage(Identify.SESSION_STOREAGE, 'instagram');
     const [insData, setInsData] = useState(instagramStored);
-    const limit = 5;
+    const limit = 12;
 
     const getUserInstagram = async () => {
         let response = await fetch(`/rest/V1/simiconnector/proxy/instagram/?limit=${limit}`);
@@ -93,10 +93,16 @@ const Instagram = (props) => {
     const renderInsView = () => {
         let html = [];
         if (insData && insData.data && insData.data instanceof Array) {
+            let count = 0;
             insData.data.every((data, index) => {
-                if (index >= limit) return false; // break
+                if (count >= limit) return false; // break
                 if (data.media_type === 'IMAGE') {
                     html.push(renderInsItem(data, index));
+                    count++;
+                }
+                if (data.media_type === 'CAROUSEL_ALBUM') {
+                    html.push(renderInsItem(data, index));
+                    count++;
                 }
                 return true; // continue
             });
