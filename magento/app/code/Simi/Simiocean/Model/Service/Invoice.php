@@ -399,11 +399,15 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
 
                 $totalDiscount = min($totalDiscount, $order->getBaseDiscountAmount());
 
+                $notes = 'Cancel #'.$orderId;
+                if ($cInvoice->getNotes()) {
+                    $notes = $notes . ' ' . $cInvoice->getNotes();
+                }
                 $data = array(
                     'CustomerID' => $customerId ?: null,
                     'CustomerName' => $cInvoice->getCustomerName(),
                     'CurrencyRate' => 1.0,
-                    'Notes' =>  'Magento Cancel Order #'.$orderId . ' ' . $cInvoice->getNotes(),
+                    'Notes' =>  $notes,
                     'TotalDiscount' => (float) -abs($totalDiscount),
                     'TotalVal' => (float) -$totalVal,
                     'FinalValue' => (float) -$total,
