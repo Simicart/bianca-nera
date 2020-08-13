@@ -63,6 +63,21 @@ class Customersync
     }
 
     /**
+     * Push customer to the ocean system with failed sync
+     */
+    public function syncFromWebsiteFailed()
+    {
+        if ($this->config->isSyncEnabled()) {
+            try{
+                $this->customerService->resyncPush();
+                $this->logger->debug(array('Cron: Customer resync push run success!'));
+            } catch (\Exception $e) {
+                $this->logger->debug(array('Cron: Customer resync push run error.', $e->getMessage()));
+            }
+        }
+    }
+
+    /**
      * Pull the update customer from the ocean system
      */
     public function syncUpdateFromOcean()

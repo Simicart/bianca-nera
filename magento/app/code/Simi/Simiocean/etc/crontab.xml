@@ -24,6 +24,9 @@
         <job name="simi_simiocean_customer_push" instance="Simi\Simiocean\Cron\Customersync" method="syncFromWebsite">
             <config_path>simiocean/cron/customer_push</config_path>
         </job>
+        <job name="simi_simiocean_customer_push_failed" instance="Simi\Simiocean\Cron\Customersync" method="syncFromWebsiteFailed">
+            <config_path>simiocean/cron/customer_push</config_path>
+        </job>
         <job name="simi_simiocean_customer_update_pull" instance="Simi\Simiocean\Cron\Customersync" method="syncUpdateFromOcean">
             <config_path>simiocean/cron/customer_pull</config_path>
         </job>

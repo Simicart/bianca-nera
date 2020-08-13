@@ -51,11 +51,12 @@
         <column xsi:type="datetime" name="created_at" nullable="true" comment="Created at"/>
         <column xsi:type="varchar"  name="direction" nullable="true" length="32" comment="Direction sync"/>
         <column xsi:type="varchar"  name="status" nullable="true" length="32" comment="Sync status"/>
+        <column xsi:type="int"      name="hit" padding="10" unsigned="true" nullable="true" comment="Hit of failed"/>
         <column xsi:type="text"     name="message" nullable="true" comment="Message status"/>
         <constraint xsi:type="unique" referenceId="SIMIOCEAN_CUSTOMER_ID">
             <column name="customer_id"/>
         </constraint>
-        <constraint xsi:type="unique" referenceId="SIMIOCEAN_CUSTOMER_ID_M_CUSTOMER_ID">
+        <constraint xsi:type="unique" referenceId="SIMIOCEAN_M_CUSTOMER_ID">
             <column name="m_customer_id"/>
         </constraint>
         <constraint xsi:type="primary" referenceId="PRIMARY">
