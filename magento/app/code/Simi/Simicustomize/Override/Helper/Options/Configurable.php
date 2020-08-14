@@ -167,28 +167,32 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
      */
     public function getAllowProducts()
     {
-        if (!$this->allowProducts) {
-            $products = [];
-            $catalogProductHelper = $this->simiObjectManager->get('\Magento\Catalog\Helper\Product');
-            $skipSaleableCheck = $catalogProductHelper->getSkipSaleableCheck();
-            $product = $this->getProduct();
-            $allProducts = $product->getTypeInstance()->getUsedProducts($product, null);
-            foreach ($allProducts as $product) {
-                // Optimize speed
-                // Replace magento to check saleable for simple product in a confugurable product
-                /* $StockState = $this->simiObjectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
-                $stockQty = $StockState->getStockQty($product->getId(), $product->getStore()->getWebsiteId());
-                if ($stockQty <= 0) {
-                    $product->setData('is_salable', false);
-                } */
-                // End
-                if ($product->isSaleable() || $skipSaleableCheck) {
-                    $products[] = $product;
+        $product = $this->getProduct();
+        if ($product && $product->getId()) {
+            if (!isset($this->allowProducts[$product->getId()])) {
+                $products = [];
+                $catalogProductHelper = $this->simiObjectManager->get('\Magento\Catalog\Helper\Product');
+                $skipSaleableCheck = $catalogProductHelper->getSkipSaleableCheck();
+                $product = $this->getProduct();
+                $allProducts = $product->getTypeInstance()->getUsedProducts($product, null);
+                $stockState = $this->simiObjectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
+                foreach ($allProducts as $product) {
+                    // Optimize speed
+                    // Replace magento to check saleable for child product in a confugurable product
+                    $stockQty = $stockState->getStockQty($product->getId(), $product->getStore()->getWebsiteId());
+                    if ($stockQty <= 0) {
+                        $product->setData('is_salable', false);
+                    }
+                    // End
+                    if ($product->isSaleable() || $skipSaleableCheck) {
+                        $products[] = $product;
+                    }
                 }
+                $this->allowProducts[$product->getId()] = $products;
             }
-            $this->allowProducts = $products;
+            return $this->allowProducts[$product->getId()];
         }
-        return $this->allowProducts;
+        return [];
     }
 
     /**
