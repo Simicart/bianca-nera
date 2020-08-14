@@ -13,21 +13,10 @@ class Options extends Component {
         ).isRequired
     };
 
+    selectedValueIndex = -1;
+
     handleSelectionChange = (optionId, selection) => {
-        const { onSelectionChange, optionSelections, options } = this.props;
-        // reset all selected option when change option is size
-        /**
-        const option = options.find((opt) => {
-            return opt.attribute_id === optionId;
-        })
-        if (option && option.attribute_code === 'size') {
-            if (optionSelections instanceof Map && optionSelections.size) {
-                optionSelections.forEach((value_index, attribute_id) => {
-                    if (optionId !== attribute_id) optionSelections.delete(attribute_id)
-                })
-            }
-        }
-        */
+        const { onSelectionChange } = this.props;
         if (onSelectionChange) {
             onSelectionChange(optionId, selection);
         }
@@ -43,13 +32,17 @@ class Options extends Component {
     mapOptionInStock = () => {
         const { options, optionsIndex, variants, optionSelections } = this.props;
         let instockColors = [];
+        let instockSizes = [];
         
         if (optionSelections instanceof Map && optionSelections.size) {
-            const colorOption = options.find((opt) => {
+            /* const colorOption = options.find((opt) => {
                 return opt.attribute_code === 'color';
+            }); */
+            const sizeOption = options.find((opt) => {
+                return opt.attribute_code === 'size';
             });
             // Show colors is in stock only (Hide the color is out of stock)
-            colorOption && optionSelections.forEach((selected_value_index, key) => {
+            /* colorOption && optionSelections.forEach((selected_value_index, key) => {
                 for (let i in optionsIndex) {
                     if (optionsIndex[i]['code'] !== 'color' && optionsIndex[i]['options'] && optionsIndex[i]['options'].length){
                         optionsIndex[i]['options'].forEach((option) => {
@@ -72,12 +65,49 @@ class Options extends Component {
                         });
                     }
                 }
+            }); */
+            // Show size is in stock only (Hide the size is out of stock)
+            sizeOption && optionSelections.forEach((selected_value_index, key) => {
+                for (let i in optionsIndex) {
+                    if (optionsIndex[i]['code'] !== 'size' && optionsIndex[i]['options'] && optionsIndex[i]['options'].length){
+                        optionsIndex[i]['options'].every((option) => {
+                            if(parseInt(option.id) === selected_value_index){
+                                if (option.products && option.products.length) {
+                                    if (optionsIndex[sizeOption.attribute_id] && optionsIndex[sizeOption.attribute_id]['options']
+                                        && optionsIndex[sizeOption.attribute_id]['options'].length){
+                                            optionsIndex[sizeOption.attribute_id]['options'].forEach((optionIndex) => {
+                                                if(optionIndex.products && optionIndex.products.length){
+                                                    optionIndex.products.forEach((productId) => {
+                                                        if (option.products.includes(productId)) {
+                                                            instockSizes.push(parseInt(optionIndex.id)); // add value_index of size option to array
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                    }
+                                }
+                                return false;
+                            }
+                            return true;
+                        });
+                    }
+                }
             });
             
-            if (colorOption) {
+            // Delete color selected in optionSelection (if not found)
+            /* if (colorOption) {
                 optionSelections.forEach((value_index, attribute_id) => {
                     if (colorOption.attribute_id === attribute_id && instockColors.length && !instockColors.includes(value_index)){
                         optionSelections.delete(attribute_id)
+                    }
+                })
+            } */
+            // Delete size selected in optionSelection (if not found)
+            if (sizeOption) {
+                optionSelections.forEach((value_index, attribute_id) => {
+                    if (sizeOption.attribute_id === attribute_id && instockSizes.length && !instockSizes.includes(value_index)){
+                        this.selectedValueIndex = value_index;
+                        optionSelections.delete(attribute_id);
                     }
                 })
             }
@@ -85,26 +115,12 @@ class Options extends Component {
         return options.map(option => {
             //filter option values for color
             let _option = {...option}
-            if(_option.attribute_code === 'color' && instockColors.length){
+            /* if(_option.attribute_code === 'color' && instockColors.length){
                 _option.values = _option.values.filter((value) => instockColors.includes(value.value_index));
-            }
-            //mapping product variants in stock to options
-            /* if(_option.values && _option.values instanceof Array){
-                _option.values.forEach((optionVal) => {
-                    let products = [];
-                    variants.forEach((variant) => {
-                        if (variant.attributes){
-                            let variantAttributes = variant.attributes.find((item) => {
-                                    return (item.code === _option.attribute_code && parseInt(item.value_index) === parseInt(optionVal.value_index))
-                                });
-                            if (variantAttributes && variant.product && variant.product.stock_status === 'IN_STOCK') {
-                                    products.push(variant.product);
-                            }
-                        }
-                    });
-                    optionVal.products = products;
-                });
             } */
+            if(_option.attribute_code === 'size' && instockSizes.length){
+                _option.values = _option.values.filter((value) => instockSizes.includes(value.value_index));
+            }
             return _option;
         });
     }
@@ -113,14 +129,14 @@ class Options extends Component {
         const { handleSelectionChange, handleAskOption } = this;
         // const { optionSelections } = this.props;
         const options = this.mapOptionInStock(); //implement out-of-stock for color option
-        return options.map(option => (
-            <Option
+        return options.map(option => {
+            return <Option
                 {...option}
-                key={option.attribute_id}
+                key={`${option.attribute_id}-${this.selectedValueIndex}`}
                 onSelectionChange={handleSelectionChange}
                 onAskOption={handleAskOption}
             />
-        ));
+        });
     }
 }
 

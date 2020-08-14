@@ -634,11 +634,11 @@ class ProductFullDetail extends Component {
         if (configurable_options) {
             let startSortOrder = 3;
             configurable_options.map((option) => {
-                if (option.attribute_code === 'size') {
+                if (option.attribute_code === 'color') {
                     option.sort_order = 1;
                     return option;
                 }
-                if (option.attribute_code === 'color') {
+                if (option.attribute_code === 'size') {
                     option.sort_order = 2;
                     return option;
                 }
