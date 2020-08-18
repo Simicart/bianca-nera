@@ -702,6 +702,9 @@ $textColor3: #e4e4e4;
             }
         }
     }
+    &.simple-header .container-header{
+      position: unset;
+    }
     .app-nav{
         opacity: 0;
         visibility: hidden;
