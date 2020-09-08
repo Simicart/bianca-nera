@@ -218,7 +218,11 @@
                     <label>Google link at footer</label>
                     <comment>Example: https://...</comment>
                 </field>
-                <field id="bianca_footer_snapchat" translate="label" type="text" sortOrder="1807" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bianca_footer_youtube" translate="label" type="text" sortOrder="1808" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Youtube link at footer</label>
+                    <comment>Example: https://...</comment>
+                </field>
+                <field id="bianca_footer_snapchat" translate="label" type="text" sortOrder="1809" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Snapchat link at footer</label>
                     <comment>Example: https://...</comment>
                 </field>

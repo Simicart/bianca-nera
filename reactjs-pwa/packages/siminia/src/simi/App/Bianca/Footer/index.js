@@ -12,9 +12,10 @@ import {Visa, MasterCard, Debit, Money, BankTransfer, GhostSnapchat} from './Ico
 import { connect } from 'src/drivers';
 require('./footer.scss');
 
+const $ = window.$;
+
 const Footer = (props) => {
 	const [isPhone, setIsPhone] = useState(window.innerWidth < 1024);
-	const $ = window.$;
 	const [ expanded, setExpanded ] = useState(null);
     var footer_customer_service = null
     var footer_information = null
@@ -27,12 +28,14 @@ const Footer = (props) => {
     var footer_twitter = null
     var footer_linkedin = null
     var footer_google = null
+    var footer_youtube = null
     var footer_snapchat = null
 	var bianca_subcribe_description = null
 	var bianca_android_app = null
 	var bianca_ios_app = null
 
-    const storeConfig = Identify.getStoreConfig();
+	const storeConfig = Identify.getStoreConfig();
+	
     // get contactus config
     if(
         storeConfig &&
@@ -41,59 +44,49 @@ const Footer = (props) => {
 		storeConfig.simiStoreConfig.config.header_footer_config
     ){
 		let footerConfig = storeConfig.simiStoreConfig.config.header_footer_config
-        footer_phone = footerConfig.bianca_footer_phone
-        footer_email = footerConfig.bianca_footer_email
-        footer_facebook = footerConfig.bianca_footer_facebook
-        footer_instagram = footerConfig.bianca_footer_instagram
-        footer_twitter = footerConfig.bianca_footer_twitter
-        footer_linkedin = footerConfig.bianca_footer_linkedin
-        footer_google = footerConfig.bianca_footer_google
-        footer_snapchat = footerConfig.bianca_footer_snapchat
+        footer_phone = footerConfig.bianca_footer_phone;
+        footer_email = footerConfig.bianca_footer_email;
+        footer_facebook = footerConfig.bianca_footer_facebook;
+        footer_instagram = footerConfig.bianca_footer_instagram;
+        footer_twitter = footerConfig.bianca_footer_twitter;
+        footer_linkedin = footerConfig.bianca_footer_linkedin;
+        footer_google = footerConfig.bianca_footer_google;
+        footer_youtube = footerConfig.bianca_footer_youtube;
+		footer_snapchat = footerConfig.bianca_footer_snapchat;
+		footer_customer_service = footerConfig.footer_customer_service;
+		
+		footer_information = footerConfig.footer_information;
+		bianca_subcribe_description = footerConfig.bianca_subcribe_description;
+
+		bianca_android_app = footerConfig.bianca_android_app;
+		bianca_ios_app = footerConfig.bianca_ios_app;
     }
 
     // get customer services and link
-	if (
-        storeConfig &&
-		storeConfig.simiStoreConfig &&
-		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.header_footer_config &&
-		storeConfig.simiStoreConfig.config.header_footer_config.footer_customer_service
-	) {
-        footer_customer_service = storeConfig.simiStoreConfig.config.header_footer_config.footer_customer_service
-    }
     if(footer_customer_service){
         const cs = JSON.parse(footer_customer_service)
         services = Object.values(cs)
     }
 
-    const listServices = (services) => {
+    const listServices = (items) => {
 		let result = null;
-		if(services){
-            if (services.length > 0) {
-                result = services.map((service, index) => {
-                    return (
-                        <li onClick={scrollTop} key={index}>
-                            <Link to={service.service_link}>{Identify.__(service.service_title)}</Link>
-                        </li>
-                    );
-                });
-            }
+		if(items && items.length > 0){
+			result = items.map((service, index) => {
+				if (service.service_link) {
+					return (
+						<li onClick={scrollTop} key={index}>
+							<Link to={service.service_link}>{Identify.__(service.service_title)}</Link>
+						</li>
+					);
+				}
+				return null;
+			});
         }
 
 		return <ul>{result}</ul>;
 	};
 
     // more informations and link
-	if (
-        storeConfig &&
-		storeConfig.simiStoreConfig &&
-		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.header_footer_config &&
-		storeConfig.simiStoreConfig.config.header_footer_config.footer_information
-	) {
-        footer_information = storeConfig.simiStoreConfig.config.header_footer_config.footer_information
-	}
-	
     if(footer_information){
         const inf = JSON.parse(footer_information)
         informations = Object.values(inf)
@@ -112,43 +105,20 @@ const Footer = (props) => {
 		if(infos){
             if (infos.length > 0) {
                 result = infos.map((info, index) => {
-                    return (
-                        <li onClick={scrollTop} key={index}>
-                            <Link to={info.information_link}>{Identify.__(info.information_title)}</Link>
-                        </li>
-                    );
+					if (info.information_link) {
+						return (
+							<li onClick={scrollTop} key={index}>
+								<Link to={info.information_link}>{Identify.__(info.information_title)}</Link>
+							</li>
+						);
+					}
+					return null;
                 });
             }
         }
 
 		return <ul>{result}</ul>;
 	};
-
-	// get subcribe description
-	if(
-		storeConfig &&
-        storeConfig.simiStoreConfig &&
-		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.header_footer_config && 
-		storeConfig.simiStoreConfig.config.header_footer_config.bianca_subcribe_description
-	){
-		bianca_subcribe_description = storeConfig.simiStoreConfig.config.header_footer_config.bianca_subcribe_description
-	}
-
-	// get link android and ios app
-	if(
-		storeConfig &&
-        storeConfig.simiStoreConfig &&
-		storeConfig.simiStoreConfig.config &&
-		storeConfig.simiStoreConfig.config.header_footer_config
-	){
-		if(storeConfig.simiStoreConfig.config.header_footer_config.bianca_android_app){
-			bianca_android_app = storeConfig.simiStoreConfig.config.header_footer_config.bianca_android_app
-		}
-		if(storeConfig.simiStoreConfig.config.header_footer_config.bianca_ios_app){
-			bianca_ios_app = storeConfig.simiStoreConfig.config.header_footer_config.bianca_ios_app
-		}
-	}
 
 	const contactUs = [
 		{
@@ -167,11 +137,14 @@ const Footer = (props) => {
 		let result = null;
 		if (pages.length > 0) {
 			result = pages.map((page, index) => {
-				return (
-					<li key={index} className="contact_us">
-						<Link to={page.link}>{page.title}</Link>
-					</li>
-				);
+				if (page.link) {
+					return (
+						<li key={index} className="contact_us">
+							<Link to={page.link}>{page.title}</Link>
+						</li>
+					);
+				}
+				return null;
 			});
 		}
 
@@ -239,34 +212,40 @@ const Footer = (props) => {
 										<span className={classes['footer--title']}>{Identify.__('Contact Us')}</span>
 										<ul>
 											{contactUs.map((page, index) => {
-												return (
-													<li key={index} className="contact_us">
-														<Link to={page.link}>{page.title}</Link>
-													</li>
-												);
+												if (page.link) {
+													return (
+														<li key={index} className="contact_us">
+															<Link to={page.link}>{page.title}</Link>
+														</li>
+													);
+												}
+												return null;
 											})}
 											<li>
 												<div className={'social-icon'}>
-													<a href={footer_facebook} target="__blank">
+													{footer_facebook && <a href={footer_facebook} target="__blank">
 														<span className={"facebook-icon"}></span>
-													</a>
-													<a href={footer_instagram} target="__blank">
+													</a>}
+													{footer_instagram && <a href={footer_instagram} target="__blank">
 														<span className={classes['instagram-icon']} ></span>
-													</a>
-													<a href={footer_twitter} target="__blank">
+													</a>}
+													{footer_twitter && <a href={footer_twitter} target="__blank">
 														<span className={classes['twitter-icon']} ></span>
-													</a>
-													<a href={footer_linkedin} target="__blank">
+													</a>}
+													{footer_linkedin && <a href={footer_linkedin} target="__blank">
 														<span className={classes['linkedin-icon']} ></span>
-													</a>
-													<a href={footer_google} target="__blank">
+													</a>}
+													{footer_google && <a href={footer_google} target="__blank">
 														<span className={classes['google-icon']} ></span>
-													</a>
-													<a href={footer_snapchat} target="__blank">
+													</a>}
+													{footer_youtube && <a href={footer_youtube} target="__blank">
+														<span className={classes['youtube-icon']} ></span>
+													</a>}
+													{footer_snapchat && <a href={footer_snapchat} target="__blank">
 														<span className={classes['snapchat-icon']} >
 															<GhostSnapchat />
 														</span>
-													</a>
+													</a>}
 												</div>
 											</li>
 											{!props.isSignedIn &&
@@ -418,26 +397,29 @@ const Footer = (props) => {
 										</Link>
 									</div>
 									<div className={'social-icon'}>
-										<a href={footer_facebook} target="__blank">
+										{footer_facebook && <a href={footer_facebook} target="__blank">
 											<span className={"facebook-icon"}></span>
-										</a>
-										<a href={footer_instagram} target="__blank">
+										</a>}
+										{footer_instagram && <a href={footer_instagram} target="__blank">
 											<span className={classes['instagram-icon']} ></span>
-										</a>
-										<a href={footer_twitter} target="__blank">
+										</a>}
+										{footer_twitter && <a href={footer_twitter} target="__blank">
 											<span className={classes['twitter-icon']} ></span>
-										</a>
-										<a href={footer_linkedin} target="__blank">
+										</a>}
+										{footer_linkedin && <a href={footer_linkedin} target="__blank">
 											<span className={classes['linkedin-icon']} ></span>
-										</a>
-										<a href={footer_google} target="__blank">
+										</a>}
+										{footer_google && <a href={footer_google} target="__blank">
 											<span className={classes['google-icon']} ></span>
-										</a>
-										<a href={footer_snapchat} target="__blank">
+										</a>}
+										{footer_youtube && <a href={footer_youtube} target="__blank">
+											<span className={classes['youtube-icon']} ></span>
+										</a>}
+										{footer_snapchat && <a href={footer_snapchat} target="__blank">
 											<span className={classes['snapchat-icon']} >
 												<GhostSnapchat />
 											</span>
-										</a>
+										</a>}
 									</div>
 								</div>
 							</div>
