@@ -67,7 +67,7 @@ class Option extends Component {
 					</h3>
 
 					<div className="list-size">
-						<div className="option-select">
+						{/* <div className="option-select">
 							<ListItemNested
 								obj={this.createRefListItem}
 								primarytext={<div className="choose-your-size">{Identify.__('Choose your size...')}</div>}
@@ -81,7 +81,8 @@ class Option extends Component {
 									defaultSelection={this.state.optionKey}
 								/>
 							</ListItemNested>
-						</div>
+						</div> */}
+						<TileList getItemKey={getItemKey} items={values} onSelectionChange={handleSelectionChange} attribute_code={attribute_code} />
 						<div className="size-guide"><button onClick={handleAskOption}><QuestionIcon />{Identify.__('Size Guide')}</button></div>
 					</div>
 				</div>
