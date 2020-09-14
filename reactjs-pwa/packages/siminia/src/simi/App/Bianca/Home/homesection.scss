@@ -40,6 +40,7 @@
             grid-template-columns: repeat(3, calc(33.3333% - 10.16px));
             grid-gap: 16px;
             max-width: calc(50% - 16px);
+            flex: 1 1 50%;
             .siminia-product-grid-item{
                 min-height: unset;
                 border: 1px solid #F2F2F2;
