@@ -271,7 +271,7 @@ class Products extends React.Component {
 
     render() {
         const {props} = this
-        const { data, title} = props;
+        const { data, title, banner} = props;
         let description = props.description
         if(!description && data&& data.category && data.category.description){
             description = data.category.description ? Identify.__('%t') : Identify.__('%t')
@@ -285,6 +285,11 @@ class Products extends React.Component {
                 <h1 className="title">
                     <div className="categoryTitle">{title}</div>
                 </h1>
+                {banner &&
+                    <div className="banner-area">
+                        <img src={banner} alt={title} style={{maxWidth: '100%'}}/>
+                    </div>
+                }
                 <h2 className="description-area">
                     {descriptionArea}
                 </h2>

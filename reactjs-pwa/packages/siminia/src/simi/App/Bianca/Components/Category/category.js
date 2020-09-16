@@ -132,6 +132,7 @@ const Category = props => {
                     filterData={appliedFilter}
                     loading={null}
                     cateEmpty={cateEmpty}
+                    banner={(foundBrand && foundBrand.banner)?foundBrand.banner:false}
                     description={(foundBrand && foundBrand.description)?foundBrand.description:false}
                 />
             }
