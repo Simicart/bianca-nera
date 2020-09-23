@@ -13,15 +13,16 @@ class SimiSimiconnectorGraphqlSimiProductListItemAfter implements ObserverInterf
         $object = $observer->getObject();
         // $extraData = $observer->getExtraData();
         if (isset($object->productExtraData['attribute_values']['vendor_id'])) {
-            if (class_exists('Vnecoms\Vendors\Model\Vendor')) {
+            $vendorId = $object->productExtraData['attribute_values']['vendor_id'];
+            if (class_exists('Vnecoms\Vendors\Model\Vendor') && $vendorId != 0) {
                 $vendor = \Magento\Framework\App\ObjectManager::getInstance()
-                    ->get(\Vnecoms\Vendors\Model\Vendor::class)
-                    ->load($object->productExtraData['attribute_values']['vendor_id']);
+                    ->get('\Vnecoms\Vendors\Model\Vendor')
+                    ->load((int)$vendorId);
                 if ($vendorId = $vendor->getId()) {
                     // productExtraData
                     $vendorHelper = \Magento\Framework\App\ObjectManager::getInstance()
                         ->get(\Simi\Simicustomize\Helper\Vendor::class);
-                    $profile = $vendorHelper->getProfile($vendorId);
+                    $profile = $vendorHelper->getProfile($vendor);
                     $object->productExtraData['attribute_values']['vendor_name'] =
                         ($profile && isset($profile['store_name']) && $profile['store_name']) ? $profile['store_name'] : $vendor->getName();
                 }

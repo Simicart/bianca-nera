@@ -25,11 +25,16 @@ const SearchForm = props => {
             props.history.push(`/search.html?query=${searchVal}`) 
         }
     }
+
+    let timeoutHandle = null;
     const handleSearchField = () => {
         if (searchField.value) {
             setShowAC(true)
-            if (searchField.value !== searchVal)
-                setSearchVal(searchField.value) 
+            let value = searchField.value;
+            clearTimeout(timeoutHandle);
+            timeoutHandle = setTimeout(() => {
+                setSearchVal(value); // delay to search when typing
+            }, 1200);
         } else {
             setShowAC(false)
         }
@@ -66,7 +71,7 @@ const SearchForm = props => {
                             id="siminia-search-field"
                             ref={(e) => {searchField = e}}
                             className="search"
-                            onChange={() => handleSearchField()}
+                            onChange={handleSearchField}
                             onKeyPress={(e) => {if (e.key === 'Enter') startSearch()}}
                             placeholder={Identify.__('Search')}
                         />

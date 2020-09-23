@@ -5,9 +5,11 @@ namespace Simi\Simicustomize\Helper;
 
 class Vendor extends \Simi\Simiconnector\Helper\Data
 {
-    protected function getProfileBlock($vendorId)
+    protected function getProfileBlock($vendor)
     {
-        $vendor = $this->simiObjectManager->get('\Vnecoms\Vendors\Model\Vendor')->load($vendorId);
+        if (!$vendor instanceof \Vnecoms\Vendors\Model\Vendor) {
+            $vendor = $this->simiObjectManager->get('\Vnecoms\Vendors\Model\Vendor')->load($vendor);
+        }
         $registry = $this->simiObjectManager->get('\Magento\Framework\Registry');
         $registry->unregister('vendor');
         $registry->register('vendor', $vendor);
@@ -17,7 +19,7 @@ class Vendor extends \Simi\Simiconnector\Helper\Data
 
     public function getProfile($vendorId) {
         $profileBlock = $this->getProfileBlock($vendorId);
-        return array(
+        $profile = array(
             'logo_width'=> $profileBlock->getLogoWidth(),
             'logo_height'=> $profileBlock->getLogoHeight(),
             'keep_transparency_logo'=> $profileBlock->keepTransparencyLogo(),
@@ -36,5 +38,8 @@ class Vendor extends \Simi\Simiconnector\Helper\Data
             'joined_date'=> $profileBlock->getJoinedDate(),
             'address'=> $profileBlock->getAddress(),
         );
+        $registry = $this->simiObjectManager->get('\Magento\Framework\Registry');
+        $registry->unregister('vendor');
+        return $profile;
     }
 }
