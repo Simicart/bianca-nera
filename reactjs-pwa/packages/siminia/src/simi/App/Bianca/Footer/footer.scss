@@ -364,6 +364,9 @@ $errorFormBgColor: #ece2e2;
                     content: '\f3f7';
                 }
             }
+            .youtube-icon::before{
+                content: "\e008";
+            }
             .snapchat-icon{
                 svg{
                     fill: #FFF;
