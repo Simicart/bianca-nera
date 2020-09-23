@@ -69,7 +69,7 @@ class Navigation extends React.Component{
 
     hoverActiveItem = (e) => {
         let id = e.currentTarget.id || '';
-        let paddingTop = $('.app-nav.app-nav-main .main-nav').height() - $(e.currentTarget).outerHeight();
+        let paddingTop = $('.app-nav.app-nav-main .main-nav').height() - 20;
         $(`.app-nav .${id} .outer-sub-item`).css({background: 'transparent', paddingTop: paddingTop});
         $(`.app-nav .${id} .outer-sub-item`).addClass('active');
     }

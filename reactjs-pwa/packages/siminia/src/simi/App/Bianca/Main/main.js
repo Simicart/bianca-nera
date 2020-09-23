@@ -56,7 +56,7 @@ class Main extends Component {
                     history && history.location && location.pathname === '/' ? <Homeskeleton />:
                     <Skeleton height={438}/>
                 }
-                <Footer />
+                <Footer storeConfig={storeConfig}/>
             </React.Fragment>
         )
     }

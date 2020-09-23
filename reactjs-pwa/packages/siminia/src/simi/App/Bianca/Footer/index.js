@@ -34,7 +34,8 @@ const Footer = (props) => {
 	var bianca_android_app = null
 	var bianca_ios_app = null
 
-	const storeConfig = Identify.getStoreConfig();
+	// const storeConfig = Identify.getStoreConfig();
+	const { storeConfig } = props;
 	
     // get contactus config
     if(

@@ -507,7 +507,7 @@ $textColor3: #e4e4e4;
 
 .app-nav {
     position: relative;
-    min-height: 42px;
+    min-height: 76px;
     max-height: 114px;
     background-color: #fff;
     font-family: Gotham;
@@ -518,8 +518,9 @@ $textColor3: #e4e4e4;
     justify-content: center;
     align-items: center;
     color: $textColor1;
-    margin-top: 10px;
+    margin-top: 0px;
     padding-top: 10px;
+    padding-bottom: 10px;
     .main-nav {
         display: flex;
         justify-content: center;
@@ -563,7 +564,7 @@ $textColor3: #e4e4e4;
     .outer-sub-item{
       display: none;
       position: absolute;
-      top: 45px;
+      top: 40px;
       left: 0;
       right: 0;
       z-index: 9999;
@@ -574,7 +575,7 @@ $textColor3: #e4e4e4;
     }
     .sub-item{
         background: white;
-        padding-top: 25px;
+        padding-top: 0px;
         padding-bottom: 10px;
         width: 100%;
         max-width: 100%;
@@ -644,7 +645,6 @@ $textColor3: #e4e4e4;
     opacity: 1;
     visibility: visible;
     // transition: visibility 0s, opacity 0.3s ease-out;
-    padding-bottom: 10px;
     &.sticker{
         opacity: 0;
         visibility: hidden;
@@ -659,11 +659,12 @@ $textColor3: #e4e4e4;
             left: 0;
             right: 0;
             z-index: 999;
-            border-bottom: solid 1px #f2f2f2;
+            // border-bottom: solid 1px #f2f2f2;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.3);
             .sub-container{
                 .header{
                     padding: 0px;
-                    min-height: 114px;
+                    min-height: 76px;
                     height: auto;
                     align-items: flex-start;
                     .header-logo{
