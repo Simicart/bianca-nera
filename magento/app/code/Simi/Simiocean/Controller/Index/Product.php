@@ -56,17 +56,61 @@ class Product extends \Magento\Framework\App\Action\Action
         // $productService->process();
         // exit;
 
-        echo '<pre>';
-        // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductList(2020, 1);
-        // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProducts(2020, 10, 10);
+        /* $rows = $this->objectManager->get('\Simi\Simiocean\Model\SyncTable')->getCollection();
+        $rows->addFieldToFilter('type', 'product');
+        $i = 0;
+        var_dump(count($rows));
+        foreach($rows as $r){
+            if (($r->getPageNum() - $i) > 1) {
+                var_dump($r->getData());
+                return;
+            }
+            $i = $r->getPageNum();
+        }
+        print_r('ok test');die; */
+
+
+        // Find these skus existing on the ocean system and log data
+        /* $logger = $this->objectManager->get('\Simi\Simiocean\Model\Logger');
+        $skus = [2031028, 2042028, 2062028, 2060028, 20181008, 20181009, 20181010];
+        for($i = 601; $i <= 750; $i++){
+            $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductList($i, 10);
+            foreach($products as $p){
+                if (in_array($p['SKU'], $skus)) {
+                    var_dump($p);
+                    $logger->debug(array('Check product result', print_r($p)));
+                    die;
+                }
+            }
+            $logger->debug('Check product page: '. $i);
+        }
+        var_dump('no product.');die; */
+
+        // Get product by page, size
+        // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductList(143, 10);
         // print_r($products);die;
         
-        $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductSku('2042004');
-        print_r($products);die;
+        // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductSku('2031028');
+        // print_r($products);die;
 
-        // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProducts(2019, 100, 1);
+        // Get product by year, page, size
+        // $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProducts(2020, 1, 100);
         // var_dump($products);die;
+
+        // Get product From date to date
+        // FromDate
+        $dateFrom = new \DateTime('2020-09-20 00:00:00', new \DateTimeZone('UTC'));
+        $dateFromParam = $dateFrom->getTimestamp();
+        // $dateFromParam = 1600586011;
+        // ToDate
+        $dateTo = new \DateTime('2020-09-21 00:00:00', new \DateTimeZone('UTC'));
+        $dateToParam = $dateTo->getTimestamp();
+        // $dateToParam = 1600586011 +  86400;
+        $products = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Product')->getProductFilter($dateFromParam, $dateToParam, 1, 100);
+        var_dump($products);die;
         
+
+        // Decrypt post data
         $requestBody = $this->getRequest()->getContent();
         $data = $this->helper->decrypt($requestBody);
         echo $data;

@@ -79,6 +79,23 @@ class CustomerSessionInit implements ObserverInterface
             }
         }
 
+        if ( !$simiCurrency || $simiCurrency == '' || !$simiStoreId || $simiStoreId == '') {
+            $mpStoreswitchHelper = $this->simiObjectManager->get('Mageplaza\StoreSwitcher\Helper\Data');
+            $rule = $mpStoreswitchHelper->getMatchingRule();
+            if ($rule) {
+                if ($rule->getCurrency() && (!$simiCurrency || $simiCurrency == '')) {
+                    $simiCurrency = $rule->getCurrency();
+                }
+                if ($rule->getData('store_redirected') && (!$simiCurrency || $simiCurrency == '')) {
+                    $simiStoreId = $rule->getData('store_redirected');
+                }
+            }
+        }
+
+        if ( !$simiStoreId || $simiStoreId == '' ) {
+            $rule = $mpStoreswitchHelper->getMatchingRule();
+        }
+
         if ($simiStoreId && $simiStoreId != '' && (int)$storeManager->getStore()->getId() != (int)$simiStoreId) {
             try {
                 $storeCode = $this->simiObjectManager

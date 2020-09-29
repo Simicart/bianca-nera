@@ -330,6 +330,151 @@ class Product extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Sync pull product by skus
+     */
+    public function syncPullSku($sku){
+        $isProductSync = false;
+        $products = $this->productApi->getProductSku($sku); // Get products from ocean with sku
+        if ($products && count($products)) {
+            $datetime = gmdate('Y-m-d H:i:s');
+            $skuGroup = array();
+            foreach($products as $oProduct){
+                if (isset($oProduct['SKU']) && $oProduct['SKU'] &&
+                    isset($oProduct['BarCode']) && $oProduct['BarCode']
+                ) {
+                    $productModel = $this->convertProductData($oProduct); // convert data array to product object model
+                    $productModel->setSku($this->_getProductSku($oProduct));
+                    $productModel->setName($this->_getProductName($oProduct));
+                    $productModel->setUrlKey($this->_getProductUrlKey($oProduct));
+                    if($product = $this->createProduct($productModel)){
+                        $oProductTable = $this->simioceanProductFactory->create();
+                        try{
+                            $oProductTable->setData($this->_getProductTableData($oProduct));
+                            $oProductTable->setProductId($product->getId());
+                            $oProductTable->save();
+                        }catch(\Exception $e){
+                            $this->logger->debug(array(
+                                'Warning! Save simiocean product failed. SKU: '.$oProductTable->getSku().', BarCode: '.$oProductTable->getBarcode(), 
+                                $e->getMessage()
+                            ));
+                        }
+                        // save product Arab store
+                        try{
+                            if ($this->config->getArStore() != null && 
+                                isset($oProduct['ProductArName']) && $oProduct['ProductArName']) 
+                            {
+                                $arStoreIds = explode(',', $this->config->getArStore());
+                                $product->setName($oProduct['ProductArName'].'-'.$oProduct['ColorArName'].'-'.$oProduct['SizeName']);
+                                foreach($arStoreIds as $storeId){
+                                    $product->setStoreId($storeId);
+                                    $product->save();
+                                }
+                            }
+                        }catch(\Exception $e){}
+                        $skuGroup[$oProduct['SKU']] = $oProduct; // It means only when product created then go to create the configurable product
+                        $isProductSync = true;
+                    }
+                }
+            }
+            
+            // Create configurable products and setting Associated Products
+            foreach($skuGroup as $sku => $oProduct){
+                $configurableProductModel = $this->convertProductData($oProduct);
+                $configurableProductModel->setSku($sku);
+                $configurableProductModel->setUrlKey(str_replace(' ', '-', strtolower($configurableProductModel->getName())).'-'.$sku);
+                $assocProductIds = $this->getProductIds($sku);
+                if($configurableProduct = $this->createConfigurableProduct($configurableProductModel, $assocProductIds)){
+                    if (isset($oProduct['CategoryId']) && isset($oProduct['SubcategoryId'])) {
+                        if ($categoryId = $this->categoryService->getMagentoCategoryId($oProduct['SubcategoryId'], $oProduct['CategoryId'])) {
+                            try{
+                                $this->linkManagement->assignProductToCategories($configurableProduct->getSku(), array($categoryId));
+                            } catch (\Exception $e) {
+                                $this->logger->debug(array(
+                                    'Product sync pull: Assign product to catalog error. Catalog Id: '.$categoryId,
+                                    $e->getMessage()
+                                ));
+                            }
+                        }
+                    }
+                    // Save parent product id for simiocean_product synced
+                    foreach($assocProductIds as $productId){
+                        try{
+                            $oProductTable = $this->getSimioceanSynced($productId);
+                            $oProductTable->setParentId($configurableProduct->getId());
+                            $oProductTable->save();
+                        }catch(\Exception $e){
+                            $this->logger->debug(
+                                'Can not update parent product_id '.$configurableProduct->getId()
+                                .' to SimioceanProduct sync table. Message: '.$e->getMessage()
+                            );
+                        }
+                    }
+                }
+            }
+
+            if ($isProductSync) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get product name
+     */
+    protected function _getProductName($oProduct){
+        if (!isset($oProduct['ProductEnName']) || !$oProduct['ProductEnName']) $oProduct['ProductEnName'] = __('No en name');
+        if (!isset($oProduct['ColorEnName'])) $oProduct['ColorEnName'] = __('No color en name');
+        if (!isset($oProduct['SizeName'])) $oProduct['SizeName'] = __('No size name');
+        return $oProduct['ProductEnName'].'-'.$oProduct['ColorEnName'].'-'.$oProduct['SizeName'];
+    }
+
+    /**
+     * Get product sku
+     */
+    protected function _getProductSku($oProduct){
+        if (!isset($oProduct['SKU'])) $oProduct['SKU'] = 'No Sku';
+        if (!isset($oProduct['BarCode'])) $oProduct['BarCode'] = 'No BarCode';
+        return $oProduct['SKU'].'_'.$oProduct['BarCode'];
+    }
+
+    /**
+     * Get product url key
+     */
+    protected function _getProductUrlKey($oProduct, $prefix = ''){
+        if (!isset($oProduct['BarCode'])) $oProduct['BarCode'] = __('No barcode');
+        if ($prefix) {
+            return str_replace(' ', '-', strtolower($prefix) . '-' . $oProduct['BarCode']);
+        }
+        return str_replace(' ', '-', $this->_getProductName($oProduct) . '-' . $oProduct['BarCode']);
+    }
+
+    /**
+     * Get product table data
+     */
+    protected function _getProductTableData($oProduct){
+        $data = [];
+        try{
+            $datetime = gmdate('Y-m-d H:i:s');
+            $data = [
+                'sku' => $oProduct['SKU'],
+                'barcode' => $oProduct['BarCode'],
+                'product_name' => $oProduct['ProductEnName'] ?: $oProduct['ProductArName'],
+                'color_id' => $oProduct['ColorID'],
+                'color_name' => $oProduct['ColorEnName'] ?: $oProduct['ColorArName'],
+                'size' => $oProduct['SizeName'],
+                'price' => $oProduct['Price'],
+                'qty' => $oProduct['StockQuantity'],
+                'product_id' => '',
+                'configurable_id' => '',
+                'sync_time' => $datetime,
+                'created_at' => $datetime,
+            ];
+        }catch(\Exception $e){}
+        return $data;
+    }
+
+    /**
      * Sync pull product from ocean to website
      */
     public function syncUpdatePull(){
@@ -727,12 +872,17 @@ class Product extends \Magento\Framework\Model\AbstractModel
              * @return \Magento\Catalog\Api\Data\ProductInterface
              */
             $productModel->setIsOcean(1);
-            if (!$savedProduct = $this->getProductExists($productModel->getSku())) {
-                $savedProduct = $this->productRepository->save($productModel);
+            $product = $this->getProductExists($productModel->getSku());
+            if (!$product) {
+                $product = $this->productRepository->save($productModel);
             } else {
-                //TODO: If override old product then write code here (this is for simple product)
+                // If override old product then write code here (this is for simple product)
+                $data = $this->dataObjectProcessor->buildOutputDataArray($productModel, ProductInterface::class);
+                /** @var Magento\Catalog\Model\Product */
+                $this->dataObjectHelper->populateWithArray($product, $data, null); // Add data array to Magento Product object
+                $product = $this->productRepository->save($product);
             }
-            return $savedProduct;
+            return $product;
             // return true;
         } catch(\Exception $e) {
             $this->logger->debug(array('Save product error: '.$e->getMessage(), $productModel->getData()));
