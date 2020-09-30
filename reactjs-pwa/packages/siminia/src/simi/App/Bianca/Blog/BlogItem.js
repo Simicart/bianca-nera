@@ -28,15 +28,15 @@ export const BlogItem = props => {
 
     return (
         <div className="article-item" {...props}>
-            {image}
-            <div className="article-description">
-                {item.publish_date && <div className="date">
-                    {getFormattedDate(item.publish_date)}
-                </div>}
-                <Link to={locationDest} className="title">
-                    {item.title}
-                </Link>
-            </div>
+            <Link to={locationDest}>
+                {image}
+                <div className="article-description">
+                    {item.publish_date && <div className="date">
+                        {getFormattedDate(item.publish_date)}
+                    </div>}
+                    <div className="title">{item.title}</div>
+                </div>
+            </Link>
         </div>
     );
 };

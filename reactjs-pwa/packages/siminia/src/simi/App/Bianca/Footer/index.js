@@ -124,12 +124,12 @@ const Footer = (props) => {
 	const contactUs = [
 		{
 			id: 1,
-			link: '#',
+			link: `tel:${footer_phone && footer_phone.replace('+', '') || ''}`,
 			title: Identify.__(footer_phone)
 		},
 		{
 			id: 2,
-			link: '#',
+			link: `mailto:${footer_email}`,
 			title: Identify.__(footer_email)
 		}
     ];
@@ -139,6 +139,13 @@ const Footer = (props) => {
 		if (pages.length > 0) {
 			result = pages.map((page, index) => {
 				if (page.link) {
+					if (page.link && (page.link.includes('mailto:') || page.link.includes('tel:'))) {
+						return (
+							<li key={index} className="contact_us">
+								<a href={page.link} alt={page.title}>{page.title}</a>
+							</li>
+						);
+					}
 					return (
 						<li key={index} className="contact_us">
 							<Link to={page.link}>{page.title}</Link>
@@ -216,7 +223,7 @@ const Footer = (props) => {
 												if (page.link) {
 													return (
 														<li key={index} className="contact_us">
-															<Link to={page.link}>{page.title}</Link>
+															<a href={page.link} alt={page.title}>{page.title}</a>
 														</li>
 													);
 												}
@@ -275,26 +282,6 @@ const Footer = (props) => {
 							<div className={`col-md-3`}>
 								{!isPhone ? (
 									<React.Fragment>
-										<span className={classes['footer--title']}>{Identify.__('Customer Services')}</span>
-										{listServices(services)}
-									</React.Fragment>
-								) : (
-									<div className={`footer-mobile`}>
-										<Expansion
-											id={`expan-2`}
-											title={Identify.__('Customer Services')}
-											content={listServices(services)}
-											icon_color="#FFFFFF"
-											handleExpand={(expanId) => handleExpand(expanId)}
-											expanded={expanded}
-										/>
-									</div>
-								)}
-							</div>
-
-							<div className={`col-md-3`}>
-								{!isPhone ? (
-									<React.Fragment>
 										<span className={classes['footer--title']}>{Identify.__('Information')}</span>
 										{listInfos(informations)}
 									</React.Fragment>
@@ -307,6 +294,26 @@ const Footer = (props) => {
 											handleExpand={(expanId) => handleExpand(expanId)}
 											expanded={expanded}
 											content={listInfos(informations)}
+										/>
+									</div>
+								)}
+							</div>
+
+							<div className={`col-md-3`}>
+								{!isPhone ? (
+									<React.Fragment>
+										<span className={classes['footer--title']}>{Identify.__('Customer Services')}</span>
+										{listServices(services)}
+									</React.Fragment>
+								) : (
+									<div className={`footer-mobile`}>
+										<Expansion
+											id={`expan-2`}
+											title={Identify.__('Customer Services')}
+											content={listServices(services)}
+											icon_color="#FFFFFF"
+											handleExpand={(expanId) => handleExpand(expanId)}
+											expanded={expanded}
 										/>
 									</div>
 								)}
