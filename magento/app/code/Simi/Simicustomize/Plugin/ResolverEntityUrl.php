@@ -20,16 +20,28 @@ class ResolverEntityUrl
     public function afterResolve($entityUrl, $result)
     {
         if (!$result) {
-            $contents            = $this->request->getContent();
-            $contents_array      = [];
-            if ($contents && ($contents != '')) {
-                $contents_parser = urldecode($contents);
-                $contents_array = json_decode($contents_parser, true);
+			$contents            = $this->request->getContent();
+			$contents_array      = [];
+			if ($contents && ($contents != '')) {
+				$contents_parser = urldecode($contents);
+				$contents_array = json_decode($contents_parser, true);
             }
-            if ($contents_array && isset($contents_array['variables']['urlKey'])) {
-                $requestPath = $contents_array['variables']['urlKey'];
-
-                $aw_blog = null;
+            
+            $requestPath = '';
+	        if ( $contents_array && isset( $contents_array['variables']['urlKey'] ) ) {
+		        $requestPath = $contents_array['variables']['urlKey'];
+	        } else {
+		        $contentQuery = $this->request->getQuery();
+		        if ( $contentQuery && is_object( $contentQuery ) && isset( $contentQuery->variables ) && $contentQuery->variables ) {
+			        $queryVar = json_decode( $contentQuery->variables, true );
+			        if ( $queryVar && is_array( $queryVar ) && isset( $queryVar['urlKey'] ) ) {
+				        $requestPath = $queryVar['urlKey'];
+			        }
+		        }
+            }
+            
+			if ($requestPath) {
+				$aw_blog = null;
                 if ($requestPath[0] === '/') {
                     $requestPath = substr($requestPath, 1);
                 }
@@ -46,8 +58,8 @@ class ResolverEntityUrl
                         'type' => 'CMS_PAGE'
                     );
                 }
-            }
-        }
-        return $result;
+			}
+		}
+		return $result;
     }
 }
