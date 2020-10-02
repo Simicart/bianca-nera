@@ -71,7 +71,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
             }
             $attributeInfo = $this->_attributeFactory->getCollection();
             $attributeInfo->addFieldToFilter('attribute_code', 'brand');
-            $storeId = $this->storeManager->getDefaultStoreView()->getStoreId();
+            $storeId = $this->storeManager->getStore()->getStoreId();
             foreach($attributeInfo as $brand){
                 $optionCollection = $this->simiObjectManager->get('\Magento\Eav\Model\Entity\Attribute\Option')->getCollection();
                 $optionCollection
