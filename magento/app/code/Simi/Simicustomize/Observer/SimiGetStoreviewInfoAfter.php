@@ -130,16 +130,16 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
             );
             $object->storeviewInfo['service'] = array(
                 'types' => $this->simiObjectManager->get('Simi\Simicustomize\Model\Source\Service\ServiceType')->getAllOptions(),
-                'description' => $this->config->getValue('sales/service/description'),
+                'description' => $this->config->getValue('sales/service/description', 'store'),
             );
             $aw_blog_enable = $this->config->getValue('aw_blog/general/enabled');
-            $aw_blog_posts_per_page = $this->config->getValue('aw_blog/general/posts_per_page');
+            $aw_blog_posts_per_page = $this->config->getValue('aw_blog/general/posts_per_page', 'store');
             if ($aw_blog_enable && $aw_blog_posts_per_page){
                 $object->storeviewInfo['blog_posts_per_page'] = $aw_blog_posts_per_page;
             }
 
             $this->simiObjectManager->get('Magento\Framework\Serialize\SerializerInterface');
-            $customTitles = $this->config->getValue('pwa_titles/pwa_titles/pwa_titles');
+            $customTitles = $this->config->getValue('pwa_titles/pwa_titles/pwa_titles', 'store');
             if ($customTitles) {
                 $customTitles = $this->simiObjectManager->get('Magento\Framework\Serialize\SerializerInterface')
                     ->unserialize($customTitles);
@@ -153,26 +153,26 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
             }
             // Nam customize
             $object->storeviewInfo['header_footer_config'] = array(
-                'bianca_header_phone' => $this->config->getValue('simiconnector/pwa_header/bianca_header_phone'),
-                'bianca_header_sale_title' => $this->config->getValue('simiconnector/pwa_header/bianca_header_sale_title'),
-                'bianca_header_sale_link' => $this->config->getValue('simiconnector/pwa_header/bianca_header_sale_link'),
-                'bianca_header_storelocator' => $this->config->getValue('simiconnector/pwa_header/bianca_header_storelocator'),
-                'bianca_subcribe_description' => $this->config->getValue('simiconnector/pwa_footer_subcribe/bianca_subcribe_description'),
-                'footer_logo' => $this->config->getValue('simiconnector/pwa_footer_subcribe/footer_logo'),
-                'footer_logo_alt' => $this->config->getValue('simiconnector/pwa_footer_subcribe/footer_logo_alt'),
-                'footer_customer_service' => $this->config->getValue('simiconnector/footer_customer_service/customer_service'),
-                'footer_information' => $this->config->getValue('simiconnector/footer_customer_service/more_information'),
-                'bianca_footer_phone' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_phone'),
-                'bianca_footer_email' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_email'),
-                'bianca_footer_facebook' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_facebook'),
-                'bianca_footer_instagram' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_instagram'),
-                'bianca_footer_twitter' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_twitter'),
-                'bianca_footer_linkedin' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_linkedin'),
-                'bianca_footer_google' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_google'),
-                'bianca_footer_youtube' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_youtube'),
-                'bianca_footer_snapchat' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_snapchat'),
-                'bianca_android_app' => $this->config->getValue('simiconnector/footer_app/bianca_android_app'),
-                'bianca_ios_app' => $this->config->getValue('simiconnector/footer_app/bianca_ios_app')
+                'bianca_header_phone' => $this->config->getValue('simiconnector/pwa_header/bianca_header_phone', 'store'),
+                'bianca_header_sale_title' => $this->config->getValue('simiconnector/pwa_header/bianca_header_sale_title', 'store'),
+                'bianca_header_sale_link' => $this->config->getValue('simiconnector/pwa_header/bianca_header_sale_link', 'store'),
+                'bianca_header_storelocator' => $this->config->getValue('simiconnector/pwa_header/bianca_header_storelocator', 'store'),
+                'bianca_subcribe_description' => $this->config->getValue('simiconnector/pwa_footer_subcribe/bianca_subcribe_description', 'store'),
+                'footer_logo' => $this->config->getValue('simiconnector/pwa_footer_subcribe/footer_logo', 'store'),
+                'footer_logo_alt' => $this->config->getValue('simiconnector/pwa_footer_subcribe/footer_logo_alt', 'store'),
+                'footer_customer_service' => $this->config->getValue('simiconnector/footer_customer_service/customer_service', 'store'),
+                'footer_information' => $this->config->getValue('simiconnector/footer_customer_service/more_information', 'store'),
+                'bianca_footer_phone' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_phone', 'store'),
+                'bianca_footer_email' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_email', 'store'),
+                'bianca_footer_facebook' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_facebook', 'store'),
+                'bianca_footer_instagram' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_instagram', 'store'),
+                'bianca_footer_twitter' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_twitter', 'store'),
+                'bianca_footer_linkedin' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_linkedin', 'store'),
+                'bianca_footer_google' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_google', 'store'),
+                'bianca_footer_youtube' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_youtube', 'store'),
+                'bianca_footer_snapchat' => $this->config->getValue('simiconnector/pwa_footer/bianca_footer_snapchat', 'store'),
+                'bianca_android_app' => $this->config->getValue('simiconnector/footer_app/bianca_android_app', 'store'),
+                'bianca_ios_app' => $this->config->getValue('simiconnector/footer_app/bianca_ios_app', 'store')
             );
             $object->storeviewInfo['social_login_config'] = array(
                 'firebase_config' => $this->config->getValue('simiconnector/firebase/firebase_config')
@@ -180,8 +180,8 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
 
             $object->storeviewInfo['seo'] = array(
                 'home_meta' => array(
-                    'title' => $this->config->getValue('simiconnector/seo/home_meta_title'),
-                    'desc' => $this->config->getValue('simiconnector/seo/home_meta_description'),
+                    'title' => $this->config->getValue('simiconnector/seo/home_meta_title', 'store'),
+                    'desc' => $this->config->getValue('simiconnector/seo/home_meta_description', 'store'),
                 )
             );
         }
