@@ -140,6 +140,9 @@ $errorFormBgColor: #ece2e2;
                             text-decoration:none !important;
                         }
                     }
+                    &.underline a {
+                        text-decoration: underline !important;
+                    }
                 }
             }
         }
@@ -325,11 +328,14 @@ $errorFormBgColor: #ece2e2;
             a, a:hover, a:active, a:visited {
                 text-decoration: none;
             }
-            .login{
+            .bottom-link {
                 padding: 0 32px;
                 margin-top: 6px;
                 margin-bottom: 12px;
                 text-align: center;
+            }
+            .bottom-link.contact a {
+                text-decoration: underline;
             }
             .social-icon{
                 margin-bottom: 12px;

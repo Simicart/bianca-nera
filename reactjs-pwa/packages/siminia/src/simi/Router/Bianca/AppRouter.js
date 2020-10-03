@@ -11,43 +11,14 @@ class AppRouter extends Abstract{
     }
     renderRoute =(router = null)=>{
         if(!router) return <div></div>
+        let routes = [];
+        for(let routeName in router){
+            routes.push(<Route exact {...router[routeName]} key={routeName}/>);
+        };
         return (
             <Switch>
-                <Route exact {...router.home}/>
-                <Route exact {...router.instagram}/>
-                <Route exact {...router.search_page}/>
-                <Route exact {...router.cart}/>
-                <Route exact {...router.product_detail}/>
-                <Route exact {...router.vendor_list}/>
-                <Route exact {...router.vendor_detail}/>
-                <Route exact {...router.checkout}/>
-                <Route exact {...router.thankyou}/>
-                <Route exact {...router.account}/>
-                <Route exact {...router.address_book}/>
-                <Route exact {...router.oder_history}/>
-                <Route exact {...router.order_history_detail}/>
-                <Route exact {...router.newsletter}/>
-                <Route exact {...router.profile}/>
-                <Route exact {...router.sizechart}/>
-                <Route exact {...router.wishlist}/>
-                <Route exact {...router.sharewishlist}/>
-                <Route exact {...router.sharedwishlist}/>
-                <Route exact {...router.my_gift_vouchers}/>
-                <Route exact {...router.login}/>
-                <Route exact {...router.vendor_login}/>
-                <Route exact {...router.logout}/>
-                <Route exact {...router.customer_reset_password}/>
-                {/* <Route exact {...router.contact}/> */}
-                <Route exact {...router.clothing_alterations}/>
-                <Route exact {...router.paypal_express}/>
-                <Route exact {...router.preorder2nd}/>
-                <Route exact {...router.webview}/>
-                <Route exact {...router.storelocator}/>
-                <Route exact {...router.shopbybrand}/>
-                <Route exact {...router.blog}/>
-                <Route exact {...router.myreserved}/>
-                <Route exact {...router.mytrytobuy}/>
-                {/*this.renderPbRoute()*/}
+                {routes}
+                {this.renderPbRoute()}
                 <Route {...router.noMatch}/>
             </Switch>
         )

@@ -263,6 +263,11 @@ const Footer = (props) => {
 													</Link>
 												</li>
 											}
+											<li className="underline">
+												<Link onClick={scrollTop} to={'/contact.html'}>
+													{Identify.__('Send us a message')}
+												</Link>
+											</li>
 										</ul>
 									</React.Fragment>
 								) : (
@@ -399,9 +404,14 @@ const Footer = (props) => {
 						<div className="container">
 							<div className="row">
 								<div className="col-md-12">
-									<div className="login">
+									<div className="bottom-link login">
 										<Link onClick={scrollTop} to={'/designer_login.html'}>
 											{Identify.__('Login as Designer')}
+										</Link>
+									</div>
+									<div className="bottom-link contact">
+										<Link onClick={scrollTop} to={'/contact.html'}>
+											{Identify.__('Send us a message')}
 										</Link>
 									</div>
 									<div className={'social-icon'}>

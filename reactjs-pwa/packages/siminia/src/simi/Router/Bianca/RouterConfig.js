@@ -42,11 +42,11 @@ const Cart = (props) => {
 }
 
 const Contact = (props) => {
-    return <LazyComponent component={() => import(/* webpackChunkName: "Contact"*/'src/simi/App/core/Contact/Contact')} {...props}/>
+    return <LazyComponent component={() => import(/* webpackChunkName: "Contact"*/'src/simi/App/Bianca/Contact')} {...props}/>
 }
 
 const Clothing = (props) => {
-    return <LazyComponent component={() => import(/* webpackChunkName: "Contact"*/'src/simi/App/Bianca/Clothing')} {...props}/>
+    return <LazyComponent component={() => import(/* webpackChunkName: "Clothing"*/'src/simi/App/Bianca/Clothing')} {...props}/>
 }
 
 const Product = (props) => {
@@ -207,21 +207,21 @@ const router = {
         path: '/mygiftvouchers.html',
         render : (location) => <Account {...location} page={`giftvoucher`}/>
     },
-    /* contact: {
+    contact: {
         path: '/contact.html',
         render : location => <Contact {...location} page={`contact`}/>
-    }, */
+    },
     clothing_alterations: {
         path: '/clothing-alterations.html',
         render : location => <Clothing {...location} page={`clothing`}/>
     },
     paypal_express: {
         path: '/paypal_express.html',
-        render : location => <PaypalExpress {...location} page={`contact`}/>
+        render : location => <PaypalExpress {...location} page={`paypal_express`}/>
     },
     preorder2nd: {
         path: '/preorder_complete.html',
-        render : location => <PreorderSecondOrder {...location} page={`contact`}/>
+        render : location => <PreorderSecondOrder {...location} page={`preorder2nd`}/>
     },
     webview: {
         path: '/payment_webview.html',

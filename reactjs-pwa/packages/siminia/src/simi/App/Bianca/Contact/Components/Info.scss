@@ -1,0 +1,16 @@
+.contact-info {
+    ul {
+        margin-top: 30px;
+        li {
+            margin-top: 20px;
+            line-height: 14px;
+        }
+    }
+    /* For mobile xs */
+    @media screen and (max-width: 767px){
+        margin-top: 0px;
+        ul li {
+            margin-top: 15px;
+        }
+    }
+}
