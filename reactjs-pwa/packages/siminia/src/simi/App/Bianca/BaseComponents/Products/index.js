@@ -260,7 +260,7 @@ class Products extends React.Component {
                             itemCount={data.products.total_count}
                             items={data.products.items}
                             limit={pageSize}
-                            currentPage={currentPage}
+                            currentPage={this.currentPage}
                             loading={this.state.isLoadingMore}
                         />
                     }

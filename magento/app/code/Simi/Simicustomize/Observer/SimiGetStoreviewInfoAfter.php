@@ -55,7 +55,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
             $descriptionArr = array();
             $brandBannerArr = array();
             $serializer = $this->simiObjectManager->get('Magento\Framework\Serialize\SerializerInterface');
-            $brandDetails = $this->config->getValue('simiconnector/product_brands/brand_details');
+            $brandDetails = $this->config->getValue('simiconnector/product_brands/brand_details', 'store');
             if ($brandDetails) {
                 $brandsDetailsFromConfig = $serializer->unserialize($brandDetails);
                 if ($brandsDetailsFromConfig && is_array($brandsDetailsFromConfig)) {

@@ -515,14 +515,6 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
         $dateFromParam = $dateFrom->getTimestamp();
 
-        // $page = 1;
-        // var_dump('FromDate: '.$dateFromParam.' ('.$dateFromGmt.')');
-        // var_dump('ToDate: '.$dateToParam .' ('.$dateToGmt.')');
-        // var_dump('Page: '.$page);
-        // var_dump('Size: '.$size);
-        // $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
-        // var_dump($oProducts);die;
-        
         try{
             $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
         }catch(\Exception $e){
@@ -534,17 +526,15 @@ class Product extends \Magento\Framework\Model\AbstractModel
         }
 
         if (is_array($oProducts)) {
-            $configurables = array();
             $hasUpdate = false;
             $records = count($oProducts);
-            foreach($oProducts as $oProduct){
+            $lastOceanObject = array();
+            foreach ($oProducts as $oProduct) {
                 if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
                     && $oProduct['SKU'] && $oProduct['BarCode']
                 ) {
                     $oceanObject = $this->dataObjectFactory->create();
                     $oceanObject->setData($oProduct);
-                    
-                    if (!isset($configurables[$oProduct['SKU']])) $configurables[$oProduct['SKU']] = $oceanObject;
 
                     $productData = $this->convertProductData($oProduct); // convert data array to product object model
                     $productData->setSku($oProduct['SKU'].'_'.$oProduct['BarCode']);
@@ -589,6 +579,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
                                         }
                                     }
                                 }catch(\Exception $e){}
+
+                                $lastOceanObject[$oProduct['SKU']] = $oceanObject;
                                 $hasUpdate = true;
                             }
                         }
@@ -596,15 +588,15 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 }
             }
 
-            // Update configurable product
-            if (!empty($configurables)) {
-                foreach($configurables as $sku => $oceanObject) {
-                    $storeId = (int)$this->storeManager->getStore()->getId();
+            // Update configurable product name, category
+            if (!empty($lastOceanObject)) {
+                $storeId = (int)$this->storeManager->getStore()->getId();
+                foreach ($lastOceanObject as $sku => $oObject) {
                     if ($configurableProduct = $this->getProductExists($sku, true, $storeId)) {
-                        if ($oceanObject->getData('CategoryId') && $oceanObject->getData('SubcategoryId')) {
+                        // Update category to change with ocean sub product's category
+                        if ($oObject->getData('CategoryId') && $oObject->getData('SubcategoryId')) {
                             if ($categoryId = $this->categoryService->getMagentoCategoryId(
-                                $oceanObject->getData('SubcategoryId'), 
-                                $oceanObject->getData('CategoryId')
+                                $oObject->getData('SubcategoryId'), $oObject->getData('CategoryId')
                             )) {
                                 try{
                                     $this->linkManagement->assignProductToCategories($configurableProduct->getSku(), array($categoryId));
@@ -616,6 +608,23 @@ class Product extends \Magento\Framework\Model\AbstractModel
                                 }
                             }
                         }
+                        // Update product name
+                        $configurableProduct->setName($oObject->getData('ProductEnName'));
+                        $urlKey = str_replace(' ', '-', strtolower($configurableProduct->getName())).'-'.$sku;
+                        $configurableProduct->setUrlKey($urlKey);
+                        $configurableProduct->setStoreId(0);
+                        $configurableProduct->save();
+                        // save product for Arab store
+                        try{
+                            if ($this->config->getArStore() != null && $oObject->getData('ProductArName')) {
+                                $arStoreIds = explode(',', $this->config->getArStore());
+                                $configurableProduct->setName($oObject->getData('ProductArName'));
+                                foreach($arStoreIds as $storeId){
+                                    $configurableProduct->setStoreId($storeId);
+                                    $configurableProduct->save();
+                                }
+                            }
+                        }catch(\Exception $e){}
                     }
                 }
             }
@@ -785,6 +794,11 @@ class Product extends \Magento\Framework\Model\AbstractModel
         return null;
     }
 
+
+    /**
+     * Get item of the ocean product from table
+     * @return object
+     */
     public function getOceanProduct($sku, $barcode){
         if ($sku && $barcode) {
             $model = $this->simioceanProductFactory->create();
