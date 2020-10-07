@@ -20,7 +20,7 @@ const Info = (props) => {
                 {bianca_footer_phone && 
                 <li>
                     <span className="label">{Identify.__('Tel')}:</span>
-                    <span><a href={`tel:${bianca_footer_phone && bianca_footer_phone.replace('+', '') || ''}`}>+0965 555 5455 731</a></span>
+                    <span><a href={`tel:${bianca_footer_phone && bianca_footer_phone.replace('+', '') || ''}`}>{bianca_footer_phone}</a></span>
                 </li>}
                 {bianca_footer_email && 
                 <li>
