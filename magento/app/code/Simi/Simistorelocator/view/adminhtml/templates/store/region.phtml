@@ -7,7 +7,7 @@ $store  = $block->getStore();
 <input type="text" id="state"  name="state" style="width:100%;" class="input-text admin__control-text" value="<?php echo $store->getStateId() ? '' : $store->getState() ?>" placeholder="<?php echo __('State/Province') ?>"  title="<?php echo __('State/Province') ?>" class="input-text" />
 
 <script type="text/javascript">
-    require(['jquery', 'Simi/Simistorelocator/js/store/region-updater'], function($){
+    require(['jquery', 'Simi_Simistorelocator/js/store/region-updater'], function($){
         $('#store_region_updater').css('width', '100%');
         $('#store_country_id').regionUpdater({
             regionListId: '#state_id',
