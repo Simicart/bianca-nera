@@ -77,7 +77,21 @@ class UrlKeyIsUnique
                 $select->where($metaData->getIdentifierField() . ' <> :id');
                 $bind['id'] = $entity->getId();
             }
-            if ($connection->fetchRow($select, $bind)) {
+            if ($row = $connection->fetchRow($select, $bind)) {
+                /** Simi Fix - Validate per store id */
+                if ($table == $this->resourceConnection->getTableName(ResourcePost::BLOG_POST_TABLE)) {
+                    $id = $row['id'];
+                    $select = $connection->select()
+                        ->from($this->resourceConnection->getTableName(ResourcePost::BLOG_POST_STORE_TABLE))
+                        ->where('post_id = :post_id')
+                        ->where('store_id IN (:storeIds)');
+                    $bind = ['storeIds' => implode(',', $entity->getStoreIds()), 'post_id' => $id];
+                    if ($connection->fetchRow($select, $bind)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
                 return false;
             }
         }
