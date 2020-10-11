@@ -75,18 +75,20 @@ class Storeview extends React.Component {
     renderItem() {
         if (this.state.changingStore) {
             const {store_id, currency} = Identify.getAppSettings() || {};
-            const cartId = storage.getItem('cartId')
+            const cartId = storage.getItem('cartId');
             return (
-                <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency, cartId: cartId?cartId:0}}>
+                <Simiquery query={simiStoreConfigDataQuery} variables={{storeId: store_id, currency, cartId: cartId?cartId:0}}
+                    fetchPolicy={'no-cache'}>
                     {({ loading, data, error }) => {
                         if (loading) return null;
                         if (error) window.location.reload();
                         if (data && data.storeConfig) {
-                            Identify.saveStoreConfig(data)
-                            saveCategoriesToDict(data.simiRootCate)
-                            window.location.reload()
+                            Identify.saveStoreConfig(data);
+                            saveCategoriesToDict(data.simiRootCate);
+                            localStorage.removeItem("apollo-cache-persist"); // remove cached to query new store config data
+                            window.location.reload();
                         } else if(data) {
-                            window.location.reload()
+                            window.location.reload();
                         }
                         return null
                     }}

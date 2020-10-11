@@ -4,7 +4,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Popper from '@material-ui/core/Popper';
 import Storeview from "src/simi/BaseComponents/Settings/Storeview";
-import Currency from "src/simi/BaseComponents/Settings//Currency";
+import Currency from "src/simi/BaseComponents/Settings/Currency";
 import SettingIcon from 'src/simi/BaseComponents/Icon/Settings'
 
 class Settings extends React.Component{
@@ -28,10 +28,10 @@ class Settings extends React.Component{
     renderSettingOptions = ()=>{
         const { open } = this.state;
         const {classes} = this.props
-        const storeViewOptions = <Storeview classes={classes} className={classes['storeview-item']}/>
-        const currencyOptions = <Currency classes={classes} className={classes['storeview-item']}/>
-        if (!storeViewOptions && !currencyOptions)
-            return false
+        // const storeViewOptions = <Storeview classes={classes} className={classes['storeview-item']}/>
+        // const currencyOptions = <Currency classes={classes} className={classes['storeview-item']}/>
+        // if (!storeViewOptions && !currencyOptions)
+            // return false
         return (
             <Popper open={open} anchorEl={this.anchorEl}
                     placement="bottom-start"
