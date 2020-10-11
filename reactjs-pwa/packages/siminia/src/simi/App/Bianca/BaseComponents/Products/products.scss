@@ -14,11 +14,15 @@ $colorTitle: #101820;
     .categoryTitle {
       margin-top: 0px;
       color: $colorTitle;
-      font-family: "Gotham Medium";
+      font-family: "Gotham Book";
+      font-weight: 600;
       font-size: 24px;
       line-height: 24px;
       text-transform: uppercase;
     }
+  }
+  .banner-area {
+    margin-top: 20px;
   }
   .description-area {
     margin-top: 24px;
