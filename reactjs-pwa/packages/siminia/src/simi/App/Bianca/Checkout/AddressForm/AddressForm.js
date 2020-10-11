@@ -99,7 +99,8 @@ const AddressForm = props => {
     }
 
     const simiGetStoreConfig = Identify.getStoreConfig();
-    const simiStoreViewCustomer = simiGetStoreConfig.simiStoreConfig.config.customer;
+    const simiStoreViewCustomer = simiGetStoreConfig && simiGetStoreConfig.simiStoreConfig 
+        && simiGetStoreConfig.simiStoreConfig.config && simiGetStoreConfig.simiStoreConfig.config.customer;
 
     let configFields = defaultConfigValues;
     if (simiStoreViewCustomer && simiStoreViewCustomer.hasOwnProperty('address_fields_config')) {
@@ -172,14 +173,10 @@ const AddressForm = props => {
                 const value = inputField.val()
                 if ((inputField.hasClass('isrequired') || inputField.attr('isrequired') === 'isrequired') && !value) {
                     formValid = false
-                    console.log(inputField)
-                    console.log(formIsValidOnce)
                     if (showNotValidWarning || formIsValidOnce) {
-                        console.log('a')
                         inputField.addClass('warning')
                         smoothScrollToView(inputField, 350, 50)
                     }
-                    console.log('b')
                     return false
                 }
                 inputField.removeClass('warning')

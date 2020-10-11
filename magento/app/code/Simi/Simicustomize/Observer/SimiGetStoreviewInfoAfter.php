@@ -184,6 +184,8 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                     'desc' => $this->config->getValue('simiconnector/seo/home_meta_description', 'store'),
                 )
             );
+
+            $object->storeviewInfo['base']['pwa_studio_url'] = $this->config->getValue('simiconnector/general/pwa_studio_url', 'store');
         }
     }
 }

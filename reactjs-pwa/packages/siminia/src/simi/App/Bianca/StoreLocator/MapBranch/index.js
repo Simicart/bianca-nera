@@ -6,7 +6,7 @@ import CurrentMarker from './CurrentMarker';
 class MapBranch extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { centerT: props.center };
+        this.state = { centerT: props.center, zoom: 0 };
     }
 
     static defaultProps = {
@@ -22,7 +22,7 @@ class MapBranch extends React.Component {
         const {data, multiple, currentLocation} = this.props;
         if (this.props.markerFocus && this.props.markerFocus.center) {
             // return { ...state, centerT: this.props.markerFocus.center };
-            this.setState({ centerT: this.props.markerFocus.center });
+            this.setState({ centerT: this.props.markerFocus.center, zoom: 9 });
         }
         if (data) {
             if(multiple && data.storelocations.length > 0){
@@ -82,6 +82,21 @@ class MapBranch extends React.Component {
         }
     } */
 
+    getAveragePosition = () => {
+        let center = this.props.center;
+        const {data, multiple} = this.props;
+        if (data && multiple && data.storelocations.length > 0) {
+            const arrLngLat = [];
+            data.storelocations.map((item) => {
+                const lat = Number(item.latitude);
+                const lng = Number(item.longitude);
+                return arrLngLat.push({ lat, lng });
+            });
+            center = this.averageGeolocation(arrLngLat);
+        }
+        return center;
+    }
+
     averageGeolocation = coords => {
         if (coords.length === 1) {
             return coords[0];
@@ -129,6 +144,34 @@ class MapBranch extends React.Component {
                 />
         }
         return html;
+    }
+
+    // Return the object {sw: {lat, lng}, ne: {lat, lng}}
+    getBound = () => {
+        const {data, multiple} = this.props;
+        if (multiple && data && data.storelocations.length > 0) {
+            let minLat = 0;
+            let maxLat = 0;
+            let minLng = 0;
+            let maxLng = 0;
+            data.storelocations.map((item, index) => {
+                if (index === 0) {
+                    minLat = item.latitude;
+                    maxLat = item.latitude;
+                    minLng = item.longitude;
+                    maxLng = item.longitude;
+                }
+                if (minLat > item.latitude) minLat = item.latitude;
+                if (maxLat < item.latitude) maxLat = item.latitude;
+                if (minLng > item.longitude) minLng = item.longitude;
+                if (maxLng < item.longitude) maxLng = item.longitude;
+            });
+            return {
+                sw: {lat: parseFloat(minLat), lng: parseFloat(minLng)},
+                ne: {lat: parseFloat(maxLat), lng: parseFloat(maxLng)}
+            }
+        }
+        return {}
     }
 
     listMaker = () => {
@@ -351,7 +394,20 @@ class MapBranch extends React.Component {
             ]
         };
         const { centerT } = this.state;
-        const { height, data } = this.props;
+        const { height, data, markerFocus } = this.props;
+
+        let zoom = this.props.zoom;
+        let centerFocus = markerFocus && markerFocus.center || centerT;
+        if (markerFocus && markerFocus.center) {
+            centerFocus = markerFocus.center;
+            zoom = 12;
+        } else {
+            centerFocus = this.getAveragePosition();
+            if (window.mapzoom) {
+                zoom = window.mapzoom;
+            }
+        }
+
         return (
             <div style={{ height: height, width: "100%" }}>
                 <GoogleMapReact
@@ -359,10 +415,25 @@ class MapBranch extends React.Component {
                         key: (data && data.google_api_key) ? data.google_api_key : "AIzaSyDVCRi-1g45uNxpu_VY3o3M9A1UqtezG1k",
                         language: "en"
                     }}
+                    center={centerFocus}
+                    zoom={zoom}
                     defaultCenter={this.props.center}
-                    center={centerT}
                     defaultZoom={this.props.zoom}
                     options={mapOptions}
+                    onGoogleApiLoaded={({ map, maps }) => {
+                        if (markerFocus && markerFocus.center) return;
+                        if (map) {
+                            this.map = map;
+                            const bound = this.getBound();
+                            var bounds = new google.maps.LatLngBounds();
+                            bounds.extend(new google.maps.LatLng(bound.sw));
+                            bounds.extend(new google.maps.LatLng(bound.ne));
+                            map.fitBounds(bounds);
+                            window.mapzoom = map.getZoom();
+                        } else {
+                            console.warn('No map of google map api')
+                        }
+                    }}
                 >
                     {this.listMaker()}
                     {/* {this.currentMaker()} */}

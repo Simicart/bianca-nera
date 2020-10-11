@@ -14,11 +14,14 @@ use Magento\Framework\Event\ObserverInterface;
 class SimiconnectorModelServerInitialize implements ObserverInterface {
 
     public $simiObjectManager;
+    public $helper;
 
     public function __construct(
-        \Magento\Framework\ObjectManagerInterface $simiObjectManager
+        \Magento\Framework\ObjectManagerInterface $simiObjectManager,
+        \Simi\Simicustomize\Helper\Data $helper
     ) {
         $this->simiObjectManager = $simiObjectManager;
+        $this->helper = $helper;
     }
     /**
      * @param \Magento\Framework\Event\Observer $observer
@@ -32,6 +35,8 @@ class SimiconnectorModelServerInitialize implements ObserverInterface {
             $data['module'] = "simicustomize";
             $object->setData($data);
         }
+
+        $this->helper->convertBearerToCustomerLoggedIn();
     }
 
 }

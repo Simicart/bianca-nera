@@ -377,6 +377,16 @@ class Checkout extends Component {
     }
 
     render() {
+        if (this.props.checkout && this.props.checkout.paymentCode && this.props.checkout.step) {
+            if (window.SMCONFIGS && window.SMCONFIGS.merchant_url) {
+                if (this.props.checkout.step === 'receipt' && (
+                    this.props.checkout.paymentCode.indexOf('simiknet') !== -1
+                )) {
+                    window.location.replace(window.SMCONFIGS.merchant_url + 'simiknet/payment/redirect?order_entity_id=' + this.props.checkout.order_entity_id)
+                    return ''
+                }
+            }
+        }
         return (
             <div className={`checkout-bg ${Identify.isRtl() ? 'checkout-bg-rtl' : ''}`}>
                 <div className="container">

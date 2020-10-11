@@ -6,7 +6,7 @@
 
 namespace Simi\Simicustomize\Model\Api;
 
-class Orders extends \Simi\Simiconnector\Model\Api\Orders
+class Orders extends \Simi\Simiconnector\Model\Api\Apiabstract
 {
 
     public $DEFAULT_ORDER = 'entity_id';
@@ -55,12 +55,12 @@ class Orders extends \Simi\Simiconnector\Model\Api\Orders
                 }
             }
         } else {
-            $this->builderQuery = $this->simiObjectManager->create('Magento\Sales\Model\Order')->getCollection()
-                    ->addFieldToFilter(
-                        'customer_id',
-                        $this->simiObjectManager->create('Magento\Customer\Model\Session')->getCustomer()->getId()
-                    )
-                    ->setOrder('entity_id', 'DESC');
+            $this->builderQuery = $this->simiObjectManager->get('Magento\Sales\Model\Order')->getCollection()
+                ->addFieldToFilter(
+                    'customer_id',
+                    $this->simiObjectManager->get('Magento\Customer\Model\Session')->getCustomer()->getId()
+                )
+                ->setOrder('entity_id', 'DESC');
         }
     }
 
@@ -358,7 +358,7 @@ class Orders extends \Simi\Simiconnector\Model\Api\Orders
     public function index()
     {
         $result   = parent::index();
-        $customer = $this->simiObjectManager->create('Magento\Customer\Model\Session')->getCustomer();
+        $customer = $this->simiObjectManager->get('Magento\Customer\Model\Session')->getCustomer();
         foreach ($result['orders'] as $index => $order) {
             $this->_updateOrderInformation($order, $customer);
             $result['orders'][$index] = $order;

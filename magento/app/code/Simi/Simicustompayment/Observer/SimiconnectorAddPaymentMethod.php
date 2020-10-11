@@ -30,6 +30,7 @@ class SimiconnectorAddPaymentMethod implements ObserverInterface {
         $object = $observer->getObject();
         $object->addPaymentMethod('payfort_fort_sadad', 3);
         $object->addPaymentMethod('payfort_fort_cc', 1);
+        $object->addPaymentMethod('simiknet', 3);
         return;
     }
 

@@ -156,11 +156,12 @@ const reducerMap = {
             submitting: true
         };
     },
-    [actions.order.accept]: state => {
+    [actions.order.accept]: (state, { payload }) => {
         return {
             ...state,
             editing: null,
             step: 'receipt',
+            order_entity_id: payload,
             submitting: false
         };
     },

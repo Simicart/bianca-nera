@@ -111,6 +111,14 @@ const PaymentsFormItems = props => {
                         Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'selected_payment_payfortcc', paymentChooseFull);
                         handleSuccess(parseData)
                     }
+
+                    if (paymentChooseFull && paymentChooseFull.code === 'simiknet' &&
+                        paymentChooseFull.simi_payment_data && !isObjectEmpty(paymentChooseFull.simi_payment_data) &&
+                        parseInt(paymentChooseFull.simi_payment_data.show_type, 10) === 3) 
+                    {
+                        // payment type 3
+                        handleSuccess(parseData)
+                    }
                 }
             }
         }
