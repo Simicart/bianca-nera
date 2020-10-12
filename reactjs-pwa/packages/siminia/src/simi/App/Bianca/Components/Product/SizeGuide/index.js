@@ -9,7 +9,7 @@ import Loading from 'src/simi/BaseComponents/Loading';
 import { getSizeChart } from 'src/simi/Model/Customer';
 
 require('./style.scss');
-if (["MacOS", "iOS"].includes(getOS())) require('./style-ios.scss');
+if (["MacOS", "iOS"].includes(getOS()) && !Identify.isRtl()) require('./style-ios.scss');
 
 const SizeGuide = (props) => {
     const $ = window.$;
