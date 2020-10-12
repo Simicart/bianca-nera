@@ -61,6 +61,13 @@ class ResolverEntityUrl
                             ['store_id']
                         )->where('store.store_id = ?', $this->storeManager->getStore()->getId());
                     $aw_blog = $collection->getFirstItem();
+                    if (!$aw_blog->getId()) {
+                        $collection = $this->simiObjectManager
+                            ->get('Aheadworks\Blog\Model\Post')
+                            ->getCollection()
+                            ->addFieldToFilter('url_key', $path_rq[1]);
+                        $aw_blog = $collection->getFirstItem();
+                    }
                     return array(
                         'id' => $aw_blog->getId(),
                         'canonical_url' => $aw_blog->getData('url_key'),
