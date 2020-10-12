@@ -63,7 +63,7 @@ class ResolverEntityUrl
                     $aw_blog = $collection->getFirstItem();
                     if (!$aw_blog->getId()) {
                         $collection = $this->simiObjectManager
-                            ->get('Aheadworks\Blog\Model\Post')
+                            ->create('Aheadworks\Blog\Model\Post')
                             ->getCollection()
                             ->addFieldToFilter('url_key', $path_rq[1]);
                         $aw_blog = $collection->getFirstItem();
