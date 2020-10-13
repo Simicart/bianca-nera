@@ -92,6 +92,13 @@ class Identify {
                 data.simiStoreConfig.config = simi_config.storeview
                 if (simi_config.storeview && simi_config.storeview.base && simi_config.storeview.base.customer_identity)
                     this.storeDataToStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID, simi_config.storeview.base.customer_identity)
+                //save current currency and store to setting
+                if (data.simiStoreConfig && data.simiStoreConfig.currency && parseInt(data.simiStoreConfig.store_id)) {
+                    this.storeAppSettings({
+                        store_id : parseInt(data.simiStoreConfig.store_id),
+                        currency : data.simiStoreConfig.currency,
+                     })
+                }
             }
         }
         //save store config to session storage
