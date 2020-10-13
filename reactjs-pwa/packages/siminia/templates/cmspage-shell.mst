@@ -1,7 +1,7 @@
 {{> templates/open-document}}
   {{> templates/open-body }}
+    {{> templates/splash}}
     <div id="root">
-        {{> templates/splash}}
     </div>
   {{> templates/seed-bundles}}
 {{> templates/close-document}}

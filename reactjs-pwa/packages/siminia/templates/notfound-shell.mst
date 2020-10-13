@@ -1,8 +1,8 @@
 {{> templates/open-document}}
     <title>Bianca Nera</title>
   {{> templates/open-body }}
+    {{> templates/splash}}
     <div id="root">
-        {{> templates/splash}}
     </div>
   {{> templates/seed-bundles}}
 {{> templates/close-document}}

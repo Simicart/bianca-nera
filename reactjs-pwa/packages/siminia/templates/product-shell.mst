@@ -6,8 +6,8 @@
     <meta name="description" content="{{#meta_description.html}}{{.}}{{/meta_description.html}}{{^meta_description.html}}{{description.html}}{{/meta_description.html}}">
     {{/model}}
   {{> templates/open-body }}
+    {{> templates/splash}}
     <div id="root">
-        {{> templates/splash}}
     </div>
   {{> templates/seed-bundles}}
 {{> templates/close-document}}
