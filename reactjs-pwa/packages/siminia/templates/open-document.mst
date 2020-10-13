@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="/simistatic/owlcarousel/owl.carousel.min.css" />
     <link rel="stylesheet" href="/simistatic/style.css" />
     {{> templates/default-font-include}}
-    <link href="https://fonts.googleapis.com/css?family=Muli:300" rel="stylesheet">
+    {{! <link href="https://fonts.googleapis.com/css?family=Muli:300" rel="stylesheet"> }}
 
     <!-- link rel="preconnect" href="{{env.MAGENTO_BACKEND_URL}}" -->
 
