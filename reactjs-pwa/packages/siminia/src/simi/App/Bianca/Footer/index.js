@@ -185,7 +185,7 @@ const Footer = (props) => {
 				<div className="footer-top">
 					<div className={`container`}>
 						<div className={`row`}>
-							<div className={`col-md-6`}>
+							<div className={`col-md-6 col-xs-12`}>
 								<div className="logo-group">
 									<div onClick={scrollRoot} className="footer-logo">
 										<Link to="/">
@@ -200,7 +200,7 @@ const Footer = (props) => {
 									</div>
 								</div>
 							</div>
-							<div className={`col-md-6`}>
+							<div className={`col-md-6 col-xs-12`}>
 								<div className="footer-subscriber">
 									<h3>{Identify.__('subscribe newsletter')}</h3>
 									<p>{Identify.__(bianca_subcribe_description)}</p>
