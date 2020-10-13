@@ -24,8 +24,6 @@
     <link rel="stylesheet" href="/simistatic/bootstrap.min.css">
     <link rel="stylesheet" href="/simistatic/owlcarousel/owl.carousel.min.css" />
     <link rel="stylesheet" href="/simistatic/style.css" />
-    <link rel="preload" as="image" href="/icons/splash-mobile.png">
-    <link rel="preload" as="image" href="/icons/splash-desktop.png">
     {{> templates/default-font-include}}
     {{! <link href="https://fonts.googleapis.com/css?family=Muli:300" rel="stylesheet"> }}
 

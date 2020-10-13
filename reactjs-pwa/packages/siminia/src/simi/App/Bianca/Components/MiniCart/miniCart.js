@@ -82,7 +82,11 @@ class MiniCart extends Component {
     componentDidMount(){
         document.addEventListener("mousedown", this.handleClickOutside);
         // this.props.getCartDetails();
-        this.props.getCartDetailsCustom();
+        // this.props.getCartDetailsCustom();
+        const {getCartDetailsCustom} = this.props
+        setTimeout(function () {
+            getCartDetailsCustom(); //delay 30 seconds
+        }, 30000);
     }
 
     get cartId() {
