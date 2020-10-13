@@ -356,7 +356,12 @@ class Storeviews extends Apiabstract
     {
         $currencies = [];
         $codes      = $this->storeManager->getStore()->getAvailableCurrencyCodes(true);
-        $locale     = $this->getLocale();
+
+        $locale         = $this->scopeConfig->getValue(
+            'general/locale/code',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $this->storeManager->getStore()->getId()
+        );
         foreach ($codes as $code) {
             $currencyTitle = '';
             try {
