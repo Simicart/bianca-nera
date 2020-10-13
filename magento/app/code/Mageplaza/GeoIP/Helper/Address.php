@@ -149,6 +149,8 @@ class Address extends Data
 
         if (!empty($server['HTTP_CLIENT_IP'])) {
             $ip = $server['HTTP_CLIENT_IP'];
+        } else if (!empty($server['HTTP_X_REAL_IP'])) {
+            $ip = $server['HTTP_X_REAL_IP'];
         } else if (!empty($server['HTTP_X_FORWARDED_FOR'])) {
             $ip = $server['HTTP_X_FORWARDED_FOR'];
         } else {

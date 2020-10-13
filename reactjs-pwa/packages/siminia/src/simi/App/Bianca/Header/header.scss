@@ -372,24 +372,32 @@ $textColor3: #e4e4e4;
     .container-global-notice {
       background-color: $bgColor1;
       .notice-inner {
-        margin-top: 28.89px;
-        height: 45.82px;
+        // margin-top: 14.5px;
+        // margin-bottom: 14.5px;
+        height: 48px;
         line-height: 24px;
         font-size: 10px;
         color: $mainColor1;
         text-align: center;
-        .left-notice{
+        .left-notice {
           width: 100%;
-          .brand-names{
+          overflow-x: auto;
+          .brand-names {
             height: 100%;
             justify-content: space-between;
             width: 100%;
-            >a{
+            > a {
               font-size: 12px;
-              line-height: 14px;
+              line-height: unset;
+              display: flex;
+              justify-content: center;
+              align-items: center;
               &:hover,&:active,&:visited,&:focus{
                 color: unset;
                 background-color: unset;
+              }
+              > span {
+                line-height: 14px;
               }
             }
           }

@@ -86,7 +86,7 @@ class CustomerSessionInit implements ObserverInterface
                 if ($rule->getCurrency() && (!$simiCurrency || $simiCurrency == '')) {
                     $simiCurrency = $rule->getCurrency();
                 }
-                if ($rule->getData('store_redirected') && (!$simiCurrency || $simiCurrency == '')) {
+                if ($rule->getData('store_redirected') && (!$simiStoreId || $simiStoreId == '')) {
                     $simiStoreId = $rule->getData('store_redirected');
                 }
             }
