@@ -211,7 +211,13 @@ const Chats = (props) => {
                     </div>
                 }
                 {livechat && livechat.enabled === '1' && livechatLicense &&
-                    <div className="chat-icons livechat bubbleIcons d1" onClick={livechatAction}>
+                    <div className="chat-icons livechat bubbleIcons d1"
+                        onClick={e => {
+                            if (Identify.isRtl())
+                                window.open(`https://direct.lc.chat/${livechatLicense}/`);
+                            else 
+                                livechatAction();
+                        }} >
                         <IconBubble style={{width: '20px', height: '20px', fill: '#fff'}}/>
                     </div>
                 }

@@ -1,7 +1,7 @@
 $color1: #101820;
-.chats-block{
-    .icons-inner{
-        .chat-icons{
+.chats-block {
+    .icons-inner {
+        .chat-icons {
             background-color: $color1;
             width: 50px;
             height: 50px;
@@ -12,56 +12,66 @@ $color1: #101820;
             display: flex;
             justify-content: center;
             align-items: center;
-            -moz-box-shadow: 0 2px 4px 0 #BDBDBD;
-            -webkit-box-shadow: 0 2px 4px 0 #BDBDBD;
-            box-shadow: 0 2px 4px 0 #BDBDBD;
+            -moz-box-shadow: 0 2px 4px 0 #bdbdbd;
+            -webkit-box-shadow: 0 2px 4px 0 #bdbdbd;
+            box-shadow: 0 2px 4px 0 #bdbdbd;
             position: fixed;
             bottom: 165px;
             z-index: 9999;
             cursor: pointer;
-            &.chats-menu{
+            &.chats-menu {
                 bottom: 165px;
                 right: 35px;
                 width: 65px;
                 height: 65px;
-                .cross-icon{
-                    display: none!important;
+                .cross-icon {
+                    display: none !important;
                 }
-                &.open{
-                    .phone-bubble-icon{
-                        display: none!important;
+                &.open {
+                    .phone-bubble-icon {
+                        display: none !important;
                     }
-                    .cross-icon{
-                        display: inline-block!important;
+                    .cross-icon {
+                        display: inline-block !important;
                     }
                 }
             }
-            &.livechat{
+            &.livechat {
                 bottom: 70px;
                 right: 35px;
                 width: 65px;
                 height: 65px;
             }
         }
-        .contact,.whatsapp,.livechat{
+        .contact,
+        .whatsapp,
+        .livechat {
             right: 42.5px;
         }
-        .chats-group{
-            &.open{
-                .contact{
+        .chats-group {
+            &.open {
+                .contact {
                     bottom: 330px;
                 }
-                .whatsapp{
+                .whatsapp {
                     bottom: 255px;
                 }
-                .livechat{
+                .livechat {
                     bottom: 405px;
                 }
-                .chat-icons{
+                .chat-icons {
                     @keyframes bubbleIcons {
-                        0%,10%,25%,35%,50%,65%,75%,90%,to {
-                            -webkit-animation-timing-function: cubic-bezier(.2,.6,.3,1);
-                            animation-timing-function: cubic-bezier(.2,.6,.3,1);
+                        0%,
+                        10%,
+                        25%,
+                        35%,
+                        50%,
+                        65%,
+                        75%,
+                        90%,
+                        to {
+                            -webkit-animation-timing-function: cubic-bezier(0.2, 0.6, 0.3, 1);
+                            animation-timing-function: cubic-bezier(0.2, 0.6, 0.3, 1);
                         }
                         0% {
                             transform: translateY(0px);
@@ -91,84 +101,84 @@ $color1: #101820;
                             transform: translateY(0px);
                         }
                     }
-                    &.bubbleIcons{
-                        -webkit-animation-duration: .6s;
-                        animation-duration: .6s;
+                    &.bubbleIcons {
+                        -webkit-animation-duration: 0.6s;
+                        animation-duration: 0.6s;
                         -webkit-animation-name: bubbleIcons;
                         animation-name: bubbleIcons;
-                        &.d1{
-                            animation-delay: .2s;
+                        &.d1 {
+                            animation-delay: 0.2s;
                         }
-                        &.d2{
-                            animation-delay: .4s;
+                        &.d2 {
+                            animation-delay: 0.4s;
                         }
-                        &.d3{
-                            animation-delay: .6s;
+                        &.d3 {
+                            animation-delay: 0.6s;
                         }
                     }
                 }
             }
-            .chat-icons{
-                &.bubbleIcons{
-                    &.d1{
-                        transition: bottom .2s ease-in-out;
+            .chat-icons {
+                &.bubbleIcons {
+                    &.d1 {
+                        transition: bottom 0.2s ease-in-out;
                     }
-                    &.d2{
-                        transition: bottom .4s ease-in-out;
+                    &.d2 {
+                        transition: bottom 0.4s ease-in-out;
                     }
-                    &.d3{
-                        transition: bottom .6s ease-in-out;
+                    &.d3 {
+                        transition: bottom 0.6s ease-in-out;
                     }
                 }
             }
         }
     }
-    &.mobile{
-        .icons-inner{
-            .chat-icons{
+    &.mobile {
+        .icons-inner {
+            .chat-icons {
                 width: 40px;
                 height: 40px;
                 bottom: 140px;
-                svg{
-                    width: 18px!important;
-                    height: 18px!important;
+                svg {
+                    width: 18px !important;
+                    height: 18px !important;
                 }
-                &.contact{
+                &.contact {
                     right: 26px;
                 }
-                &.whatsapp{
+                &.whatsapp {
                     right: 26px;
-                    svg{
-                        width: 19px!important;
-                        height: 22px!important;
+                    svg {
+                        width: 19px !important;
+                        height: 22px !important;
                     }
                 }
-                &.chats-menu{
+                &.chats-menu {
                     bottom: 130px;
                     right: 16px;
                     width: 60px;
                     height: 60px;
                 }
-                &.livechat{
+                &.livechat {
                     bottom: 55px;
                     right: 16px;
                     width: 60px;
                     height: 60px;
-                    svg{
-                        width: 18px!important;
-                        height: 20px!important;
+                    svg {
+                        width: 18px !important;
+                        height: 20px !important;
                     }
                 }
             }
-            .chats-group{
-                &.open{
-                    .contact{
+            .chats-group {
+                &.open {
+                    .contact {
                         bottom: 235px;
                     }
-                    .whatsapp{
+                    .whatsapp {
                         bottom: 180px;
                     }
-                    .livechat{
+                    .livechat {
                         bottom: 125px;
                     }
                 }
@@ -176,38 +186,40 @@ $color1: #101820;
         }
     }
 }
-#chat-widget-container{visibility: hidden;}
-#contact-modal-overlay{
-    background: #e4e4e480!important;
-    @media screen and (max-width: 375px){
+#chat-widget-container {
+    visibility: hidden;
+}
+#contact-modal-overlay {
+    background: #e4e4e480 !important;
+    @media screen and (max-width: 375px) {
         padding: 16px;
     }
-    #contact-modal{
+    #contact-modal {
         width: 100%;
         max-width: 604px;
         min-height: 494px;
         padding: 24px 32px 32px 32px;
-        -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.5);
-        -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.5);
-        box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.5);
+        -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
         margin-top: auto;
         margin-bottom: auto;
-        @media screen and (max-width: 1023px){
+        @media screen and (max-width: 1023px) {
             padding: 15px 20px 32px 20px;
         }
-        @media screen and (max-width: 375px){
+        @media screen and (max-width: 375px) {
             margin-top: 20%;
         }
-        #contact-modal-close{
+        #contact-modal-close {
             top: 24px;
             right: 32px;
-            @media screen and (max-width: 375px){
+            @media screen and (max-width: 375px) {
                 top: 15px;
                 right: 21.17px;
             }
         }
-        .contact-wrap{
-            h3.title{
+        .contact-wrap {
+            h3.title {
                 margin-top: 8px;
                 font-size: 24px;
                 line-height: 24px;
@@ -215,30 +227,32 @@ $color1: #101820;
                 color: $color1;
                 text-transform: uppercase;
                 text-align: center;
-                font-family: 'Gotham Book';
+                font-family: "Gotham Book";
             }
-            .header-text{
+            .header-text {
                 display: flex;
                 justify-content: center;
                 text-align: center;
                 color: $color1;
-                font-family: 'Gotham Book';
+                font-family: "Gotham Book";
                 font-size: 18px;
                 line-height: 18px;
                 margin: 0 auto;
                 margin-top: 20px;
                 max-width: 407px;
             }
-            .contact-form{
-                select{cursor: pointer;}
-                .form-row{
+            .contact-form {
+                select {
+                    cursor: pointer;
+                }
+                .form-row {
                     max-width: 376px;
                     margin: 0 auto;
                     margin-top: 20px;
-                    &:first-child{
+                    &:first-child {
                         margin-top: 32px;
                     }
-                    >label{
+                    > label {
                         font-size: 10px;
                         line-height: 10px;
                         text-transform: uppercase;
@@ -246,8 +260,8 @@ $color1: #101820;
                         font-weight: 600;
                         margin-bottom: 8px;
                     }
-                    &.time{
-                        .contact-input{
+                    &.time {
+                        .contact-input {
                             position: relative;
                             display: flex;
                             align-items: center;
@@ -271,7 +285,7 @@ $color1: #101820;
                                 color: $color1;
                                 font-size: 14px;
                             }
-                            select{
+                            select {
                                 width: 100%;
                                 -webkit-appearance: none;
                                 -webkit-border-radius: unset;
@@ -282,17 +296,18 @@ $color1: #101820;
                                 background: transparent;
                                 z-index: 99;
                             }
-                            .input-display{
+                            .input-display {
                                 padding: 10px 16px;
                                 width: 100%;
                             }
                         }
                     }
-                    input.contact-input, select.contact-input{
+                    input.contact-input,
+                    select.contact-input {
                         padding: 10px 16px;
                     }
                 }
-                .contact-input{
+                .contact-input {
                     background-color: #f2f2f2;
                     color: #727272;
                     font-size: 14px;
@@ -304,14 +319,14 @@ $color1: #101820;
                     position: relative;
                     width: 100%;
                     border: none;
-                    &.invalid{
+                    &.invalid {
                         border: 1px solid #b91c1c;
                     }
-                    &.phone-input{
+                    &.phone-input {
                         display: flex;
                         flex-direction: row;
                         position: relative;
-                        .arrow-down{
+                        .arrow-down {
                             width: 52px;
                             height: 100%;
                             display: inline-flex;
@@ -337,7 +352,7 @@ $color1: #101820;
                             //     font-feature-settings: "liga";
                             // }
                         }
-                        input{
+                        input {
                             border: none;
                             margin: 0px;
                             padding: 0px;
@@ -345,7 +360,7 @@ $color1: #101820;
                             width: 100%;
                             background: transparent;
                         }
-                        .input-select{
+                        .input-select {
                             position: absolute;
                             background: #fff;
                             z-index: 999;
@@ -355,29 +370,30 @@ $color1: #101820;
                             width: 100%;
                             overflow-y: auto;
                             max-height: 200px;
-                            box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
-                            .input-option{
+                            box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+                                0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+                            .input-option {
                                 padding: 5px 17px;
                                 background-color: #f2f2f2;
                                 color: $color1;
-                                &:hover{
+                                &:hover {
                                     background-color: #e4e4e4;
                                 }
-                                &.selected{
+                                &.selected {
                                     background-color: #bdbdbd;
                                 }
                             }
                         }
                     }
                 }
-                .form-btn{
+                .form-btn {
                     text-align: center;
                     margin-top: 32px;
-                    .btn{
+                    .btn {
                         background-color: #101820;
                         color: #fff;
                         font-size: 16px;
-                        font-family: 'Gotham Medium';
+                        font-family: "Gotham Medium";
                         text-transform: uppercase;
                         border-radius: 0px;
                         max-width: 180px;
@@ -389,51 +405,51 @@ $color1: #101820;
                     }
                 }
             }
-            .message{
+            .message {
                 display: flex;
                 justify-content: center;
                 text-align: center;
                 color: $color1;
-                font-family: 'Gotham Book';
+                font-family: "Gotham Book";
                 font-size: 18px;
                 line-height: 18px;
                 margin: 0 auto;
                 margin-top: 20px;
                 max-width: 407px;
             }
-            &.mobile{
-                h3.title{
+            &.mobile {
+                h3.title {
                     font-size: 16px;
                     line-height: 16px;
                     margin-top: 41px;
                     padding-top: 0px;
                     margin-bottom: 0px;
                 }
-                .header-text{
+                .header-text {
                     max-width: 250.54px;
                     font-size: 14px;
                     line-height: 14px;
                 }
-                .contact-form{
-                    .form-row{
-                        &:first-child{
+                .contact-form {
+                    .form-row {
+                        &:first-child {
                             margin-top: 40px;
                         }
-                        >label{
+                        > label {
                             font-size: 14px;
                             line-height: 14px;
                             padding-top: 0px;
                             margin-bottom: 0px;
                         }
-                        .contact-input{
+                        .contact-input {
                             height: 40px;
                             margin-top: 8px;
-                            font-family: 'Gotham Book';
+                            font-family: "Gotham Book";
                         }
                     }
-                    .form-btn{
+                    .form-btn {
                         margin-top: 60px;
-                        .btn{
+                        .btn {
                             max-width: 190.56px;
                             min-height: 40px;
                         }
@@ -442,29 +458,108 @@ $color1: #101820;
             }
         }
     }
-    &.rtl-root{
-        #contact-modal{
-            #contact-modal-close{
+    &.rtl-root {
+        #contact-modal {
+            #contact-modal-close {
                 right: unset;
                 left: 32px;
             }
-            .contact-wrap .contact-form{
+            .contact-wrap .contact-form {
                 .form-row.time .contact-input i {
                     right: unset;
                     left: 16px;
                 }
-                .contact-input.phone-input{
-                    .arrow-down{
+                .contact-input.phone-input {
+                    .arrow-down {
                         right: 0;
                     }
-                    input{
+                    input {
                         padding-left: 0px;
                         padding-right: 52px;
                     }
                 }
-                .form-row.time .contact-input:before{
+                .form-row.time .contact-input:before {
                     right: unset;
                     left: 16px;
+                }
+            }
+        }
+    }
+}
+.rtl-root {
+    .chats-block {
+        .icons-inner {
+            .chat-icons {
+                bottom: 183px;
+                &.chats-menu {
+                    bottom: 183px;
+                    right: unset;
+                    left: 35px;
+                }
+                &.livechat {
+                    bottom: 88px;
+                    right: unset;
+                    left: 35px;
+                }
+            }
+
+            .chats-group {
+                &.open {
+                    .contact {
+                        bottom: 348px;
+                    }
+                    .whatsapp {
+                        bottom: 273px;
+                    }
+                    .livechat {
+                        bottom: 423px;
+                    }
+                }
+            }
+            .contact,
+            .whatsapp,
+            .livechat {
+                right: unset;
+                left: 42.5px;
+            }
+        }
+
+        &.mobile {
+            .icons-inner {
+                .chat-icons {
+                    bottom: 140px;
+                    &.contact {
+                        right: unset;
+                        left: 26px;
+                    }
+                    &.whatsapp {
+                        right: unset;
+                        left: 26px;
+                    }
+                    &.chats-menu {
+                        bottom: 130px;
+                        right: 16px;
+                        width: 60px;
+                        height: 60px;
+                    }
+                    &.livechat {
+                        bottom: 55px;
+                        right: unset;
+                        left: 16px;
+                    }
+                }
+                .chats-group {
+                    &.open {
+                        .contact {
+                            bottom: 235px;
+                        }
+                        .whatsapp {
+                            bottom: 180px;
+                        }
+                        .livechat {
+                            bottom: 125px;
+                        }
+                    }
                 }
             }
         }

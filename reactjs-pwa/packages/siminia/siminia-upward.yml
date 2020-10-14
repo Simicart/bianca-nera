@@ -27,6 +27,10 @@ body: response.body
 # on the URL pattern in the request object.
 response:
   when:
+    # siminia handle home page with index (no url resolver) (move to first)
+    - matches: request.url.pathname
+      pattern: '^/$'
+      use: index
     # This URL pattern requests a compressed version of an image from the
     # server.
     # The resolution path is directed to the top-level `imageOpt` object.
@@ -75,10 +79,6 @@ response:
       use: appShell
     # Requests to the document root, i.e. having no URL key, is also handled
     # by the top-level 'appShell' object.
-    # siminia handle home page with index (no url resolver)
-    - matches: request.url.pathname
-      pattern: '^/$'
-      use: index
     # custom routes
     - matches: request.url.pathname
       pattern: '^/(cart.html|product.html|checkout.html|account.html|login.html|logout.html|wishlist.html|orderhistory.html|orderdetails.html|profile.html|addresses.html|newsletter.html|paypal_express.html|payment_webview.html|searchaine.html)'
