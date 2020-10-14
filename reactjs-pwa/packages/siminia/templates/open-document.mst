@@ -52,9 +52,6 @@
     </script>
     <!-- End OneSignal Notification -->
 
-    <script src="/simistatic/app_configs.js"></script>
-    <script src="/simistatic/jquery.min.js"></script>
-
     {{! #bundles.prefetch}}
     {{! <link rel="prefetch script" href="/"> }}
     {{! /bundles.prefetch}}
