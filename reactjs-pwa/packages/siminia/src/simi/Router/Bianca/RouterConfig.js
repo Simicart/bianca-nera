@@ -1,9 +1,10 @@
 import React from 'react'
 import { LazyComponent } from 'src/simi/BaseComponents/LazyComponent'
+import Home from 'src/simi/App/Bianca/Home'
 
-const Home = (props) => {
-    return <LazyComponent component={() => import(/* webpackChunkName: "Home"*/'src/simi/App/Bianca/Home')} {...props}/>
-}
+// const Home = (props) => {
+//     return <LazyComponent component={() => import(/* webpackChunkName: "Home"*/'src/simi/App/Bianca/Home')} {...props}/>
+// }
 
 const Instagram = (props) => {
     return <LazyComponent component={() => import(/* webpackChunkName: "Home"*/'src/simi/App/Bianca/Home/InstagramAuth')} {...props}/>
