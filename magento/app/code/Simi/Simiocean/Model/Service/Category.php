@@ -19,7 +19,16 @@ class Category extends \Magento\Framework\Model\AbstractModel
     protected $categoryRepository;
     protected $categoryResource;
 
+    /**
+     * @var \Magento\Catalog\Model\CategoryFactory
+     */
+    protected $categoryFactory;
+
     protected $storeManager;
+
+    /** @var \Magento\Store\Api\StoreRepositoryInterface */
+    protected $storeRepository;
+
     protected $objectManager;
 
     /** @var Simi\Simiocean\Model\Logger */
@@ -40,8 +49,10 @@ class Category extends \Magento\Framework\Model\AbstractModel
         \Simi\Simiocean\Model\Ocean\Category $categoryApi,
         \Simi\Simiocean\Model\CategoryFactory $oceanCategoryFactory,
         \Magento\Catalog\Model\CategoryRepository $categoryRepository,
+        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         \Magento\Catalog\Model\ResourceModel\Category $categoryResource,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Store\Api\StoreRepositoryInterface $storeRepository,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Simi\Simiocean\Model\Logger $logger
     ){
@@ -51,8 +62,10 @@ class Category extends \Magento\Framework\Model\AbstractModel
         $this->oceanCategoryFactory = $oceanCategoryFactory;
         $this->oceanCategoryCollectionFactory = $oceanCategoryCollectionFactory;
         $this->categoryRepository = $categoryRepository;
+        $this->categoryFactory = $categoryFactory;
         $this->categoryResource = $categoryResource;
         $this->storeManager = $storeManager;
+        $this->storeRepository = $storeRepository;
         $this->objectManager = $objectManager;
         parent::__construct($context, $registry);
     }
@@ -290,6 +303,207 @@ class Category extends \Magento\Framework\Model\AbstractModel
         return true;
     }
 
+    /**
+     * Sync ocean category to magento by CategoryId and SubcategoryId
+     * @param string $categoryId is parent category id, in case category is parent then value is 0
+     * @param string $subCategoryId
+     * @return boolean
+     */
+    public function syncCategoryById($categoryId, $subCategoryId){
+        $oceanSubCategoryArray = $this->getOceanSubCategory($categoryId);
+        $oceanCategoryArray = $this->getOceanParentCategory($subCategoryId);
+        $oSubCategory = '';
+        $oParentCategory = '';
+        // Find parent category
+        foreach($oceanCategoryArray as $cate){
+            if (isset($cate['CategoryId']) && $cate['CategoryId'] == $categoryId) {
+                $oParentCategory = $cate;
+                break;
+            }
+        }
+        // Find sub category
+        foreach($oceanSubCategoryArray as $cate){
+            if (isset($cate['SubcategoryID']) && $cate['SubcategoryID'] == $subCategoryId) {
+                $oSubCategory = $cate;
+                break;
+            }
+        }
+
+        if ($oParentCategory) {
+            if ($category = $this->saveMagentoCategory($oParentCategory)) {
+                $this->saveOceanCategory($oParentCategory, $category->getId());
+            }
+            if ($oSubCategory && $category) {
+                $parentCategory = $category;
+                if ($category = $this->saveMagentoCategory($oSubCategory, $oParentCategory['CategoryId'], $parentCategory)) {
+                    $this->saveOceanCategory($oParentCategory, $category->getId(), $oParentCategory['CategoryId']);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the list sub category of ocean
+     * @param string $categoryId
+     * @return array
+     */
+    public function getOceanSubCategory($categoryId){
+        if (!$categoryId) return array();
+        return $this->categoryApi->getSubCategory($categoryId);
+    }
+
+    /**
+     * Get the list parent category of ocean
+     * @param string $subCategoryId
+     * @return array
+     */
+    public function getOceanParentCategory($subCategoryId){
+        if (!$subCategoryId) return array();
+        return $this->categoryApi->getCategory($subCategoryId);
+    }
+
+    /**
+     * Create or update one magento category
+     * @param array $oCate Ocean category data
+     * @param string $parentId Ocean parent category id, $parentId = 0 if it is parent
+     * @param \Magento\Catalog\Model\Category $parent
+     * @return object
+     */
+    public function saveMagentoCategory($oCate, $parentId = 0, $parent = ''){
+        $category = null;
+        $categoryId = null;
+        $oCateId = $this->getArrData($oCate, 'SubcategoryID') ?: $this->getArrData($oCate, 'CategoryId');
+        $oceanCategory = $this->getOceanCategory($oCateId, $parentId);
+        if ($oceanCategory) {
+            if ($categoryId = $oceanCategory->getMagentoId()) {
+                try{
+                    // $category = $this->categoryRepository->get($categoryId);
+                    /** @var Category $category */
+                    $category = $this->categoryFactory->create();
+                    $category->load($categoryId);
+                    if (!$category->getId()) {
+                        $category = null;
+                    }
+                }catch(\Magento\Framework\Exception\NoSuchEntityException $e){
+                }catch(\Exception $e){
+                    $category = null;
+                }
+            }
+        }
+        if($category && $category->getId()){
+            $category->setName($this->getArrData($oCate, 'CategoryEnName'));
+            // $category->setIsActive(true);
+            $category->setUpdatedAt(gmdate('Y-m-d H:i:s'));
+            if ($parent) {
+                $category->setParentId($parent->getId());
+                $category->setPath($parent->getPath());
+            }
+            try {
+                $category->save();
+                // Save for Ar store
+                if ($this->config->getArStore() != null){
+                    $arStoreIds = explode(',', $this->config->getArStore());
+                    foreach($arStoreIds as $storeId){
+                        $category->setStoreId($storeId);
+                        $category->setName($this->getArrData($oCate, 'CategoryArName'));
+                        $category->setUrlKey(urlencode($this->getArrData($oCate, 'CategoryEnName')));
+                        try{
+                            $category->save();
+                        }catch(\Exception $e){};
+                    }
+                }
+            } catch (\Exception $e) {
+                $this->logger->debug(array('Save magento category error (1): '. $e->getMessage()));
+                return false;
+            }
+            return $category;
+        } else {
+            $date = gmdate('Y-m-d H:i:s');
+            $category = $this->objectManager->create(\Magento\Catalog\Api\Data\CategoryInterface::class);
+            $category->setName($this->getArrData($oCate, 'CategoryEnName'));
+            $category->setIsActive(true);
+            $category->setCreatedAt($date);
+            $category->setUpdatedAt($date);
+            
+            $store = $this->storeManager->getWebsite(true)->getDefaultStore(); //default is store code
+
+            if (isset($oCate['CategoryId'])) {
+                // Add to root category
+                $rootId = $store->getRootCategoryId();
+                if (!$rootId) $rootId = \Magento\Catalog\Model\Category::TREE_ROOT_ID;
+                $rootCategory = $this->objectManager->get('Magento\Catalog\Model\Category')->load($rootId);
+                $category->setParentId($rootCategory->getId());
+                $category->setPath($rootCategory->getPath());
+                // $category->setAttributeSetId($rootCategory->getDefaultAttributeSetId());
+            }
+
+            if ($parent) {
+                $category->setParentId($parent->getId());
+                $category->setPath($parent->getPath());
+            }
+
+            $category->setLevel(null);
+            $category->setPosition(1);
+            $category->setStoreId($store->getId());
+            $category->setUrlKey($this->getArrData($oCate, 'CategoryEnName'));
+            $category->setData('children_count', 0);
+
+            try{
+                $this->categoryResource->save($category); // cannot save category with flat table (bug magento)
+                // $category->save();
+            }catch(\Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException $e){
+                $category->setUrlKey($category->getUrlKey().'-ocean');
+                $this->categoryResource->save($category);
+                // $category->save();
+            }catch(\Exception $e){
+                $this->logger->debug(array('Save magento category error (2): '. $e->getMessage()));
+                return false;
+            }
+            
+            if ($this->config->getArStore() != null){
+                $arStoreIds = explode(',', $this->config->getArStore());
+                foreach($arStoreIds as $storeId){
+                    $category->setStoreId($storeId);
+                    $category->setName($this->getArrData($oCate, 'CategoryArName'));
+                    $category->setUrlKey(urlencode($this->getArrData($oCate, 'CategoryEnName')));
+                    try{
+                        $category->save();
+                    }catch(\Exception $e){
+                        $this->logger->debug(array('Save magento category error (3): '. $e->getMessage()));
+                    };
+                }
+            }
+            return $category;
+        }
+    }
+
+    /**
+     * Save ocean category to table
+     * @param array $oCate Ocean category data
+     * @return object
+     */
+    public function saveOceanCategory($oCate, $magentoId, $parentId = 0){
+        $date = gmdate('Y-m-d H:i:s');
+        $categoryId = $this->getArrData($oCate, 'SubcategoryID') ?: $this->getArrData($oCate, 'CategoryId');
+        $oceanCategory = $this->getOceanCategory($categoryId, $parentId);
+        if (!$oceanCategory) {
+            $oceanCategory = $this->oceanCategoryFactory->create();
+            $oceanCategory->setCreatedAt($date);
+        } else {
+            $oceanCategory
+                ->setCategoryId($categoryId)
+                ->setParentId($parentId)
+                ->setMagentoId($magentoId)
+                ->setSyncTime($date)
+                ->setDirection(\Simi\Simiocean\Model\Category::DIR_OCEAN_TO_WEB)
+                ->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS)
+                ->setCategoryArName($this->getArrData($oCate, 'CategoryArName'))
+                ->setCategoryEnName($this->getArrData($oCate, 'CategoryEnName'))
+                ->save();
+        }
+    }
 
     /**
      * Get ocean category synced by ocean category id and its parent id
@@ -298,6 +512,8 @@ class Category extends \Magento\Framework\Model\AbstractModel
      * @return \Simi\Simiocean\Model\Category|null
      */
     public function getOceanCategory($cateId, $parentId = 0){
+        if (!$cateId) return null;
+        if ($parentId === null) $parentId = 0;
         $collection = $this->oceanCategoryCollectionFactory->create();
         $collection->addFieldToFilter('category_id', $cateId)
             ->addFieldToFilter('parent_id', $parentId)
@@ -341,5 +557,13 @@ class Category extends \Magento\Framework\Model\AbstractModel
             return $collection->getFirstItem();
         }
         return null;
+    }
+
+    /**
+     * Get data from ocean array data
+     * @return mixed
+     */
+    protected function getArrData($oData, $key){
+        return isset($oData[$key]) ? $oData[$key] : null;
     }
 }

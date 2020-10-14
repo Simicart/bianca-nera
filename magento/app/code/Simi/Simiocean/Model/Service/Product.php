@@ -34,6 +34,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
     protected $sizeMapping;
     protected $brandMapping;
 
+    protected $messages = []; // message texts
+
     protected $categoryService;
 
     /**
@@ -336,6 +338,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $isProductSync = false;
         $products = $this->productApi->getProductSku($sku); // Get products from ocean with sku
         if ($products && count($products)) {
+            $this->addSyncMessages('synced by sku');
             $datetime = gmdate('Y-m-d H:i:s');
             $skuGroup = array();
             foreach($products as $oProduct){
@@ -359,6 +362,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
                                 $oProductTable->setData($tableData);
                             }
                             $oProductTable->setProductId($product->getId());
+                            $oProductTable->setMessage(implode(', ', $this->getSyncMessages()));
                             $oProductTable->save();
                         }catch(\Exception $e){
                             $this->logger->debug(array(
@@ -396,6 +400,11 @@ class Product extends \Magento\Framework\Model\AbstractModel
                         if ($categoryId = $this->categoryService->getMagentoCategoryId($oProduct['SubcategoryId'], $oProduct['CategoryId'])) {
                             try{
                                 $this->linkManagement->assignProductToCategories($configurableProduct->getSku(), array($categoryId));
+                            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                                $this->categoryService->syncCategoryById($oProduct['CategoryId'], $oProduct['SubcategoryId']);
+                                if ($categoryId = $this->categoryService->getMagentoCategoryId($oProduct['SubcategoryId'], $oProduct['CategoryId'])){
+                                    $this->linkManagement->assignProductToCategories($configurableProduct->getSku(), array($categoryId));
+                                }
                             } catch (\Exception $e) {
                                 $this->logger->debug(array(
                                     'Product sync pull: Assign product to catalog error. Catalog Id: '.$categoryId,
@@ -857,7 +866,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
         // Add data array to Magento Product object
         /** @var Magento\Catalog\Model\Product */
         $productModel = $this->productInterfaceFactory->create();
-        $this->dataObjectHelper->populateWithArray($productModel, $data, null);
+        $this->dataObjectHelper->populateWithArray($productModel, $data, ProductInterface::class);
         $productModel->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
 
         /* Convert custom_attributes (color, size, ...) */
@@ -923,11 +932,10 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 // If override old product then write code here (this is for simple product)
                 $data = $this->dataObjectProcessor->buildOutputDataArray($productModel, ProductInterface::class);
                 /** @var Magento\Catalog\Model\Product */
-                $this->dataObjectHelper->populateWithArray($product, $data, null); // Add data array to Magento Product object
+                $this->dataObjectHelper->populateWithArray($product, $data, ProductInterface::class); // Add data array to Magento Product object
                 $product = $this->productRepository->save($product);
             }
             return $product;
-            // return true;
         } catch(\Exception $e) {
             $this->logger->debug(array('Save product error: '.$e->getMessage(), $productModel->getData()));
             return false;
@@ -1152,5 +1160,68 @@ class Product extends \Magento\Framework\Model\AbstractModel
      */
     protected function checkNewProducts(){
         return true;
+    }
+
+    /**
+     * Resync all product from Ocean to Website
+     */
+    public function resyncAll(){
+        $oProducts = $this->getOceanProductsSyncedBefore('2020-10-13 00:00:00', 10);
+        $status = false;
+        if ($oProducts) {
+            foreach($oProducts as $item){
+                $this->resetSyncMessages();
+                $this->addSyncMessages('resync by sku '.$item['sku']);
+                $status = $this->syncPullSku($item['sku']);
+            }
+        }
+        return $status;
+    }
+
+    /**
+     * Get ocean products synced before date
+     * @param string $date the date after synced
+     * @return object
+     */
+    public function getOceanProductsSyncedBefore($date = '', $limit = 10){
+        if (!$date) $date = gmdate('Y-m-d H:i:s');
+        $collection = $this->simioceanProductFactory->create()->getCollection();
+        $collection->addFieldToFilter('sync_time', array('lt' => $date))
+            ->getSelect()
+            ->where('product_id IS NOT NULL')
+            ->where('sku IS NOT NULL')
+            ->group('sku')
+            ->order('sync_time DESC')
+            ->limit($limit);
+        if ($collection->getSize()) {
+            return $collection;
+        }
+        return false;
+    }
+
+    /**
+     * @return self
+     */
+    public function resetSyncMessages(){
+        $this->messages = [];
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function addSyncMessages($messages){
+        if (!is_array($this->messages)) {
+            $this->messages = array($messages);
+        }
+        $this->messages[] = $messages;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSyncMessages(){
+        return $this->messages;
     }
 }
