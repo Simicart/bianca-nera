@@ -173,6 +173,7 @@ appShell:
         # The appShell object will always resolve to a response containing 
         # 'text/html' content.
         content-type: 'text/html'
+        fromupwardshell: 'text/html'
     body:
       # The body property of an appShell object is resolved using a
       # TemplateResolver.
