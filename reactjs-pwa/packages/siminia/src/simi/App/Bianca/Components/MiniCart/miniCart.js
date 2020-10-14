@@ -85,8 +85,8 @@ class MiniCart extends Component {
         // this.props.getCartDetailsCustom();
         const {getCartDetailsCustom} = this.props
         setTimeout(function () {
-            getCartDetailsCustom(); //delay 30 seconds
-        }, 30000);
+            getCartDetailsCustom(); //delay 5 seconds
+        }, 5000);
     }
 
     get cartId() {
