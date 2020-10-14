@@ -19,11 +19,11 @@
         Apple Icons for Homescreen
         Sizes: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/app-icon/
     }}
-    <link async rel="apple-touch-icon" href="/icons/favicon64.png">
-    <link async rel="apple-touch-icon" sizes="180x180" href="/icons/favicon512.png">
-    <link async rel="stylesheet" href="/simistatic/bootstrap.min.css">
-    <link async rel="stylesheet" href="/simistatic/owlcarousel/owl.carousel.min.css" />
-    <link async rel="stylesheet" href="/simistatic/style.css" />
+    <link rel="apple-touch-icon" href="/icons/favicon64.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/favicon512.png">
+    <link rel="stylesheet" href="/simistatic/bootstrap.min.css">
+    <link rel="stylesheet" href="/simistatic/owlcarousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/simistatic/style.css" />
     {{> templates/default-font-include}}
     {{! <link href="https://fonts.googleapis.com/css?family=Muli:300" rel="stylesheet"> }}
 
@@ -38,7 +38,7 @@
     <!-- End Google Tag Manager -->
 
     <!-- OneSignal Notification -->
-    <script async src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
     <script>
     window.OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
