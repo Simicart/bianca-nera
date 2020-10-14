@@ -347,9 +347,17 @@ class Product extends \Magento\Framework\Model\AbstractModel
                     $productModel->setName($this->_getProductName($oProduct));
                     $productModel->setUrlKey($this->_getProductUrlKey($oProduct));
                     if($product = $this->createProduct($productModel)){
-                        $oProductTable = $this->simioceanProductFactory->create();
                         try{
-                            $oProductTable->setData($this->_getProductTableData($oProduct));
+                            $tableData = $this->_getProductTableData($oProduct);
+                            // check if exist in table
+                            $oProductTable = $this->getOceanProductExist($oProduct['SKU'], $oProduct['BarCode']);
+                            if ($oProductTable->getId()) {
+                                unset($tableData['created_at']);
+                                $oProductTable->addData($tableData);
+                            } else {
+                                $oProductTable = $this->simioceanProductFactory->create();
+                                $oProductTable->setData($tableData);
+                            }
                             $oProductTable->setProductId($product->getId());
                             $oProductTable->save();
                         }catch(\Exception $e){
@@ -451,6 +459,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
 
     /**
      * Get product table data
+     * @return array
      */
     protected function _getProductTableData($oProduct){
         $data = [];
@@ -807,6 +816,27 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 ->addFieldToFilter('barcode', $barcode)
                 ->getSelect()
                 ->where('product_id IS NOT NULL')
+                ->limit(1);
+            if ($collection->getSize()) {
+                return $collection->getFirstItem();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get ocean product exist by sku and barcode
+     * @param string $sku
+     * @param string $barcode
+     * @return object
+     */
+    public function getOceanProductExist($sku, $barcode){
+        if ($sku && $barcode) {
+            $model = $this->simioceanProductFactory->create();
+            $collection = $model->getCollection();
+            $collection->addFieldToFilter('sku', $sku)
+                ->addFieldToFilter('barcode', $barcode)
+                ->getSelect()
                 ->limit(1);
             if ($collection->getSize()) {
                 return $collection->getFirstItem();
