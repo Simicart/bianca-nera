@@ -527,7 +527,7 @@ $color1: #101820;
         &.mobile {
             .icons-inner {
                 .chat-icons {
-                    bottom: 158px;
+                    bottom: 168px;
                     &.contact {
                         right: unset;
                         left: 26px;
@@ -537,12 +537,12 @@ $color1: #101820;
                         left: 26px;
                     }
                     &.chats-menu {
-                        bottom: 148px;
+                        bottom: 158px;
                         right: unset;
                         left: 16px;
                     }
                     &.livechat {
-                        bottom: 78px;
+                        bottom: 88px;
                         right: unset;
                         left: 16px;
                     }
@@ -550,13 +550,13 @@ $color1: #101820;
                 .chats-group {
                     &.open {
                         .contact {
-                            bottom: 253px;
+                            bottom: 263px;
                         }
                         .whatsapp {
-                            bottom: 189px;
+                            bottom: 199px;
                         }
                         .livechat {
-                            bottom: 143px;
+                            bottom: 153px;
                         }
                     }
                 }
