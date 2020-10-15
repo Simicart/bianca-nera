@@ -26,6 +26,10 @@
             <instagram>                                               
                 <redirect_uri>https://bianca-nera.com/instagram_auth/</redirect_uri>
             </instagram>
+            <instant_contact>                                               
+                <recipient_email>info@bianca-nera.com</recipient_email>
+                <times>Now,Next day</times>
+            </instant_contact>
         </simiconnector>
     </default>
 </config>

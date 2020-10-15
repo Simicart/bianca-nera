@@ -85,7 +85,7 @@ class Contact extends \Simi\Simiconnector\Model\Api\Apiabstract implements \Simi
                 try{
                     // send email to admin
                     $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
-                    $adminEmail = $this->config->getValue('contact/email/recipient_email', $storeScope);
+                    $adminEmail = $this->config->getValue('simiconnector/instant_contact/recipient_email', $storeScope);
                     if ($adminEmail) {
                         $this->inlineTranslation->suspend();
                         $postObject = new \Magento\Framework\DataObject();
@@ -93,13 +93,13 @@ class Contact extends \Simi\Simiconnector\Model\Api\Apiabstract implements \Simi
                         // $postObject->setData('customer_email', $customer->getEmail());
                         // $postObject->setData('email', $customer->getEmail());
                         $error = false;
-                        $contactSenderIdentity = $this->config->getValue('contact/email/sender_email_identity', $storeScope);
+                        $contactSenderIdentity = $this->config->getValue('simiconnector/instant_contact/sender_email_identity', $storeScope);
                         $sender = [
                             'name' => $this->config->getValue('trans_email/ident_'.$contactSenderIdentity.'/name', $storeScope),
                             'email' => $this->config->getValue('trans_email/ident_'.$contactSenderIdentity.'/email', $storeScope),
                         ];
                         $transport = $this->transportBuilder
-                            ->setTemplateIdentifier($this->config->getValue('contact/email/email_template', $storeScope))
+                            ->setTemplateIdentifier($this->config->getValue('simiconnector/instant_contact/email_template', $storeScope))
                             ->setTemplateOptions([
                                 'area' => \Magento\Framework\App\Area::AREA_FRONTEND, // this is using frontend area to get the template file
                                 'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,

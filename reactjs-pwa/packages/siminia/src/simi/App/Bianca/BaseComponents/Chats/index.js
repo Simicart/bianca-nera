@@ -32,11 +32,11 @@ const Chats = (props) => {
     const TriggerPhoneSelectRef = useRef(null);
     const storeConfig = Identify.getStoreConfig() || {};
     const config = storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.config || {};
-    const {contact_us, instant_contact, livechat} = config || {};
+    const {instant_contact, livechat} = config || {};
     const data = instant_contact;
     const livechatLicense = livechat && livechat.license || '';
 
-    const contact_times = contact_us && contact_us.times && contact_us.times.split(',') || [];
+    const contact_times = instant_contact && instant_contact.times && instant_contact.times.split(',') || [];
 
     const contactAction = () => {
         setOpenContactModal(true);
@@ -181,7 +181,7 @@ const Chats = (props) => {
             <div className="icons-inner">
                 <div className="chats-group closed">
                 {
-                    contact_us && contact_us.enabled && contact_us.enabled === '1' &&
+                    instant_contact && instant_contact.enabled && instant_contact.enabled === '1' &&
                     <div className="chat-icons contact bubbleIcons d3" onClick={contactAction}>
                         <IconTelephone style={{width: '24px', height: '24px', fill: '#fff'}}/>
                     </div>
@@ -203,7 +203,7 @@ const Chats = (props) => {
                     </a>
                 } */}
                 </div>
-                {((contact_us && contact_us.enabled && contact_us.enabled === '1') || 
+                {((instant_contact && instant_contact.enabled && instant_contact.enabled === '1') || 
                     (data && data.phone)) &&
                     <div className="chat-icons chats-menu" onClick={onChatOpen}>
                         <PhoneBubble style={{width: '24px', height: '24px', fill: '#fff'}}/>
@@ -274,7 +274,7 @@ const Chats = (props) => {
                             <div className="form-row time">
                                 <label htmlFor="contact-time">{Identify.__('Time')}</label>
                                 {
-                                    contact_us && contact_us.enabled && contact_us.enabled === '1' && contact_us.times &&
+                                    instant_contact && instant_contact.enabled && instant_contact.enabled === '1' && instant_contact.times &&
                                     <Select className="contact-input time-input" 
                                         items={timeItems} onChange={onChangeContactTime} 
                                         showSelected={true}

@@ -112,9 +112,10 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 'enabled' => $this->config->getValue('simiconnector/instagram/enable'),
                 'userid' => $this->config->getValue('simiconnector/instagram/userid'),
             );
-            $object->storeviewInfo['contact_us'] = array(
-                'enabled' => $this->config->getValue('contact/contact/enabled'),
-                'times' => $this->config->getValue('contact/time/times'),
+            $object->storeviewInfo['instant_contact'] = array(
+                'enabled' => $this->config->getValue('simiconnector/instant_contact/enable'),
+                'times' => $this->config->getValue('simiconnector/instant_contact/times'),
+                'phone' => $this->config->getValue('simiconnector/instant_contact/phone'),
             );
             $sizeGuideFile = $this->config->getValue('simiconnector/sizeguide/image_file');
             $sizeGuideFileMobile = $this->config->getValue('simiconnector/sizeguide/image_file_mobile');

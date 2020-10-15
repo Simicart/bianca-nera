@@ -26,6 +26,8 @@ class Contacts extends Apiabstract
         $params = $data['contents_array'];
         $dataMail = $this->validatedParams($params);
         try {
+            $dataMail['name'] = mb_convert_encoding($dataMail['name'], 'UTF-8');
+            $dataMail['message'] = mb_convert_encoding($dataMail['message'], 'UTF-8');
             $this->sendEmail($email, $dataMail);
             $DataPersistor->clear('contact_us');
             return [
