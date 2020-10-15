@@ -1,5 +1,6 @@
 $iconpath: './Banner/';
 .banner-homepage{
+    min-height: 400px;
     .carousel.carousel-slider{
         overflow: unset;
         .control-arrow.control-prev{
@@ -34,6 +35,7 @@ $iconpath: './Banner/';
 }
 .mobile{
     .banner-homepage{
+        min-height: 150px;
         .carousel.carousel-slider{
             .control-arrow.control-prev{
                 left: 0;

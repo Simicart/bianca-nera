@@ -225,8 +225,8 @@ const Chats = (props) => {
             {/* {livechat && livechat.enabled === '1' && livechatLicense &&
                 <LiveChat className={`${liveChatRef ? 'livechat-active':'livechat-disabled'}`} license={parseInt(livechatLicense)} onChatLoaded={onChatLoaded} onChatWindowMinimized={(e) => onChatWindowMinimized(e)} />
             } */}
-            {livechat && livechat.enabled === '1' && livechatLicense &&
-                <LiveChat className={'live-chat'} license={parseInt(livechatLicense)} />
+            {(livechat && livechat.enabled === '1' && livechatLicense && !Identify.isRtl()) ?
+                <LiveChat className={'live-chat'} license={parseInt(livechatLicense)} /> : ''
             }
 
             <Modal open={openContactModal} onClose={onCloseContact}
