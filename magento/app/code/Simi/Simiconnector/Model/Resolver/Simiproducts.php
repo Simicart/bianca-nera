@@ -18,6 +18,12 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Catalog\Model\Layer\Resolver;
 use Magento\CatalogGraphQl\Model\Resolver\Products\SearchCriteria\Helper\Filter as FilterHelper;
 
+use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\Store\Model\StoreManagerInterface;
+
 /**
  * Simiproducts field resolver, used for GraphQL request processing.
  */
@@ -50,6 +56,14 @@ class Simiproducts implements ResolverInterface
      * @var FilterHelper
      */
     private $filterHelper;
+
+    const XML_PATH_STOCK_THRESHOLD_QTY = 'cataloginventory/options/stock_threshold_qty';
+
+    private $getStockItemConfiguration;
+    private $productSalableQty;
+    private $stockResolver;
+    private $storeManager;
+
     /**
      * @param Builder $searchCriteriaBuilder
      * @param Search $searchQuery
@@ -62,7 +76,11 @@ class Simiproducts implements ResolverInterface
         Filter $filterQuery,
         SearchFilter $searchFilter,
         FilterHelper $filterHelper,
-        \Magento\Framework\ObjectManagerInterface $simiObjectManager //simiconnector changing
+        \Magento\Framework\ObjectManagerInterface $simiObjectManager, //simiconnector changing,
+        GetProductSalableQtyInterface $productSalableQty,
+        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        StockResolverInterface $stockResolver,
+        StoreManagerInterface $storeManager
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->searchQuery = $searchQuery;
@@ -70,6 +88,10 @@ class Simiproducts implements ResolverInterface
         $this->searchFilter = $searchFilter;
         $this->filterHelper = $filterHelper;
         $this->simiObjectManager = $simiObjectManager; //simiconnector changing
+        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->productSalableQty = $productSalableQty;
+        $this->stockResolver = $stockResolver;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -124,7 +146,12 @@ class Simiproducts implements ResolverInterface
         $this->eventManager = $this->simiObjectManager->get('\Magento\Framework\Event\ManagerInterface');
 
         $products = $searchResult->getProductsSearchResult();
-        $stockModel = $this->simiObjectManager->get('Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku');
+        // $stockModel = $this->simiObjectManager->get('Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku');
+
+        $websiteCode = $this->storeManager->getWebsite()->getCode();
+        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+        $stockId = $stock->getStockId();
+        
         foreach ($products as $index => $product) {
             $sku = $product['sku'];
             // $productModel = $this->simiObjectManager->get('Magento\Catalog\Model\Product')
@@ -141,15 +168,33 @@ class Simiproducts implements ResolverInterface
                         ->get('\Simi\Simiconnector\Helper\Review')
                         ->getProductReviews($productModel->getId())
                 ); */
+                
                 $isSalable = $productModel->getIsSalable();
-                if ($productModel->getIsSalable()) {
+                // if is configurable product then check with collect all children product
+                if ($productModel->getTypeId() == 'configurable') {
+                    $_children = $productModel->getTypeInstance()->getUsedProducts($productModel);
+                    $salableQty = 0;
+                    foreach ($_children as $child){
+                        $salableQty += $this->productSalableQty->execute($child->getSku(), $stockId);
+                        if ($salableQty > 0) break;
+                    }
+                } else {
+                    $salableQty = $this->productSalableQty->execute($sku, $stockId);
+                }
+                if ($salableQty <= 0) {
+                    $isSalable = false;
+                }
+                /* if ($productModel->getIsSalable()) {
                     try{
                         $salable_qty_by_sku = $stockModel->execute($sku);
                         if (isset($salable_qty_by_sku[0]['qty']) && $salable_qty_by_sku[0]['qty'] == 0) {
                             $isSalable = false;
                         }
+                        if ($salableQty <= 0) {
+                            $isSalable = false;
+                        }
                     }catch(\Exception $e){}
-                }
+                } */
                 $this->productExtraData = array(
                     'attribute_values' => array(
                         'is_salable' => $isSalable ? 1 : 0,
