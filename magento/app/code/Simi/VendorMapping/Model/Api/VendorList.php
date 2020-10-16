@@ -72,9 +72,11 @@ class VendorList implements VendorListInterface
      * Vendor list api VnecomsVendor module
      * @return array | json
      */
-    public function getVendorList(){
+    public function getVendorList($noLimit = false){
         $vendors = [];
-        $this->_buildLimit();
+        if (!$noLimit) {
+            $this->_buildLimit();
+        }
         $vendorIds = $this->_request->getParam(self::VENDOR_IDS);
         $postData = $this->_request->getContent();
         if ($postData) {
@@ -115,7 +117,7 @@ class VendorList implements VendorListInterface
             if ($postContent) {
                 $parameters = json_decode($postContent, true);
             }
-            $page       = 1;
+            $page = 1;
             if (isset($parameters[self::PAGE]) && $parameters[self::PAGE]) {
                 $page = $parameters[self::PAGE];
             }
