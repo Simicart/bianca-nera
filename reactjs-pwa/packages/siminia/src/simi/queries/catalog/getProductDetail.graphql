@@ -55,6 +55,7 @@ query productDetail($urlKey: String, $onServer: Boolean!) {
                 url_key
                 url_path
             }
+            stock_status
         }
     }
   	simiProductDetailExtraField(filter: { url_key: { eq: $urlKey } })
