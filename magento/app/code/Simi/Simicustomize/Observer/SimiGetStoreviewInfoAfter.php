@@ -48,7 +48,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
         $object = $observer->getEvent()->getData('object');
         if ($object->storeviewInfo) {
             //TODO: will be sync with Ocean system in the future
-            $object->storeviewInfo['vendor_list'] = $this->vendorList->getVendorList(); //get all vendors
+            $object->storeviewInfo['vendor_list'] = $this->vendorList->getVendorList(true); //get all vendors
             $object->storeviewInfo['delivery_returns'] = $this->config->getValue('sales/policy/delivery_returns', 'store'); //get all vendors
             $object->storeviewInfo['preorder_deposit'] = $this->config->getValue('sales/preorder/deposit_amount'); //get all vendors
             // add brands list to storeview api
