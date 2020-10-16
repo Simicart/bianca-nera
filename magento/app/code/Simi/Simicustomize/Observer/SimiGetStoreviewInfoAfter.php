@@ -49,7 +49,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
         if ($object->storeviewInfo) {
             //TODO: will be sync with Ocean system in the future
             $object->storeviewInfo['vendor_list'] = $this->vendorList->getVendorList(); //get all vendors
-            $object->storeviewInfo['delivery_returns'] = $this->config->getValue('sales/policy/delivery_returns'); //get all vendors
+            $object->storeviewInfo['delivery_returns'] = $this->config->getValue('sales/policy/delivery_returns', 'store'); //get all vendors
             $object->storeviewInfo['preorder_deposit'] = $this->config->getValue('sales/preorder/deposit_amount'); //get all vendors
             // add brands list to storeview api
             $descriptionArr = array();
@@ -105,20 +105,20 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 }
             }
             $object->storeviewInfo['livechat'] = array(
-                'enabled' => $this->config->getValue('simiconnector/customchat/enable'),
-                'license' => $this->config->getValue('simiconnector/customchat/license'),
+                'enabled' => $this->config->getValue('simiconnector/customchat/enable', 'store'),
+                'license' => $this->config->getValue('simiconnector/customchat/license', 'store'),
             );
             $object->storeviewInfo['instagram'] = array(
-                'enabled' => $this->config->getValue('simiconnector/instagram/enable'),
-                'userid' => $this->config->getValue('simiconnector/instagram/userid'),
+                'enabled' => $this->config->getValue('simiconnector/instagram/enable', 'store'),
+                'userid' => $this->config->getValue('simiconnector/instagram/userid', 'store'),
             );
             $object->storeviewInfo['instant_contact'] = array(
-                'enabled' => $this->config->getValue('simiconnector/instant_contact/enable'),
-                'times' => $this->config->getValue('simiconnector/instant_contact/times'),
-                'phone' => $this->config->getValue('simiconnector/instant_contact/phone'),
+                'enabled' => $this->config->getValue('simiconnector/instant_contact/enable', 'store'),
+                'times' => $this->config->getValue('simiconnector/instant_contact/times', 'store'),
+                'phone' => $this->config->getValue('simiconnector/instant_contact/phone', 'store'),
             );
-            $sizeGuideFile = $this->config->getValue('simiconnector/sizeguide/image_file');
-            $sizeGuideFileMobile = $this->config->getValue('simiconnector/sizeguide/image_file_mobile');
+            $sizeGuideFile = $this->config->getValue('simiconnector/sizeguide/image_file', 'store');
+            $sizeGuideFileMobile = $this->config->getValue('simiconnector/sizeguide/image_file_mobile', 'store');
             $object->storeviewInfo['size_guide'] = array(
                 'image_file' => array(
                     'src' => $this->urlBuilder->getBaseUrl().UrlInterface::URL_TYPE_MEDIA.'/sizeguide/'.$sizeGuideFile,
@@ -176,7 +176,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 'bianca_ios_app' => $this->config->getValue('simiconnector/footer_app/bianca_ios_app', 'store')
             );
             $object->storeviewInfo['social_login_config'] = array(
-                'firebase_config' => $this->config->getValue('simiconnector/firebase/firebase_config')
+                'firebase_config' => $this->config->getValue('simiconnector/firebase/firebase_config', 'store')
             );
 
             $object->storeviewInfo['seo'] = array(

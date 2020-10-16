@@ -36,7 +36,7 @@ class ServiceType implements OptionSourceInterface
     public function getAllOptions()
     {
         if ($this->_options === null) {
-            $config = $this->config->getValue('sales/service/types');
+            $config = $this->config->getValue('sales/service/types', 'store');
             $services = explode(',', $config);
             foreach($services as $type){
                 $type = trim($type);
