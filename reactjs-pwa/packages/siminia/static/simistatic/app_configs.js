@@ -1562,7 +1562,18 @@ var DASHBOARD_CONFIG = {
                 "Website":"موقع الكتروني",
                 "Your name here":"اسمك هنا",
                 "E-mail address":"عنوان البريد الإلكتروني",
-                "Type your message":"اكتب رسالتك",
+				"Type your message":"اكتب رسالتك",
+				"Clothing Alterations":"تعديلات الملابس",
+				"CLOTHING ALTERATIONS":"تعديلات الملابس",
+				"Please fill in the form below for a quote.":"يرجى ملء النموذج أدناه للحصول على عرض أسعار.",
+				"Email Address":"عنوان البريد الإلكتروني",
+				"EMAIL ADDRESS":"عنوان البريد الإلكتروني",
+				"User's name":"اسم المستخدم",
+				"Type Of Service":"نوع الخدمة",
+				"Please describe what work you need to be done in as much detail as possible.":"يرجى وصف العمل الذي تحتاج إلى القيام به بأكبر قدر ممكن من التفاصيل.",
+				"Upload Files":"تحميل الملفات",
+				"You can upload up to 4 files":"يمكنك تحميل ما يصل إلى 4 ملفات",
+				"Choose file":"اختر ملف",
 			}
 		}
 	}]
