@@ -120,6 +120,10 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                     }
                 }
 
+                $websiteCode = $this->storeManager->getWebsite()->getCode();
+                $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+                $stockId = $stock->getStockId();
+                
                 $isSalable = $productModel->getIsSalable();
 
                 // if is configurable product then check with collect all children product
@@ -153,7 +157,7 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                     'app_reviews' => $app_reviews,
                     // 'additional'  => $_additional, // Optimize speed
                     // 'app_tier_prices' => $tierPrice, // Optimize speed
-                    'is_salable' => $productModel->getIsSalable() ? 1 : 0, // Optimize speed
+                    'is_salable' => $isSalable ? 1 : 0, // Optimize speed
                 );
                 $this->eventManager = $this->simiObjectManager->get('\Magento\Framework\Event\ManagerInterface');
                 $this->eventManager->dispatch(
