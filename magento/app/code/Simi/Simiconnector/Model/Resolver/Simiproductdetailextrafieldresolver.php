@@ -12,7 +12,12 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
-use Magento\Store\Model\StoreManagerInterface as StoreManager;
+
+use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * @inheritdoc
@@ -32,10 +37,16 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
     public function __construct(
         \Magento\Framework\ObjectManagerInterface $simiObjectManager,
         MetadataPool $metadataPool,
-        StoreManager $storeManager
+        GetProductSalableQtyInterface $productSalableQty,
+        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        StockResolverInterface $stockResolver,
+        StoreManagerInterface $storeManager
     ) {
         $this->metadataPool = $metadataPool;
         $this->simiObjectManager = $simiObjectManager;
+        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->productSalableQty = $productSalableQty;
+        $this->stockResolver = $stockResolver;
         $this->storeManager = $storeManager;
     }
 
@@ -101,6 +112,23 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                             $gcAmountOption['current_percent'] = round((float) $gcAmountOption['percent'] * (float) $currencyRate, 2);
                         }
                     }
+                }
+
+                $isSalable = $productModel->getIsSalable();
+
+                // if is configurable product then check with collect all children product
+                if ($productModel->getTypeId() == 'configurable') {
+                    $_children = $productModel->getTypeInstance()->getUsedProducts($productModel);
+                    $salableQty = 0;
+                    foreach ($_children as $child){
+                        $salableQty += $this->productSalableQty->execute($child->getSku(), $stockId);
+                        if ($salableQty > 0) break;
+                    }
+                } else {
+                    $salableQty = $this->productSalableQty->execute($sku, $stockId);
+                }
+                if ($salableQty <= 0) {
+                    $isSalable = false;
                 }
 
                 $this->extraFields = array(
