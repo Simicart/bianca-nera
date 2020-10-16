@@ -29,7 +29,13 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
      */
     private $metadataPool;
     public $extraFields;
-    protected $storeManager;
+
+    const XML_PATH_STOCK_THRESHOLD_QTY = 'cataloginventory/options/stock_threshold_qty';
+
+    private $getStockItemConfiguration;
+    private $productSalableQty;
+    private $stockResolver;
+    private $storeManager;
 
     /**
      * @param MetadataPool $metadataPool
