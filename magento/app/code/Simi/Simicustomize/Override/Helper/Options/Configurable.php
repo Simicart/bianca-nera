@@ -40,16 +40,16 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
                 if (isset($attribute_details['options'])) {
                     $updatedOptions = array();
                     foreach ($attribute_details['options'] as $option_key => $option_data) {
-                        if (
-                            isset($option_data['products']) &&
-                            is_array($option_data['products']) &&
-                            count($option_data['products']) != 0
-                        ) {
+                        // if (
+                        //     isset($option_data['products']) &&
+                        //     is_array($option_data['products']) &&
+                        //     count($option_data['products']) != 0
+                        // ) {
                             if($attribute_details['code'] === 'color') {
                                 $option_data['option_value'] = $this->getValueSwatch($option_data['id']); // add color swatch image
                             }
                             $updatedOptions[] = $option_data;
-                        }
+                        // }
                     }
                     $attribute_details['options'] = $updatedOptions;
                     $configurable_options['attributes'][$attribute_code] = $attribute_details;
@@ -72,8 +72,8 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
         $swatchHelper = $this->simiObjectManager->get('Magento\Swatches\Helper\Data');
         $value = $swatchHelper->getSwatchesByOptionsId([$id]);
         if (!isset($value[$id]['value']))
-            return;
-        if(strpos($value[$id]['value'], '#') === false) {
+            return '';
+        if(strpos($value[$id]['value'], '#') === FALSE) {
             $value[$id]['value'] = $this->simiObjectManager->get('Magento\Swatches\Helper\Media')->getSwatchMediaUrl().$value[$id]['value'];
         }
         return $value[$id]['value'];
@@ -90,6 +90,7 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
         $options = [];
         $allowAttributes = $product->getTypeInstance()->getConfigurableAttributes($product);
         $allowedProducts = $this->getAllowProducts();
+        $allowedProductsOptions = $this->getAllowProductsForOptions($product);
         foreach ($allowAttributes as $attribute) {
             $productAttribute = $attribute->getProductAttribute();
             $productAttributeId = $productAttribute->getId();
@@ -109,6 +110,15 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
                 $_options[$attributeValue]['id'] = $attributeValue;
                 // $_options[$attributeValue]['label'] = isset($optionIndex[$attributeValue]['label']) ? $optionIndex[$attributeValue]['label'] : '';
                 $_options[$attributeValue]['products'][] = $productId;
+            }
+            // Help to add option_value for color of product not salable
+            foreach ($allowedProductsOptions as $childProduct) {
+                $productId = $childProduct->getId();
+                $attributeValue = $childProduct->getData($productAttributeCode);
+                $_options[$attributeValue]['id'] = $attributeValue;
+                if (!isset($_options[$attributeValue]['products'])) {
+                    $_options[$attributeValue]['products'] = []; // to empty array to output data
+                }
             }
 
             $options[$productAttributeId] = [
@@ -193,6 +203,16 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
             return $this->allowProducts[$product->getId()];
         }
         return [];
+    }
+
+    public function getAllowProductsForOptions($product)
+    {
+        $products = [];
+        $allProducts = $product->getTypeInstance()->getUsedProducts($product, null);
+        foreach ($allProducts as $product) {
+            $products[] = $product;
+        }
+        return $products;
     }
 
     /**
