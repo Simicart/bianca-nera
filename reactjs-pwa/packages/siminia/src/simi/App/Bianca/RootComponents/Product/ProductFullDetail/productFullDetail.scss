@@ -308,7 +308,7 @@ $colorRed: #b91c1c;
                                     margin-right: 0px;
                                     &._selected{
                                         border: 1px solid $color1;
-                                        background-color: unset;
+                                        background-color: $color1;
                                         img{
                                             width: 80px;
                                             height: 53px;
