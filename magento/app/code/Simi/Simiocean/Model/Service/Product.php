@@ -395,7 +395,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 $configurableProductModel->setSku($sku);
                 $configurableProductModel->setUrlKey(str_replace(' ', '-', strtolower($configurableProductModel->getName())).'-'.$sku);
                 $assocProductIds = $this->getProductIds($sku);
-                if($configurableProduct = $this->createConfigurableProduct($configurableProductModel, $assocProductIds)){
+                $arName = isset($oProduct['ProductArName']) ? $oProduct['ProductArName'] : $configurableProductModel->getName();
+                if($configurableProduct = $this->createConfigurableProduct($configurableProductModel, $assocProductIds, $arName)){
                     if (isset($oProduct['CategoryId']) && isset($oProduct['SubcategoryId'])) {
                         if ($categoryId = $this->categoryService->getMagentoCategoryId($oProduct['SubcategoryId'], $oProduct['CategoryId'])) {
                             try{
@@ -944,14 +945,14 @@ class Product extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Add new configurable product to magento
+     * Add new configurable product to magento or update data to existing product
      * @param ProductInterface $productModel
+     * @param string|array $associatedProductIds
+     * @param string $arName in Arabic name
      * @return bool
      */
-    protected function createConfigurableProduct($productModel, $associatedProductIds){
+    protected function createConfigurableProduct($productModel, $associatedProductIds, $arName = ''){
         $productModel->setTypeId('configurable');
-        // $productModel->setWebsiteIds(array(1));
-        // $productModel->setCategoryIds(array(31));
         $productModel->setStockData(
             array(
                 'use_config_manage_stock' => 1,
@@ -976,9 +977,17 @@ class Product extends \Magento\Framework\Model\AbstractModel
              * @return \Magento\Catalog\Api\Data\ProductInterface
              */
             $productModel->setIsOcean(1);
-            if (!$savedProduct = $this->getProductExists($productModel->getSku())) {
-                $savedProduct = $this->productRepository->save($productModel);
+            if ($savedProduct = $this->getProductExists($productModel->getSku())) {
+                // Update data to existing product
+                $data = $this->dataObjectProcessor->buildOutputDataArray($productModel, ProductInterface::class);
+                $this->dataObjectHelper->populateWithArray($savedProduct, $data, ProductInterface::class);
+                $savedProduct->setStoreId(0);
+                $savedProduct->save(); // Save existing product
+            } else {
+                $productModel->setStoreId(0);
+                $savedProduct = $this->productRepository->save($productModel);  // Save new product
             }
+            
             // Save again with associated product Ids
             if ($savedProduct && $savedProduct->getId()) {
                 $attributeIds = $this->getAttributeIds(array('color', 'size')); // Super Attribute Ids Used To Create Configurable Product
@@ -1004,6 +1013,20 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 $configurableAttributesData = $this->productTypeConfigurable->getConfigurableAttributesAsArray($savedProduct);
                 $savedProduct->setConfigurableAttributesData($configurableAttributesData);
                 $savedProduct->save();
+
+                // save product for Arab store
+                try{
+                    if ($this->config->getArStore() != null) {
+                        $backupProduct = clone $savedProduct;
+                        $arStoreIds = explode(',', $this->config->getArStore());
+                        $savedProduct->setName($arName);
+                        foreach($arStoreIds as $storeId){
+                            $savedProduct->setStoreId($storeId);
+                            $savedProduct->save();
+                        }
+                        $savedProduct = $backupProduct;
+                    }
+                }catch(\Exception $e){}
             }
             return $savedProduct;
         } catch(\Exception $e) {
