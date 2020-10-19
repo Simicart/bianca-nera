@@ -1189,7 +1189,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
      * Resync all product from Ocean to Website
      */
     public function resyncAll(){
-        $oProducts = $this->getOceanProductsSyncedBefore('2020-10-13 00:00:00', 10);
+        $oProducts = $this->getOceanProductsSyncedBefore('2020-10-19 00:00:00', 10);
         $status = false;
         if ($oProducts) {
             foreach($oProducts as $item){
