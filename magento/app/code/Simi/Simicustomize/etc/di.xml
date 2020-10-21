@@ -91,4 +91,6 @@
     <type name='Magento\Quote\Model\Quote\Item\ToOrderItem'>
         <plugin name='SimiAddOrderItemPlugin' type='Simi\Simicustomize\Plugin\QuoteItemToOrderItem' sortOrder='99'/>
     </type>
+    <!-- rewrite to set default encoding type to base 64 -->
+    <preference for="Magento\Framework\Mail\Message" type="Simi\Simicustomize\Plugin\ZendMailMessage"/>
 </config>
