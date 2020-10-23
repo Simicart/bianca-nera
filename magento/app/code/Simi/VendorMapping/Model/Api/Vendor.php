@@ -107,9 +107,9 @@ class Vendor implements VendorInterface
         if ($vendor->getId()) {
             $data = $vendor->toArray();
             $data['logo'] = $this->getLogoUrl($vendor->getId());
-            $data['logo_path'] = $this->getLogoPath($vendor->getId()) ? '/'. \Magento\Framework\UrlInterface::URL_TYPE_MEDIA . '/' .$this->getLogoPath($vendor->getId()) : '';
+            $data['logo_path'] = $this->getLogoPath($vendor->getId()) ? \Magento\Framework\UrlInterface::URL_TYPE_MEDIA . '/' .$this->getLogoPath($vendor->getId()) : '';
             $data['banner'] = $this->getBannerUrl($vendor->getId());
-            $data['banner_path'] = $this->getBannerPath($vendor->getId()) ? '/'. \Magento\Framework\UrlInterface::URL_TYPE_MEDIA . '/' .$this->getBannerPath($vendor->getId()) : '';
+            $data['banner_path'] = $this->getBannerPath($vendor->getId()) ? \Magento\Framework\UrlInterface::URL_TYPE_MEDIA . '/' .$this->getBannerPath($vendor->getId()) : '';
             $data['profile'] = $this->vendorHelper->getProfile($vendor->getId());
             $data['reviews'] = $this->reviewHelper->getVendorReviews($id, false);
             $data['about'] = $this->getAbout($id);
@@ -302,7 +302,7 @@ class Vendor implements VendorInterface
             $this->_logoConfig = $this->_configHelper->getVendorConfig('general/store_information/logo', $vendorId);
         }
         if ($this->_logoConfig) {
-            return 'ves_vendors/logo/' . $this->_logoConfig;
+            return 'ves_vendors/attribute/logo/' . $this->_logoConfig;
         }
         return '';
     }
@@ -328,7 +328,7 @@ class Vendor implements VendorInterface
             $this->_bannerConfig = $this->_configHelper->getVendorConfig('general/store_information/banner', $vendorId);
         }
         if ($this->_bannerConfig) {
-            return 'ves_vendors/banner/' . $this->_bannerConfig;
+            return 'ves_vendors/attribute/banner/' . $this->_bannerConfig;
         }
         return '';
     }

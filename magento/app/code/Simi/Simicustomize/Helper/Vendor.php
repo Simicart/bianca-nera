@@ -5,6 +5,8 @@ namespace Simi\Simicustomize\Helper;
 
 class Vendor extends \Simi\Simiconnector\Helper\Data
 {
+    protected $_configHelper;
+
     protected function getProfileBlock($vendor)
     {
         if (!$vendor instanceof \Vnecoms\Vendors\Model\Vendor) {
@@ -18,6 +20,9 @@ class Vendor extends \Simi\Simiconnector\Helper\Data
     }
 
     public function getProfile($vendorId) {
+        if (!$this->_configHelper) {
+            $this->_confighelper = $this->simiObjectManager->get('Vnecoms\VendorsConfig\Helper\Data');
+        }
         $profileBlock = $this->getProfileBlock($vendorId);
         $profile = array(
             'logo_width'=> $profileBlock->getLogoWidth(),
@@ -27,6 +32,7 @@ class Vendor extends \Simi\Simiconnector\Helper\Data
             'no_logo_url'=> $profileBlock->getNoLogoUrl(),
             'vendor_url'=> $profileBlock->getVendorUrl(),
             'store_name'=> $profileBlock->getStoreName(),
+            'company'=> $this->_confighelper->getVendorConfig('general/store_information/company', $vendorId),
             'description'=> $profileBlock->getStoreDescription(),
             'can_show_vendor_short_description'=> $profileBlock->canShowVendorShortDescription(),
             'can_show_vendor_phone'=> $profileBlock->canShowVendorPhone(),

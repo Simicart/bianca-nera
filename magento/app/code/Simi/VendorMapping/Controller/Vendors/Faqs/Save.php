@@ -65,7 +65,7 @@ class Save extends \Vnecoms\Vendors\Controller\Vendors\Action
                 $groups = array('store' => array('fields' => array('faqs' => array('value' => $data['content']))));
                 $helper->saveConfig($vendor->getId(), 'general', $groups, $storeId);
 
-                $this->messageManager->addSuccessMessage(__('Successfully saved'));
+                $this->messageManager->addSuccessMessage(__('The value of this field is changed successfully but it has not been approved yet.'));
 
                 if ($vendor && $vendor->getId()) {
                     return $resultRedirect->setPath('*/*/edit/id/'.$vendor->getId());

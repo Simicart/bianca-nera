@@ -9,5 +9,6 @@
 	<menu>
         <update id="Aheadworks_Giftcard::home" title="Gift Voucher" translate="title" module="Aheadworks_Giftcard" sortOrder="50" parent="Vnecoms_Vendors::marketplace" resource="Aheadworks_Giftcard::home"/>
         <update id="Aheadworks_Giftcard::code_pools" title="Gift Code Pools" translate="title" module="Aheadworks_Giftcard" sortOrder="10" parent="Aheadworks_Giftcard::home" action="aw_giftcard_admin/pool/index" resource="Aheadworks_Giftcard::code_pools"/>
+        <update id="Vnecoms_VendorsConfigApproval::pending_config" title="Manage Sellers Pending Edit" sortOrder="25" module="Vnecoms_VendorsConfigApproval" parent="Vnecoms_Vendors::vendors" action="vendors/config_pending"  dependsOnModule="Vnecoms_Vendors" resource="Vnecoms_VendorsConfigApproval::pending_config"/>
     </menu>
 </config>

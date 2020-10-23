@@ -6,13 +6,16 @@
 
 namespace Simi\VendorMapping\Model\Api;
 
-use Vnecoms\Vendors\Model\Session as VendorSession;
-use Simi\VendorMapping\Api\VendorRegisterInterface;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Vnecoms\Vendors\Controller\Seller\RegisterPost;
+use Vnecoms\Vendors\Model\Session as VendorSession;
 use Vnecoms\Vendors\Model\Vendor;
+use Simi\VendorMapping\Api\VendorRegisterInterface;
 
 class VendorRegister extends RegisterPost implements VendorRegisterInterface
 {
+    protected $_mediaDir;
+
     public function registerPost()
     {
 
@@ -108,6 +111,7 @@ class VendorRegister extends RegisterPost implements VendorRegisterInterface
                     $vendor->setData('city', $vendorData['vendor_data']['city']);
                     $vendor->setData('region', $vendorData['vendor_data']['region']);
                     $vendor->setData('telephone', $vendorData['vendor_data']['telephone']);
+                    $vendor->setData('company', $vendorData['vendor_data']['company']);
                     if (isset($vendorData['vendor_data']['website'])) {
                         $vendor->setData('website', $vendorData['vendor_data']['website']);
                     }
@@ -146,6 +150,36 @@ class VendorRegister extends RegisterPost implements VendorRegisterInterface
 
                     $vendor->save();
 
+                    $banner = '';
+                    // upload banner image
+                    if (isset($vendorData['vendor_data']['banner'])) {
+                        $banner = $this->saveUploadedImage('banner', $vendorData['vendor_data']['banner'], $vendor->getVendorId());
+                        $vendorData['banner'] = $banner ? 'ves_vendors/attribute/banner/'.$banner : '';
+                    }
+
+                    $logo = '';
+                    // upload logo image
+                    if (isset($vendorData['vendor_data']['logo'])) {
+                        $logo = $this->saveUploadedImage('logo', $vendorData['vendor_data']['logo'], $vendor->getVendorId());
+                        $vendorData['logo'] = $logo ? 'ves_vendors/attribute/logo/'.$logo : '';
+                    }
+
+                    // Save other vendor configurations (Description, banner, logo)
+                    $groupData = array(
+                        'store_information' => array('fields' => array(
+                            'logo' => array('value' => $logo ?? ''),
+                            'banner' => array('value' => $banner ?? ''),
+                            // 'name' => array('value' => $vendorData['vendor_data']['company'] ?? ''),
+                            'company' => array('value' => $vendorData['vendor_data']['company'] ?? ''),
+                            'short_description' => array('value' => $vendorData['vendor_data']['description'] ?? ''),
+                    )));
+                    $configHelper = $this->_objectManager->get('Vnecoms\VendorsConfig\Helper\Data');
+                    $configHelper->saveConfig(
+                        $vendor->getId(),
+                        'general', 
+                        $groupData // group data for save
+                    );
+
                     if ($this->_vendorHelper->isUsedCustomVendorUrl()) {
                         return [[
                             'status' => 'error',
@@ -181,5 +215,42 @@ class VendorRegister extends RegisterPost implements VendorRegisterInterface
                 'message' => __('Register error')
             ]
         ];
+    }
+
+    /**
+     * Get media directory absolute path
+     */
+    protected function getMediaDir(){
+        if (!$this->_mediaDir) {
+            $filesystem = $this->_objectManager->get('Magento\Framework\Filesystem');
+            $this->_mediaDir = $filesystem->getDirectoryRead(DirectoryList::MEDIA)->getAbsolutePath();
+        }
+        return $this->_mediaDir;
+    }
+
+    /**
+     * @param string $attribute attribute code to save
+     * @param string $fullImagePath upload with full absolute path
+     * @param int $vendorId vendor id
+     * @return string
+     */
+    protected function saveUploadedImage($attribute, $fullImagePath, $vendorId, $isWithDirPath = false){
+        $DS = DIRECTORY_SEPARATOR;
+        $media = $this->getMediaDir();
+        if ($fullImagePath && is_file($fullImagePath) && $media) {
+            $fileDir = "ves_vendors${DS}attribute${DS}${attribute}" . $DS;
+            if (!is_dir($media.$fileDir)) mkdir($media.$fileDir, 755, true);
+            $ext = explode('.', $fullImagePath);
+            $ext = count($ext) > 1 ? array_pop($ext) : 'jpg';
+            $filename = $vendorId . '-' . $attribute . '.'.$ext;
+            $file = $fileDir . $filename; // file save to
+            if(rename($fullImagePath, $media.$file)){
+                if ($isWithDirPath) {
+                    return $fileDir . $filename;
+                }
+                return $filename;
+            }
+        }
+        return '';
     }
 }

@@ -7,6 +7,7 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Vnecoms\VendorsConfig\Model\Config\Backend\Image" type="Simi\VendorMapping\Model\Config\Backend\Image" />
     <!-- add di from di.xml in aw giftcard adminhtml  -->
     <!-- <type name="Magento\Sales\Controller\Adminhtml\Order\Creditmemo\NewAction">
         <plugin name="aw-giftcard-new-creditmemo" type="Aheadworks\Giftcard\Plugin\Controller\Sales\Order\NewCreditmemoPlugin" />
