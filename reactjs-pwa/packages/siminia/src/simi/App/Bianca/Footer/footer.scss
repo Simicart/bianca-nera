@@ -383,22 +383,21 @@ $errorFormBgColor: #ece2e2;
             }
         }
     }
+    .defaultError {
+        display: none;
+    }
+    .showError {
+        display: block;
+        color: $errorFormColor;
+        font-family: Gotham;
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 10px;
+        text-align: center;
+        margin-top: 10px;
+    }
 }
-.defaultError{
-    display: none;
-}
-.showError{
-    position: absolute;
-    display: block;
-    color: $errorFormColor;
-    font-family: Gotham;
-    font-size: 10px;
-    font-weight: 500;
-    line-height: 10px;
-    text-align: center;
-    bottom: -21px;
-    left: 45px;
-}
+
 
 @media(max-width: 1199px){
     .footer-app .footer-wrapper .footer-subscriber{
@@ -408,11 +407,12 @@ $errorFormBgColor: #ece2e2;
         font-size: 21px;
         margin-bottom: 10px;
     }
-    .showError{
-        left: 29px;
-        font-size: 9px;
+    .footer-app {
+        .showError{
+            left: 29px;
+            font-size: 9px;
+        }
     }
-
 }
 
 @media(max-width: 1023px){
@@ -431,9 +431,11 @@ $errorFormBgColor: #ece2e2;
         width: 100%;
         height: auto;
     }
-    .showError{
-        left: 45px;
-        font-size: 8px;
+    .footer-app {
+        .showError{
+            left: 45px;
+            font-size: 8px;
+        }
     }
     .rtl-root{
         .footer-app.on-mobile .mobile-social .footer-mobile-social .social-icon{
@@ -449,9 +451,11 @@ $errorFormBgColor: #ece2e2;
             max-width: unset;
         }
     }
-    .showError{
-        left: 49px;
-        font-size: 10px;
+    .footer-app {
+        .showError{
+            left: 49px;
+            font-size: 10px;
+        }
     }
 }
 
@@ -464,8 +468,10 @@ $errorFormBgColor: #ece2e2;
 }
 
 @media(max-width: 425px){
-    .showError{
-        font-size: 9px;
+    .footer-app {
+        .showError{
+            font-size: 9px;
+        }
     }
 }
 
@@ -515,8 +521,10 @@ $errorFormBgColor: #ece2e2;
 }
 
 @media(max-width: 320px){
-    .showError{
-        font-size: 7px;
+    .footer-app {
+        .showError{
+            font-size: 7px;
+        }
     }
 }
 .footer-app{

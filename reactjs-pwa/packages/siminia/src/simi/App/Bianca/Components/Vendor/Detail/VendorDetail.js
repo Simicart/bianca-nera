@@ -147,6 +147,7 @@ class VendorDetail extends React.Component {
 
         const {profile, reviews, telephone} = data || {}
         const storeName = profile && profile.store_name || name;
+        const company = profile && profile.company || storeName;
         const phone_number = profile && profile.phone_number || telephone;
 
         return (
@@ -156,12 +157,13 @@ class VendorDetail extends React.Component {
                         <div className="cont-left">
                             <div className="store-info">
                                 <div className="logo"><img src={mediaPrefix+data.logo_path} alt="Vendor banner"/></div>
-                                <div className="name">{Identify.__(storeName)}</div>
+                                <div className="name">{storeName}</div>
                                 <div className="location">{Identify.__(profile.address)}</div>
                                 <div className="description">{Identify.__(profile.description)}</div>
                                 <div className="reviews">
                                     <TopReview reviews={reviews}/>
                                 </div>
+                                <div className="company">{company}</div>
                                 <div className="phone"><IconPhone /><span>{Identify.__(phone_number)}</span></div>
                                 <div className="email"><IconEnvelopeOpen /><span>{Identify.__(data.email)}</span></div>
                             </div>

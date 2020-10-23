@@ -42,6 +42,9 @@ export const validators = new Map()
 	.set('vendorId', (value) => {
 		return !(value || '').trim() ? Identify.__('Vendor ID is required.') : undefined;
 	})
+	.set('text', (value) => {
+		return !(value || '').trim() ? Identify.__('This field is required.') : undefined;
+	})
 	.set('countryId', (value) => {
 		return !(value || '').trim() ? Identify.__('Country is required.') : undefined;
 	})

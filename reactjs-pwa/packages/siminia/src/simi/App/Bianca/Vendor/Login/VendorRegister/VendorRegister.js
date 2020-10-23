@@ -1,9 +1,10 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { shape, string } from 'prop-types';
 import { Form, Option, asField, BasicSelect, useFieldState } from 'informed';
-
-import Field from 'src/components/Field';
+import Field, { Message } from 'src/components/Field';
 import TextInput from 'src/components/TextInput';
+import TextArea from 'src/components/TextArea';
+import FileInput from './FileInput';
 import { validators } from './validators';
 import classes from './vendorRegister.css';
 import Identify from 'src/simi/Helper/Identify';
@@ -12,7 +13,6 @@ import { vendorRegister } from 'src/simi/Model/Customer';
 import { showToastMessage } from 'src/simi/Helper/Message';
 import { showFogLoading, hideFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading';
 import { validateEmpty } from 'src/simi/Helper/Validation';
-import { red } from '@material-ui/core/colors';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 import VerifyForm from 'src/simi/App/Bianca/Components/Otp/VerifyForm';
 import GetOtpModal from 'src/simi/App/Bianca/Components/Otp/GetOtpModal';
@@ -47,9 +47,9 @@ const VendorRegister = (props) => {
 			<BasicSelect
 				fieldState={fieldState}
 				{...props}
-				style={fieldState.error ? { border: 'solid 1px red' } : null}
+				// style={fieldState.error ? { border: 'solid 1px red' } : null}
 			/>
-			{fieldState.error ? <small style={{ color: 'red' }}>{Identify.__(fieldState.error)}</small> : null}
+			<Message fieldState={fieldState}>{props.message}</Message>
 		</React.Fragment>
 	));
 
@@ -242,20 +242,27 @@ const VendorRegister = (props) => {
 			// vendor_id: values.vendorId,
 			vendor_registration_agreement: values.vendor_registration_agreement ? 1 : 0
 		};
-		if (!allowSubmit) {
-			$('#must-verify').css('display', 'block')
-			$('#createAccount').css('backgroundColor', '#B91C1C')
-			$('#verify-opt-area .wrap').css('float', 'unset')
-			// do nothing
-		} else {
-			$('#must-verify').css('display', 'none')
-			$('#createAccount').css('backgroundColor', '#101820')
-			$('#verify-opt-area .wrap').css('float', 'right')
-			showFogLoading()
-			registeringEmail = values.email;
-			registeringPassword = values.password;
-			vendorRegister(registerDone, params);
-		}
+		// if (!!allowSubmit) {
+		// 	$('#must-verify').css('display', 'block')
+		// 	$('#createAccount').css('backgroundColor', '#B91C1C')
+		// 	$('#verify-opt-area .wrap').css('float', 'unset')
+		// 	// do nothing
+		// } else {
+		// 	$('#must-verify').css('display', 'none')
+		// 	$('#createAccount').css('backgroundColor', '#101820')
+		// 	$('#verify-opt-area .wrap').css('float', 'right')
+		// 	showFogLoading()
+		// 	registeringEmail = values.email;
+		// 	registeringPassword = values.password;
+		// 	vendorRegister(registerDone, params);
+		// }
+		$('#must-verify').css('display', 'none')
+		$('#createAccount').css('backgroundColor', '#101820')
+		$('#verify-opt-area .wrap').css('float', 'right')
+		showFogLoading()
+		registeringEmail = values.email;
+		registeringPassword = values.password;
+		vendorRegister(registerDone, params);
 	};
 
 	const registerDone = (data) => {
@@ -417,6 +424,14 @@ const VendorRegister = (props) => {
 							placeholder={Identify.__('Designer ID')}
 						/>
 					</Field>
+					<Field label={Identify.__('Logo *')} required={true}>
+						<FileInput
+							field="vendor.logo"
+							validate={validators.get('text')}
+							validateOnBlur
+							placeholder={Identify.__("Designer's logo")}
+						/>
+					</Field>
 					<Field label={Identify.__('Email address *')} required={true}>
 						<TextInput
 							field="email"
@@ -426,6 +441,29 @@ const VendorRegister = (props) => {
 							placeholder={Identify.__('Email')}
 						/>
 					</Field>
+					<Field label={Identify.__('Banner (optional)')} required={false}>
+						<FileInput
+							field="vendor.banner"
+							placeholder={Identify.__("Banner")}
+						/>
+					</Field>
+					<Field label={Identify.__('Description *')} required={true}>
+						<TextArea style={{marginBottom: '-10px'}}
+							field="vendor.description"
+							validate={validators.get('text')}
+							validateOnBlur
+							placeholder={Identify.__('Description')}
+						/>
+					</Field>
+					<Field label={Identify.__('Company Name')} required={false}>
+						<TextInput
+							field="vendor.company"
+							// validate={validators.get('text')}
+							// validateOnBlur
+							placeholder={Identify.__('Company Name')}
+						/>
+					</Field>
+					
 					<div className={classes.form_row}>
 						<label className={classes.select} htmlFor="input-country">{Identify.__('Country *')}</label>
 						<label className={`${classes.arrow_down1} show icon-chevron-down icons`} htmlFor="input-country" />

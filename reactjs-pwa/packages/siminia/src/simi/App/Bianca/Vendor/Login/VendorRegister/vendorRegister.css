@@ -79,8 +79,6 @@
 	text-align: center;
 }
 
-.root .root_error {}
-
 .root div[class *="field-root"] {
 	margin-top: 35px;
 }
@@ -111,7 +109,7 @@
 	display: none;
 }
 
-.root div[class *="field-root"] input {
+.root div[class *="field-root"] input, .root div[class *="field-root"] textarea {
     min-height: 48px;
     padding-left: 16px !important;
     background-color: #f2f2f2;
@@ -124,12 +122,17 @@
     line-height: 14px;
     color: #101820;
 }
-
-.root div[class *="field-root"] input::placeholder {
+.root div[class *="field-root"] textarea {
+	padding-top: 16px;
+}
+.root div[class *="field-root"] input::placeholder, .root div[class *="field-root"] textarea::placeholder {
 	font-family: Gotham;
 }
+.root div[class *="field-root"] textarea::placeholder {
+	padding-top: 0px;
+}
 
-.root div[class *="field-root"] input:focus {
+.root div[class *="field-root"] input:focus, .root div[class *="field-root"] textarea:focus {
 	box-shadow: none;
 	border-color: unset;
 }
@@ -207,7 +210,7 @@
 	align-items: center;
 	position: absolute;
 	z-index: 9;
-	top: 43px;
+	top: 40px;
 	margin: 0;
 	right: 16px;
 	padding-bottom: 0;
@@ -232,7 +235,7 @@
 	align-items: center;
 	position: absolute;
 	z-index: 9;
-	top: 43px;
+	top: 38px;
 	margin: 0;
 	right: 16px;
 	padding-bottom: 0;
@@ -264,9 +267,6 @@
 }
 
 /* right to left */
-.rtl-rootForm{
-
-}
 
 .rtl-rootForm .lead2{
     text-align: unset !important;
@@ -312,6 +312,9 @@
 		padding: 0 80px;
 	}
 	.root div[class *="field-root"] input {
+		min-width: unset !important;
+	}
+	.root div[class *="field-root"] textarea {
 		min-width: unset !important;
 	}
 	.root select {
