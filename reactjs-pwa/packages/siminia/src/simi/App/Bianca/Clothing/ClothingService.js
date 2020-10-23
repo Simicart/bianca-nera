@@ -49,7 +49,7 @@ const ClothingService = (props) => {
     const isPhone = windowSize.width < 1024;
     const storeConfig = Identify.getStoreConfig() || {};
     const {service} = storeConfig && storeConfig.simiStoreConfig && storeConfig.simiStoreConfig.config || {};
-    const {types, description} = service;
+    const {types, description} = service || {};
 
     const uploadFileReturn = (data) => {
         hideFogLoading()
