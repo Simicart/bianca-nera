@@ -242,20 +242,20 @@ const VendorRegister = (props) => {
 			// vendor_id: values.vendorId,
 			vendor_registration_agreement: values.vendor_registration_agreement ? 1 : 0
 		};
-		// if (!!allowSubmit) {
-		// 	$('#must-verify').css('display', 'block')
-		// 	$('#createAccount').css('backgroundColor', '#B91C1C')
-		// 	$('#verify-opt-area .wrap').css('float', 'unset')
-		// 	// do nothing
-		// } else {
-		// 	$('#must-verify').css('display', 'none')
-		// 	$('#createAccount').css('backgroundColor', '#101820')
-		// 	$('#verify-opt-area .wrap').css('float', 'right')
-		// 	showFogLoading()
-		// 	registeringEmail = values.email;
-		// 	registeringPassword = values.password;
-		// 	vendorRegister(registerDone, params);
-		// }
+		if (!!allowSubmit) {
+			$('#must-verify').css('display', 'block')
+			$('#createAccount').css('backgroundColor', '#B91C1C')
+			$('#verify-opt-area .wrap').css('float', 'unset')
+			// do nothing
+		} else {
+			$('#must-verify').css('display', 'none')
+			$('#createAccount').css('backgroundColor', '#101820')
+			$('#verify-opt-area .wrap').css('float', 'right')
+			showFogLoading()
+			registeringEmail = values.email;
+			registeringPassword = values.password;
+			vendorRegister(registerDone, params);
+		}
 		$('#must-verify').css('display', 'none')
 		$('#createAccount').css('backgroundColor', '#101820')
 		$('#verify-opt-area .wrap').css('float', 'right')
@@ -425,6 +425,7 @@ const VendorRegister = (props) => {
 						/>
 					</Field>
 					<Field label={Identify.__('Logo *')} required={true}>
+						<small>{Identify.__('Suggested size 180x180 pixel')}</small>
 						<FileInput
 							field="vendor.logo"
 							validate={validators.get('text')}
@@ -442,6 +443,7 @@ const VendorRegister = (props) => {
 						/>
 					</Field>
 					<Field label={Identify.__('Banner (optional)')} required={false}>
+						<small>{Identify.__('Suggested size 866x322 pixel')}</small>
 						<FileInput
 							field="vendor.banner"
 							placeholder={Identify.__("Banner")}
@@ -455,7 +457,7 @@ const VendorRegister = (props) => {
 							placeholder={Identify.__('Description')}
 						/>
 					</Field>
-					<Field label={Identify.__('Company Name')} required={false}>
+					<Field label={Identify.__('Company Name (optional)')} required={false}>
 						<TextInput
 							field="vendor.company"
 							// validate={validators.get('text')}
