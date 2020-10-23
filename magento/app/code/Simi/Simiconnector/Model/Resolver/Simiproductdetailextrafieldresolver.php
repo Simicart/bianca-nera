@@ -135,7 +135,7 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                         if ($salableQty > 0) break;
                     }
                 } else {
-                    $salableQty = $this->productSalableQty->execute($sku, $stockId);
+                    $salableQty = $this->productSalableQty->execute($productModel->getSku(), $stockId);
                 }
                 if ($salableQty <= 0) {
                     $isSalable = false;

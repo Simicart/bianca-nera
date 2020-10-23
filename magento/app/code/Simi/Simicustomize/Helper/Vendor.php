@@ -27,6 +27,10 @@ class Vendor extends \Simi\Simiconnector\Helper\Data
             $vendor = $this->simiObjectManager->get('\Vnecoms\Vendors\Model\Vendor')->load($vendor);
         }
 
+        if (!$vendor || !$vendor->getId()) {
+            return array();
+        }
+
         $profileBlock = $this->getProfileBlock($vendor);
         $profile = array(
             'logo_width'=> $profileBlock->getLogoWidth(),

@@ -120,6 +120,7 @@ class Griditem extends React.Component {
         if (data.errors) {
             showToastMessage(Identify.__('Problem occurred.'))
         } else {
+            showToastMessage(Identify.__('Product was added to your wishlist'))
             if (this.wlBtnRef) {
                 this.wlBtnRef.classList.add("added-item")
             }
