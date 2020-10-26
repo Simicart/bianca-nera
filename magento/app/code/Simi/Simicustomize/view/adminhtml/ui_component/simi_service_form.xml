@@ -102,11 +102,10 @@
         </field>
         <field name="service_text">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Simi\Simicustomize\Model\Source\Service\ServiceType</item>
                 <item name="config" xsi:type="array">
                     <item name="source" xsi:type="string">service</item>
                     <item name="dataType" xsi:type="string">text</item>
-                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="formElement" xsi:type="string">input</item>
                     <item name="elementTmpl" xsi:type="string">Simi_Simicustomize/ui/form/element/label</item>
                     <item name="label" xsi:type="string" translate="true">Type Of Service</item>
                     <item name="dataScope" xsi:type="string">service_text</item>
