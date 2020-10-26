@@ -151,12 +151,15 @@
         </column>
         <column name="service_text" sortOrder="30">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Simi\Simicustomize\Model\Source\Service\ServiceType</item>
+                <!-- <item name="options" xsi:type="object">Simi\Simicustomize\Model\Source\Service\ServiceType</item> -->
                 <item name="config" xsi:type="array">
+                    <item name="fieldAction" xsi:type="boolean">false</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
                     <item name="fieldName" xsi:type="string">service_text</item>
-                    <item name="dataType" xsi:type="string">select</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
+                    <!-- <item name="dataType" xsi:type="string">select</item> -->
+                    <!-- <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item> -->
                     <item name="label" xsi:type="string" translate="true">Type Of Service</item>
+                    <item name="filter" xsi:type="string">text</item>
                 </item>
             </argument>
         </column>
