@@ -28,7 +28,17 @@ export const getFormattedDate = (data, lang='en') => {
     const yy = date.getFullYear();
     if (lang === 'ar') {
         const months = ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        return dd + ' ' + months[date.getMonth()] + ' ' + yy;
+        const numberMap = { 0: '٠', 1: '١', 2: '٢', 3: '٣', 4: '٤', 5: '٥', 6: '٦', 7: '٧', 8: '٨', 9: '٩' };
+        const translate = (number) => {
+            const numStr = String(number);
+            const len = numStr.length;
+            let arNum = '';
+            for(let i=0; i<len; i++){
+                arNum += numberMap[numStr.charAt(i)];
+            }
+            return arNum;
+        }
+        return translate(yy) + '-' + months[date.getMonth()] + '-' + translate(dd);
     }
     return dd + ' ' + monthNames[date.getMonth()] + ' ' + yy;
 }
