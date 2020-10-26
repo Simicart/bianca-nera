@@ -93,7 +93,7 @@ class Blog extends React.Component {
             return <div className="article-item item-featured-post">
                 <div className="article-description">
                     {data.publish_date && <div className="date">
-                        {getFormattedDate(data.publish_date)}
+                        {getFormattedDate(data.publish_date, Identify.isRtl() ? 'ar':'en')}
                     </div>}
                     <div className="title">
                         <Link to={this.locationDest}>

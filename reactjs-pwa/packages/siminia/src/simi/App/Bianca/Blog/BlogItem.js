@@ -32,7 +32,7 @@ export const BlogItem = props => {
                 {image}
                 <div className="article-description">
                     {item.publish_date && <div className="date">
-                        {getFormattedDate(item.publish_date)}
+                        {getFormattedDate(item.publish_date, Identify.isRtl() ? 'ar':'en')}
                     </div>}
                     <div className="title">{item.title}</div>
                 </div>

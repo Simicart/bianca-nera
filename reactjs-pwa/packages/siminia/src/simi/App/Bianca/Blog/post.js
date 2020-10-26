@@ -42,7 +42,7 @@ const BlogPost = props => {
                 <BreadCrumb breadcrumb={breadcrumb} />
                 <div className="container">
                     <div className="post-main">
-                        <div className="post-date">{getFormattedDate(data.publish_date)}</div>
+                        <div className="post-date">{getFormattedDate(data.publish_date, Identify.isRtl() ? 'ar':'en')}</div>
                         <h2 className="title">{data.title}</h2>
                         {data.featured_image_file && <div className="post-featured-img">
                             <img src={data.featured_image_file} alt='featuredimage'/>

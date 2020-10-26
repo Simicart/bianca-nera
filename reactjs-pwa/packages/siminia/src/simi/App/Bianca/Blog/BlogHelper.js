@@ -1,5 +1,5 @@
 
-export const getFormattedDate = (data) => {
+export const getFormattedDate = (data, lang='en') => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
@@ -26,5 +26,9 @@ export const getFormattedDate = (data) => {
             break;
     } */
     const yy = date.getFullYear();
+    if (lang === 'ar') {
+        const months = ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+        return dd + ' ' + months[date.getMonth()] + ' ' + yy;
+    }
     return dd + ' ' + monthNames[date.getMonth()] + ' ' + yy;
 }
