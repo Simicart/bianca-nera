@@ -4,6 +4,7 @@
     <preference for="\Magento\Eav\Model\Entity\Attribute\AbstractAttribute" type="\Simi\Simicustomize\Override\Eav\Model\Entity\Attribute\AbstractAttribute" />
     <preference for="\Simi\Simiconnector\Helper\Products" type="\Simi\Simicustomize\Override\Helper\Products" />
     <preference for="\Simi\Simiconnector\Helper\Customer" type="\Simi\Simicustomize\Override\Helper\Customer" />
+    <preference for="\Simi\Simiconnector\Helper\Checkout\Payment" type="\Simi\Simicustomize\Override\Helper\Checkout\Payment" />
     <preference for="\Simi\Simiconnector\Helper\Options\Configurable" type="\Simi\Simicustomize\Override\Helper\Options\Configurable" />
     <preference for="\Simi\Simiconnector\Model\Api\Customers" type="\Simi\Simicustomize\Model\Api\Customers" />
     <preference for="\Simi\Simiconnector\Model\Customer" type="\Simi\Simicustomize\Model\Customer" />

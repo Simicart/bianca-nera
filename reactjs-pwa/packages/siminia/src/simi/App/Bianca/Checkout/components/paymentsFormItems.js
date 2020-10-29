@@ -11,6 +11,7 @@ import isObjectEmpty from 'src/util/isObjectEmpty';
 import Identify from 'src/simi/Helper/Identify';
 import BraintreeDropin from './paymentMethods/braintreeDropin';
 import CCType from './paymentMethods/ccType';
+import MasterCard from './paymentMethods/MasterCard';
 import PayfortCC from './paymentMethods/PayfortCC'
 require('./paymentsFormItems.scss')
 
@@ -119,6 +120,11 @@ const PaymentsFormItems = props => {
                         // payment type 3
                         handleSuccess(parseData)
                     }
+
+                    // MasterCard
+                    if (paymentChooseFull && paymentChooseFull.code === 'tns_hpf') {
+                        handleSuccess(parseData);
+                    }
                 }
             }
         }
@@ -189,6 +195,16 @@ const PaymentsFormItems = props => {
                             // payment type 3
                         }
                     }
+
+                    if (ite.code === 'tns_hpf') {
+                        frameCard = <MasterCard 
+                            onSuccess={handleSuccess} 
+                            paymentContent={ite.simi_payment_data} 
+                            cartCurrencyCode={cartCurrencyCode} 
+                            cart={cart} payment_method={ite.code} 
+                            initialValues={initialValues}
+                        />
+                    }
                 }
 
                 return <Fragment key={ite.code}>
@@ -205,7 +221,9 @@ const PaymentsFormItems = props => {
             <div className='body'>
                 <div className='payment-method-item'>
                     <CustomRadioPayment 
-                        initialValue={paymentCode} field="payment_method" 
+                        fieldState={{value: paymentCode}}
+                        initialValue={paymentCode} 
+                        field="payment_method" 
                         key={thisInitialValue} onChange={() => selectPaymentMethod()}
                         className='payment-method-radio'>
                         {renderMethod()}

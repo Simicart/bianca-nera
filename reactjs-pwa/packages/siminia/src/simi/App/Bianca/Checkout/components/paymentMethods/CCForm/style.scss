@@ -1,0 +1,26 @@
+.container-cc_form{
+    .cc-msg-error {
+        color: rgb(192, 18, 63);
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1rem;
+        padding: 0.375rem 0.125rem 0.125rem;
+    }
+    .cc-msg-success {
+        color: rgb(0, 115, 120);
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1rem;
+        padding: 0.375rem 0.125rem 0.125rem;
+    }
+
+    .submitCC {
+        font-family: 'Gotham Book';
+        padding: 10px 15px;
+        height: 40px;
+        font-size: 12px;
+        background-color: #101820;
+        color: white;
+        text-transform: uppercase;
+    }
+}

@@ -378,6 +378,83 @@ export const submitOrder = () =>
         }
     };
 
+export const setPaymentInfomation = (payload, responseCallback) =>
+    async function thunk(dispatch, getState) {
+        const { cart, user } = getState();
+        const { cartId } = cart;
+        if (!cartId) {
+            throw new Error('Missing required information: cartId');
+        }
+
+        await savePaymentMethod(payload);
+
+        let billing_address = await retrieveBillingAddress();
+        const shipping_address = await retrieveShippingAddress();
+
+        if (!billing_address || billing_address.sameAsShippingAddress) {
+            billing_address = shipping_address;
+            billing_address.save_in_address_book = 0
+        } else {
+            if (shipping_address && shipping_address.email) {
+                const { email, firstname, lastname, telephone } = shipping_address;
+                billing_address = {
+                    email,
+                    firstname,
+                    lastname,
+                    telephone,
+                    ...billing_address
+                };
+            }
+        }
+
+        try {
+            // POST to payment-information to submit the payment details and billing address,
+            // Note: this endpoint also actually submits the order.
+            // Support 3DS for mastercard method tns_hpf
+            const paymentEndpoint = user.isSignedIn
+                ? '/rest/V1/carts/mine/set-payment-information'
+                : `/rest/V1/guest-carts/${cartId}/set-payment-information`;
+
+            const bodyData = {
+                billingAddress: billing_address,
+                cartId: cartId,
+                email: billing_address.email,
+                paymentMethod: {
+                    additional_data: {
+                        // payment_method_nonce: paymentMethod.data.nonce
+                    },
+                    method: payload.code
+                }
+            };
+
+            // for CC payment: Stripe
+            if (payload.hasOwnProperty('additional_data') && payload.additional_data){
+                bodyData.paymentMethod['additional_data'] = payload.additional_data;
+            }
+
+            // for payment type Purchase Order
+            if (payload.hasOwnProperty('purchaseorder') && payload.purchaseorder){
+                bodyData.paymentMethod['po_number'] = payload.purchaseorder;
+            }
+
+            const response = await request(paymentEndpoint, {
+                method: 'POST',
+                body: JSON.stringify(bodyData)
+            });
+
+            responseCallback && responseCallback(response);
+
+            if (response === true) {
+                dispatch(checkoutActions.paymentMethod.submit(payload));
+                if (payload.data) payload.data['setPayment'] = 'success';
+                dispatch(checkoutActions.paymentMethod.accept(payload));
+            }
+            
+        } catch (error) {
+            dispatch(checkoutActions.order.reject(error));
+        }
+    };
+
 async function saveShippingAddress(address) {
     if (address.hasOwnProperty('region') && address.region instanceof Object) {
         address = (({ region, ...others }) => ({ ...others }))(address)
@@ -434,4 +511,8 @@ async function clearShippingMethod() {
 
 async function clearToken() {
     return storage.removeItem('signin_token');
+}
+
+async function savePaymentMethod(method) {
+    return storage.setItem('paymentMethod', method);
 }
