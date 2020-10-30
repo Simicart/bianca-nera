@@ -172,7 +172,7 @@ export const request = (resourceUrl, opts) => {
                             try{
                                 data = JSON.parse(bodyText);
                             }catch(error){}
-                            if (status === 401 && data && data.message && data.message.includes(`The consumer isn't authorized`)) {
+                            if (data && data.message && data.message.includes(`The consumer isn't authorized`)) {
                                 CacheHelper.clearCaches();
                                 // window.location.reload();
                                 setTimeout(()=>{
@@ -184,7 +184,16 @@ export const request = (resourceUrl, opts) => {
                 );
             }
             return response;
-        }).then(res => res.json());
+        }).then(res => {
+            try {
+                let response = res.json();
+                return response;
+            }catch(e){
+                if (res && res.message) {
+                    throw new Error(res.message);
+                }
+            }
+        });
         
     }catch(error){
         console.warn(error)

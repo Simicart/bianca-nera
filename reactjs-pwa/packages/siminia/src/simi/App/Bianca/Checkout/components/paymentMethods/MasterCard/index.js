@@ -180,7 +180,6 @@ const MasterCard = (props) => {
         if (!initialValues || initialValues && initialValues.setPayment !== 'success') {
             if (!sessionId) {
                 createSession(({session}) => {
-                    console.log(session)
                     setSessionId(session && session.id || 'failed');
                 });
             }

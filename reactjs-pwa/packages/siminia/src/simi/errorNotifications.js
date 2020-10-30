@@ -41,19 +41,32 @@ class ErrorNotifications extends Component {
 
     get allNotifications() {
         const { classes, errors } = this.props;
-        return errors.map(({ error, id, loc }) => (
-            <Notification
+        return errors.map(({ error, id, loc }) => {
+            let errorMessage = '';
+            if (error instanceof String) {
+                errorMessage = error.replace(/^Error:(.*)at dispatch.*/, '$1').trim();
+            }
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+
+            return <Notification
                 key={id}
                 type="error"
                 onClick={this.dismissNotificationOnClick}
                 afterDismiss={this.getErrorDismisser(error)}
             >
-                <div>Sorry! An unexpected error occurred.</div>
-                <small className={classes.debuginfo}>
-                    Debug: {id} {loc}
-                </small>
+                {errorMessage !== '' ? <>
+                        <div>Sorry! {errorMessage}</div>
+                    </>:<>
+                        <div>Sorry! An unexpected error occurred.</div>
+                        <small className={classes.debuginfo}>
+                            Debug: {id} {loc}
+                        </small>
+                    </>
+                }
             </Notification>
-        ));
+        });
     }
 
     render() {
