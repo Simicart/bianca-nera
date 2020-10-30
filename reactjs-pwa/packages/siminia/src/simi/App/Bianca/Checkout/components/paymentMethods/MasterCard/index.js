@@ -209,7 +209,7 @@ const MasterCard = (props) => {
                 classNames={{ overlay: Identify.isRtl() ? "rtl-root" : "" }}
             >
                 <iframe data-role="tns-threedsecure-iframe" style={{width: '100%',minHeight: '420px'}}
-                    src={'/tns/threedsecure/form/quote_id/'+cart.cartId+'?simiforceproxy=1&return_url_base64='+returnUrl} frameBorder="0"></iframe>
+                    src={addMerchantUrl('tns/threedsecure/form/quote_id/'+cart.cartId+'?simiforceproxy=1&return_url_base64='+returnUrl)} frameBorder="0"></iframe>
             </Modal>
         </React.Fragment>
     );
