@@ -133,6 +133,17 @@ const MasterCard = (props) => {
                             });
                             return;
                         }
+                        if (data && data.status === 'fields_in_error') {
+                            hideFogLoading();
+                            if (data.errors) {
+                                let message = [];
+                                for (let field in data.errors) {
+                                    message.push(field +': '+ Identify.__(data.errors[field]));
+                                }
+                                showToastMessage(message.join(', ') + '. ' + Identify.__('Please try again.'))
+                            }
+                            return;
+                        }
                         if (data && data.session && data.session.updateStatus === 'SUCCESS') {
                             Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'cc_card_data', card);
                             if (paymentContent && paymentContent.three_d_secure) {
