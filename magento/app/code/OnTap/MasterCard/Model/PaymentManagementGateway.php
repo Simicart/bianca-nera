@@ -19,21 +19,17 @@ namespace OnTap\MasterCard\Model;
 
 use OnTap\MasterCard\Api\PaymentManagementGatewayInterface;
 use OnTap\MasterCard\Gateway\Config\Hpf\Config as HpfConfig;
-use Simi\Simicustomize\Model\Proxy;
 use Magento\Store\Model\StoreManagerInterface;
 
 class PaymentManagementGateway implements PaymentManagementGatewayInterface
 {
-    protected $proxy;
     protected $config;
     protected $storeManager;
 
     public function __construct(
-        Proxy $proxy,
         HpfConfig $config,
         StoreManagerInterface $storeManager
     ) {
-        $this->proxy = $proxy;
         $this->config = $config;
         $this->storeManager = $storeManager;
     }
@@ -47,7 +43,7 @@ class PaymentManagementGateway implements PaymentManagementGatewayInterface
         $this->config->setMethodCode('tns_hpf');
         $componentUrl = $this->config->getComponentUrl($storeId);
         $componentUrl = str_replace('.js', '', $componentUrl);
-        $result = $this->proxy->query($componentUrl);
+        $result = $this->proxy($componentUrl);
         return ['data' => json_decode($result, true)];
     }
 
