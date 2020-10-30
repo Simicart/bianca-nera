@@ -50,6 +50,7 @@ const MasterCard = (props) => {
                 }
             })
             .then((data) => {
+                if (data[0]) data = data[0];
                 callback && callback(data);
                 return data;
             }).catch((error) => {
@@ -67,12 +68,12 @@ const MasterCard = (props) => {
             return;
         };
         const endPoint = getEndPoint();
-        reqHttp(endPoint, {}, cb);
+        reqHttp('/rest/V1/tns/mastercard/session', {}, cb);
     }
 
     const applyCard = (card, cb) => {
         const endPoint = getEndPoint()+'/'+sessionId;
-        reqHttp(endPoint, [
+        reqHttp('/rest/V1/tns/mastercard/session/'+sessionId, [
             {
                 field: 'sourceOfFundsType',
                 value: 'card'
@@ -98,7 +99,7 @@ const MasterCard = (props) => {
 
     const startTransaction = (cb) => {
         const endPoint = getEndPoint()+'/'+sessionId;
-        reqHttp(endPoint, {frameEmbeddingMitigation: ["x-frame-options"]}, cb, 'PUT');
+        reqHttp('/rest/V1/tns/mastercard/session/'+sessionId, {frameEmbeddingMitigation: ["x-frame-options"]}, cb, 'PUT');
     }
 
     const checkMethod = (cb) => {
@@ -168,6 +169,7 @@ const MasterCard = (props) => {
         if (!initialValues || initialValues && initialValues.setPayment !== 'success') {
             if (!sessionId) {
                 createSession(({session}) => {
+                    console.log(session)
                     setSessionId(session && session.id || 'failed');
                 });
             }

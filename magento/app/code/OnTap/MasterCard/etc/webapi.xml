@@ -31,4 +31,25 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+
+    <!-- start customize for pwa -->
+    <route method="POST" url="/V1/tns/mastercard/session">
+        <service class="OnTap\MasterCard\Api\PaymentManagementGatewayInterface" method="createNewPaymentSession"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route method="POST" url="/V1/tns/mastercard/session/:session">
+        <service class="OnTap\MasterCard\Api\PaymentManagementGatewayInterface" method="addCard"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route method="PUT" url="/V1/tns/mastercard/session/:session">
+        <service class="OnTap\MasterCard\Api\PaymentManagementGatewayInterface" method="submitCard"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
 </routes>

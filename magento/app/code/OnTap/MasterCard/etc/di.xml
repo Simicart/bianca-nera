@@ -16,6 +16,7 @@
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="OnTap\MasterCard\Api\SessionInformationManagementInterface" type="OnTap\MasterCard\Model\SessionInformationManagement" />
+    <preference for="OnTap\MasterCard\Api\PaymentManagementGatewayInterface" type="OnTap\MasterCard\Model\PaymentManagementGateway" />
 
     <virtualType name="MpgsHpfLogger" type="Magento\Payment\Model\Method\Logger">
         <arguments>
