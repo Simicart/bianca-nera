@@ -11,10 +11,6 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class SalesQuoteLoadAfter implements ObserverInterface
 {
-    /**
-     * @var \Magento\Framework\ObjectManagerInterface
-     */
-    public $objectManager;
 
     public $storeManager;
 
@@ -24,7 +20,6 @@ class SalesQuoteLoadAfter implements ObserverInterface
     public function __construct(
         StoreManagerInterface $storeManager
     ) {
-        $this->objectManager = $objectManager;
         $this->storeManager = $storeManager;
     }
 
