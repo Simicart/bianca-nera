@@ -48,10 +48,4 @@
         <observer name="simicustomize_payment_method_is_active"
                   instance="Simi\Simicustomize\Observer\PaymentMethodIsActive" />
     </event>
-
-    <!-- fix bug quote load old store id -->
-    <event name="sales_quote_load_after">
-        <observer name="simicustomize_sales_quote_load_after"
-                  instance="Simi\Simicustomize\Observer\SalesQuoteLoadAfter" />
-    </event>
 </config>

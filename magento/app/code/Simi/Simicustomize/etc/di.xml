@@ -94,4 +94,8 @@
     </type>
     <!-- rewrite to set default encoding type to base 64 -->
     <preference for="Magento\Framework\Mail\Message" type="Simi\Simicustomize\Plugin\ZendMailMessage"/>
+    <!-- Fix bug payment method title not translate -->
+    <type name='Magento\Payment\Model\PaymentMethodList'>
+        <plugin name='SimiPaymentMethodListPlugin' type='Simi\Simicustomize\Plugin\PaymentMethodList' />
+    </type>
 </config>
