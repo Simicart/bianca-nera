@@ -306,12 +306,14 @@ $colorRed: #b91c1c;
                                     box-sizing: border-box;
                                     border: 1px solid #efefef;
                                     margin-right: 0px;
+                                    overflow: hidden;
                                     &._selected{
                                         border: 1px solid $color1;
-                                        background-color: $color1;
+                                        // background-color: $color1;
+                                        background-color: #FFFFFF;
                                     }
                                     img{
-                                        width: 80px;
+                                        width: 53px;
                                         height: 53px;
                                         object-fit: contain;
                                     }

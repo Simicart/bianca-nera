@@ -90,6 +90,7 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
         $options = [];
         $allowAttributes = $product->getTypeInstance()->getConfigurableAttributes($product);
         $allowedProducts = $this->getAllowProducts();
+        krsort($allowedProducts); // sort product for option products desc
         $allowedProductsOptions = $this->getAllowProductsForOptions($product);
         foreach ($allowAttributes as $attribute) {
             $productAttribute = $attribute->getProductAttribute();
@@ -183,19 +184,19 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
                 $products = [];
                 $catalogProductHelper = $this->simiObjectManager->get('\Magento\Catalog\Helper\Product');
                 $skipSaleableCheck = $catalogProductHelper->getSkipSaleableCheck();
-                $product = $this->getProduct();
+                // $product = $this->getProduct();
                 $allProducts = $product->getTypeInstance()->getUsedProducts($product, null);
                 $stockState = $this->simiObjectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
-                foreach ($allProducts as $product) {
+                foreach ($allProducts as $childProduct) {
                     // Optimize speed
                     // Replace magento to check saleable for child product in a confugurable product
-                    $stockQty = $stockState->getStockQty($product->getId(), $product->getStore()->getWebsiteId());
+                    $stockQty = $stockState->getStockQty($childProduct->getId(), $childProduct->getStore()->getWebsiteId());
                     if ($stockQty <= 0) {
-                        $product->setData('is_salable', false);
+                        $childProduct->setData('is_salable', false);
                     }
                     // End
-                    if ($product->isSaleable() || $skipSaleableCheck) {
-                        $products[] = $product;
+                    if ($childProduct->isSaleable() || $skipSaleableCheck) {
+                        $products[] = $childProduct;
                     }
                 }
                 $this->allowProducts[$product->getId()] = $products;
@@ -232,16 +233,20 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
         $helperImage = $this->simiObjectManager->get('Magento\Catalog\Helper\Image');
         foreach ($products as $product) {
             
-            $helperImage->init($product, 'product_swatch_image_small');
-            $images[$product->getId()][] = [
-                'img' => $helperImage->getUrl(),
-                'full' => '',
-                'caption' => 'Swatch Image',
-                'position' => 0,
-                'isMain' => false,
-                'type' => 'swatch_image',
-                'videoUrl' => '',
-            ];
+            // $helperImage->init($product, 'product_swatch_image_small');
+            $helperImage->init($product, 'swatch_image');
+            $swatchImage = $helperImage->getUrl();
+            if (strpos($swatchImage, 'Magento_Catalog/images/product/placeholder') === FALSE) { // skip placeholder image
+                $images[$product->getId()][] = [
+                    'img' => $helperImage->getUrl(),
+                    'full' => '',
+                    'caption' => 'Swatch Image',
+                    'position' => 0,
+                    'isMain' => false,
+                    'type' => 'swatch_image',
+                    'videoUrl' => '',
+                ];
+            }
 
             $galleryImages = $product->getMediaGalleryImages();
             if ($galleryImages instanceof \Magento\Framework\Data\Collection) {
