@@ -14,7 +14,6 @@ class TileList extends Component {
     };
     
     render() {
-        const {items} = this.props
         return <List renderItem={Tile} {...this.props} />;
     }
 }

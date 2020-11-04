@@ -608,16 +608,39 @@ class ProductFullDetail extends Component {
         const { fallback, handleConfigurableSelectionChange, props } = this;
         const { configurable_options, simiExtraField, type_id, is_dummy_data, variants } = props.product;
         const {attribute_values: {pre_order, try_to_buy, reservable}, is_salable} = simiExtraField;
+        const { app_options } = simiExtraField || {};
+        const { configurable_options: simi_configurable_options } = app_options || {};
+
         // map color options in simiExtraField to configurable_options
-        if (simiExtraField && simiExtraField.app_options && simiExtraField.app_options.configurable_options && simiExtraField.app_options.configurable_options.attributes) {
-            let optionColors = Object.values(simiExtraField.app_options.configurable_options.attributes);
+        if (simi_configurable_options && simi_configurable_options.attributes) {
+            let optionColors = Object.values(simi_configurable_options.attributes);
             let optionColor = optionColors.find(item => item.code === 'color');
             if (optionColor && optionColor.options){
                 let _optionColor = configurable_options.find(item => item.attribute_code === 'color');
                 if (_optionColor && _optionColor.values) {
                     optionColor.options.map(item => {
                         let option = _optionColor.values.find(_optItem => _optItem.value_index === parseInt(item.id));
-                        if (option) option.option_value = item.option_value;
+                        if (option) {
+                            option.option_value = item.option_value;
+                            // add color option swatch by product image
+                            if (item.products && item.products.length) {
+                                let firstProduct = item.products[0];
+                                if (simi_configurable_options.images && simi_configurable_options.images[firstProduct]) {
+                                    let productImages = simi_configurable_options.images[firstProduct];
+                                    if (productImages && productImages.length) {
+                                        let swatchImage = productImages.find(image => image.type === 'swatch_image' && image.img);
+                                        if (swatchImage) {
+                                            option.option_value = swatchImage.img;//add option value is image url
+                                        } else {
+                                            swatchImage = productImages.find(image => image.type === 'image' && image.full);
+                                            if (swatchImage) {
+                                                option.option_value = swatchImage.full;//add option value is image url
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        };
                         return option;
                     })
                 }
@@ -625,9 +648,8 @@ class ProductFullDetail extends Component {
         }
 
         let configurable_options_index = [];
-        if (simiExtraField && simiExtraField.app_options && simiExtraField.app_options.configurable_options 
-            && simiExtraField.app_options.configurable_options.attributes) {
-                configurable_options_index = simiExtraField.app_options.configurable_options.attributes;
+        if (simi_configurable_options && simi_configurable_options.attributes) {
+                configurable_options_index = simi_configurable_options.attributes;
         }
 
         // sorting options

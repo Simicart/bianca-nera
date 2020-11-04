@@ -309,10 +309,11 @@ $colorRed: #b91c1c;
                                     &._selected{
                                         border: 1px solid $color1;
                                         background-color: $color1;
-                                        img{
-                                            width: 80px;
-                                            height: 53px;
-                                        }
+                                    }
+                                    img{
+                                        width: 80px;
+                                        height: 53px;
+                                        object-fit: contain;
                                     }
                                 }
                             }
@@ -821,7 +822,7 @@ $colorRed: #b91c1c;
                                         img{
                                             width: 100%!important;
                                             height: 100%!important;
-                                            object-fit: cover;
+                                            // object-fit: cover;
                                         }
                                     }
                                 }

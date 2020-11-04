@@ -229,7 +229,20 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
         // $helper = $this->simiObjectManager->get('Magento\ConfigurableProduct\Helper\Data');
         // $this->imageUrlBuilder = $this->simiObjectManager->get('Magento\Catalog\Model\Product\Image\UrlBuilder');
         $products = $this->getAllowProducts();
+        $helperImage = $this->simiObjectManager->get('Magento\Catalog\Helper\Image');
         foreach ($products as $product) {
+            
+            $helperImage->init($product, 'product_swatch_image_small');
+            $images[$product->getId()][] = [
+                'img' => $helperImage->getUrl(),
+                'full' => '',
+                'caption' => 'Swatch Image',
+                'position' => 0,
+                'isMain' => false,
+                'type' => 'swatch_image',
+                'videoUrl' => '',
+            ];
+
             $galleryImages = $product->getMediaGalleryImages();
             if ($galleryImages instanceof \Magento\Framework\Data\Collection) {
                 /** @var $image Image */
