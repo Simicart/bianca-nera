@@ -43,7 +43,7 @@ fi
 if [ -d ./Server-Customization ]; then
     pushd ./Server-Customization
     commitMessage2=$( git log -n 1 --format=%B )
-    commitMessage="$commitMessage, $commitMessage2"
+    commitMessage="Client: $commitMessage. Server: $commitMessage2"
     popd
     rm -rf ./magento/app/code
     cp -rpf ./Server-Customization/app/code ./magento/app/code
