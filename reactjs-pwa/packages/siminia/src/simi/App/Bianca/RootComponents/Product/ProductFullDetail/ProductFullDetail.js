@@ -630,7 +630,7 @@ class ProductFullDetail extends Component {
                                     if (productImages && productImages.length) {
                                         let swatchImage = productImages.find(image => image.type === 'swatch_image' && image.img);
                                         if (swatchImage) {
-                                            option.option_value = swatchImage.img;//add option value is image url
+                                            option.option_value = swatchImage.img.replace('graphql/_view', 'frontend/Magento/luma');//add option value is image url and fix bug wrong area
                                         } else {
                                             swatchImage = productImages.find(image => image.type === 'image' && image.full);
                                             if (swatchImage) {
