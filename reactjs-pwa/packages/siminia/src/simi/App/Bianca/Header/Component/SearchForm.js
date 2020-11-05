@@ -21,8 +21,8 @@ const SearchForm = props => {
     });
 
     const startSearch = () => {
-        if (searchVal) {
-            props.history.push(`/search.html?query=${searchVal}`) 
+        if (searchField && searchField.value) {
+            props.history.push(`/search.html?query=${searchField.value}`) 
         }
     }
 
