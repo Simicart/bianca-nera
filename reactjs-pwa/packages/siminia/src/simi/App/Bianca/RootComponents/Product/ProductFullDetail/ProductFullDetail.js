@@ -690,6 +690,7 @@ class ProductFullDetail extends Component {
                         optionSelections={this.state.optionSelections}
                         onSelectionChange={handleConfigurableSelectionChange}
                         onSizeGuideClick={this.onSizeGuideClick}
+                        pre_order
                     />
                 }
                 {
