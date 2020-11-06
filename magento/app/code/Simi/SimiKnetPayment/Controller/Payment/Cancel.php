@@ -69,6 +69,7 @@ class Cancel extends Main
         $order->save();
         
         // return $resultRedirect->setPath('checkout/cart');
-        return $resultRedirect->setUrl($this->getPwaStudioUrl() . 'cart.html');
+        $query = http_build_query($params);
+        return $resultRedirect->setUrl($this->getPwaStudioUrl() . 'cart.html?payment=false&'.$query.'&errorMsg='.$errorMsg);
     }
 }

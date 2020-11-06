@@ -15,7 +15,12 @@ class Fail extends Main
      */
     public function execute()
     {
-        $resultPage = $this->resultPageFactory->create();
-        return $resultPage;
+        $errorMsg = __('An error occurred while making the transaction. Please try again.');
+        $params = $this->getRequest()->getParams();
+        $resultRedirect = $this->resultRedirectFactory->create();
+        $query = http_build_query($params);
+        return $resultRedirect->setUrl($this->getPwaStudioUrl() . 'cart.html?payment=false&'.$query.'&errorMsg='.$errorMsg);
+        // $resultPage = $this->resultPageFactory->create();
+        // return $resultPage;
     }
 }

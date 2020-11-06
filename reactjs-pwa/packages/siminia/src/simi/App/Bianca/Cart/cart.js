@@ -64,9 +64,17 @@ class Cart extends Component {
     componentDidMount() {
         const {props} = this
         if (this.props && this.props.location && this.props.location.search && this.props.location.search.indexOf('payment=false') !== -1) {
+            const query = this.props.location.search;
+            let params = query && query.replace(/^\?/, '').split('&') || [];
+            params = params.map((p)=>{
+                return p.split('=');
+            })
+            params = new Map(params);
             if (!this.toggledErrMessOnce) {
                 this.toggledErrMessOnce = true
-                if (props.toggleMessages){
+                if (params.get('errorMsg')){
+                    props.toggleMessages([{ type: 'error', message: Identify.__(decodeURI(params.get('errorMsg'))), auto_dismiss: false }])
+                } else if (props.toggleMessages){
                     props.toggleMessages([{ type: 'error', message: Identify.__('An error occurred while making the transaction. Please try again.'), auto_dismiss: false }])
                 }
             }
