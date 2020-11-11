@@ -40,58 +40,109 @@ const ShippingForm = (props) => {
                 initialSelected[vendorIdRate[1]] = selectedMethodsArray[i];
             }
         }
+        // method code selected other
+        if (Object.values(initialSelected).length < 1) {
+            initialSelected[storedShippingMethod.carrier_code] = storedShippingMethod.method_code;
+        }
     }
     const [methodCodesSelected, setMethodCodesSelected] = useState(initialSelected);
     let availableVendorsMethods = [];
+    let availableOtherMethods = [];
     const defaultMethod = { value: '', label: Identify.__('Please choose') }
 
     // convert availableShippingMethods to vendor shipping methods
     availableVendorsMethods = useMemo(() => {
         if (availableShippingMethods.length) {
-            availableShippingMethods.map(
-                (shippingMethod) => {
-                    // availableVendorsMethods
-                    const { carrier_code, carrier_title, method_code, method_title, price_incl_tax } = shippingMethod;
-                    if (carrier_code === "vendor_multirate") {
-                        return false
-                    }
-                    
-                    if (method_code) {
-                        const methodCode = method_code.split('||');
-                        if (methodCode[1] !== undefined){
-                            let index;
-                            const vendorMethod = availableVendorsMethods.find((vendor, i) => {
-                                if (vendor.vendor_id === methodCode[1]) {
-                                    index = i;
-                                    return true;
-                                }
-                                return false;
-                            });
-                            let rate = {
-                                id: methodCode[0],
-                                order: price_incl_tax,
-                                value: method_code,
-                                label: `${method_title} (${formatLabelPrice(price_incl_tax)})`
-                            }
-                            if (vendorMethod === undefined) {
-                                availableVendorsMethods.push({
-                                    vendor_id: methodCode[1],
-                                    carrier_code: carrier_code,
-                                    carrier_title: carrier_title,
-                                    rates: [rate]
-                                });
-                            }
-                            if (vendorMethod) {
-                                if (vendorMethod.rates) vendorMethod.rates.push(rate);
-                                availableVendorsMethods[index].rates = vendorMethod.rates;
-                            }
-                        }
-                    }
-                    return shippingMethod;
+            availableShippingMethods.map((shippingMethod) => {
+                // availableVendorsMethods
+                const { carrier_code, carrier_title, method_code, method_title, price_incl_tax } = shippingMethod;
+                if (carrier_code === "vendor_multirate") {
+                    return false
                 }
-            );
+                // Flat rate, freeshipping for vendor or admin (shop) products
+                if (method_code && ['vflatrate', 'freeshipping'].includes(carrier_code)) {
+                    const methodCode = method_code.split('||');
+                    if (methodCode[1] !== undefined){
+                        let index;
+                        const vendorMethod = availableVendorsMethods.find((vendor, i) => {
+                            if (vendor.vendor_id === methodCode[1]) {
+                                index = i;
+                                return true;
+                            }
+                            return false;
+                        });
+                        let rate = {
+                            id: methodCode[0],
+                            order: price_incl_tax,
+                            value: method_code,
+                            label: `${method_title} (${formatLabelPrice(price_incl_tax)})`
+                        }
+                        if (vendorMethod === undefined) {
+                            availableVendorsMethods.push({
+                                vendor_id: methodCode[1],
+                                carrier_code: carrier_code,
+                                carrier_title: carrier_title,
+                                rates: [rate]
+                            });
+                        }
+                        if (vendorMethod) {
+                            if (vendorMethod.rates) vendorMethod.rates.push(rate);
+                            availableVendorsMethods[index].rates = vendorMethod.rates;
+                        }
+                    } 
+                }
+                return null;
+            });
+
             if (!availableVendorsMethods) return [];
             return availableVendorsMethods;
+        }
+        return [];
+    }, [availableShippingMethods]);
+
+    // convert availableShippingMethods to other shipping methods
+    availableOtherMethods = useMemo(() => {
+        if (availableShippingMethods.length) {
+            let otherMethods = {};
+            availableShippingMethods.map((shippingMethod) => {
+                // availableVendorsMethods
+                const { carrier_code, carrier_title, method_code, method_title, price_incl_tax } = shippingMethod;
+                // Ignore not is other method (is vendor flat rate method)
+                if (['vendor_multirate', 'vflatrate', 'freeshipping'].includes(carrier_code)) {
+                    return false;
+                }
+                // Ignore invalid method
+                if (!carrier_code || !method_code) return false;
+                // Add other shipping method and all rates, example DHL has multiple rates
+                if (!otherMethods[carrier_code]) {
+                    otherMethods[carrier_code] = {
+                        vendor_id: carrier_code,
+                        carrier_code: carrier_code,
+                        carrier_title: carrier_title,
+                        rates: [{
+                            id: method_code,
+                            order: price_incl_tax,
+                            value: method_code,
+                            label: `${method_title} (${formatLabelPrice(price_incl_tax)})`
+                        }]
+                    }
+                } else {
+                    // If available method in otherMethods then add to rates
+                    otherMethods[carrier_code].rates.push({
+                        id: method_code,
+                        order: price_incl_tax,
+                        value: method_code,
+                        label: `${method_title} (${formatLabelPrice(price_incl_tax)})`
+                    });
+                }
+                return null;
+            });
+
+            // Add available other methods from Object to array
+            availableOtherMethods = Object.values(otherMethods);
+
+            if (!availableOtherMethods) return [];
+            return availableOtherMethods;
         }
         return [];
     }, [availableShippingMethods]);
@@ -102,7 +153,6 @@ const ShippingForm = (props) => {
         const selecteds = Object.values(selectedMethods); //array
         if (availableVendorsMethods && availableVendorsMethods.length === selecteds.length) {
             vendor_multirate = selecteds.join('|_|');
-            // console.log('SELECTED SHIPPING CODE: ', vendor_multirate);
             // find method object available
             const shippingMethod = availableShippingMethods.find(
                 ({ method_code, carrier_code }) => {
@@ -120,7 +170,6 @@ const ShippingForm = (props) => {
                     return false;
                 }
             );
-            // console.log('FOUND SHIPPING METHHOD: ', shippingMethod);
             if (shippingMethod) {
                 Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, SHIPPING_METHOD_SELECTED, shippingMethod.method_code);
                 submit({ shippingMethod: shippingMethod });
@@ -135,6 +184,31 @@ const ShippingForm = (props) => {
             return true;
         }
         return false;
+    }
+
+    const handleSubmitOther = (selectedMethods) => {
+        const selecteds = Object.values(selectedMethods); //array
+        // find method object available
+        const shippingMethod = availableShippingMethods.find(
+            ({ method_code, carrier_code }) => {
+                if (method_code === selectedMethods[carrier_code]) {
+                    return true;
+                }
+                return false;
+            }
+        );
+        if (shippingMethod) {
+            Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, SHIPPING_METHOD_SELECTED, shippingMethod.method_code);
+            submit({ shippingMethod: shippingMethod });
+        }
+        else {
+            console.warn(
+                `Could not find the selected shipping method ${selecteds.join(', ')} in the list of available shipping methods.`
+            );
+            cancel();
+            return;
+        }
+        return true;
     }
 
     /**
@@ -162,6 +236,18 @@ const ShippingForm = (props) => {
         setMethodCodesSelected(selecteds);
         handleSubmit2(selecteds);
     }
+
+    /**
+     * Handle select for other shipping methods
+     * @param {*} action 
+     */
+    const methodSelecteHandleOther = (action) => {
+        let selecteds = {};
+        if (action && action.vendor_id && action.method_code)
+            selecteds[action.vendor_id] = action.method_code;
+        setMethodCodesSelected(selecteds);
+        handleSubmitOther(selecteds);
+    }
     
     if (!availableVendorsMethods || !availableVendorsMethods.length) {
         return <Loading />
@@ -170,11 +256,12 @@ const ShippingForm = (props) => {
     return (
         <form className="shipping-form">
             <div className="shipping-body">
+                <div className="group-title">{Identify.__('Please choose shipping method for each product')}</div>
                 {
                     availableVendorsMethods.map((vendor, vendor_key) => {
                         const {rates, carrier_title, vendor_id} = vendor;
                         rates.sort((a, b) => (a.order > b.order) ? 1 : -1); //sort
-                        rates.unshift(defaultMethod);
+                        {/* rates.unshift(defaultMethod); */}
                         let vendorName = carrier_title && vendor_id !== 'default' && Identify.__(`Vendor ${vendor_id}`) || Identify.__('Default');
                         let designer = null
                         if(vendors)
@@ -202,6 +289,40 @@ const ShippingForm = (props) => {
                                             value={rate.value} 
                                             onClick={() => methodSelecteHandle({vendor_id, method_code: rate.value})}
                                             // onChange={(value) => handleSubmit(value)}
+                                            selected={selected}
+                                            className="select-shipping-checkbox"
+                                            classes={{
+                                                label: 'select_shipping_checkbox_label',
+                                                icon: 'select_shipping_checkbox_icon'
+                                            }}
+                                        />
+                                    )
+                                })}
+                            </div>
+                        )
+                    })
+                }
+                { availableOtherMethods && availableOtherMethods.length > 0 &&
+                    <div className="group-title">
+                        {Identify.__('Or')}<br/>
+                        {Identify.__('Use one of the following shipping methods for all products')}
+                    </div>
+                }
+                {
+                    availableOtherMethods.map((method, vendor_key) => {
+                        const {rates, carrier_title, vendor_id} = method;
+                        return (
+                            <div key={vendor_key} className="shipping-vendor">
+                                <span className="shipping-vendor-name">{Identify.__(carrier_title)}</span>
+                                {rates.map((rate) => {
+                                    if(!rate.id) return null;
+                                    const selected = (methodCodesSelected[vendor_id] === rate.value);
+                                    return (
+                                        <Checkbox 
+                                            key={rate.id} 
+                                            label={rate.label} 
+                                            value={rate.value} 
+                                            onClick={() => methodSelecteHandleOther({vendor_id, method_code: rate.value})}
                                             selected={selected}
                                             className="select-shipping-checkbox"
                                             classes={{

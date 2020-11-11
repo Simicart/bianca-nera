@@ -954,6 +954,9 @@ var DASHBOARD_CONFIG = {
 				"Enter your measurement to get your personalized product":"أدخل القياس الخاص بك للحصول على منتجك المخصص",
 				"Thank you for submitting information. We will contact you soon":"شكرا لك على تقديم المعلومات. سوف نتصل بك قريبا",
 				"Transaction Id %s":"معرّف المعاملة %s",
+				"Please choose shipping method for each product":"الرجاء اختيار طريقة الشحن لكل منتج",
+				"Or":"أو",
+				"Use one of the following shipping methods for all products":"استخدم إحدى طرق الشحن التالية لجميع المنتجات",
 			}
 		}
 	}]
