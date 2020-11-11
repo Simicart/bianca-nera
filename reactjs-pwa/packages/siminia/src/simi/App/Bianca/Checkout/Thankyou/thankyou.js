@@ -18,6 +18,7 @@ const Thankyou = props => {
     const last_cart_info = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'last_cart_info');
     const last_order_info = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'last_order_info');
     const [orderIncIdFromAPI, setOrderIncFromAPI] = useState(false)
+    const [orderData, setOrderData] = useState()
 
     let isPreOrder = false
     try {
@@ -40,6 +41,7 @@ const Thankyou = props => {
                 if (orderData && orderData.order && orderData.order.increment_id) {
                     analyticPurchaseGTM(orderData.order)
                     setOrderIncFromAPI(orderData.order.increment_id)
+                    setOrderData(orderData.order)
                 }
             })
         }
@@ -75,6 +77,14 @@ const Thankyou = props => {
                 <h2 className='header'>{Identify.__('Thank you for your purchase!')}</h2>
                 <div  className="email-sending-message">
                     {padOrderId && <div className="order-number">{Identify.__('Order your number is #@').replace('@', padOrderId)}</div>}
+                    {orderData && orderData.payment_information && 
+                        <div className="payment_information">
+                            {/* <div className="payment_title">{Identify.__('%s').replace('%s', orderData.payment_information.method_title)}</div> */}
+                            <div className="payment_info">
+                                {orderData.payment_information.method_title} {Identify.__('Transaction Id %s').replace('%s', orderData.payment_information.tranid)}<br/>
+                            </div>
+                        </div>
+                    }
                     {isPreOrder && <div className="order-preorder-note">{Identify.__('Please be aware that this is a preorder. You will be informed once they become available.')}</div>}
                     {Identify.__("We'll email you an order confirmation with details and tracking info.")}
                 </div>

@@ -44,7 +44,7 @@ class Redirect extends Main
         $translID = $this->helper->getTransportalId();
         $transportalID = "id=" . $this->helper->getTransportalId();
         $transportalPass = "password=" . $this->helper->getTransportalPassword();
-        $amount = "amt=" . round($order->getGrandTotal(), 3);
+        $amount = "amt=" . round($order->getBaseGrandTotal(), 3);
         $trackID = "trackid=" . $tranTrackid;
         $currency = "currencycode=414";
         $language = "langid=" . $this->helper->getPaymentLanguage();

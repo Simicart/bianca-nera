@@ -15,7 +15,13 @@ const Detail = (props) => {
     const [loaded, setLoaded] = useState(false)
     const { history } = props
     const isPhone = window.innerWidth < 1024 
-    const id = history.location.state.orderData.increment_id || null;
+
+    let id = history.location.state && history.location.state.orderData.increment_id || null;
+    if (!id && history.location.pathname) {
+        const matched = history.location.pathname.match(/\/.*\/(.*)/);
+        id = matched && matched[1] || null;
+    }
+
     const storeConfig = Identify.getStoreConfig();
 
     useEffect(() => {

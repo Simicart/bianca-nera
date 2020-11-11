@@ -953,6 +953,7 @@ var DASHBOARD_CONFIG = {
 				"SIZE GUIDE":"دليل المقاسات",
 				"Enter your measurement to get your personalized product":"أدخل القياس الخاص بك للحصول على منتجك المخصص",
 				"Thank you for submitting information. We will contact you soon":"شكرا لك على تقديم المعلومات. سوف نتصل بك قريبا",
+				"Transaction Id %s":"معرّف المعاملة %s",
 			}
 		}
 	}]

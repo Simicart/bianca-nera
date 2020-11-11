@@ -260,4 +260,15 @@ class Payment extends AbstractMethod
     {
         return parent::refund($payment, $amount);
     }
+
+    public function canUseForCurrency($currencyCode){
+        $currentCurrency = $this->storeManager->getStore()->getCurrentCurrency()->getCode();
+        if ($currentCurrency !== $this->getConfig('currency')) {
+            return false;
+        }
+        // if ($currencyCode !== $this->getConfig('currency')) {
+        //     return false;
+        // }
+        return true;
+    }
 }

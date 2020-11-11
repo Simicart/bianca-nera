@@ -391,6 +391,7 @@ class Orders extends \Simi\Simiconnector\Model\Api\Apiabstract
 
         $order['total']           = $this->simiObjectManager->get('Simi\Simicustomize\Helper\Total')
                 ->showTotalOrder($orderModel);
+        $order['payment_information']  = $orderModel->getPayment()->getAdditionalInformation();
     }
 
     public function _getProductFromOrderHistoryDetail($order)
