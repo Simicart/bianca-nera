@@ -29,7 +29,7 @@ const ListItem = props => {
             <div className="white-box-content">
                 <div className="box-content">
                     <address>
-                        {data.firstname} {data.lastname}<br/>
+                        {data.firstname} {data.middlename} {data.lastname}<br/>
                         {(!addressConfig || addressConfig && addressConfig.street_show) && data.street ? 
                             <>{data.street.map((address, index) => {
                             return <React.Fragment key={index}>{address}<br/></React.Fragment>;
@@ -38,6 +38,9 @@ const ListItem = props => {
                         {(!addressConfig || addressConfig && addressConfig.city_show) && data.city ? <>{data.city}, </>: ''}
                         {(!addressConfig || addressConfig && addressConfig.region_id_show) && data.region ? <>{data.region.region_code}<br/></>: ''}
                         {(!addressConfig || addressConfig && addressConfig.country_id_show) ? <>{data.country}<br/></> : ''}
+                        {/* {data.house_number && <>{data.house_number}<br/></>}
+                        {data.apartment_number && <>{data.apartment_number}<br/></>}
+                        {data.block && <>{data.block}<br/></>} */}
                         {(!addressConfig || addressConfig && addressConfig.telephone_show) && data.telephone && 
                             <>
                                 T: <a href={"tel:"+data.telephone}>{data.telephone}</a>

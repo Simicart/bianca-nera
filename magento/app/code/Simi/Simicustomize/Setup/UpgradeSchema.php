@@ -404,6 +404,72 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     ]
                 );
         }
+
+        /** Add 3 field requested by DHL house_number, apartment_number, block to checkout */
+        /* if ($context->getVersion() && version_compare($context->getVersion(), '1.0.16', '<')) {
+            $quote_table = $setup->getTable('quote_address');
+            $connection->addColumn(
+                $quote_table,
+                'house_number',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'default' => '',
+                    'nullable' => true,
+                    'comment' => 'House Number'
+                ]
+            );
+            $connection->addColumn(
+                $quote_table,
+                'apartment_number',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'default' => '',
+                    'nullable' => true,
+                    'comment' => 'Apartment Number'
+                ]
+            );
+            $connection->addColumn(
+                $quote_table,
+                'block',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'default' => '',
+                    'nullable' => true,
+                    'comment' => 'Block'
+                ]
+            );
+            $order_address_table = $setup->getTable('sales_order_address');
+            $connection->addColumn(
+                $order_address_table,
+                'house_number',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'default' => '',
+                    'nullable' => true,
+                    'comment' => 'House Number'
+                ]
+            );
+            $connection->addColumn(
+                $order_address_table,
+                'apartment_number',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'default' => '',
+                    'nullable' => true,
+                    'comment' => 'Apartment Number'
+                ]
+            );
+            $connection->addColumn(
+                $order_address_table,
+                'block',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'default' => '',
+                    'nullable' => true,
+                    'comment' => 'Block'
+                ]
+            );
+        } */
     }
 
     public function checkTableExist($installer, $table_key_name, $table_name)

@@ -183,6 +183,17 @@ const Edit = props => {
                 values.region.region_code = null;
             }
         }
+        // Custom Attributes
+        if (values.custom_attributes instanceof Object) {
+            let attrs = [];
+            for (let attrcode in values.custom_attributes) {
+                attrs.push({
+                    attribute_code: attrcode,
+                    value: values.custom_attributes[attrcode]
+                });
+            }
+            values.custom_attributes = attrs;
+        }
         // required values
         const config = addressConfig;
         if (config) {
@@ -286,6 +297,10 @@ const Edit = props => {
                                 <SimiText id="input-firstname" field="firstname" initialValue={addressData.firstname} placeholder={Identify.__('First Name')} validate={validate} validateOnBlur validateOnChange />
                             </div>
                             <div className="form-row">
+                                <label htmlFor="input-middlename">{Identify.__('Middle Name')} <span>*</span></label>
+                                <SimiText id="input-middlename" field="middlename" initialValue={addressData.middlename} placeholder={Identify.__('Middle Name')} validate={validate} validateOnBlur validateOnChange />
+                            </div>
+                            <div className="form-row">
                                 <label htmlFor="input-lastname">{Identify.__('Last Name')} <span>*</span></label>
                                 <SimiText id="input-lastname" field="lastname" initialValue={addressData.lastname} placeholder={Identify.__('Last Name')} validate={validate} validateOnBlur validateOnChange />
                             </div>
@@ -316,6 +331,18 @@ const Edit = props => {
                                 <label htmlFor="input-email">{Identify.__('Email address')} <span>*</span></label>
                                 <SimiText id="input-email" field="email" initialValue={user.email} placeholder={Identify.__('Email Address')} readOnly={true} />
                             </div>
+                            {/* <div className="form-row">
+                                <label htmlFor="input-house_number">{Identify.__('House Number')}</label>
+                                <SimiText id="input-house_number" field="extension_attributes[house_number]" initialValue={addressData.house_number} placeholder={Identify.__('House Number')} />
+                            </div>
+                            <div className="form-row">
+                                <label htmlFor="input-apartment_number">{Identify.__('Apartment Number')}</label>
+                                <SimiText id="input-apartment_number" field="extension_attributes[apartment_number]" initialValue={addressData.apartment_number} placeholder={Identify.__('Apartment Number')} />
+                            </div>
+                            <div className="form-row">
+                                <label htmlFor="input-block">{Identify.__('Block')}</label>
+                                <SimiText id="input-block" field="extension_attributes[block]" initialValue={addressData.block} placeholder={Identify.__('Block')} />
+                            </div> */}
                             {!isSmallPhone ? <div className="form-button">
                                 <SimiMutation mutation={CUSTOMER_MUTATION}>
                                     {(mutaionCallback, { data }) => {

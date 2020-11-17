@@ -23,6 +23,10 @@ query {
         country_id
         default_shipping
         default_billing
+        middlename
+        house_number
+        apartment_number
+        block
     }
   }
   countries {

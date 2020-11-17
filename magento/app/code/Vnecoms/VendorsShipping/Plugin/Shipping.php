@@ -60,20 +60,33 @@ class Shipping
         if(!$this->helper->isEnabled()) return $result;
         $shippingRates = $subject->getResult()->getAllRates();
         $newVendorRates = [];
+        $methodTitle = [];
         foreach ($this->groupShippingRatesByVendor($shippingRates) as $vendorId => $rates) {
             if (!sizeof($newVendorRates)) {
                 foreach ($rates as $rate) {
+                    // $newVendorRates[$rate->getCarrier().'_'.$rate->getMethod()] = [
+                    //     'title' => $rate->getCarrierTitle().' - '.$rate->getMethodTitle().self::SEPARATOR.$vendorId,
+                    //     'price' => $rate->getPrice()
+                    // ];
                     $newVendorRates[$rate->getCarrier().'_'.$rate->getMethod()] = [
-                        'title' => $rate->getCarrierTitle().' - '.$rate->getMethodTitle().self::SEPARATOR.$vendorId,
+                        'title' => $rate->getMethodTitle(),
                         'price' => $rate->getPrice()
                     ];
                 }
             } else {
                 $tmpRates = [];
                 foreach ($rates as $rate) {
+                    // if (!isset($methodTitle[$rate->getMethod()])) {
+                    //     $methodTitle[$rate->getMethod()] = '';
+                    // }
+                    $methodTitle[$rate->getMethodTitle()] = $rate->getMethodTitle();
                     foreach ($newVendorRates as $cod => $shipping) {
+                        // $tmpRates[$cod.self::METHOD_SEPARATOR.$rate->getCarrier().'_'.$rate->getMethod()] = [
+                        //     'title' => $shipping['title'].self::METHOD_SEPARATOR.$rate->getCarrierTitle().' - '.$rate->getMethodTitle().self::SEPARATOR.$vendorId,
+                        //     'price' => $shipping['price']+$rate->getPrice(),
+                        // ];
                         $tmpRates[$cod.self::METHOD_SEPARATOR.$rate->getCarrier().'_'.$rate->getMethod()] = [
-                            'title' => $shipping['title'].self::METHOD_SEPARATOR.$rate->getCarrierTitle().' - '.$rate->getMethodTitle().self::SEPARATOR.$vendorId,
+                            'title' => $shipping['title'].self::METHOD_SEPARATOR . $rate->getMethodTitle(),
                             'price' => $shipping['price']+$rate->getPrice(),
                         ];
                     }
@@ -84,10 +97,10 @@ class Shipping
         foreach ($newVendorRates as $code => $shipping) {
             $method = $this->_rateMethodFactory->create();
             $method->setCarrier('vendor_multirate');
-            $method->setCarrierTitle('Multiple_Rate');
+            $method->setCarrierTitle('');
 
             $method->setMethod($code);
-            $method->setMethodTitle($shipping['title']);
+            $method->setMethodTitle(!empty($methodTitle) ? implode(', ', $methodTitle) : $shipping['title']);
 
             $method->setPrice($shipping['price']);
             $method->setCost($shipping['price']);

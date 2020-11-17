@@ -262,7 +262,7 @@ class Identify {
                 //fake region to accept current shipping address
                 //region = { region: "Mississippi", region_code: "MS", region_id: 35 };
             }
-            console.log(address)
+            // console.log(address)
             address.region = region.name ? region.name : (region.region ? region.region : (address.region && address.region.region) ? address.region.region :'')
             address.region_code = region.region_code ? region.region_code : (address.region_code ? address.region_code : '')
             return {

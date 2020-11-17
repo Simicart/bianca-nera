@@ -1,6 +1,7 @@
 mutation ($id: Int!, 
   $firstname: String,
   $lastname: String,
+  $middlename: String,
   $company: String,
   $telephone: String,
   $street: [String],
@@ -10,10 +11,12 @@ mutation ($id: Int!,
   $country_id: CountryCodeEnum,
   $default_shipping: Boolean!,
   $default_billing: Boolean!
+  $extension_attributes: AddressExtensionAttributesInput
 ){
   updateCustomerAddress(id: $id, input: {
     firstname: $firstname
     lastname: $lastname
+    middlename: $middlename
     company: $company
     telephone: $telephone
     street: $street
@@ -23,6 +26,7 @@ mutation ($id: Int!,
     country_id: $country_id
     default_shipping: $default_shipping
     default_billing: $default_billing
+    extension_attributes: $extension_attributes
   }) {
     id
     customer_id
@@ -41,5 +45,9 @@ mutation ($id: Int!,
     country_id
     default_shipping
     default_billing
+    middlename
+    house_number
+    apartment_number
+    block
   }
 }

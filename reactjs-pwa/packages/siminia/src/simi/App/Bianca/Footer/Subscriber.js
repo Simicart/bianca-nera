@@ -2,6 +2,7 @@ import React, {useRef, useState, useEffect, useCallback} from 'react';
 import Identify from "src/simi/Helper/Identify";
 import { connect } from 'src/drivers';
 import { toggleMessages } from 'src/simi/Redux/actions/simiactions';
+import {showToastMessage} from 'src/simi/Helper/Message';
 import { SimiMutation } from 'src/simi/Network/Query';
 import {validateEmail, validateEmpty} from 'src/simi/Helper/Validation';
 import Loading from "src/simi/BaseComponents/Loading";
@@ -32,12 +33,12 @@ const Subscriber = props => {
         if (data && data.subscribe && data.subscribe.message) {
             setWaiting(false);
             if (data.subscribe.status === 'error') {
-
+                showToastMessage(data.subscribe.message);
             }
             if (data.subscribe.status === '1') {
                 if (waiting) {
                     props.toggleMessages([{
-                        type: data.subscribe.status === '1' ? 'success':'error',
+                        type: 'success',
                         message: data.subscribe.message,
                         auto_dismiss: true
                     }]);
@@ -80,7 +81,6 @@ const Subscriber = props => {
             <SimiMutation mutation={MUTATION_GRAPHQL}>
                 {(subscribeCall, { data }) => {
                     if (data && data.subscribe && data.subscribe.message) {
-                        {/* console.log(data) */}
                         responseLoaded(data);
                     }
                     return (

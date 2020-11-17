@@ -12,6 +12,7 @@ const fields = [
     'city',
     'email',
     'firstname',
+    'middlename',
     'lastname',
     'postcode',
     'region_code',
@@ -118,17 +119,26 @@ const AddressForm = props => {
     }
 
     const values = useMemo(
-        () =>
-            fields.reduce((acc, key) => {
+        () => {
+            let memoFields = fields.reduce((acc, key) => {
                 if (key === 'save_in_address_book') {
                     acc[key] = initialFormValues[key] ? true : false;
                 } else {
                     acc[key] = initialFormValues[key];
                 }
-
                 return acc;
-            }, {}),
-        [initialFormValues]
+            }, {});
+
+            // if (initialFormValues['extension_attributes']) {
+            //     for (let attributeCode in initialFormValues['extension_attributes']) {
+            //         memoFields[attributeCode] = initialFormValues['extension_attributes'][attributeCode];
+            //     }
+            // }
+            if (initialFormValues['extension_attributes']) {
+                memoFields.extension_attributes = initialFormValues['extension_attributes'];
+            }
+            return memoFields;
+        }, [initialFormValues]
     );
 
     let initialCountry;
@@ -190,6 +200,15 @@ const AddressForm = props => {
                         submitValues['email'] = value
                     } else if (name === 'save_in_address_book') { 
                         submitValues[name] = (inputField.is(":checked")) ? 1 : 0
+                    } else if (name.search(/extension_attributes\[(.*)\]/) === 0) {
+                        const attributeCode = name.replace(/extension_attributes\[(.*)\]/, '$1')
+                        if (!submitValues.hasOwnProperty('extension_attributes')) {
+                            submitValues['extension_attributes'] = {}
+                        }
+                        if (!(submitValues['extension_attributes'] instanceof Object)) {
+                            submitValues['extension_attributes'] = {}
+                        }
+                        submitValues['extension_attributes'][attributeCode] = value
                     } else {
                         submitValues[name] = value
                     }

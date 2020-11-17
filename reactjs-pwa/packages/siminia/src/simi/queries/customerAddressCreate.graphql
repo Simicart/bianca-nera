@@ -1,6 +1,7 @@
 mutation (
   $firstname: String,
   $lastname: String,
+  $middlename: String,
   $company: String,
   $telephone: String,
   $street: [String],
@@ -9,11 +10,13 @@ mutation (
   $postcode: String,
   $country_id: CountryCodeEnum,
   $default_shipping: Boolean!,
-  $default_billing: Boolean!
+  $default_billing: Boolean!,
+  $extension_attributes: AddressExtensionAttributesInput
 ){
   createCustomerAddress(input: {
     firstname: $firstname
     lastname: $lastname
+    middlename: $middlename
     company: $company
     telephone: $telephone
     street: $street
@@ -23,6 +26,7 @@ mutation (
     country_id: $country_id
     default_shipping: $default_shipping
     default_billing: $default_billing
+    extension_attributes: $extension_attributes
   }) {
     id
     customer_id
@@ -41,5 +45,9 @@ mutation (
     country_id
     default_shipping
     default_billing
+    middlename
+    house_number
+    apartment_number
+    block
   }
 }

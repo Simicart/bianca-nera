@@ -39,11 +39,16 @@ class Customer extends \Simi\Simiconnector\Model\Customer
         $customer = $this->simiObjectManager
             ->get('Simi\Simicustomize\Override\Helper\Customer')->getCustomerByEmail($data->email);
 
+        if (!$customer->getId()) {
+            // Create new customer account for social network
+            $customer = $this->_createCustomer($data);
+        }
+
         if ($customer->getId()) {
             // If exist account with that email, check confirmation
-            if ($customer->getConfirmation()) {
-                throw new \Simi\Simiconnector\Helper\SimiException(__('This account is not confirmed. Verify and try again.'), 4);
-            }
+            // if ($customer->getConfirmation()) {
+            //     throw new \Simi\Simiconnector\Helper\SimiException(__('This account is not confirmed. Verify and try again.'), 4);
+            // }
             //Check authenticate with facebook, google or twitter
             // Only twitter need accessTokenSecret
             if (isset($data->providerId) && isset($data->accessToken)) {
@@ -159,16 +164,16 @@ class Customer extends \Simi\Simiconnector\Model\Customer
                 throw new \Simi\Simiconnector\Helper\SimiException(__('Invalid login !'), 4);
             }
         } else {
-            if (!$data->firstname) {
-                $data->firstname = __('Firstname');
-            }
-            if (!$data->lastname) {
-                $data->lastname = __('Lastname');
-            }
-            // Create new customer account for social network
-            $customer = $this->_createCustomer($data);
-            // Notify user to check mailbox and verify new account
-            throw new \Simi\Simiconnector\Helper\SimiException(__('Please check your mailbox to active your account !.'), 4);
+            // if (!$data->firstname) {
+            //     $data->firstname = __('Firstname');
+            // }
+            // if (!$data->lastname) {
+            //     $data->lastname = __('Lastname');
+            // }
+            // // Create new customer account for social network
+            // $customer = $this->_createCustomer($data);
+            // // Notify user to check mailbox and verify new account
+            // throw new \Simi\Simiconnector\Helper\SimiException(__('Please check your mailbox to active your account !.'), 4);
         }
     }
     public function updateProfile($data)

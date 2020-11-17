@@ -256,7 +256,10 @@ const ShippingForm = (props) => {
     return (
         <form className="shipping-form">
             <div className="shipping-body">
-                <div className="group-title">{Identify.__('Please choose shipping method for each product')}</div>
+                {availableOtherMethods && availableOtherMethods.length > 0 &&
+                    availableVendorsMethods && availableVendorsMethods.length > 1 &&
+                    <div className="group-title">{Identify.__('Please choose shipping method for each product')}</div>
+                }
                 {
                     availableVendorsMethods.map((vendor, vendor_key) => {
                         const {rates, carrier_title, vendor_id} = vendor;
@@ -303,6 +306,7 @@ const ShippingForm = (props) => {
                     })
                 }
                 { availableOtherMethods && availableOtherMethods.length > 0 &&
+                    availableVendorsMethods && availableVendorsMethods.length > 1 &&
                     <div className="group-title">
                         {Identify.__('Or')}<br/>
                         {Identify.__('Use one of the following shipping methods for all products')}

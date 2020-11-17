@@ -117,7 +117,7 @@ const FormFields = (props) => {
             if ((parseInt(selected_address_field) === parseInt(defaultValue)))
                 return
             setShippingNewForm(false);
-            const shippingFilter = addresses.find(
+            let shippingFilter = addresses.find(
                 ({ id }) => id === parseInt(selected_address_field, 10)
             );
             if (shippingFilter) {
@@ -131,6 +131,20 @@ const FormFields = (props) => {
                     }
                 }
                 shippingFilter.save_in_address_book = 0
+
+                // convert custom_attributes to extension_attributes
+                let extensionAttributes = {}
+                if (shippingFilter.custom_attributes instanceof Object) {
+                    for (let attrCode in shippingFilter.custom_attributes) {
+                        const customAttr = shippingFilter.custom_attributes[attrCode];
+                        if (customAttr.attribute_code) {
+                            extensionAttributes[customAttr.attribute_code] = customAttr.value;
+                        }
+                    }
+                    shippingFilter.extension_attributes = extensionAttributes;
+                    delete shippingFilter.custom_attributes;
+                }
+
                 handleSubmit(shippingFilter);
                 if (!billingForm && !billingAddressSaved) {
                     handleSubmitBillingSameFollowShipping();
@@ -245,7 +259,7 @@ const FormFields = (props) => {
         if (addresses) {
             if (addresses.length) {
                 html = addresses.map((address, idx) => {
-                    const labelA = address.firstname + ' ' + address.lastname + ', ' + address.city + (address.region.region ? (', ' + address.region.region) : '')
+                    const labelA = address.firstname + ' '+ (address.middlename || '') + ' ' + address.lastname + ', ' + address.city + (address.region.region ? (', ' + address.region.region) : '')
                     return <option value={address.id} key={idx}>{labelA}</option>
                 });
             }
@@ -301,7 +315,6 @@ const FormFields = (props) => {
             initDefaultValue = initialShipping
             if (!storageShipping) {
                 Identify.storeDataToStoreage(Identify.SESSION_STOREAGE, 'shipping_address', initDefaultValue)
-                console.log(props.initialValues)
                 if (initDefaultValue !== 'new_address' && (!props.initialValues || !props.initialValues.firstname)) {
 
                     //delay 500ms to set default option
@@ -341,6 +354,8 @@ const FormFields = (props) => {
         }
     }
 
+    const extension = initialValues.extension_attributes || {};
+
     const viewFields = (!usingSameAddress || is_virtual) ? (
         <Fragment>
             {isSignedIn &&
@@ -351,7 +366,8 @@ const FormFields = (props) => {
                             <select name="selected_address_field"
                                 defaultValue={initDefaultValue}
                                 onChange={() => handleChooseAddedAddress(initDefaultValue)}
-                                onBlur={() => handleChooseAddedAddress(initDefaultValue)}>
+                                // onBlur={() => handleChooseAddedAddress(initDefaultValue)}
+                                >
                                 {listOptionsAddress(addresses)}
                             </select>
                         </span>
@@ -399,11 +415,33 @@ const FormFields = (props) => {
                             <input type="text" id='firstname' name='firstname' className="isrequired" onBlur={e => addressFieldChangedValue(e)} 
                                 placeholder={Identify.__("First Name")} defaultValue={initialValues.firstname}></input>
                         </div>
+                        <div className='middlename'>
+                            <div className={`address-field-label req`}>{Identify.__("Middle Name")}</div>
+                            <input type="text" id='middlename' name='middlename' className="isrequired" onBlur={e => addressFieldChangedValue(e)} 
+                                placeholder={Identify.__("Middle Name")} defaultValue={initialValues.middlename}></input>
+                        </div>
                         <div className='lastname'>
                             <div className={`address-field-label req`}>{Identify.__("Last Name")}</div>
                             <input type="text" id='lastname' name='lastname' className="isrequired" onBlur={e => addressFieldChangedValue(e)} 
                                 placeholder={Identify.__("Last Name")} defaultValue={initialValues.lastname}></input>
                         </div>
+                        
+                        {/* <div className='house_number'>
+                            <div className={`address-field-label`}>{Identify.__("House Number")}</div>
+                            <input type="text" id='house_number' name='extension_attributes[house_number]' className="" onBlur={e => addressFieldChangedValue(e)} 
+                                placeholder={Identify.__("House Number")} defaultValue={extension.house_number}></input>
+                        </div>
+                        <div className='apartment_number '>
+                            <div className={`address-field-label`}>{Identify.__("Apartment Number")}</div>
+                            <input type="text" id='apartment_number' name='extension_attributes[apartment_number]' className="" onBlur={e => addressFieldChangedValue(e)} 
+                                placeholder={Identify.__("Apartment Number")} defaultValue={extension.apartment_number}></input>
+                        </div>
+                        <div className='block'>
+                            <div className={`address-field-label`}>{Identify.__("Block")}</div>
+                            <input type="text" id='block' name='extension_attributes[block]' className="" onBlur={e => addressFieldChangedValue(e)} 
+                                placeholder={Identify.__("Block")} defaultValue={extension.block}></input>
+                        </div> */}
+
                         {configFields && configFields.hasOwnProperty('company_show') && configFields.company_show ?
                             <div className='company'>
                                 <div className={`address-field-label ${configFields.company_show === 'req' ? 'req' : ''}`}>{Identify.__("Company")}</div>

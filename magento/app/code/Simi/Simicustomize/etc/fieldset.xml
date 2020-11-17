@@ -12,6 +12,18 @@
             <field name="discount_description">
                 <aspect name="to_order"/>
             </field>
+            <field name="house_number">
+                <aspect name="to_customer_address"/>
+                <aspect name="to_order_address" />
+            </field>
+            <field name="apartment_number">
+                <aspect name="to_customer_address"/>
+                <aspect name="to_order_address" />
+            </field>
+            <field name="block">
+                <aspect name="to_customer_address"/>
+                <aspect name="to_order_address" />
+            </field>
         </fieldset>
         <fieldset id="sales_convert_order">
             <field name="discount_description">
@@ -22,6 +34,17 @@
             </field>
             <field name="discount_amount">
                 <aspect name="to_invoice"/>
+            </field>
+        </fieldset>
+        <fieldset id="customer_address">
+            <field name="house_number">
+                <aspect name="to_quote_address" />
+            </field>
+            <field name="apartment_number">
+                <aspect name="to_quote_address" />
+            </field>
+            <field name="block">
+                <aspect name="to_quote_address" />
             </field>
         </fieldset>
     </scope>

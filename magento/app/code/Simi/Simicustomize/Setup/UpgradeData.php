@@ -13,6 +13,7 @@ use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Sales\Setup\SalesSetupFactory;
 use Magento\Sales\Setup\SalesSetup;
 use Magento\Framework\DB\Ddl\Table;
+use Magento\Customer\Setup\CustomerSetupFactory;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -38,6 +39,8 @@ class UpgradeData implements UpgradeDataInterface
      */
     protected $salesSetupFactory;
 
+    protected $customerSetupFactory;
+
     /**
     * @param EavSetup $eavSetup,
     * @param ObjectManagerInterface $objectManager,
@@ -50,13 +53,15 @@ class UpgradeData implements UpgradeDataInterface
         ObjectManagerInterface $objectManager,
         StoreRepositoryInterface $storeRepository,
         LoggerInterface $logger,
-        SalesSetupFactory $salesSetupFactory
+        SalesSetupFactory $salesSetupFactory,
+        CustomerSetupFactory $customerSetupFactory
     ) {
         $this->eavSetup = $eavSetup;
         $this->_objectManager = $objectManager;
         $this->storeRepository = $storeRepository;
         $this->logger = $logger;
         $this->salesSetupFactory = $salesSetupFactory;
+        $this->customerSetupFactory = $customerSetupFactory;
     }
 
     /**
@@ -251,5 +256,91 @@ class UpgradeData implements UpgradeDataInterface
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                 'length' => "12,4"]);
         }
+
+        /* Add customer address fields */
+        /* if ($context->getVersion() && version_compare($context->getVersion(), '1.0.16', '<')) {
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
+            $customerSetup->addAttribute('customer_address', 'house_number', [
+                'label' => 'House Number',
+                'input' => 'text',
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'source' => '',
+                'required' => false,
+                'position' => 65,
+                'visible' => true,
+                'system' => false,
+                'is_used_in_grid' => false,
+                'is_visible_in_grid' => false,
+                'is_filterable_in_grid' => false,
+                'is_searchable_in_grid' => false,
+                'frontend_input' => 'hidden',
+                'backend' => ''
+            ]);
+            $attribute = $customerSetup->getEavConfig()
+                ->getAttribute('customer_address','house_number')                                  
+                ->addData(['used_in_forms' => [
+                        'adminhtml_customer_address',
+                        'adminhtml_customer',
+                        'customer_address_edit',
+                        'customer_register_address',
+                        'customer_address',
+                    ]
+                ]);
+            $attribute->save();
+            $customerSetup->addAttribute('customer_address', 'apartment_number', [
+                'label' => 'Apartment Number',
+                'input' => 'text',
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'source' => '',
+                'required' => false,
+                'position' => 66,
+                'visible' => true,
+                'system' => false,
+                'is_used_in_grid' => false,
+                'is_visible_in_grid' => false,
+                'is_filterable_in_grid' => false,
+                'is_searchable_in_grid' => false,
+                'frontend_input' => 'hidden',
+                'backend' => ''
+            ]);
+            $attribute = $customerSetup->getEavConfig()
+                ->getAttribute('customer_address','apartment_number')                                  
+                ->addData(['used_in_forms' => [
+                        'adminhtml_customer_address',
+                        'adminhtml_customer',
+                        'customer_address_edit',
+                        'customer_register_address',
+                        'customer_address',
+                    ]
+                ]);
+            $attribute->save();
+            $customerSetup->addAttribute('customer_address', 'block', [
+                'label' => 'Block',
+                'input' => 'text',
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'source' => '',
+                'required' => false,
+                'position' => 67,
+                'visible' => true,
+                'system' => false,
+                'is_used_in_grid' => false,
+                'is_visible_in_grid' => false,
+                'is_filterable_in_grid' => false,
+                'is_searchable_in_grid' => false,
+                'frontend_input' => 'hidden',
+                'backend' => ''
+            ]);
+            $attribute = $customerSetup->getEavConfig()
+                ->getAttribute('customer_address','block')                                  
+                ->addData(['used_in_forms' => [
+                        'adminhtml_customer_address',
+                        'adminhtml_customer',
+                        'customer_address_edit',
+                        'customer_register_address',
+                        'customer_address',
+                    ]
+                ]);
+            $attribute->save();
+        } */
     }
 }
