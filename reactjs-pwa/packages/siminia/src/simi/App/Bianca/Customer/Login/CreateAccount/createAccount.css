@@ -2,7 +2,7 @@
     display: grid;
     justify-items: stretch;
     padding: 0 98px;
-    margin-top: 50px;
+    /* margin-top: 50px; */
 }
 
 .actions {
@@ -81,6 +81,9 @@
 
 .root div[class *="field-root"] {
     margin-top: 35px;
+}
+.root div[class *="field-root"]:first-child {
+    margin-top: 0px;
 }
 
 .root div[class *="field-root"] span[class *="label"] {

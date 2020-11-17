@@ -127,12 +127,12 @@ export async function sendRequest(endPoint, callBack, method='GET', getData= {},
 
 
 export const request = (resourceUrl, opts) => {
-    let newResourceUrl = addMerchantUrl(resourceUrl)
+    let newResourceUrl = addMerchantUrl(resourceUrl);
+    const reqVars = addRequestVars({})
     if (opts && !(opts.method && opts.method!=='GET')) { //only for get method
-        const getData = addRequestVars({})
-        let dataGetString = Object.keys(getData).map(function (key) {
+        let dataGetString = Object.keys(reqVars).map(function (key) {
             return encodeURIComponent(key) + '=' +
-                encodeURIComponent(getData[key]);
+                encodeURIComponent(reqVars[key]);
         })
         dataGetString = dataGetString.join('&')
         if (dataGetString)
@@ -142,6 +142,9 @@ export const request = (resourceUrl, opts) => {
     // Modify request network to apply auto logout after session timeout
     try{
         const req = new M2ApiRequest(newResourceUrl, {...opts, multicast: false});
+        // add var to header
+        req.opts.headers.set('Simi-Currency', reqVars.simiCurrency);
+        req.opts.headers.set('Simi-Store-Id', reqVars.simiStoreId);
         // Replace run M2ApiRequest
         return window.fetch(req.resourceUrl, req.opts).then(response => {
             // WHATWG fetch will only reject in the unlikely event

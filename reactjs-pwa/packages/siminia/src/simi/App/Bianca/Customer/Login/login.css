@@ -90,6 +90,28 @@
     background-color: #101820;
     color: #fff;
 }
+.leadhead {
+    padding: 0 98px;
+    margin-top: 50px;
+    margin-bottom: 35px;
+}
+.lead1 {
+    color: #101820;
+    font-family: 'Gotham Book';
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 18px;
+}
+.lead2 {
+    color: #727272;
+    font-family: Gotham;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
 
 .login-container .buyer-login span {
     color: #fff;

@@ -209,12 +209,12 @@ const CreateAccount = props => {
                 initialValues={initialValues}
                 onSubmit={handleSubmit}
             >
-                <div className={classes.lead1}>
+                {/* <div className={classes.lead1}>
                     {Identify.__('create an account').toUpperCase()}
                 </div>
                 <div className={classes.lead2}>
                     {Identify.__('Please enter the following information to create your account.')}
-                </div>
+                </div> */}
                 <Field label={Identify.__('First Name *')} required={true}>
                     <TextInput
                         classes={classes}

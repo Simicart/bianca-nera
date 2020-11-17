@@ -490,8 +490,28 @@ class Login extends Component {
 							className={`${classes['buyer-login']}`}
 							style={{ display: `${this.state.forgotPassSuccess}` }}
 						>
-							<span>{Identify.__('Buyer').toUpperCase()}</span>
+							<span>{Identify.__('User').toUpperCase()}</span>
 						</div>
+						{!isCreateAccountOpen && !isForgotPasswordOpen &&
+							<div className={classes.leadhead}>
+								<div className={classes.lead1}>
+									{Identify.__('Existing Account').toUpperCase()}
+								</div>
+								<div className={classes.lead2}>
+									{Identify.__('Please enter the following information to sign in to your account.')}
+								</div>
+							</div>
+						}
+						{createAccountForm &&
+							<div className={classes.leadhead}>
+								<div className={classes.lead1}>
+									{Identify.__('create an account').toUpperCase()}
+								</div>
+								<div className={classes.lead2}>
+									{Identify.__('Please enter the following information to create your account.')}
+								</div>
+							</div>
+						}
 						<div
 							className={`${isCreateAccountOpen || isForgotPasswordOpen
 								? classes['inactive'] : ''} ${classes['select-type']}`}

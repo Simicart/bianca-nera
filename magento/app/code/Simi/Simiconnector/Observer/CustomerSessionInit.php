@@ -79,6 +79,14 @@ class CustomerSessionInit implements ObserverInterface
             }
         }
 
+        // get simiCurrency and simiStoreId in header
+        if ($this->request->getHeader('Simi-Currency')) {
+            $simiCurrency = $this->request->getHeader('Simi-Currency');
+        }
+        if ($this->request->getHeader('Simi-Store-Id')) {
+            $simiStoreId = $this->request->getHeader('Simi-Store-Id');
+        }
+
         if ( !$simiCurrency || $simiCurrency == '' || !$simiStoreId || $simiStoreId == '') {
             $mpStoreswitchHelper = $this->simiObjectManager->get('Mageplaza\StoreSwitcher\Helper\Data');
             $rule = $mpStoreswitchHelper->getMatchingRule();
