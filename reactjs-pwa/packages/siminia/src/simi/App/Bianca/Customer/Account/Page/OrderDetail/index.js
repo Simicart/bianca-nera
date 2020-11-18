@@ -109,7 +109,24 @@ const Detail = (props) => {
             <div className="checkout-method-label">{label}</div>
             <div className="checkout-method-value">{value}</div>
         </div>
+    }
 
+    const renderPaymentInformation = (label, paymentInfo) => {
+        return <div className="checkout-method">
+            <div className="checkout-method-label">{label}</div>
+            {paymentInfo.tranid ?
+                <div className="checkout-method-value">
+                    <span>{paymentInfo.method_title}</span><br/>
+                    <label>{Identify.__('Pay ID')}:</label>&nbsp;<span>{paymentInfo.paymentid}</span><br/>
+                    <label>{Identify.__('Trans ID')}:</label>&nbsp;<span>{paymentInfo.tranid}</span><br/>
+                    <label>{Identify.__('Result')}:</label>&nbsp;<span>{paymentInfo.result}</span><br/>
+                </div>
+                :
+                <div className="checkout-method-value">
+                    {paymentInfo.method_title}
+                </div>
+            }
+        </div>
     }
 
     const renderSummary = () => {
@@ -125,7 +142,11 @@ const Detail = (props) => {
                         {(data.shipping_address && Object.keys(data.shipping_address).length > 0) && <div className={colSize}>{renderAddress(data.shipping_address, Identify.__("Delivery Address"))}</div>}
                         {data.shipping_method && <div className={colSize}>{renderMethod(Identify.__('Shipping Method'), data.shipping_method)}</div>}
                         {(data.billing_address && Object.keys(data.billing_address).length > 0) &&  <div className={colSize}>{renderAddress(data.billing_address, Identify.__("Billing Address"))}</div>}
-                        {data.payment_method && <div className={colSize}>{renderMethod(Identify.__('Payment Method'), data.payment_method)}</div>}
+                        {data.payment_information ? 
+                            <div className={colSize}>{renderPaymentInformation(Identify.__('Payment Method'), data.payment_information)}</div>
+                            :
+                            data.payment_method && <div className={colSize}>{renderMethod(Identify.__('Payment Method'), data.payment_method)}</div>
+                        }
                     </div>
                 </div>
             );
