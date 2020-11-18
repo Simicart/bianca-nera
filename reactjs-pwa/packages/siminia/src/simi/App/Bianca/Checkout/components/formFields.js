@@ -435,11 +435,6 @@ const FormFields = (props) => {
                             <div className={`address-field-label`}>{Identify.__("Apartment Number")}</div>
                             <input type="text" id='apartment_number' name='extension_attributes[apartment_number]' className="" onBlur={e => addressFieldChangedValue(e)} 
                                 placeholder={Identify.__("Apartment Number")} defaultValue={extension.apartment_number}></input>
-                        </div>
-                        <div className='block'>
-                            <div className={`address-field-label`}>{Identify.__("Block")}</div>
-                            <input type="text" id='block' name='extension_attributes[block]' className="" onBlur={e => addressFieldChangedValue(e)} 
-                                placeholder={Identify.__("Block")} defaultValue={extension.block}></input>
                         </div> */}
 
                         {configFields && configFields.hasOwnProperty('company_show') && configFields.company_show ?
@@ -455,10 +450,13 @@ const FormFields = (props) => {
                                 <div className={`address-field-label ${configFields.street_show === 'req' ? 'req' : ''}`}>{Identify.__("Street")}</div>
                                 <input type="text" id='street[0]' name='street[0]' className={configFields.street_show === 'req' ? 'isrequired' : ''}
                                     onBlur={e => addressFieldChangedValue(e)} 
-                                    placeholder={Identify.__("Street 1")} defaultValue={(initialValues.street && initialValues.street[0]) ? initialValues.street[0] : ''}></input>
+                                    placeholder={Identify.__("Street")} defaultValue={(initialValues.street && initialValues.street[0]) ? initialValues.street[0] : ''}></input>
                                 <input type="text" id='street[1]' name='street[1]'
                                     onBlur={e => addressFieldChangedValue(e)} 
-                                    placeholder={Identify.__("Street 2")} defaultValue={(initialValues.street && initialValues.street[1]) ? initialValues.street[1] : ''}></input>
+                                    placeholder={Identify.__("House Number")} defaultValue={(initialValues.street && initialValues.street[1]) ? initialValues.street[1] : ''}></input>
+                                <input type="text" id='street[2]' name='street[2]'
+                                    onBlur={e => addressFieldChangedValue(e)} 
+                                    placeholder={Identify.__("Apartment Number")} defaultValue={(initialValues.street && initialValues.street[2]) ? initialValues.street[2] : ''}></input>
                             </div>}
                         {isFieldShow('city_show') &&
                             <div className='city'>
@@ -487,12 +485,17 @@ const FormFields = (props) => {
                                 />
                             </div>}
                         {isFieldShow('region_id_show') && renderRegionField(selectedCountry, initialCountry, countries, configFields, initialValues)}
+                        <div className='block'>
+                            <div className={`address-field-label`}>{Identify.__("Block")}</div>
+                            <input type="text" id='block' name='extension_attributes[block]' className="" onBlur={e => addressFieldChangedValue(e)} 
+                                placeholder={Identify.__("Block")} defaultValue={extension.block}></input>
+                        </div>
                         {isFieldShow('telephone_show') &&
                             <div className='telephone'>
                                 <div className={`address-field-label ${configFields.telephone_show === 'req' ? 'req' : ''}`}>{Identify.__("Phone")}</div>
                                 <input type="tel" id='telephone' name='telephone' className={configFields.telephone_show === 'req' ? 'isrequired' : ''}
                                     onBlur={e => addressFieldChangedValue(e)} 
-                                    placeholder={Identify.__("Phone")} defaultValue={initialValues.telephone}></input>
+                                    placeholder={Identify.__("Ex")+": (+965) 5162 - 3283"} defaultValue={initialValues.telephone}></input>
                             </div>}
                         {configFields && configFields.hasOwnProperty('fax_show') && configFields.fax_show ?
                             <div className='fax'>

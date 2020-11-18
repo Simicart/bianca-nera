@@ -60,6 +60,10 @@ const DEFAULT_FORM_VALUES = {
 };
 
 const AddressForm = props => {
+
+    const HOUSE_NUMBER_LABEL = 'House No.';
+    const APARTMENT_NUMBER_LABEL = 'Apartment No.';
+
     const {
         countries,
         isAddressInvalid,
@@ -129,11 +133,6 @@ const AddressForm = props => {
                 return acc;
             }, {});
 
-            // if (initialFormValues['extension_attributes']) {
-            //     for (let attributeCode in initialFormValues['extension_attributes']) {
-            //         memoFields[attributeCode] = initialFormValues['extension_attributes'][attributeCode];
-            //     }
-            // }
             if (initialFormValues['extension_attributes']) {
                 memoFields.extension_attributes = initialFormValues['extension_attributes'];
             }
@@ -194,11 +193,13 @@ const AddressForm = props => {
                 if (name) {
                     if (name === 'street[0]') {
                         submitValues.street = [value]
-                    } else if (name === 'street[1]') { 
-                        submitValues.street.push(value)
-                    } else if (name === 'emailaddress') { 
+                    } else if (name === 'street[1]') {
+                        submitValues.street.push(HOUSE_NUMBER_LABEL+value)
+                    } else if (name === 'street[2]') {
+                        submitValues.street.push(APARTMENT_NUMBER_LABEL+value)
+                    } else if (name === 'emailaddress') {
                         submitValues['email'] = value
-                    } else if (name === 'save_in_address_book') { 
+                    } else if (name === 'save_in_address_book') {
                         submitValues[name] = (inputField.is(":checked")) ? 1 : 0
                     } else if (name.search(/extension_attributes\[(.*)\]/) === 0) {
                         const attributeCode = name.replace(/extension_attributes\[(.*)\]/, '$1')

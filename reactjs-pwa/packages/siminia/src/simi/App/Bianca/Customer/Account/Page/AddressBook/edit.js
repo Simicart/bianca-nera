@@ -38,12 +38,15 @@ const $ = window.$
 
 const Edit = props => {
 
+    const HOUSE_NUMBER_LABEL = 'House No.';
+    const APARTMENT_NUMBER_LABEL = 'Apartment No.';
+
     const width = window.innerWidth;
     const isSmallPhone = width < 768;
 
     const { user, addressData, countries, address_fields_config } = props;
     const addressConfig = address_fields_config;
-    const [phoneChange, setPhone] = useState("")
+    const [phoneChange, setPhone] = useState(addressData.telephone);
 
     let pageType = 'new';
     let CUSTOMER_MUTATION = CUSTOMER_ADDRESS_CREATE;
@@ -90,12 +93,9 @@ const Edit = props => {
     }
 
     const formSubmit = (values) => {
-        // console.log('form submited:', values)
-
     }
 
     const formChange = (formState) => {
-        // console.log('form change:', formState)
         if (formState && formState.values && formState.values.default_billing === true) {
             $('#checkbox-billing').css('appearance', 'none');
             $('#checkbox-billing').css('background-color', '#101820');
@@ -138,7 +138,7 @@ const Edit = props => {
 
     const buttonSubmitHandle = (mutaionCallback, formApi) => {
         loading = true;
-        const values = formApi.getValues();
+        let values = {...formApi.getValues()};
         formApi.submitForm();
         if (pageType === 'edit') {
             const newPhoneNumber = $('#input-edit-phone').val()
@@ -198,14 +198,28 @@ const Edit = props => {
         const config = addressConfig;
         if (config) {
             if (!phoneChange) values.telephone = config.telephone_default || 'NA';
-            if (!values.street) values.street = [config.street_default || 'NA'];
+            // if (!values.street) values.street = [config.street_default || 'NA'];
             if (!values.country_id) values.country_id = config.country_id_default || 'US';
             if (!values.city) values.city = config.city_default || 'NA';
             if (!values.postcode) values.postcode = config.zipcode_default || 'NA';
         }
+
         if (phoneChange) {
             values.telephone = phoneChange
         }
+
+        let newStreet = [];
+        if (values.street && values.street[0]) {
+            newStreet.push(values.street[0]);
+        }
+        if (values.street && values.street[1]) {
+            newStreet.push(HOUSE_NUMBER_LABEL + values.street[1]);
+        }
+        if (values.street && values.street[2]) {
+            newStreet.push(APARTMENT_NUMBER_LABEL + values.street[2]);
+        }
+
+        values.street = newStreet;
 
         values.id = addressData.id; //address id
         mutaionCallback({ variables: values });
@@ -331,6 +345,7 @@ const Edit = props => {
                                 <label htmlFor="input-email">{Identify.__('Email address')} <span>*</span></label>
                                 <SimiText id="input-email" field="email" initialValue={user.email} placeholder={Identify.__('Email Address')} readOnly={true} />
                             </div>
+
                             {/* <div className="form-row">
                                 <label htmlFor="input-house_number">{Identify.__('House Number')}</label>
                                 <SimiText id="input-house_number" field="extension_attributes[house_number]" initialValue={addressData.house_number} placeholder={Identify.__('House Number')} />
@@ -338,11 +353,8 @@ const Edit = props => {
                             <div className="form-row">
                                 <label htmlFor="input-apartment_number">{Identify.__('Apartment Number')}</label>
                                 <SimiText id="input-apartment_number" field="extension_attributes[apartment_number]" initialValue={addressData.apartment_number} placeholder={Identify.__('Apartment Number')} />
-                            </div>
-                            <div className="form-row">
-                                <label htmlFor="input-block">{Identify.__('Block')}</label>
-                                <SimiText id="input-block" field="extension_attributes[block]" initialValue={addressData.block} placeholder={Identify.__('Block')} />
                             </div> */}
+                            
                             {!isSmallPhone ? <div className="form-button">
                                 <SimiMutation mutation={CUSTOMER_MUTATION}>
                                     {(mutaionCallback, { data }) => {
@@ -391,16 +403,25 @@ const Edit = props => {
 
                             {(!addressConfig || (addressConfig && addressConfig.street_show)) &&
                                 <div className="form-row">
-                                    <label htmlFor="input-street1">
+                                    <label htmlFor="input-street">
                                         {Identify.__('Street Address')} {addressConfig && addressConfig.street_show !== 'req' ? null : <span>*</span>}
                                     </label>
-                                    <SimiText id="input-street1" field="street[0]" initialValue={addressData.street[0]}
+                                    <SimiText id="input-street" field="street[0]" initialValue={addressData.street[0]}
                                         validate={(value) => validateStreet(value, addressConfig && addressConfig.street_show || 'req')}
                                         validateOnBlur validateOnChange placeholder={Identify.__('Address')} />
-                                    {/* <SimiText id="input-street2" field="street[1]" initialValue={addressData.street[1]} />
-                                    <SimiText id="input-street3" field="street[2]" initialValue={addressData.street[2]} /> */}
+                                    <SimiText id="input-street1" field="street[1]" initialValue={addressData.street[1] 
+                                        && addressData.street[1].replace(new RegExp('^'+HOUSE_NUMBER_LABEL), '') || ''} 
+                                        placeholder={Identify.__('House Number')} />
+                                    <SimiText id="input-street2" field="street[2]" initialValue={addressData.street[2]
+                                        && addressData.street[2].replace(new RegExp('^'+APARTMENT_NUMBER_LABEL), '') || ''} 
+                                        placeholder={Identify.__('Apartment Number')} />
                                 </div>
                             }
+
+                            <div className="form-row">
+                                <label htmlFor="input-block">{Identify.__('Block')}</label>
+                                <SimiText id="input-block" field="extension_attributes[block]" initialValue={addressData.block} placeholder={Identify.__('Block')} />
+                            </div>
 
                             {(!addressConfig || (addressConfig && addressConfig.city_show)) &&
                                 <div className="form-row">
@@ -447,7 +468,6 @@ const Edit = props => {
                                     </SimiSelect>
                                 </div>
                             }
-
 
                             <div className="form-row">
                                 <div className="checkbox">

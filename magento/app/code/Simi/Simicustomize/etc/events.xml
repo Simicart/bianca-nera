@@ -48,12 +48,16 @@
         <observer name="simicustomize_payment_method_is_active"
                   instance="Simi\Simicustomize\Observer\PaymentMethodIsActive" />
     </event>
-    <!-- <event name="customer_address_save_before">
+    <event name="customer_address_load_after">
+        <observer name="simicustomize_customer_address_load_after"
+                  instance="Simi\Simicustomize\Observer\CustomerAddressLoadAfter" />
+    </event>
+    <event name="customer_address_save_before">
         <observer name="simicustomize_customer_address_save_before"
                   instance="Simi\Simicustomize\Observer\CustomerAddressSaveBefore" />
     </event>
     <event name="sales_quote_address_save_before">
         <observer name="simicustomize_sales_quote_address_save_before"
                   instance="Simi\Simicustomize\Observer\SalesQuoteAddressSaveBefore" />
-    </event> -->
+    </event>
 </config>

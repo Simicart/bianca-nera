@@ -39,8 +39,8 @@ const ListItem = props => {
                         {(!addressConfig || addressConfig && addressConfig.region_id_show) && data.region ? <>{data.region.region_code}<br/></>: ''}
                         {(!addressConfig || addressConfig && addressConfig.country_id_show) ? <>{data.country}<br/></> : ''}
                         {/* {data.house_number && <>{data.house_number}<br/></>}
-                        {data.apartment_number && <>{data.apartment_number}<br/></>}
-                        {data.block && <>{data.block}<br/></>} */}
+                        {data.apartment_number && <>{data.apartment_number}<br/></>} */}
+                        {data.block && <>{Identify.__('Block')} {data.block}<br/></>}
                         {(!addressConfig || addressConfig && addressConfig.telephone_show) && data.telephone && 
                             <>
                                 T: <a href={"tel:"+data.telephone}>{data.telephone}</a>

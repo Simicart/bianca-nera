@@ -957,6 +957,10 @@ var DASHBOARD_CONFIG = {
 				"Please choose shipping method for each product":"الرجاء اختيار طريقة الشحن لكل منتج",
 				"Or":"أو",
 				"Use one of the following shipping methods for all products":"استخدم إحدى طرق الشحن التالية لجميع المنتجات",
+				"Block":"منع",
+				"Ex":"مثال",
+				"House Number":"رقم الدار",
+				"Apartment Number":"رقم الشقة",
 			}
 		}
 	}]

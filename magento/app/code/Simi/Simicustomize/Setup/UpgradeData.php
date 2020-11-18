@@ -258,9 +258,9 @@ class UpgradeData implements UpgradeDataInterface
         }
 
         /* Add customer address fields */
-        /* if ($context->getVersion() && version_compare($context->getVersion(), '1.0.16', '<')) {
+        if ($context->getVersion() && version_compare($context->getVersion(), '1.0.16', '<')) {
             $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
-            $customerSetup->addAttribute('customer_address', 'house_number', [
+            /* $customerSetup->addAttribute('customer_address', 'house_number', [
                 'label' => 'House Number',
                 'input' => 'text',
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
@@ -313,7 +313,7 @@ class UpgradeData implements UpgradeDataInterface
                         'customer_address',
                     ]
                 ]);
-            $attribute->save();
+            $attribute->save(); */
             $customerSetup->addAttribute('customer_address', 'block', [
                 'label' => 'Block',
                 'input' => 'text',
@@ -341,6 +341,6 @@ class UpgradeData implements UpgradeDataInterface
                     ]
                 ]);
             $attribute->save();
-        } */
+        }
     }
 }

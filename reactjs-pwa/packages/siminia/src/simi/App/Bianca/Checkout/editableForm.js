@@ -4,7 +4,7 @@ import { array, bool, func, object, oneOf, shape, string } from 'prop-types';
 import AddressForm from './AddressForm/AddressForm';
 import PaymentsForm from './PaymentsForm/PaymentsForm';
 import ShippingForm from './ShippingForm';
-import AddressItem from 'src/simi/BaseComponents/Address';
+import AddressItem from 'src/simi/App/Bianca/BaseComponents/Address';
 import isObjectEmpty from 'src/util/isObjectEmpty';
 import Identify from 'src/simi/Helper/Identify';
 
