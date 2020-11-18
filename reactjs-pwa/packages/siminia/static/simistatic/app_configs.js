@@ -964,6 +964,7 @@ var DASHBOARD_CONFIG = {
 				"Transaction Id %s":"معرّف المعاملة %s",
 				"Payment Id %s":"معرف الدفع %s",
 				"Result %s":"نتيجة %s",
+				"Pay date %s":"تاريخ الدفع %s",
 			}
 		}
 	}]

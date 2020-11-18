@@ -67,6 +67,17 @@ const Thankyou = props => {
         }
         history.push(orderLocate);
     }
+
+    const getDateFormat = dateData => {
+        const date = new Date(dateData);
+        const day = date.getDate();
+        const month =
+            date.getMonth() + 1 < 10
+                ? "0" + (date.getMonth() + 1)
+                : date.getMonth() + 1;
+        const year = date.getFullYear();
+        return day + "/" + month + "/" + year;
+    };
     
     return (
         <div className="container thankyou-container" style={{ marginTop: 40 }}>
@@ -84,6 +95,7 @@ const Thankyou = props => {
                                 {orderData.payment_information.method_title} {Identify.__('Transaction Id %s').replace('%s', orderData.payment_information.tranid)}<br/>
                                 {Identify.__('Payment Id %s').replace('%s', orderData.payment_information.paymentid)}<br/>
                                 {Identify.__('Result %s').replace('%s', orderData.payment_information.result)}<br/>
+                                {Identify.__('Pay date %s').replace('%s', getDateFormat(orderData.created_at))}<br/>
                             </div>
                         </div>
                     }
