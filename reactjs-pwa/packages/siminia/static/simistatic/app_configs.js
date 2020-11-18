@@ -961,6 +961,9 @@ var DASHBOARD_CONFIG = {
 				"Ex":"مثال",
 				"House Number":"رقم الدار",
 				"Apartment Number":"رقم الشقة",
+				"Transaction Id %s":"معرّف المعاملة %s",
+				"Payment Id %s":"معرف الدفع %s",
+				"Result %s":"نتيجة %s",
 			}
 		}
 	}]
