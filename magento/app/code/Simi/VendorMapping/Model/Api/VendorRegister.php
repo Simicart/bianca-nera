@@ -106,12 +106,12 @@ class VendorRegister extends RegisterPost implements VendorRegisterInterface
                     }
                     $vendor->setCustomer($customer);
                     $vendor->setWebsiteId($customer->getWebsiteId());
-                    $vendor->setData('country_id', $vendorData['vendor_data']['country_id']);
+                    $vendor->setData('country_id', $vendorData['vendor_data']['country_id'] ?? '');
                     // $vendor->setData('postcode', $vendorData['vendor_data']['postcode']);
-                    $vendor->setData('city', $vendorData['vendor_data']['city']);
-                    $vendor->setData('region', $vendorData['vendor_data']['region']);
-                    $vendor->setData('telephone', $vendorData['vendor_data']['telephone']);
-                    $vendor->setData('company', $vendorData['vendor_data']['company']);
+                    $vendor->setData('city', $vendorData['vendor_data']['city'] ?? '');
+                    $vendor->setData('region', $vendorData['vendor_data']['region'] ?? '');
+                    $vendor->setData('telephone', $vendorData['vendor_data']['telephone'] ?? '');
+                    $vendor->setData('company', $vendorData['vendor_data']['company'] ?? '');
                     if (isset($vendorData['vendor_data']['website'])) {
                         $vendor->setData('website', $vendorData['vendor_data']['website']);
                     }
