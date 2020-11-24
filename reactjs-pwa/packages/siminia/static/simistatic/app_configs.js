@@ -733,6 +733,7 @@ var DASHBOARD_CONFIG = {
 				"You have logged out":"قمت بتسجيل الخروج",
 				"There are no notifications in history":"لا توجد تنبيهات في التاريخ",
 				"Store":"متجر",
+				"Stores":"المتاجر",
 				"Are you sure that you want to cancel the order":"هل أنت متأكد أنك تريد إلغاء الأمر",
 				"Your order is cancelled":"تم إلغاء طلبك",
 				"Thank You Page":"شكرا ل",

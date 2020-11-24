@@ -5,7 +5,7 @@ import { Util, RestApi } from '@magento/peregrine';
 import CacheHelper from 'src/simi/Helper/CacheHelper';
 
 const { BrowserPersistence } = Util;
-const peregrinRequest = RestApi.Magento2.request;
+// const peregrinRequest = RestApi.Magento2.request;
 const M2ApiRequest = RestApi.Magento2.default;
 
 const prepareData = (endPoint, getData, method, header, bodyData) => {
@@ -175,12 +175,19 @@ export const request = (resourceUrl, opts) => {
                             try{
                                 data = JSON.parse(bodyText);
                             }catch(error){}
-                            if (data && data.message && data.message.includes(`The consumer isn't authorized`)) {
+                            if (data && data.message && data.message.includes("The consumer isn't authorized")) {
                                 CacheHelper.clearCaches();
                                 // window.location.reload();
                                 setTimeout(()=>{
                                     window.location.href = '/login.html';
                                 }, 1000);
+                            }
+                            if (data && data.message && data.message.includes('No such entity with %fieldName = %fieldValue') &&
+                                data.parameters && data.parameters.fieldName === 'cartId'
+                            ) {
+                                const storage = new BrowserPersistence();
+                                storage.removeItem('cartId');
+                                window.location.reload();
                             }
                             return data;
                         })

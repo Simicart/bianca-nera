@@ -353,7 +353,7 @@ class Header extends React.Component {
 											<div className="storelocator-icon" />
 											<div className="storelocator-title">
 												<Link to={'/storelocator.html'}>
-													{Identify.__('Store')}
+													{Identify.__('Stores')}
 												</Link>
 											</div>
 										</div>
