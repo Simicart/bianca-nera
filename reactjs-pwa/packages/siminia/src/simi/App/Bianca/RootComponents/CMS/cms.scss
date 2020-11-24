@@ -1,130 +1,142 @@
-.static-page {
-    &.international-page {
-        color: #101820;
-        padding: 15px;
+.cms-page.static-page {
+    color: #101820;
+    padding: 15px;
+    font-weight: 500;
+    h1 {
         font-weight: 500;
+        font-size: 40px;
+        margin-bottom: 40px;
+    }
+    h2 {
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 26px;
+        margin-top: 2.25rem;
+        margin-bottom: 1.8rem;
+    }
+    h3 {
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 24px;
+        margin-top: 1.8rem;
+        margin-bottom: 0.9rem;
+    }
+    em,
+    i {
+        font-style: italic;
+    }
+    p {
+        font-weight: 500;
+        margin-top: 0rem;
+        margin-bottom: 0.9rem;
+    }
+    img {
+        border: 0;
+    }
+    img,
+    object,
+    video,
+    embed {
+        max-height: 100%;
+        max-width: 100%;
+    }
+    ul {
+        margin: initial;
+        padding: initial;
+        list-style-type: initial;
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
+        li {
+            margin-left: 10px;
+        }
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        max-width: 100%;
+    }
+    table th {
+        display: table-cell;
+        vertical-align: inherit;
+        font-weight: bold;
+        text-align: left;
+    }
+    table > thead > tr > th, table > thead > tr > td {
+        vertical-align: bottom;
+    }
+    table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table > thead > tr > td, table > tbody > tr > td, table > tfoot > tr > td {
+        padding: 11px 10px;
+    }
+    @media screen and (max-width: 768px){
+        h3, h4, h5, h6 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
+        }
         h1 {
             font-weight: 500;
-            font-size: 40px;
-            margin-bottom: 40px;
+            line-height: 1.1;
+            font-size: 1.6rem;
+            margin-top: 0rem;
+            margin-bottom: 1.2rem;
         }
         h2 {
             font-weight: 500;
             line-height: 1.1;
-            font-size: 26px;
-            margin-top: 2.25rem;
-            margin-bottom: 1.8rem;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
         }
-        h3 {
-            font-weight: 500;
-            line-height: 1.1;
-            font-size: 24px;
-            margin-top: 1.8rem;
-            margin-bottom: 0.9rem;
-        }
-        em,
-        i {
-            font-style: italic;
-        }
-        p {
-            font-weight: 500;
-            margin-top: 0rem;
-            margin-bottom: 0.9rem;
-        }
-        img {
-            border: 0;
-        }
-        img,
-        object,
-        video,
-        embed {
-            max-height: 100%;
-            max-width: 100%;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            max-width: 100%;
-        }
-        table th {
-            display: table-cell;
-            vertical-align: inherit;
-            font-weight: bold;
-            text-align: left;
-        }
-        table > thead > tr > th, table > thead > tr > td {
-            vertical-align: bottom;
-        }
-        table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table > thead > tr > td, table > tbody > tr > td, table > tfoot > tr > td {
-            padding: 11px 10px;
-        }
-        @media screen and (max-width: 768px){
-            h3, h4, h5, h6 {
-                font-size: 1rem;
-                font-weight: 500;
-                margin: 0;
-            }
-            h1 {
-                font-weight: 500;
-                line-height: 1.1;
-                font-size: 1.6rem;
-                margin-top: 0rem;
-                margin-bottom: 1.2rem;
-            }
-            h2 {
-                font-weight: 500;
-                line-height: 1.1;
-                font-size: 1.2rem;
-                margin-top: 1.5rem;
-                margin-bottom: 1rem;
-            }
-        }
-        /* end all default css */
+    }
+    /* end all default css */
 
-        .page-title-wrapper .page-title {
-            word-break: break-all;
-            display: inline-block;
+    .page-title-wrapper .page-title {
+        word-break: break-all;
+        display: inline-block;
+    }
+    .block-collapsible-nav{
+        .title {
+            border: 0;
+            clip: rect(0, 0, 0, 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
         }
-        .block-collapsible-nav{
-            .title {
-                border: 0;
-                clip: rect(0, 0, 0, 0);
-                height: 1px;
-                margin: -1px;
-                overflow: hidden;
+        .content {
+            background: #e4e4e4;
+            padding: 15px 0;
+            .items {
+                margin: 0;
                 padding: 0;
-                position: absolute;
-                width: 1px;
-            }
-            .content {
-                background: #e4e4e4;
-                padding: 15px 0;
-                .items {
-                    margin: 0;
-                    padding: 0;
-                    list-style: none none;
-                    .item {
-                        margin: 3px 0 0;
+                list-style: none none;
+                .item {
+                    margin: 3px 0 0;
+                }
+                .item:first-child {
+                    margin-top: 0;
+                }
+                .item a{
+                    text-decoration: none;
+                }
+                .item {
+                    a, > strong {
+                        border-left: 3px solid transparent;
+                        display: block;
+                        padding: 5px 18px 5px 15px;
                     }
-                    .item:first-child {
-                        margin-top: 0;
-                    }
-                    .item a{
-                        text-decoration: none;
-                    }
-                    .item {
-                        a, > strong {
-                            border-left: 3px solid transparent;
-                            display: block;
-                            padding: 5px 18px 5px 15px;
-                        }
-                    }
-                    .item.current {
-                        a, > strong {
-                            border-color: #ff5501;
-                            font-weight: 600;
-                        }
+                }
+                .item.current {
+                    a, > strong {
+                        border-color: #ff5501;
+                        font-weight: 600;
                     }
                 }
             }

@@ -191,16 +191,16 @@ const ClothingService = (props) => {
             <div className="container">
                 {breadcrumb()}
                 <div className="header">
-                    <h1>{Identify.__('CLOTHING ALTERATIONS')}</h1>
+                    <h1>{Identify.__('ALTERATION FORM')}</h1>
                     <p>{Identify.__(description)}</p>
                 </div>
                 <div className="quote-form">
                     <h3>{Identify.__('Please fill in the form below for a quote.')}</h3>
                     <div className="form">
                         <div className="form-row">
-                            <label htmlFor="name">{Identify.__('Name')}<span>*</span></label>
+                            <label htmlFor="name">{Identify.__('FULL NAME')}<span>*</span></label>
                             <div className={`form-input ${validate('name', ['empty'])}`}>
-                                <input value={formData['name']} onChange={(e) => onChangeInput('name', e.target.value)} id="name" name="name" placeholder={Identify.__(`User's name`)} />
+                                <input value={formData['name']} onChange={(e) => onChangeInput('name', e.target.value)} id="name" name="name" placeholder={Identify.__(`Full Name`)} />
                             </div>
                         </div>
                         <div className="form-row">
@@ -218,11 +218,11 @@ const ClothingService = (props) => {
                         <div className="form-row">
                             <label htmlFor="address">{Identify.__('Address')}<span>*</span></label>
                             <div className={`form-input ${validate('address', ['empty'])}`}>
-                                <input value={formData['address']} onChange={(e) => onChangeInput('address', e.target.value)} id="address" name="address" placeholder={Identify.__(`Address`)}/>
+                                <input value={formData['address']} onChange={(e) => onChangeInput('address', e.target.value)} id="address" name="address" placeholder={Identify.__(`City - Country`)}/>
                             </div>
                         </div>
                         <div className="form-row">
-                            <label htmlFor="service">{Identify.__('Type Of Service')}<span>*</span></label>
+                            <label htmlFor="service">{Identify.__('Type Of Product')}<span>*</span></label>
                             <Select className={`form-input service-type ${validate('service', ['empty'])}`}
                                 items={types}
                                 selected={formData['service']}
@@ -242,13 +242,13 @@ const ClothingService = (props) => {
                         <div className="form-row">
                             <label htmlFor="detail">{Identify.__('Details')}<span>*</span></label>
                             <div className={`form-input detail ${validate('detail', ['empty'])}`}>
-                                <textarea value={formData['detail']} onChange={(e) => onChangeInput('detail', e.target.value)} id="detail" name="detail" placeholder={Identify.__(`Please describe what work you need to be done in as much detail as possible.`)}/>
+                                <textarea value={formData['detail']} onChange={(e) => onChangeInput('detail', e.target.value)} id="detail" name="detail" placeholder={Identify.__(`Please describe in detail what changes or alterations should be done in order to process your request.`)}/>
                             </div>
                         </div>
                         <div className="form-row">
-                            <label>{Identify.__('Upload Files')}<span>*</span></label>
+                            <label>{Identify.__('Upload Images')}<span>*</span></label>
                             <div className={`form-input files ${validate('files', ['empty'])}`}>
-                                <span>{Identify.__(`You can upload up to 4 files`)}</span>
+                                <span>{Identify.__(`You can upload up to 4 images (jpg or png format)`)}</span>
                                 {Object.values(formData.files).length < 4 &&
                                     <div className="upload-file">
                                         <label htmlFor="service-files">{Identify.__('Choose file')}</label>

@@ -22,16 +22,16 @@ const CMS = (props) => {
             if (error) return <div>Data Fetch Error</div>;
             if (!data || loading) return <LoadingSpiner />;
             return <div className="container">
-                <div className="static-page international-page">
-                    <div class="page-title-wrapper">
-                        <h1 class="page-title">
-                            <span class="base" data-ui-id="page-title-wrapper">
+                <div className="cms-page static-page international-page">
+                    <div className="page-title-wrapper">
+                        <h1 className="page-title">
+                            <span className="base" data-ui-id="page-title-wrapper">
                                 {data.cmsPage && data.cmsPage.content_heading ? ReactHTMLParser(data.cmsPage.content_heading) : ''}
                             </span>
                         </h1>
                     </div>
-                    <div class="columns">
-                        <div class="column main">
+                    <div className="columns">
+                        <div className="column main">
                         {data.cmsPage && data.cmsPage.content ? ReactHTMLParser(data.cmsPage.content) : Identify.__("Not found content")}
                         </div>
                     </div>

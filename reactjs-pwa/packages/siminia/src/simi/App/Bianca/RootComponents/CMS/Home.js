@@ -1,11 +1,11 @@
 import React from 'react'
-import { PbPageHoc } from 'src/simi/BaseComponents/Pbpage'
+// import { PbPageHoc } from 'src/simi/BaseComponents/Pbpage'
 import Identify from 'src/simi/Helper/Identify'
 import TitleHelper from 'src/simi/Helper/TitleHelper'
 import DefaultHome from 'src/simi/App/core/Home'
 
 const Home = props => {
-    const jsonSimiCart = Identify.getAppDashboardConfigs();
+    /* const jsonSimiCart = Identify.getAppDashboardConfigs();
     const storeConfig = Identify.getStoreConfig();
     let pb_page = null
     if (jsonSimiCart !== null && storeConfig && storeConfig.storeConfig && storeConfig.storeConfig.id) {
@@ -35,25 +35,24 @@ const Home = props => {
                 pb_page = home_pb_page
             }
         }
-    }
+    } */
     // if (pb_page && pb_page.entity_id)
-    if(false)
-        return (
-            <React.Fragment>
-                {TitleHelper.renderMetaHeader({
-                    title:Identify.__('Home Page')
-                })}
-                <PbPageHoc pb_page_id={pb_page.entity_id} {...props}/>
-            </React.Fragment>
-        )
-    else return (
+    /* return (
+        <React.Fragment>
+            {TitleHelper.renderMetaHeader({
+                title:Identify.__('Home Page')
+            })}
+            <PbPageHoc pb_page_id={pb_page.entity_id} {...props}/>
+        </React.Fragment>
+    ) */
+
+    return (
         <React.Fragment>
             {TitleHelper.renderMetaHeader({
                 title:Identify.__('Home Page')
             })}
             <DefaultHome {...props}/>
         </React.Fragment>
-
     )
 }
 
