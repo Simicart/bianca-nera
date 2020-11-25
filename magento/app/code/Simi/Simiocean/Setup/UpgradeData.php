@@ -64,5 +64,21 @@ class UpgradeData implements UpgradeDataInterface
                 ]
             );
         }
+        /* Update default value to 1 (YES) cause Ocean system does not allow to push attribute is_ocean = 1 */
+        if ($context->getVersion() && version_compare($context->getVersion(), '1.0.2', '<')) {
+            $attributeId = $this->eavSetup->getAttributeId(\Magento\Catalog\Model\Product::ENTITY, 'is_ocean');
+            $this->eavSetup->updateAttribute(
+                \Magento\Catalog\Model\Product::ENTITY,
+                $attributeId,
+                array(
+                    'default_value' => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::VALUE_YES,
+                    'is_visible' => true,
+                    'is_required' => true,
+                    'frontend_input' => 'select',
+                    'source_model' => \Simi\Simiocean\Model\Source\SelectBoolean::class,
+                    'note' => 'Please choose “No”',
+                )
+            );
+        }
     }
 }
