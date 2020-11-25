@@ -252,7 +252,6 @@ class Login extends Component {
 	};
 
 	get socialAndCreateAccount() {
-		const { setCreateAccountForm } = this;
 		const { isCreateAccountOpen, isForgotPasswordOpen } = this.state;
 		const { classes } = this.props;
 		return (
@@ -289,16 +288,7 @@ class Login extends Component {
 							<span className={`${classes['icon']} ${classes['instagram']}`} />
 						</span> */}
 					</div>
-					<div className={`${classes['showCreateAccountButtonCtn']}`}>
-						<button
-							priority="high"
-							className={`${classes['showCreateAccountButton']}`}
-							onClick={setCreateAccountForm}
-							type="submit"
-						>
-							{Identify.__('Create an Account')}
-						</button>
-					</div>
+					
 				</div>
 			</React.Fragment>
 		);
@@ -452,6 +442,7 @@ class Login extends Component {
 			emailLoginForm,
 			forgotPasswordForm,
 			phoneLoginForm,
+			setCreateAccountForm,
 			socialAndCreateAccount,
 			props,
 			state
@@ -472,16 +463,14 @@ class Login extends Component {
 					title: Identify.__('Customer Login')
 				})}
 				<div id="login-background" className={classes['login-background']}>
-					<div className="container">
-						{isShowBackBtn ?
+					{isShowBackBtn &&
+						<div className={classes['login-container']} style={{border: 'none',padding:0,margin:'0 auto'}}>
 							<div className={`special-back ${classes['login-back']}`} id="btn-back" 
 								onClick={this.handleGoBack} >
 								<span>{Identify.__('back').toUpperCase()}</span>
 							</div>
-							:
-							<div className={`special-back ${classes['login-back']}`}></div>
-						}
-					</div>
+						</div>
+					}
 					<div
 						className={`${this.state.forgotPassSuccess == 'none'
 							? classes['smallSize'] : ''} ${classes['login-container']}`}
@@ -493,12 +482,14 @@ class Login extends Component {
 							<span>{Identify.__('User').toUpperCase()}</span>
 						</div>
 						{!isCreateAccountOpen && !isForgotPasswordOpen &&
-							<div className={classes.leadhead}>
-								<div className={classes.lead1}>
-									{Identify.__('Existing Account').toUpperCase()}
-								</div>
-								<div className={classes.lead2}>
-									{Identify.__('Please enter the following information to sign in to your account.')}
+							<div className="root sign-in-form" style={{display:'block'}}>
+								<div className={classes.leadhead}>
+									<div className={classes.lead1}>
+										{Identify.__('Existing Account').toUpperCase()}
+									</div>
+									<div className={classes.lead2}>
+										{Identify.__('Please enter the following information to sign in to your account.')}
+									</div>
 								</div>
 							</div>
 						}
@@ -541,6 +532,20 @@ class Login extends Component {
 						{createAccountForm}
 						{forgotPasswordForm}
 					</div>
+					{!isCreateAccountOpen && !isForgotPasswordOpen &&
+						<div className="sign-in-form">
+							<div className={`${classes['showCreateAccountButtonCtn']}`}>
+								<button
+									priority="high"
+									className={`${classes['showCreateAccountButton']}`}
+									onClick={setCreateAccountForm}
+									type="submit"
+								>
+									{Identify.__('Create an Account')}
+								</button>
+							</div>
+						</div>
+					}
 				</div>
 			</React.Fragment>
 		);

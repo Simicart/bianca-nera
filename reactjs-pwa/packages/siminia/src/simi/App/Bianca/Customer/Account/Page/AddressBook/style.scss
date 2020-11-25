@@ -292,8 +292,8 @@
                         margin: 0px;
                         margin-right: 5px;
                         vertical-align: middle;
-                        background-image: url('./image/checkbox_empty.svg');
-                        background-repeat: no-repeat;
+                        border: 1px solid #101820;
+                        appearance: none!important;
                         font-family: Linearicons;
                         color: white;
                         position: relative;

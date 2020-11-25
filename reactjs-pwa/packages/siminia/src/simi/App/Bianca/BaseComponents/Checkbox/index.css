@@ -14,7 +14,7 @@
 .checkbox-item .checkbox-item-icon {
     width: 16px;
     height: 16px;
-    background-image: url("./image/checkbox_empty.svg");
+    border: 1px solid #101820;
     background-size: contain;
     margin-top: 1px;
     margin-right: 9px;

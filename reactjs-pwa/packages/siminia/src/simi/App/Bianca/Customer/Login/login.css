@@ -13,9 +13,8 @@
     margin-top: 41px;
     margin-left: auto;
     margin-right: auto;
-    padding: 0px 0px 60px;
-    border: 1px solid;
-    border-bottom: unset;
+    padding: 0px 0px 30px;
+    border: 1px solid #727272;
     background-color: white;
     /* min-height: 700px !important; */
 }
@@ -84,14 +83,11 @@
     width: 100%;
     padding: 20px 0;
     text-align: center;
-    border-left: 1px solid #727272;
-    border-right: 1px solid #727272;
     box-sizing: border-box;
     background-color: #101820;
     color: #fff;
 }
 .leadhead {
-    padding: 0 98px;
     margin-top: 50px;
     margin-bottom: 35px;
 }
@@ -108,7 +104,6 @@
     font-size: 14px;
     font-weight: 500;
     line-height: 14px;
-    text-align: left;
     margin-top: 10px;
     margin-bottom: 0px;
 }
@@ -274,17 +269,20 @@
 }
 
 .login-background div[class~="signInButtonCtn"] {
+    min-width: 263px;
     margin-top: 32px !important;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .login-background div[class~="signInButtonCtn"] button {
     font-size: 16px;
-    /* font-weight: 500 !important; */
+    color: #101820;
+    border: 1px solid #101820;
     white-space: nowrap;
     text-align: center;
     padding-top: 16px !important;
     cursor: pointer;
-    border: 0;
     width: 100%;
     min-width: 200px;
     padding-bottom: 16px !important;
@@ -318,14 +316,6 @@
     width: 211px;
 }
 
-.login-background .active .signInDivider .hr.left-hr {
-    margin-right: 12px;
-}
-
-.login-background .active .signInDivider .hr.right-hr {
-    margin-left: 12px;
-}
-
 .login-background .active .signInDivider .signInWidth {
     color: #101820;
     font-family: "Gotham Book";
@@ -333,6 +323,8 @@
     font-size: 14px;
     height: 14px;
     text-transform: uppercase;
+    min-width: 150px;
+    margin: 0 6px;
 }
 
 .login-background .active .socialMedia {
@@ -401,31 +393,32 @@
     content: "\e609";
 }
 
-.login-background .active .showCreateAccountButtonCtn {
+.login-background .showCreateAccountButtonCtn {
     display: flex;
-    margin-top: 60px;
-    box-sizing: content-box;
     height: 48px;
-    width: 572px;
+    min-width: 263px;
+    max-width: 572px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: content-box;
     border: 1px solid #101820;
-    cursor: pointer;
+    background-color: #101820;
 }
 
-.login-background .active .showCreateAccountButtonCtn .showCreateAccountButton {
+.login-background .showCreateAccountButtonCtn .showCreateAccountButton {
     display: inline-block;
     width: 100%;
-    color: #101820;
+    color: #FFF;
     font-family: Gotham;
     font-size: 16px;
     font-weight: 500;
     line-height: 16px;
     text-transform: uppercase;
+    cursor: pointer;
 }
 
 /* right to left */
-.rtl-wrap{
-
-}
 .rtl-wrap .icon-email,
 .rtl-wrap .icon-phone{
     margin-right: unset !important;
@@ -436,19 +429,13 @@
     margin-left: unset !important;
     margin-right: 3px;
 }
-.rtl-divider{
-    
+@media screen and (max-width: 1024px) {
+    .leadhead {
+        padding: 0;
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
 }
-.rtl-divider .hr.left-hr{
-    margin-left: 12px !important;
-    margin-right: unset !important;
-}
-.rtl-divider .hr.right-hr{
-    margin-left: unset !important;
-    margin-right: 12px !important;
-}
-
-
 @media (max-width: 834px) {
     .login-background {
         padding: 40px;
@@ -559,7 +546,6 @@
     .login-container {
         margin-top: 20px !important;
         border: unset !important;
-        padding-bottom: 50px !important;
     }
     .login-background .select-type {
         padding: 0px;
@@ -573,7 +559,6 @@
     .login-container {
         margin-top: 20px !important;
         border: unset !important;
-        padding-bottom: 50px !important;
     }
     .login-background {
         padding: 15px;
@@ -652,7 +637,7 @@
         margin-bottom: 30px;
     }
     .login-background div[class~="signInButtonCtn"] button {
-        max-width: 249px;
+        max-width: 263px;
         font-size: 14px;
         line-height: 14px !important;
         padding-top: 13px !important;
@@ -666,14 +651,17 @@
     .login-background .active .socialMedia {
         margin-top: 30px;
     }
-    .login-background .active .showCreateAccountButtonCtn {
-        margin-top: 30px;
+    .login-background .showCreateAccountButtonCtn {
+        margin-top: 0px;
         display: block;
         text-align: center;
         border: unset !important;
+        min-width: 263px;
+        width: 15rem;
     }
-    .login-background .active .showCreateAccountButtonCtn .showCreateAccountButton {
-        max-width: 249px;
+    .login-background .showCreateAccountButtonCtn .showCreateAccountButton {
+        max-width: 263px;
+        height: 100%;
         font-size: 14px;
         line-height: 14px !important;
         padding-top: 12px !important;
