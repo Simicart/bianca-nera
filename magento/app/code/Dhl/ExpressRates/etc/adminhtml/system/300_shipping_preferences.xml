@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <field id="shipmentsettings_heading" translate="tooltip label comment" sortOrder="310" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label><![CDATA[Shipping Preferences]]></label>
+        <frontend_model>Dhl\ExpressRates\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+        <attribute type="shared">1</attribute>
+    </field>
+    <field id="allowedinternationalproducts" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="320"
+            translate="tooltip label comment" type="Dhl\ExpressRates\Model\Data\Form\Element\Checkboxset">
+        <label><![CDATA[Allowed International Products]]></label>
+        <source_model>Dhl\ExpressRates\Model\Config\Source\InternationalProducts</source_model>
+    </field>
+    <field id="alloweddomesticproducts" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="330"
+            translate="tooltip label comment" type="Dhl\ExpressRates\Model\Data\Form\Element\Checkboxset">
+        <label><![CDATA[Allowed Domestic Products]]></label>
+        <source_model>Dhl\ExpressRates\Model\Config\Source\DomesticProducts</source_model>
+    </field>
+    <field id="packaging_weight" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="335"
+            translate="label comment tooltip" type="text">
+        <label><![CDATA[Packaging Weight]]></label>
+        <validate>validate-number validate-zero-or-greater</validate>
+        <comment><![CDATA[The package weight specified here will be added to the weight of all items in the cart. This combined weight will be used to calculate shipping rates]]></comment>
+        <tooltip><![CDATA[Your weight unit can be configured under Stores>General>Locale Options>Weight Unit. You may enter a full number or a decimal value  (ex. 1.3)]]></tooltip>
+    </field>
+    <field id="cut_off_time" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="340"
+            translate="tooltip label comment" type="time">
+        <label><![CDATA[Order Cut-off Time]]></label>
+        <source_model>Magento\Config\Model\Config\Source\Date\Short</source_model>
+        <comment><![CDATA[Enter an order cut-off time that will allow for preparing the shipment before the DHL Express courier pick up time]]></comment>
+        <tooltip><![CDATA[Orders confirmed before the cut-off time are expected to ship the same day.  Orders confirmed after the cut-off time are expected to ship the following day. Holidays and weekends globally between the origin and destination are taken into account.]]></tooltip>
+    </field>
+    <field id="pickup_time" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="350"
+            translate="tooltip label comment" type="time">
+        <label><![CDATA[Pickup/Handover Time]]></label>
+        <source_model>Magento\Config\Model\Config\Source\Date\Short</source_model>
+        <comment><![CDATA[Enter the time when shipments will be handed over to DHL Express]]></comment>
+    </field>
+    <field id="regular_pickup" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="360"
+            translate="tooltip label comment" type="Dhl\ExpressRates\Model\Data\Form\Element\Radioset">
+        <label><![CDATA[Pickup Type]]></label>
+        <source_model>Dhl\ExpressRates\Model\Config\Source\PickupType</source_model>
+    </field>
+    <field id="terms_of_trade" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="370"
+            translate="label" type="Dhl\ExpressRates\Model\Data\Form\Element\Radioset">
+        <label><![CDATA[Duties & Taxes]]></label>
+        <source_model>Dhl\ExpressRates\Model\Config\Source\TermsOfTrade</source_model>
+        <comment>In some cases, additional fees may apply. Consult your account representative for more details</comment>
+    </field>
+    <field id="package_insurance" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="380"
+            translate="label comment tooltip" type="Dhl\ExpressRates\Model\Data\Form\Element\Checkbox">
+        <label><![CDATA[Package Insurance]]></label>
+        <button_label>Add insurance charge to shipping price</button_label>
+    </field>
+    <field id="package_insurance_from_value" translate="label" type="text" sortOrder="390" showInDefault="1"
+            showInWebsite="1" showInStore="0">
+        <label><![CDATA[Minimum Cart Value]]></label>
+        <validate>validate-number validate-zero-or-greater</validate>
+        <depends>
+            <field id="package_insurance">1</field>
+        </depends>
+        <comment><![CDATA[Shipping costs will include shipment protection costs for any cart value equal to or greater than this amount]]></comment>
+    </field>
+</include>

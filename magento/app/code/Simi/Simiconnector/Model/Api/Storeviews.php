@@ -367,7 +367,7 @@ class Storeviews extends Apiabstract
             try {
                 $options    = $this->simiObjectManager->create('\Magento\Framework\CurrencyFactory')
                                 ->create([null, $locale]);
-                $currencyTitle = $options->getName($code, $locale);
+                $currencyTitle = $options->getShortName($code, $locale);
             } catch (\Exception $e) {
                 $currencyTitle = $code;
             }

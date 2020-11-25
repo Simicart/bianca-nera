@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- module preferences -->
+    <preference for="Dhl\ExpressRates\Model\Config\ModuleConfigInterface" type="Dhl\ExpressRates\Model\Config\ModuleConfig"/>
+
+    <!-- rate classes -->
+    <preference for="Dhl\ExpressRates\Webservice\Adapter\RateServiceAdapterInterface" type="Dhl\ExpressRates\Webservice\Soap\RateServiceAdapter"/>
+    <preference for="Dhl\ExpressRates\Webservice\Rate\RequestDataMapperInterface" type="Dhl\ExpressRates\Webservice\Rate\RequestDataMapper"/>
+    <preference for="Dhl\ExpressRates\Webservice\Rate\ResponseDataMapperInterface" type="Dhl\ExpressRates\Webservice\Rate\ResponseDataMapper"/>
+
+    <!-- sdk preferences -->
+    <preference for="Dhl\Express\Api\RateRequestBuilderInterface" type="Dhl\Express\RequestBuilder\RateRequestBuilder"/>
+    <preference for="Dhl\Express\Api\ServiceFactoryInterface" type="Dhl\Express\Webservice\SoapServiceFactory"/>
+
+    <!-- argument overrides -->
+    <type name="\Dhl\ExpressRates\Model\Carrier\Express">
+        <arguments>
+            <argument name="rateProvider" xsi:type="object">Dhl\ExpressRates\Model\Rate\CheckoutProvider\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\ExpressRates\Model\Rate\CheckoutProvider">
+        <arguments>
+            <argument name="rateProcessors" xsi:type="array">
+                <item name="allowed_products" xsi:type="object">Dhl\ExpressRates\Model\Rate\Processor\AllowedProducts</item>
+                <item name="handling_fee" xsi:type="object">Dhl\ExpressRates\Model\Rate\Processor\HandlingFee</item>
+                <item name="rounded_prices" xsi:type="object">Dhl\ExpressRates\Model\Rate\Processor\RoundedPrices</item>
+                <!-- FreeShipping processor must always be applied after other price manipulating processors. -->
+                <item name="free_shipping" xsi:type="object">Dhl\ExpressRates\Model\Rate\Processor\FreeShipping</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Dhl\ExpressRates\Webservice\RateClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">Dhl\ExpressRates\Model\Logger\Virtual</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\ExpressRates\Webservice\Rate\ResponseDataMapper">
+        <arguments>
+            <argument name="dateTimeFormatter" xsi:type="object">Dhl\ExpressRates\Virtual\DateTimeFormatter</argument>
+        </arguments>
+    </type>
+
+    <!-- virtual types -->
+    <virtualType name="Dhl\ExpressRates\Model\Logger\Virtual" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">Dhl\ExpressRates\Model\Logger\ExpressHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Dhl\ExpressRates\Virtual\DateTimeFormatter" type="Magento\Framework\Stdlib\DateTime\DateTimeFormatter">
+        <arguments>
+            <argument name="useIntlFormatObject" xsi:type="boolean">false</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- plugins -->
+    <type name="Magento\Quote\Model\Cart\ShippingMethodConverter">
+        <plugin name="Dhl_ExpressRates_AdditionalMethodData" type="Dhl\ExpressRates\Plugin\Quote\Cart\ShippingMethodConverterPlugin" sortOrder="1"/>
+    </type>
+    <type name="Magento\Quote\Model\Quote\Address\Rate">
+        <plugin name="Dhl_ExpressRates_AdditionalMethodData" type="Dhl\ExpressRates\Plugin\Quote\Cart\ShippingMethodConverterPlugin" sortOrder="1"/>
+    </type>
+</config>
