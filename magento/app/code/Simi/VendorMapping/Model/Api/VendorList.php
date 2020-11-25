@@ -97,6 +97,10 @@ class VendorList implements VendorListInterface
             //     'vendor_config.vendor_id = e.entity_id AND vendor_config.store_id = 0 AND vendor_config.path = "general/store_information/logo"',
             //     ['vendor_config.value AS logo']
             // );
+
+            /* Filter active vendor */
+            $this->_collection->addFieldToFilter('status', 2); // Status Approved
+            
             foreach ($this->_collection as $vendor) {
                 $vendorData = $vendor->toArray();
                 $vendorData['logo'] = $this->getLogoUrl($vendor->getId());
