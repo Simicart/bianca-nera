@@ -151,32 +151,6 @@ class Login extends Component {
 		);
 	}
 
-	get createAccount() {
-		const { setVendorRegisterForm } = this;
-		const { isVendorRegisterOpen, isForgotPasswordOpen } = this.state;
-		const { history, classes } = this.props;
-		return (
-			<React.Fragment>
-				<div
-					className={`${isVendorRegisterOpen || isForgotPasswordOpen
-						? classes['inactive']
-						: classes['active']}`}
-				>
-					<div className={`${classes['showCreateAccountButtonCtn']}`}>
-						<button
-							priority="high"
-							className={`${classes['showCreateAccountButton']}`}
-							onClick={setVendorRegisterForm}
-							type="submit"
-						>
-							{Identify.__('Create an Account')}
-						</button>
-					</div>
-				</div>
-			</React.Fragment>
-		);
-	}
-
 	vendorRegister = () => { };
 
 	setVendorRegisterForm = () => {
@@ -317,7 +291,7 @@ class Login extends Component {
 			emailLoginForm,
 			forgotPasswordForm,
 			phoneLoginForm,
-			createAccount,
+			setVendorRegisterForm,
 			vendorRegisterForm,
 			props,
 			state
@@ -334,18 +308,14 @@ class Login extends Component {
 					title: Identify.__('Designer Login')
 				})}
 				<div id="login-background" className={`${classes['login-background']} ${Identify.isRtl() ? classes['rtl-login-background'] : null}`}>
-					<div className="container">
-						{isShowBackBtn ?
-							<div 
-								role="presentation"
-								className={`special-back ${classes['login-back']}`} id="btn-back" 
+					{isShowBackBtn &&
+						<div className={classes['login-container']} style={{border: 'none',padding:0,margin:'0 auto'}}>
+							<div className={`special-back ${classes['login-back']}`} id="btn-back" 
 								onClick={this.handleGoBack} >
 								<span>{Identify.__('back').toUpperCase()}</span>
 							</div>
-							:
-							<div className={`special-back ${classes['login-back']}`}></div>
-						}
-					</div>
+						</div>
+					}
 					<div
 						className={` ${this.state.forgotPassSuccess == 'none'
 							? classes['smallSize']
@@ -385,10 +355,24 @@ class Login extends Component {
 						</div>
 						{emailLoginForm}
 						{phoneLoginForm}
-						{createAccount}
 						{vendorRegisterForm}
 						{forgotPasswordForm}
 					</div>
+
+					{!isVendorRegisterOpen && !isForgotPasswordOpen &&
+						<div className="sign-in-form">
+							<div className={`${classes['showCreateAccountButtonCtn']}`}>
+								<button
+									priority="high"
+									className={`${classes['showCreateAccountButton']}`}
+									onClick={setVendorRegisterForm}
+									type="submit"
+								>
+									{Identify.__('Create an Account')}
+								</button>
+							</div>
+						</div>
+					}
 				</div>
 			</React.Fragment>
 		);

@@ -93,12 +93,7 @@ class VendorLogin extends Component {
 						</button>
 					</div>
 					<div className="signInButtonCtn">
-						<button
-							priority="high"
-							className="signInButton"
-							type="submit"
-							style={{ backgroundColor: '#101820', color: '#fff' }}
-						>
+						<button className="signInButton" priority="high" type="submit">
 							{Identify.__('Sign In').toUpperCase()}
 						</button>
 					</div>

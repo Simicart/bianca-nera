@@ -494,12 +494,14 @@ class Login extends Component {
 							</div>
 						}
 						{createAccountForm &&
-							<div className={classes.leadhead}>
-								<div className={classes.lead1}>
-									{Identify.__('create an account').toUpperCase()}
-								</div>
-								<div className={classes.lead2}>
-									{Identify.__('Please enter the following information to create your account.')}
+							<div className="root sign-in-form" style={{display:'block'}}>
+								<div className={classes.leadhead}>
+									<div className={classes.lead1}>
+										{Identify.__('create an account').toUpperCase()}
+									</div>
+									<div className={classes.lead2}>
+										{Identify.__('Please enter the following information to create your account.')}
+									</div>
 								</div>
 							</div>
 						}
