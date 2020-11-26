@@ -20,8 +20,8 @@ class OtpForm extends Component {
 
     render() {
         const styleActice = {
-            backgroundColor: configColor.button_background,
-            color: configColor.button_text_color
+            // backgroundColor: configColor.button_background,
+            // color: configColor.button_text_color
         }
 
         const styleInActive = {

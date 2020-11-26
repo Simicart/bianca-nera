@@ -621,10 +621,6 @@
         padding: unset;
         margin-top: 1px;
     }
-    .login-background .select-type .phone-type .title-phone {
-    }
-    .login-background .select-type .email-type .title-email {
-    }
     .login-background div[class~="signInAction"] button {
         margin-top: 25px;
         font-family: 'Gotham Book';
