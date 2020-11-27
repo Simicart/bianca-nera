@@ -334,7 +334,7 @@ var DASHBOARD_CONFIG = {
 				"Contact us 24/7":"اتصل بنا 24/7",
 				"Enter postcode for directions":"أدخل الرمز البريدي للاتجاهات",
 				"Contact":"اتصل",
-				"Store Locators":"متجر المواقع",
+				"Stores Location":"موقع المتاجر",
 				"Home":"الرئيسية",
 				"OR SIGN IN WITH":"أو تسجيل الدخول مع",
 				"PASSWORD *":"كلمه السر *",

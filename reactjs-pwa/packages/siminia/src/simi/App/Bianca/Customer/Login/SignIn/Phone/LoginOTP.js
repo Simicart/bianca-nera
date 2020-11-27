@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { showFogLoading, hideFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading'
 import OtpForm from 'src/simi/App/Bianca/Components/Otp/OtpForm';
-import { sendOTPForLogin, verifyOTPForLogin } from 'src/simi/Model/Otp';
+import { sendOTPForLogin } from 'src/simi/Model/Otp';
 import { Util } from '@magento/peregrine';
 import Identify from 'src/simi/Helper/Identify'
 const { BrowserPersistence } = Util;
 const storage = new BrowserPersistence();
-import validator from 'validator'
-import * as Constants from 'src/simi/Config/Constants';
 const $ = window.$;
+
+const isMobilePhone = (number) => {
+    return true;
+}
 
 class LoginOTP extends Component {
     constructor(props) {
@@ -41,7 +43,7 @@ class LoginOTP extends Component {
             return;
         }
 
-        if (!validator.isMobilePhone(phone)) {
+        if (!isMobilePhone(phone)) {
             $('#login-opt-area #number_phone-invalid').css({ display: 'block' });
             return;
         }
@@ -85,14 +87,21 @@ class LoginOTP extends Component {
         const { isButtonDisabled } = this.state;
 
         return (
-            <OtpForm
-                handleSendOtp={this.handleSendOtp}
-                isButtonDisabled={isButtonDisabled}
-                handleVerify={this.handleVerifyLogin}
-                handleChangePhone={(val1, val2) => this.onChange(val1, val2)}
-                phone={this.state.phone}
-                type={'login'}
-            />
+            <>
+                <OtpForm
+                    isButtonDisabled={isButtonDisabled}
+                    handleVerify={this.handleVerifyLogin}
+                    handleChangePhone={(val1, val2) => this.onChange(val1, val2)}
+                    phone={this.state.phone}
+                    type={'login'}
+                    notShowBtn={true}
+                />
+                <div role="presentation" className='send-otp-login' onClick={this.handleSendOtp}>
+                    <button>
+                        {Identify.__('SIGN IN')}
+                    </button>
+                </div>
+            </>
         )
     }
 }

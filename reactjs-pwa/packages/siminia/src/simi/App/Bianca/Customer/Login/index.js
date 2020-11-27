@@ -18,15 +18,17 @@ import * as Constants from 'src/simi/Config/Constants';
 import { Util } from '@magento/peregrine';
 import { simiSignedIn } from 'src/simi/Redux/actions/simiactions';
 import { showToastMessage } from 'src/simi/Helper/Message';
-import firebase, { auth } from 'firebase';
+import firebase from 'firebase';
 import firebaseApp from './SocialLogin/base';
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 import VerifyOtpModal from 'src/simi/App/Bianca/Components/Otp/VerifyOtpModal';
-import { sendOTPForLogin, verifyOTPForLogin } from 'src/simi/Model/Otp';
+import { verifyOTPForLogin } from 'src/simi/Model/Otp';
 
 const { BrowserPersistence } = Util;
 const storage = new BrowserPersistence();
 const $ = window.$;
+
+require('./login.scss');
 
 class Login extends Component {
 	constructor(props) {
@@ -462,7 +464,7 @@ class Login extends Component {
 				{TitleHelper.renderMetaHeader({
 					title: Identify.__('Customer Login')
 				})}
-				<div id="login-background" className={classes['login-background']}>
+				<div id="login-background" className={classes['login-background']+' login-form'}>
 					{isShowBackBtn &&
 						<div className={classes['login-container']} style={{border: 'none',padding:0,margin:'0 auto'}}>
 							<div className={`special-back ${classes['login-back']}`} id="btn-back" 
@@ -535,8 +537,8 @@ class Login extends Component {
 						{forgotPasswordForm}
 					</div>
 					{!isCreateAccountOpen && !isForgotPasswordOpen &&
-						<div className="sign-in-form">
-							<div className={`${classes['showCreateAccountButtonCtn']}`}>
+						<div className="create-account">
+							<div className='create-acc-btn'>
 								<button
 									priority="high"
 									className={`${classes['showCreateAccountButton']}`}

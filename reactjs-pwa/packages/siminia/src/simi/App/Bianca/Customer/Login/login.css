@@ -268,30 +268,6 @@
     min-width: 103px;
 }
 
-.login-background div[class~="signInButtonCtn"] {
-    min-width: 263px;
-    margin-top: 32px !important;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.login-background div[class~="signInButtonCtn"] button {
-    font-size: 16px;
-    color: #101820;
-    border: 1px solid #101820;
-    white-space: nowrap;
-    text-align: center;
-    padding-top: 16px !important;
-    cursor: pointer;
-    width: 100%;
-    min-width: 200px;
-    padding-bottom: 16px !important;
-    /* font-family: 'Gotham Medium'; */
-    line-height: 16px !important;
-    font-family: 'Gotham Book';
-    font-weight: 600;
-}
-
 .login-background .inactive {
     display: none;
 }
@@ -481,11 +457,6 @@
         margin-top: 40px;
         height: 40px;
     }
-    .login-background div[class~="signInButtonCtn"] button {
-        padding-top: 12px !important;
-        padding-bottom: 12px !important;
-        line-height: 16px !important;
-    }
 }
 
 @media(max-width: 736px) {
@@ -627,17 +598,6 @@
         font-weight: 600;
         font-size: 14px;
         line-height: 14px;
-    }
-    .login-background div[class~="signInButtonCtn"] {
-        margin-top: 38px !important;
-        margin-bottom: 30px;
-    }
-    .login-background div[class~="signInButtonCtn"] button {
-        max-width: 263px;
-        font-size: 14px;
-        line-height: 14px !important;
-        padding-top: 13px !important;
-        padding-bottom: 13px !important;
     }
     .login-background .active .signInDivider .signInWidth {
         font-size: 14px;

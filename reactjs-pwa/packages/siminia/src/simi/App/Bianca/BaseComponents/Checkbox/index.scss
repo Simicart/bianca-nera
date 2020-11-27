@@ -14,16 +14,16 @@
 .checkbox-item .checkbox-item-icon {
     width: 16px;
     height: 16px;
-    // background-image: url("./image/checkbox_empty.svg");
-    // background-size: contain;
     border: 1px solid #101820;
     margin-top: 1px;
     margin-right: 9px;
     background-repeat: no-repeat;
 }
-
-.checkbox-item.selected .checkbox-item-icon {
-    margin-top: 2px;
-    background-image: url("./image/checkbox_checked.svg");
-    background-repeat: no-repeat;
+.checkbox-item .checkbox-item-icon .selected {
+    width: 5px;
+    height: 11px;
+    border-right: 2px solid #101820;
+    border-bottom: 2px solid #101820;
+    transform: rotate(45deg);
+    margin: auto;
 }

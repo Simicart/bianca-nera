@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
-
 import TextBox from 'src/simi/BaseComponents/TextBox';
 import Identify from 'src/simi/Helper/Identify';
 import Checkbox from 'src/simi/App/Bianca/BaseComponents/CustomCheckbox';
 import { Whitebtn } from 'src/simi/BaseComponents/Button';
 import { editCustomer } from 'src/simi/Model/Customer';
 import { showFogLoading, hideFogLoading } from 'src/simi/BaseComponents/Loading/GlobalLoading'
-import validator from 'validator'
 import { smoothScrollToView } from 'src/simi/Helper/Behavior';
-import PhoneInputReadonly from './PhoneInputReadonly';
 import PhoneInputVerify from './PhoneInputVerify';
 import { sendOTPForRegister, verifyOTPForRegister } from 'src/simi/Model/Otp';
 import GetOtpModal from 'src/simi/App/Bianca/Components/Otp/GetOtpModal';
 import VerifyOtpModal from 'src/simi/App/Bianca/Components/Otp/VerifyOtpModal';
 import { showToastMessage } from 'src/simi/Helper/Message';
 const $ = window.$;
+
+const isMobilePhone = (number) => {
+    return true;
+}
 
 const ProfileForm = props => {
     const { history, isPhone, data } = props;
@@ -117,7 +118,7 @@ const ProfileForm = props => {
                         }
                     }
                     if ($(this).attr("name") === "telephone") {
-                        if (!validator.isMobilePhone($(this).val())) {
+                        if (!isMobilePhone($(this).val())) {
                             formCheck = false;
                             $(this).addClass("is-invalid");
                             msg = Identify.__("Phone number is invalid");
@@ -216,7 +217,7 @@ const ProfileForm = props => {
         let fullPhoneNumber = (countryCode + realPhone).substring(1)
         if (fullPhoneNumber === telephone) {
             showToastMessage(Identify.__('New phone number must be difference the old one !'))
-        } else if (phoneChange.length < 10 || fullPhoneNumber < 10 || !validator.isMobilePhone(fullPhoneNumber)) {
+        } else if (phoneChange.length < 10 || fullPhoneNumber < 10 || !isMobilePhone(fullPhoneNumber)) {
             showToastMessage(Identify.__('Invalid phone number !'))
         } else {
             setModalGet(true)

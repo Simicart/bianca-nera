@@ -1,0 +1,108 @@
+.login-form {
+    button {
+        font-family: 'Gotham Book';
+        font-weight: 600;
+    }
+    .signInButtonCtn {
+        min-width: 263px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 32px;
+        button {
+            font-size: 16px;
+            color: #101820;
+            border: 1px solid #101820;
+            white-space: nowrap;
+            text-align: center;
+            padding-top: 16px;
+            width: 100%;
+            min-width: 200px;
+            padding-bottom: 16px;
+            line-height: 16px;
+        }
+    }
+
+    .send-otp-login {
+        margin: 32px 0px;
+        button {
+            margin: 0 auto;
+            border: 1px solid #101820;
+            min-width: 263px;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+            line-height: 16px !important;
+            font-size: 16px;
+            display: block;
+        }
+    }
+    .create-account {
+        max-width: 770px;
+        margin: 0 auto;
+        padding: 0px 0px 30px;
+        .create-acc-btn {
+            display: flex;
+            height: 48px;
+            min-width: 263px;
+            max-width: 572px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 30px;
+            border: 1px solid #101820;
+            background-color: #101820;
+            box-sizing: border-box;
+            button {
+                display: inline-block;
+                width: 100%;
+                color: #FFF;
+                font-size: 14px;
+                line-height: 14px;
+                text-transform: uppercase;
+                cursor: pointer;
+            }
+        }
+    }
+
+    @media (max-width: 834px) and (min-width: 464px) {
+        .create-account {
+            padding: 0 80px;
+        }
+        .send-otp-login {
+            padding: 0 80px;
+        }
+    }
+
+    @media screen and (max-width: 1023px) {
+        .signInButtonCtn {
+            min-width: 249px;
+            button {
+                color: #FFF;
+                background-color: #101820;
+                font-size: 14px;
+                line-height: 14px;
+                padding: 12px 14px;
+            }
+        }
+        .send-otp-login {
+            button {
+                color: #FFF;
+                background-color: #101820;
+                min-width: 249px;
+                font-size: 14px;
+                line-height: 14px !important;
+            }
+        }
+        .create-account .create-acc-btn {
+            color: #101820;
+            background-color: #FFF;
+            max-width: 249px;
+            min-width: unset;
+            min-height: 40px;
+            height: auto;
+            margin-top: 0px;
+            button {
+                color: #101820;
+                font-weight: 600;
+            }
+        }
+    }
+}

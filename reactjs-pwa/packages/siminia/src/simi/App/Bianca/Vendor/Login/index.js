@@ -19,7 +19,9 @@ import { simiSignedIn } from 'src/simi/Redux/actions/simiactions';
 import { showToastMessage } from 'src/simi/Helper/Message';
 import VendorRegister from './VendorRegister';
 import VerifyOtpModal from 'src/simi/App/Bianca/Components/Otp/VerifyOtpModal';
-import { sendOTPForLogin, verifyOTPForLogin } from 'src/simi/Model/Otp';
+import { verifyOTPForLogin } from 'src/simi/Model/Otp';
+
+require('src/simi/App/Bianca/Customer/Login/login.scss');
 
 const { BrowserPersistence } = Util;
 const storage = new BrowserPersistence();
@@ -307,7 +309,7 @@ class Login extends Component {
 				{TitleHelper.renderMetaHeader({
 					title: Identify.__('Designer Login')
 				})}
-				<div id="login-background" className={`${classes['login-background']} ${Identify.isRtl() ? classes['rtl-login-background'] : null}`}>
+				<div id="login-background" className={`${classes['login-background']} ${Identify.isRtl() ? classes['rtl-login-background'] : null} login-form`}>
 					{isShowBackBtn &&
 						<div className={classes['login-container']} style={{border: 'none',padding:0,margin:'0 auto'}}>
 							<div className={`special-back ${classes['login-back']}`} id="btn-back" 
@@ -360,8 +362,8 @@ class Login extends Component {
 					</div>
 
 					{!isVendorRegisterOpen && !isForgotPasswordOpen &&
-						<div className="sign-in-form">
-							<div className={`${classes['showCreateAccountButtonCtn']}`}>
+						<div className="create-account">
+							<div className='create-acc-btn'>
 								<button
 									priority="high"
 									className={`${classes['showCreateAccountButton']}`}
