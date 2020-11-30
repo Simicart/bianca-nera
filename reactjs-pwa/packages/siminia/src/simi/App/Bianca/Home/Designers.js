@@ -64,8 +64,13 @@ const Designers = props => {
                     <h3 className="title">{Identify.__('Shop By Designers')}</h3>
                 </div>
             }
-            <Scroller data={newData} initItemIndex={startItemIndex} lastItems={lastItems} history={history} slideSettings={slideSettings} isPhone={isPhone} 
-                onClickItem={onClickItem}/>
+            <Scroller data={newData} 
+                initItemIndex={startItemIndex} 
+                lastItems={lastItems} 
+                slideSettings={slideSettings} 
+                isPhone={isPhone} history={history} 
+                onClickItem={onClickItem}
+            />
         </div>
     );
 }

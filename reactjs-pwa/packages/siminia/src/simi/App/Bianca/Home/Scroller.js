@@ -84,9 +84,11 @@ const Scroller = props => {
         rtlStyle = {direction: 'ltr'}
     }
 
+    const isNoItem = !(data && data.length > 0 || false)
+
     return (
         <div className={`scroller ${Identify.isRtl() ? 'scroller-rtl' : ''}`} style={rtlStyle}>
-            <div className={`container scroller-container`}>
+            <div className={`container scroller-container ${isNoItem ? 'no-item':''}`}>
                 <ItemsCarousel
                     {..._settings}>
                     {items}

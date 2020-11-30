@@ -84,7 +84,7 @@ class VendorRegister extends RegisterPost implements VendorRegisterInterface
                         if ($customerTelephone != $vendorData['vendor_data']['telephone']) {
                             return [[
                                 'status' => 'error',
-                                'message' => __('Your telephone number does not match !')
+                                'message' => __('There is a customer registered with this email address. Please use the same phone number to register as a designer.')
                             ]];
                         }
                         // check password vendor as same as password of customer or not ?

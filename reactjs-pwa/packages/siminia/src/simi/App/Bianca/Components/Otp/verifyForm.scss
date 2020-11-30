@@ -8,7 +8,6 @@
     width: 50%;
     border: unset;
     margin-bottom: 24px;
-    font-family: Gotham;
     font-size: 14px;
     font-weight: 500;
     line-height: 14px;
@@ -52,9 +51,9 @@
 // if error show, opt-area mat float la ok
 #verify-opt-area {
   .wrap {
-    display: flex;
-    justify-content: space-between;
+    display: block;
     float: right;
+    width: 100%;
   }
   .login-otp {
     width: 100%;
@@ -63,7 +62,6 @@
     margin-bottom: -7px;
     cursor: pointer;
     color: #fff;
-    font-family: Gotham;
     font-size: 16px;
     font-weight: 500;
     line-height: 16px;
@@ -96,8 +94,8 @@
       display: none;
       margin-top: 15px;
       color: #b91c1c;
-      font-family: Gotham;
-      font-size: 10px;
+      // font-size: 10px;
+      font-size: 0.875rem;
       font-weight: 500;
       line-height: 10px;
     }
@@ -1450,5 +1448,19 @@
   }
   .verify-opt-area-rtl .custom-input .element-2 {
     right: 65px !important;
+  }
+}
+
+.rtl-root {
+  #verify-opt-area {
+    .wrap {
+      display: block;
+    }
+    .login-otp {
+      float: left;
+    }
+    .error-message {
+      float: right;
+    }
   }
 }

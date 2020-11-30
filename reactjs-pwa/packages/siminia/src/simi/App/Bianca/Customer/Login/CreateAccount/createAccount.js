@@ -81,20 +81,36 @@ const CreateAccount = props => {
                     errorMsg += error.message
                 })
                 const message = Identify.__(errorMsg);
-                if (errorMsg === 'Account confirmation is required. Please, check your email !') {
+                if (errorMsg.includes('Account confirmation is required. Please check your email')) {
                     smoothScrollToView($('#id-message'));
                     showToastMessage(message)
-                    // props.toggleMessages([{ type: 'success', message: message, auto_dismiss: true }]);
                     // Reset form
                     $('.form-create-account')[0].reset();
                     // Make button opacity = 1
                     $('.form-create-account button').css('opacity', '1');
+                    if (history) {
+                        setTimeout(()=>{
+                            history.push('/login.html');
+                        }, 3000);
+                    }
                 } else {
                     showToastMessage(message)
                 }
             }
+        } else if(data.message){
+            data.message.length > 0 && showToastMessage(Identify.__(data.message[0]));
+            if (history) {
+                setTimeout(()=>{
+                    history.push('/login.html');
+                }, 3000);
+            }
         } else {
-
+            showToastMessage(Identify.__('Your account is registered successfully.'));
+            if (history) {
+                setTimeout(()=>{
+                    history.push('/login.html');
+                }, 3000);
+            }
         }
         setAllowSubmit(false)
     }

@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useMemo } from 'react';
 import { shape, string } from 'prop-types';
 import { Form, Option, asField, BasicSelect, useFieldState } from 'informed';
 import Field, { Message } from 'src/components/Field';
@@ -22,7 +22,6 @@ import { toggleMessages } from 'src/simi/Redux/actions/simiactions';
 import { connect } from 'src/drivers';
 
 const VendorRegister = (props) => {
-	const [firstName, setName] = useState('');
 	const { history, createAccountError } = props;
 	const errorMessage =
 		createAccountError && Object.keys(createAccountError).length !== 0
@@ -30,18 +29,18 @@ const VendorRegister = (props) => {
 			: null;
 	const [allowSubmit, setAllowSubmit] = useState(false)
 	const [phoneRegister, setPhone] = useState("")
+	const [country, setCountry] = useState("")
+	const [region, setRegion] = useState("")
 	const [showModalGet, setModalGet] = useState(false)
 	const [showModalVerify, setModalVerify] = useState(false)
 	const [idModalVendorPopup, setIdModalVendorPopup] = useState('')
-	let registeringEmail = null;
-	let registeringPassword = null;
 
 	const $ = window.$;
 	$('#siminia-main-page').css('min-height', '100vh');
 
 	const storeConfig = Identify.getStoreConfig();
 	const countries = storeConfig.simiStoreConfig.config.allowed_countries;
-	const [selectedCountry, setCountry] = useState('');
+	// const [selectedCountry, setCountry] = useState('');
 	const SimiSelect = asField(({ fieldState, ...props }) => (
 		<React.Fragment>
 			<BasicSelect
@@ -53,37 +52,6 @@ const VendorRegister = (props) => {
 		</React.Fragment>
 	));
 
-	const initialValues = () => {
-		const { initialValues } = props;
-		const {
-			vendorId,
-			company,
-			street,
-			city,
-			countryId,
-			region,
-			postcode,
-			telephone,
-			vendorAgreement,
-			...rest
-		} = initialValues;
-
-		return {
-			vendor: {
-				vendor_id: vendorId,
-				company,
-				street,
-				city,
-				country_id: countryId,
-				region,
-				postcode,
-				telephone,
-				vendor_registration_agreement: vendorAgreement
-			},
-			...rest
-		};
-	};
-
 	const validateOption = (value, opt) => {
 		if (opt === 'req') {
 			return !value || !validateEmpty(value) ? Identify.__('Please select an option.') : undefined;
@@ -91,7 +59,10 @@ const VendorRegister = (props) => {
 		return undefined;
 	};
 
-	const hideArrow = () => {
+	const regionChange = (e) => {
+		setRegion(e.target.value);
+	};
+	const regionChangeArrow = (value) => {
 		// show arrow down
 		const form = $('#root-designer');
 		// region
@@ -103,9 +74,10 @@ const VendorRegister = (props) => {
 			arrowDown.removeClass('hidden');
 			arrowDown.addClass('show');
 		}
+		setRegion(value);
 	};
 
-	const hideArrow1 = () => {
+	const hideArrow1 = (value) => {
 		// show arrow down
 		const form = $('#root-designer');
 		// country
@@ -117,6 +89,7 @@ const VendorRegister = (props) => {
 			arrowDown1.removeClass('hidden');
 			arrowDown1.addClass('show');
 		}
+		setCountry(value);
 	};
 
 	useLayoutEffect(function () {
@@ -168,7 +141,7 @@ const VendorRegister = (props) => {
 		});
 	};
 
-	const Regions = () => {
+	const Regions = ({ initialValue }) => {
 		// get selected country
 		var country;
 		var selectedCountry = useFieldState('vendor.country_id');
@@ -179,7 +152,7 @@ const VendorRegister = (props) => {
 			}
 		}
 		if (country && country.states && country.states.length) {
-			var regionValue = null;
+			var regionValue = initialValue;
 			return (
 				<div className={classes.form_row}>
 					<label className={classes.select} htmlFor="input-region">{Identify.__('Region *')}</label>
@@ -191,7 +164,7 @@ const VendorRegister = (props) => {
 						initialValue={regionValue}
 						validate={(value) => validateOption(value, 'req')}
 						validateOnChange
-						onValueChange={() => hideArrow()}
+						onValueChange={regionChangeArrow}
 					>
 						<Option value="" key={-1}>
 							{Identify.__('Region')}
@@ -207,7 +180,6 @@ const VendorRegister = (props) => {
 				</div>
 			);
 		} else {
-			var regionValue = null;
 			return (
 				<Field label={Identify.__('Region *')}>
 					<TextInput
@@ -215,6 +187,8 @@ const VendorRegister = (props) => {
 						validate={validators.get('region')}
 						placeholder={Identify.__('Region')}
 						validateOnBlur
+						initialValue={initialValue}
+						onBlur={regionChange}
 					/>
 				</Field>
 			);
@@ -222,7 +196,6 @@ const VendorRegister = (props) => {
 	};
 
 	const handleSubmit = (values) => {
-		values.vendor.telephone = phoneRegister.substring(1)
 		const merchant = Identify.getStoreConfig();
 		if (merchant && merchant.hasOwnProperty('storeConfig') && merchant.storeConfig) {
 			const { website_id } = merchant.storeConfig;
@@ -242,26 +215,18 @@ const VendorRegister = (props) => {
 			// vendor_id: values.vendorId,
 			vendor_registration_agreement: values.vendor_registration_agreement ? 1 : 0
 		};
-		if (!!allowSubmit) {
+
+		if (!allowSubmit) {
 			$('#must-verify').css('display', 'block')
 			$('#createAccount').css('backgroundColor', '#B91C1C')
 			$('#verify-opt-area .wrap').css('float', 'unset')
-			// do nothing
-		} else {
-			$('#must-verify').css('display', 'none')
-			$('#createAccount').css('backgroundColor', '#101820')
-			$('#verify-opt-area .wrap').css('float', 'right')
-			showFogLoading()
-			registeringEmail = values.email;
-			registeringPassword = values.password;
-			vendorRegister(registerDone, params);
+			return; // do nothing
 		}
+
 		$('#must-verify').css('display', 'none')
 		$('#createAccount').css('backgroundColor', '#101820')
 		$('#verify-opt-area .wrap').css('float', 'right')
 		showFogLoading()
-		registeringEmail = values.email;
-		registeringPassword = values.password;
 		vendorRegister(registerDone, params);
 	};
 
@@ -293,7 +258,6 @@ const VendorRegister = (props) => {
 
 		showFogLoading()
 		phone = phone.replace(/[- )(]/g, '').replace(/\+/g, "").replace(/\,/g, "");
-		var phoneNB = phone
 		let params = {
 			mobile: phone
 		}
@@ -337,7 +301,7 @@ const VendorRegister = (props) => {
 		let logintotp = localStorage.getItem('login_otp');
 		$('#login-input-otp-warning').css({ display: 'none' })
 		showFogLoading();
-		verifyOTPForRegister(phoneRegister.substring(1), logintotp, handleCallBackLVerifyRegister);
+		verifyOTPForRegister(phoneRegister, logintotp, handleCallBackLVerifyRegister);
 		localStorage.removeItem('login_otp')
 	}
 
@@ -352,19 +316,12 @@ const VendorRegister = (props) => {
 		}
 	}
 
-	const onChange = (val1, val2) => {
-		$('#verify-opt-area #number_phone-invalid').css({ display: 'none' })
-		const value = val1 + val2
-		setPhone(value)
-		setAllowSubmit(false)
-		localStorage.setItem("numberphone_register", value);
-	}
-
-	const openGetModal = () => {
-		if (phoneRegister.length < 10) {
-
-		} else {
-			setModalGet(true)
+	const openGetModal = (phoneCode, number) => {
+		let phoneRegNum = String(phoneCode) + String(number).replace(/^0+/g, '');
+		if (phoneRegNum && phoneRegNum.length) {
+			localStorage.setItem("numberphone_register", phoneRegNum);
+			setPhone(phoneRegNum);
+			setModalGet(true);
 		}
 	}
 
@@ -475,7 +432,8 @@ const VendorRegister = (props) => {
 							field="vendor.country_id"
 							validate={(value) => validateOption(value, 'req')}
 							validateOnChange
-							onValueChange={() => hideArrow1()}
+							onValueChange={(value) => hideArrow1(value)}
+							initialValue={country}
 						>
 							<Option value="" key={-1}>
 								{Identify.__('Country')}
@@ -497,12 +455,13 @@ const VendorRegister = (props) => {
 							validateOnBlur
 						/>
 					</Field>
-					<Regions />
+					<Regions initialValue={region} />
 					<VerifyForm
 						openGetModal={openGetModal}
-						handleVerify={handleVerifyRegister}
-						handleChangePhone={(val1, val2) => onChange(val1, val2)}
-						type={'login'}
+						// handleChangePhone={(val1, val2) => onChange(val1, val2)}
+						field="vendor.telephone"
+						validate={validators.get('text')}
+						validateOnBlur
 					/>
 					<Field label={Identify.__('Website *')}>
 						<TextInput field="vendor.website" validate={validators.get('website')} validateOnBlur />

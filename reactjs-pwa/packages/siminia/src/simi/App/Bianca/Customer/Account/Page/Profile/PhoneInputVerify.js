@@ -74,7 +74,8 @@ class PhoneInputVerify extends Component {
                 </div>
                 <div className="wrap">
                     <div id="must-verify" className="error-message">
-                        {Identify.__('You must ')}{Identify.__('verify phone number').toUpperCase()}{Identify.__(' before ')}{Identify.__('change').toUpperCase()}
+                        {/* {Identify.__('You must ')}{Identify.__('verify phone number').toUpperCase()}{Identify.__(' before ')}{Identify.__('change').toUpperCase()} */}
+                        {Identify.__('You must VERIFY PHONE NUMBER before CHANGE')}
                     </div>
                     <div role="presentation" id="createAccount" className='login-otp' onClick={this.props.openGetModal}>
                         <div className='title'>

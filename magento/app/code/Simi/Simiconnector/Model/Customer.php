@@ -126,7 +126,7 @@ class Customer extends \Magento\Framework\Model\AbstractModel
         }
         $confirmationStatus = $this->getAccountManagement()->getConfirmationStatus($customer->getId());
         if ($confirmationStatus === \Magento\Customer\Api\AccountManagementInterface::ACCOUNT_CONFIRMATION_REQUIRED) {
-            throw new \Simi\Simiconnector\Helper\SimiException(__('Account confirmation is required. Please, check your email !'), 4);
+            throw new \Simi\Simiconnector\Helper\SimiException(__('Account confirmation is required. Please check your email.'), 4);
         }
         return $customer;
     }
