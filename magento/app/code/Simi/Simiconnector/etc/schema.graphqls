@@ -32,6 +32,10 @@ type Simiproducts @doc(description: "The Products object is the top-level object
     simiProductListItemExtraField : [SimiProductListItemExtraField] @doc(description: "Extra fields for product listing item")
 }
 
+interface ProductInterface {
+    extraData: String
+}
+
 type SimiProductListItemExtraField {
     sku : String
     extraData: String

@@ -56,4 +56,14 @@ class Vendor extends \Simi\Simiconnector\Helper\Data
         $registry->unregister('vendor');
         return $profile;
     }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getStoreName($id){
+        if (!$id) return '';
+        $vendorHelper = $this->simiObjectManager->get('Vnecoms\Vendors\Helper\Data');
+        return $vendorHelper->getVendorStoreName($id);
+    }
 }

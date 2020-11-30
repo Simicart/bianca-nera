@@ -44,14 +44,11 @@ const addExcludedTaxAmount = (amount, adjustments) => {
 
 //add simiProductListItemExtraField to items
 export const applySimiProductListItemExtraField = (simiproducts) => {
-    if (simiproducts.simiProductListItemExtraField) {
-        simiproducts.items = simiproducts.items.map((product, index) => {
-            const itemExtraField = simiproducts.simiProductListItemExtraField[index]
-            if (itemExtraField && itemExtraField.extraData && itemExtraField.sku && itemExtraField.sku === product.sku) {
-                product.simiExtraField = JSON.parse(itemExtraField.extraData)
-            }
-            return product
-        })
-    }
+    simiproducts.items = simiproducts.items.map((product) => {
+        if (product.extraData) {
+            product.simiExtraField = JSON.parse(product.extraData)
+        }
+        return product
+    })
     return simiproducts
 }

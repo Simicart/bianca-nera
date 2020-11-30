@@ -4,14 +4,14 @@
         <observer name="Simi_Simicustomize_Simiconnector_Model_Server_Initialize" 
                   instance="Simi\Simicustomize\Observer\SimiconnectorModelServerInitialize" />
     </event>
-    <event name="simi_simiconnector_graphql_simi_product_list_item_after">
+    <!-- <event name="simi_simiconnector_graphql_simi_product_list_item_after">
         <observer name="Simi_Simicustomize_simiconnector_graphql_simi_product_list_item_after"
                   instance="Simi\Simicustomize\Observer\SimiGraphqlListItemAfter" />
     </event>
     <event name="simi_simiconnector_graphql_simi_product_list_after">
         <observer name="Simi_Simicustomize_simiconnector_graphql_simi_product_list_after"
                   instance="Simi\Simicustomize\Observer\SimiGraphqlListAfter" />
-    </event>
+    </event> -->
     <event name="simiconnector_get_storeview_info_after">
         <observer name="Simi_Simicustomize_simiconnector_get_storeview_info_after"
                   instance="Simi\Simicustomize\Observer\SimiGetStoreviewInfoAfter" />

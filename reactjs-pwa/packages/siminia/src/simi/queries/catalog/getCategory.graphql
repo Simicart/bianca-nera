@@ -69,16 +69,13 @@ query category($id: Int!, $currentPage: Int, $pageSize: Int, $stringId: String, 
             price {
                 ... SimiPrice
             }
+            extraData
             __typename
         }
         page_info {
             total_pages
         }
         total_count
-        simiProductListItemExtraField {
-            sku
-            extraData
-        }
         __typename
     }
 }

@@ -221,7 +221,7 @@ class Simiproducts implements ResolverInterface
                 'total_pages' => $maxPages
             ],
             'layer_type' => $layerType,
-            'simiProductListItemExtraField' => $products,
+            'simiProductListItemExtraField' => '',
             'simi_filters' => $simiProductFilters?json_decode($simiProductFilters):array()
         ];
 
