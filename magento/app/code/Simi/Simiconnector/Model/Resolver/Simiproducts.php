@@ -170,8 +170,10 @@ class Simiproducts implements ResolverInterface
                 ); */
                 
                 $isSalable = $productModel->getIsSalable();
+
+                // Remove code cause load too slow
                 // if is configurable product then check with collect all children product
-                if ($productModel->getTypeId() == 'configurable') {
+                /* if ($productModel->getTypeId() == 'configurable') {
                     $_children = $productModel->getTypeInstance()->getUsedProducts($productModel);
                     $salableQty = 0;
                     foreach ($_children as $child){
@@ -183,18 +185,8 @@ class Simiproducts implements ResolverInterface
                 }
                 if ($salableQty <= 0) {
                     $isSalable = false;
-                }
-                /* if ($productModel->getIsSalable()) {
-                    try{
-                        $salable_qty_by_sku = $stockModel->execute($sku);
-                        if (isset($salable_qty_by_sku[0]['qty']) && $salable_qty_by_sku[0]['qty'] == 0) {
-                            $isSalable = false;
-                        }
-                        if ($salableQty <= 0) {
-                            $isSalable = false;
-                        }
-                    }catch(\Exception $e){}
                 } */
+                
                 $this->productExtraData = array(
                     'attribute_values' => array(
                         'is_salable' => $isSalable ? 1 : 0,

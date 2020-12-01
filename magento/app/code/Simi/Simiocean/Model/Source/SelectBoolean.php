@@ -43,7 +43,7 @@ class SelectBoolean extends \Magento\Eav\Model\Entity\Attribute\Source\Boolean
         if ($this->_options === null) {
             $this->_options = [
                 ['label' => 'Please select', 'value' => ''],
-                // ['label' => __('Yes'), 'value' => self::VALUE_YES],
+                ['label' => __('Yes'), 'value' => self::VALUE_YES],
                 ['label' => __('No'), 'value' => self::VALUE_NO],
             ];
         }

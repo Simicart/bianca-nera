@@ -251,6 +251,7 @@ class Griditem extends React.Component {
     }
 
     render() {
+        const { history, handleLink } = this.props;
         const { props, addToCart } = this
         const item = prepareProduct(props.item)
         const logo_url = logoUrl()
@@ -265,6 +266,9 @@ class Griditem extends React.Component {
                 item_data: item
             },
         }
+
+        // replace url path graphql/_view -> frontend/magento/luma
+        const _small_image = small_image && small_image.replace('/graphql/_view/', '/frontend/magento/luma/') || '';
 
         const image = (
             <div
@@ -281,7 +285,7 @@ class Griditem extends React.Component {
                 <div
                     style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '100%' }}>
                     <Link to={location}>
-                        {<Image className={`img-${id}`} src={small_image} alt={name} />}
+                        {<Image className={`img-${id}`} src={_small_image} alt={name} />}
                     </Link>
                 </div>
                 <div 
@@ -347,14 +351,12 @@ class Griditem extends React.Component {
                 </div>
                 
                 <div className="siminia-product-des">
-                    <div className="product-des-info">
+                    <div className="product-des-info" onClick={() => {handleLink && handleLink(location) || history.push(location)}}>
                         <div className="product-name">
-                            <div role="presentation" className="product-name small"
-                                onClick={() => {props.handleLink(location)}} >{ReactHTMLParse(name)}</div>
+                            <div role="presentation" className="product-name small">{ReactHTMLParse(name)}</div>
                         </div>
                         <div className="vendor-and-price">
-                            <div role="presentation" className={`prices-layout ${Identify.isRtl() ? "prices-layout-rtl" : ''}`} id={`price-${id}`} 
-                                onClick={() => {props.handleLink(location)}}>
+                            <div role="presentation" className={`prices-layout ${Identify.isRtl() ? "prices-layout-rtl" : ''}`} id={`price-${id}`}>
                                 <Price
                                     prices={price} type={type_id}
                                 />
