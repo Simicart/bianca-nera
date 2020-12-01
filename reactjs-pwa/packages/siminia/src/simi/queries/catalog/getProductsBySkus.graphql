@@ -28,16 +28,13 @@ query getProductsBySkus($currentPage: Int, $pageSize: Int, $stringSku: [String],
             price {
                 ... SimiPrice
             }
+            extraData
             __typename
         }
         page_info {
             total_pages
         }
         total_count
-        simiProductListItemExtraField {
-            sku
-            extraData
-        }
         __typename
     }
 }

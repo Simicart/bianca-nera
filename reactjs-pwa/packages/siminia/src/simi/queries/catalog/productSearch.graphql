@@ -48,14 +48,11 @@ query productSearch($inputText: String, $currentPage: Int, $pageSize: Int, $cate
             price {
                 ... SimiPrice
             }
+            extraData
         }
         page_info {
             total_pages
         }
         total_count
-        simiProductListItemExtraField {
-            sku
-            extraData
-        }
     }
 }
