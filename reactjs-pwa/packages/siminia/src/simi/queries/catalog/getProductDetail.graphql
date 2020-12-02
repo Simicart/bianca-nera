@@ -57,6 +57,7 @@ query productDetail($urlKey: String, $onServer: Boolean!) {
             }
             stock_status
         }
+        placeholderimage
     }
   	simiProductDetailExtraField(filter: { url_key: { eq: $urlKey } })
 }

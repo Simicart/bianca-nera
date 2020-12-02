@@ -47,6 +47,7 @@ class QuickView extends React.Component {
                     {({ error, data }) => {
                         if (error) return <div>{Identify.__('Data Fetch Error')}</div>;
                         let product = null
+                        let placeholderimage = ''
 
                         if (data && data.productDetail && data.productDetail.items && !data.productDetail.items.length) {
                             return ''
@@ -60,6 +61,9 @@ class QuickView extends React.Component {
                             //save full data to quote
                             if (product.url_key)
                                 saveDataToUrl(`/${product.url_key}${productUrlSuffix()}`, product, false)
+                            if (data.productDetail.placeholderimage) {
+                                placeholderimage = data.productDetail.placeholderimage
+                            }
                         } else if (preloadedData) {
                             product = preloadedData
                         }
@@ -67,6 +71,7 @@ class QuickView extends React.Component {
                             return (
                                 <ProductFullDetail
                                     product={product} hideRelatedProduct={true}
+                                    placeholderimage={placeholderimage}
                                 />
                             );
                         }

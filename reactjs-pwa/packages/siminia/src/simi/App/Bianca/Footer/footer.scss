@@ -105,9 +105,11 @@ $errorFormBgColor: #ece2e2;
                     padding-inline-end: 18px!important; */
                     padding-left: 5px!important;
                     padding-right: 18px!important;
-                    padding-left: 60px;
-                    padding-right: 18px;
                     flex: 1 1;
+                    font-size: 16px;
+                    &:focus{
+                        font-size: 16px;
+                    }
                 }
                 button{
                     position: absolute;

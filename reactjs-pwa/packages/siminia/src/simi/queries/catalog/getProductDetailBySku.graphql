@@ -58,6 +58,7 @@ query productDetail($sku: String, $onServer: Boolean!) {
                 url_path
             }
         }
+        placeholderimage
     }
   	simiProductDetailExtraField(filter:  { sku: { eq: $sku }})
 }

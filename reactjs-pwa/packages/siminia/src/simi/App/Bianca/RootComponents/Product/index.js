@@ -43,6 +43,7 @@ const Product = props => {
             {({ error, data }) => {
                 if (error) return <div>{Identify.__('Data Fetch Error')}</div>;
                 let product = null
+                let placeholderimage = ''
                 
                 if (data && data.productDetail && data.productDetail.items && !data.productDetail.items.length) {
                     return <Page404 />
@@ -54,15 +55,19 @@ const Product = props => {
                     simiExtraField = simiExtraField?JSON.parse(simiExtraField):null
                     product.simiExtraField = simiExtraField
                     //save full data to quote
-                    if (product.url_key)
-                        saveDataToUrl(`/${product.url_key}${productUrlSuffix()}`, product, false)
+                    if (product.url_key) saveDataToUrl(`/${product.url_key}${productUrlSuffix()}`, product, false)
+                    if (data.productDetail.placeholderimage) {
+                        placeholderimage = data.productDetail.placeholderimage
+                    }
                 } else if (preloadedData) {
                     product = preloadedData
                 }
+                
                 if (product)
                     return (
                         <ProductFullDetail
                             product={product}
+                            placeholderimage={placeholderimage}
                         />
                     );
                 return <Loading />
