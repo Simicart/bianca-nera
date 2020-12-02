@@ -864,18 +864,6 @@ class ProductFullDetail extends Component {
         }
         analyticsViewDetailsGTM(product)
 
-        if (!product.media_gallery_entries || product.media_gallery_entries.length === 0) {
-            if (props.placeholderimage) {
-                product.media_gallery_entries = [{
-                    disabled: false,
-                    file: props.placeholderimage,
-                    label: null,
-                    position: 1,
-                    __typename: "MediaGalleryEntry",
-                }];
-            }
-        }
-
         return (
             <div className={`container product-detail-root ${getOS()} ${isPhone ? 'mobile':''}`}>
                 {this.breadcrumb(product)}

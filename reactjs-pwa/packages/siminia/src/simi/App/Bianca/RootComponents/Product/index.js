@@ -17,6 +17,7 @@ const Page404 = (props) => {
 const Product = props => {
     const {preloadedData} = props
     if (preloadedData && !preloadedData.is_dummy_data) { //saved api is full api, then no need api getting anymore
+        console.log(preloadedData)
         return (
             <ProductFullDetail
                 product={preloadedData}
@@ -43,7 +44,6 @@ const Product = props => {
             {({ error, data }) => {
                 if (error) return <div>{Identify.__('Data Fetch Error')}</div>;
                 let product = null
-                let placeholderimage = ''
                 
                 if (data && data.productDetail && data.productDetail.items && !data.productDetail.items.length) {
                     return <Page404 />
@@ -54,11 +54,22 @@ const Product = props => {
                     let simiExtraField = data.simiProductDetailExtraField
                     simiExtraField = simiExtraField?JSON.parse(simiExtraField):null
                     product.simiExtraField = simiExtraField
+
+                    // Add placeholder image to detail and save to url dict
+                    if (data.productDetail.placeholderimage) {
+                        if (!product.media_gallery_entries || product.media_gallery_entries.length === 0) {
+                            product.media_gallery_entries = [{
+                                disabled: false,
+                                file: data.productDetail.placeholderimage,
+                                label: null,
+                                position: 1,
+                                __typename: "MediaGalleryEntry",
+                            }];
+                        }
+                    }
                     //save full data to quote
                     if (product.url_key) saveDataToUrl(`/${product.url_key}${productUrlSuffix()}`, product, false)
-                    if (data.productDetail.placeholderimage) {
-                        placeholderimage = data.productDetail.placeholderimage
-                    }
+
                 } else if (preloadedData) {
                     product = preloadedData
                 }
@@ -67,7 +78,6 @@ const Product = props => {
                     return (
                         <ProductFullDetail
                             product={product}
-                            placeholderimage={placeholderimage}
                         />
                     );
                 return <Loading />
