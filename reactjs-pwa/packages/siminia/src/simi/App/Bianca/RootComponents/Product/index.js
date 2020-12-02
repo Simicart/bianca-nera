@@ -59,7 +59,7 @@ const Product = props => {
                         if (!product.media_gallery_entries || product.media_gallery_entries.length === 0) {
                             product.media_gallery_entries = [{
                                 disabled: false,
-                                file: data.productDetail.placeholderimage,
+                                file: data.productDetail.placeholderimage.replace('/graphql/_view/', '/frontend/Magento/luma/'),
                                 label: null,
                                 position: 1,
                                 __typename: "MediaGalleryEntry",
