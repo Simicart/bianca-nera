@@ -31,7 +31,7 @@ class Options extends Component {
 
     mapOptionInStock = () => {
         const { options, optionsIndex, variants, optionSelections, pre_order } = this.props;
-        let instockColors = [];
+        // let instockColors = [];
         let instockSizes = [];
         
         if (optionSelections instanceof Map && optionSelections.size) {
@@ -119,6 +119,11 @@ class Options extends Component {
                 _option.values = _option.values.filter((value) => instockColors.includes(value.value_index));
             } */
             if(_option.attribute_code === 'size'){
+                if (optionSelections instanceof Map && optionSelections.get(_option.attribute_id) && 
+                    optionSelections.size < 2
+                ) {
+                    return _option; // fix bug
+                }
                 if (instockSizes.length) {
                     _option.values = _option.values.filter((value) => instockSizes.includes(value.value_index));
                 } else if(optionSelections instanceof Map && optionSelections.size && pre_order && pre_order !== '1') {
