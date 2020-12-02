@@ -32,6 +32,10 @@ type Simiproducts @doc(description: "The Products object is the top-level object
     simiProductListItemExtraField : [SimiProductListItemExtraField] @doc(description: "Extra fields for product listing item")
 }
 
+type Products {
+    placeholderimage: String @resolver(class: "Simi\\Simiconnector\\Model\\Resolver\\CatalogPlaceHolderImage")
+}
+
 interface ProductInterface {
     extraData: String
 }

@@ -18,13 +18,11 @@ class EmptyMiniCart extends Component {
 
     continueShopping = () => {
         const {history, closeDrawer} = this.props
-        // if (history) {
-            history && history.push('/');
-            if(closeDrawer) {
-                closeDrawer()
-                document.body.classList.remove('minicart-open');
-            }
-        // }
+        // history && history.push('/');
+        if(closeDrawer) {
+            closeDrawer()
+            document.body.classList.remove('minicart-open');
+        }
     }
 
     render() {
