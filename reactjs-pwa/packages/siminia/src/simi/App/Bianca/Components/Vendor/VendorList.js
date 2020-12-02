@@ -36,22 +36,39 @@ const VendorList = (props) => {
     }
 
     const getStoreName = (vendor) => {
-        let storeName = vendor.middlename ? `${vendor.firstname} ${vendor.middlename}` : vendor.firstname;
-        storeName = vendor.lastname ? `${storeName} ${vendor.lastname}` : storeName;
-        return vendor && vendor.profile && vendor.profile.store_name || storeName;
+        let name = vendor.firstname;
+        if (vendor.middlename) name += ' ' + vendor.middlename;
+        if (vendor.lastname) name += ' ' + vendor.lastname;
+        if (vendor && vendor.profile && vendor.profile.store_name) name = vendor.profile.store_name;
+        // Clean string
+        var output = "";
+        for (var i=0; i<name.length; i++) {
+            if (name.charCodeAt(i) === 8) continue;
+            output += name.charAt(i);
+        }
+        return output || '';
     }
 
     const getVendorGroups = () => {
         let groups = {};
         if (vendor_list && vendor_list.length) {
-            vendor_list.sort((vendorA, vendorB)=> getStoreName(vendorA).localeCompare(getStoreName(vendorB)));//sort by alphabet
-            vendor_list.map((vendor) => {
-                const name = getStoreName(vendor).toUpperCase();
+            let _vendors = vendor_list.map(vendor => {
+                vendor.storeName = getStoreName(vendor).trim();
+                return vendor;
+            });
+            console.log(vendor_list)
+            _vendors.sort((vendorA, vendorB)=> vendorA.storeName.localeCompare(vendorB.storeName));//sort by alphabet
+            _vendors.map((vendor) => {
+                const name = vendor.storeName.toUpperCase();
+
+                console.log(name, name[0])
+
                 if(!(groups[name[0]] instanceof Array)) groups[name[0]] = [];
                 groups[name[0]].push(vendor);
                 return vendor;
             });
         }
+        console.log(groups)
         return groups;
     }
 
@@ -71,8 +88,8 @@ const VendorList = (props) => {
                             {
                                 groups[char].map((vendor, index) => {
                                     return <div className={`vendor-name ${vendor.vendor_id}`} key={index}>
-                                        <a href={viewVendorDetail(vendor.vendor_id)} title={getStoreName(vendor)}>
-                                            {Identify.__(getStoreName(vendor))}
+                                        <a href={viewVendorDetail(vendor.vendor_id)} title={vendor.storeName}>
+                                            {vendor.storeName}
                                         </a>
                                     </div>
                                 })

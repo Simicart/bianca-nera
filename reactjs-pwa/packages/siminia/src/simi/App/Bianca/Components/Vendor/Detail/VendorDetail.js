@@ -170,9 +170,10 @@ class VendorDetail extends React.Component {
                         </div>
                         <div className="cont-right">
                             <div className="banner-info">
-                                {data.banner_path &&
+                                {/* {data.banner_path &&
                                     <img src={mediaPrefix+data.banner_path} alt="Vendor banner"/>
-                                }
+                                } */}
+                                {data.banner && <img src={data.banner} alt="Vendor banner"/>}
                             </div>
                         </div>
                     </div>
