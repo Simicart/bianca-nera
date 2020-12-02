@@ -61,7 +61,10 @@ class ProductImage extends React.Component {
             const imageLabel = item.file && item.file.label ? item.file.label : item.label;
             return (item.video_content && item.video_content instanceof Object ) 
             ? { url : this.convertEmberVideo(item.video_content.video_url), type: 'video', altTag: item.video_content.video_title} : (imageFile
-            ? { url: window.location.origin+resourceUrl(imageFile, { type: 'image-product', width: 640 }), type: 'photo', altTag: imageLabel}
+            ? { url: imageFile.indexOf('http') === 0 ? 
+                    resourceUrl(imageFile, { type: 'image-product', width: 640 }) : 
+                    window.location.origin+resourceUrl(imageFile, { type: 'image-product', width: 640 }),
+                type: 'photo', altTag: imageLabel}
             : { url: window.location.origin+transparentPlaceholder, type: 'photo', altTag: 'no image'})
         });
         return (
