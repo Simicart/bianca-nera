@@ -33,8 +33,9 @@ if [ -d ./siminia ]; then
     pushd ./siminia
     commitMessage=$( git log -n 1 --format=%B )
     popd
-    rm -rf ./reactjs-pwa/packages/siminia
-    cp -rpf ./siminia ./reactjs-pwa/packages/siminia
+    # rm -rf ./reactjs-pwa/packages/siminia
+    cp -rpf ./siminia/* ./reactjs-pwa/packages/siminia/
+    cp -rpf ./siminia/.??* ./reactjs-pwa/packages/siminia/
 else
     echo "No source ./siminia"
 fi
@@ -45,8 +46,8 @@ if [ -d ./Server-Customization ]; then
     commitMessage2=$( git log -n 1 --format=%B )
     commitMessage="Client: $commitMessage. Server: $commitMessage2"
     popd
-    rm -rf ./magento/app/code
-    cp -rpf ./Server-Customization/app/code ./magento/app/code
+    # rm -rf ./magento/app/code
+    cp -rpf ./Server-Customization/app/code/* ./magento/app/code/
 else
     echo "No source ./Server-Customization"
 fi
