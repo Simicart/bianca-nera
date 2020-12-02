@@ -17,7 +17,6 @@ const Page404 = (props) => {
 const Product = props => {
     const {preloadedData} = props
     if (preloadedData && !preloadedData.is_dummy_data) { //saved api is full api, then no need api getting anymore
-        console.log(preloadedData)
         return (
             <ProductFullDetail
                 product={preloadedData}

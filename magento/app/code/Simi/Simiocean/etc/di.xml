@@ -21,4 +21,7 @@
             <argument name="logger" xsi:type="object">Simi\Simiocean\Model\VirtualModel\VirtualLogger</argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\Webapi\ServiceInputProcessor">
+        <plugin name="Simi_Modify_Rest_Product_Create_Plugin" type="Simi\Simiocean\Plugin\ServiceInputProcessor" sortOrder="10" disabled="false"/>
+    </type>
 </config>
