@@ -57,10 +57,11 @@ export const getShippingMethods = () => {
                 '/rest/V1/carts/mine/estimate-shipping-methods';
             const endpoint = user.isSignedIn ? authedEndpoint : guestEndpoint;
 
+            const savedAddress = await retrieveShippingAddress();
             const response = await request(endpoint, {
                 method: 'POST',
                 body: JSON.stringify({
-                    address: {
+                    address: savedAddress instanceof Object ? savedAddress : {
                         country_id: 'US',
                         postcode: null
                     }

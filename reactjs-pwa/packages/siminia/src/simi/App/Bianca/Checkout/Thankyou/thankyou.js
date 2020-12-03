@@ -16,7 +16,7 @@ const Thankyou = props => {
     const {  history, order, isSignedIn } = props;
     let padOrderId = null
     const last_cart_info = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'last_cart_info');
-    const last_order_info = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'last_order_info');
+    let last_order_info = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, 'last_order_info');
     const [orderIncIdFromAPI, setOrderIncFromAPI] = useState(false)
     const [orderData, setOrderData] = useState()
 
@@ -29,6 +29,11 @@ const Thankyou = props => {
         })
     } catch (err) {
 
+    }
+
+    const debugOrderId = Identify.findGetParameter('debug_order_id');
+    if (debugOrderId) {
+        last_order_info = debugOrderId;
     }
 
     if (last_order_info) {

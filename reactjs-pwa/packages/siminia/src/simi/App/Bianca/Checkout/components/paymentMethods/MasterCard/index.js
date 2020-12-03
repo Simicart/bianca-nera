@@ -190,6 +190,9 @@ const MasterCard = (props) => {
                 hideFogLoading();
                 if (result && result.result === 'Y') {
                     setOpenModal(true);
+                } else if(result && result.errors) { // else show error when check failed
+                    const errors = result.errors.map(e=>e.message).join('. ');
+                    showToastMessage(Identify.__(errors));
                 } else if(result && result.message) { // else show error when check failed
                     showToastMessage(Identify.__(result.message));
                 }

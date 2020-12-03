@@ -29,6 +29,10 @@ $color3: #F2F2F2;
                         -moz-border-radius: 52px;
                         border-radius: 52px;
                         overflow: hidden;
+                        &.placeholder {
+                            border: none;
+                            overflow: unset;
+                        }
                         img{
                             width: 100%;
                             height: auto;

@@ -156,7 +156,14 @@ class VendorDetail extends React.Component {
                     <div className="container">
                         <div className="cont-left">
                             <div className="store-info">
-                                <div className="logo"><img src={mediaPrefix+data.logo_path} alt="Vendor banner"/></div>
+                                {data.logo_path ?
+                                    <div className="logo">
+                                        <img src={mediaPrefix+data.logo_path} alt="Vendor banner"/>
+                                    </div>:
+                                    <div className="logo placeholder">
+                                        <img src="/icons/logo.webp" alt="Vendor banner"/>
+                                    </div>
+                                }
                                 <div className="name">{storeName}</div>
                                 <div className="location">{Identify.__(profile.address)}</div>
                                 <div className="description">{Identify.__(profile.description)}</div>
