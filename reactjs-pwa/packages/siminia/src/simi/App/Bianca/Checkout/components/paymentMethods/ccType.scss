@@ -29,6 +29,7 @@
   }
   .form-group-line{
     display: inline-flex;
+    width: 100%; /* fix bug */
     .form-group {
       margin-top: 10px;
     }
