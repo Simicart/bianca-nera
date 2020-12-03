@@ -136,6 +136,10 @@ const AddressForm = props => {
             if (initialFormValues['extension_attributes']) {
                 memoFields.extension_attributes = initialFormValues['extension_attributes'];
             }
+            if (memoFields.street) {
+                if (memoFields.street[1]) memoFields.street[1] = memoFields.street[1].replace(HOUSE_NUMBER_LABEL, '');
+                if (memoFields.street[2]) memoFields.street[2] = memoFields.street[2].replace(APARTMENT_NUMBER_LABEL, '');
+            }
             return memoFields;
         }, [initialFormValues]
     );
@@ -194,9 +198,11 @@ const AddressForm = props => {
                     if (name === 'street[0]') {
                         submitValues.street = [value]
                     } else if (name === 'street[1]') {
-                        submitValues.street.push(HOUSE_NUMBER_LABEL+value)
+                        let street1 = value ? HOUSE_NUMBER_LABEL + value.replace(HOUSE_NUMBER_LABEL, '') : '';
+                        submitValues.street.push(street1)
                     } else if (name === 'street[2]') {
-                        submitValues.street.push(APARTMENT_NUMBER_LABEL+value)
+                        let street2 = value ? APARTMENT_NUMBER_LABEL + value.replace(APARTMENT_NUMBER_LABEL, '') : '';
+                        submitValues.street.push(street2)
                     } else if (name === 'emailaddress') {
                         submitValues['email'] = value
                     } else if (name === 'save_in_address_book') {
@@ -219,6 +225,10 @@ const AddressForm = props => {
         if (!formValid)
             return
         formIsValidOnce = true
+        //clean some attributes
+        if (submitValues.hasOwnProperty('street[0]')) delete submitValues['street[0]'];
+        if (submitValues.hasOwnProperty('street[1]')) delete submitValues['street[1]'];
+        if (submitValues.hasOwnProperty('street[2]')) delete submitValues['street[2]'];
         if (submitValues.hasOwnProperty('addresses_same')) delete submitValues.addresses_same
         if (submitValues.hasOwnProperty('selected_address_field')) delete submitValues.selected_address_field
         if (submitValues.hasOwnProperty('password')) delete submitValues.password

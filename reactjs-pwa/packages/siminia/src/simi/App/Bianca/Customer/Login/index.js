@@ -132,10 +132,14 @@ class Login extends Component {
 				Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID, data.customer_identity);
 				setToken(data.customer_access_token)
 				this.props.simiSignedIn(data.customer_access_token);
+				showToastMessage(Identify.__('You have logged in successfully'));
+				setTimeout(()=>{
+					this.props.history.push('/');
+				}, 2000);
 				// getProfileAfterOtp(this.handleSendProfile.bind(this, data.customer_access_token));
 			} else {
 				hideFogLoading();
-				showToastMessage(Identify.__('Invalid login !'))
+				showToastMessage(Identify.__('Invalid login!'))
 			}
 		}
 	}

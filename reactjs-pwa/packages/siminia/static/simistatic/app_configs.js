@@ -830,6 +830,8 @@ var DASHBOARD_CONFIG = {
 				"Please correct your password again":"يرجى تصحيح كلمة المرور مرة أخرى",
 				"View detail of your order: #":"عرض التفاصيل طلبك: #",
 				"You have placed an order successfully":"لقد وضعت على أمر بنجاح",
+				"You have logged in successfully":"لقد قمت بتسجيل الدخول بنجاح",
+				"Invalid login":"تسجيل الدخول غير صالح",
 				"You have logged out. Thank you":"قمت بتسجيل الخروج. شكرا لكم",
 				"Invalid Email":"بريد إلكتروني خاطئ",
 				"Say something to looking for":"أقول شيئا لتبحث عن",

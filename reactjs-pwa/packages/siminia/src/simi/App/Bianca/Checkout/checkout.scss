@@ -130,13 +130,15 @@
         .country > span, .region_code > span {
             margin-bottom: 20px;
         }
-        
+        input::placeholder {
+            color: #bdbdbd;
+        }
         input[type=text], input[type=email], input[type=tel], input[type=password] {
             background-color: #F2F2F2;
             padding: 17px 16px !important;
             border: unset;
             margin-bottom: 20px;
-            color: #727272;
+            color: #383e42;
             font-size: 14px;
             line-height: 14px;
             font-family: 'Gotham Book';
@@ -146,7 +148,7 @@
             background-color: #F2F2F2;
             padding: 17px 16px !important;
             border: unset;
-            color: #727272;
+            color: #383e42;
             font-size: 14px;
             line-height: 14px;
             height: unset;

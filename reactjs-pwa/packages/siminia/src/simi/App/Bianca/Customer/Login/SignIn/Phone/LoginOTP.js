@@ -107,9 +107,3 @@ class LoginOTP extends Component {
 }
 
 export default LoginOTP
-
-async function setToken(token) {
-    // TODO: Get correct token expire time from API
-    return storage.setItem('signin_token', token, 604800);
-}
-
