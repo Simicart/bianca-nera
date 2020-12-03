@@ -203,6 +203,7 @@ var DASHBOARD_CONFIG = {
 				"Thank you for your purchase!":"شكرا لك على الشراء!",
 				"We'll email you an order confirmation with details and tracking info.":"سنرسل إليك رسالة تأكيد بالبريد تتضمن التفاصيل ومعلومات التتبع.",
 				"items in cart":"العناصر الموجودة في العربة",
+				"item in cart":"العنصر في عربة التسوق",
 				"Service support":"دعم الخدمة",
 				"Clear all items":"مسح جميع العناصر",
 				"Save in address book.":"حفظ في دفتر العناوين.",

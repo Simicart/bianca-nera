@@ -5,7 +5,6 @@ import Arrow from 'src/simi/BaseComponents/Icon/Arrowup';
 import Total from 'src/simi/App/Bianca/BaseComponents/Total';
 import isObjectEmpty from 'src/util/isObjectEmpty';
 import OrderItems from './OrderItems';
-import { isArray } from 'util';
 import { getOS } from 'src/simi/App/Bianca/Helper';
 
 require('./OrderSummary.scss')
@@ -19,7 +18,16 @@ const OrderSummary = (props) => {
     const { cart, cartCurrencyCode, panelClassName, btnPlaceOrder, is_try_to_buy, is_pre_order } = props;
     const { details } = cart;
 
-    const totalLabel = details && details.hasOwnProperty('items_count') && details.items_count + Identify.__(' items in cart');
+
+    let totalLabel = Identify.__('item in cart');
+    if (details && details.hasOwnProperty('items_count')) {
+        if(details.items_count > 1) {
+            totalLabel = details.items_count + ' '+ Identify.__('items in cart');
+        } else {
+            totalLabel = details.items_count + ' '+ Identify.__('item in cart');
+        }
+    }
+
     const orderItem = useMemo(() => details && details.items &&
                 <OrderItems totals={cart.totals} cartCurrencyCode={cartCurrencyCode} 
                     is_try_to_buy={is_try_to_buy} is_pre_order={is_pre_order} details={details}/>, [details.items]);
