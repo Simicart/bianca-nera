@@ -74,7 +74,7 @@ const Thankyou = props => {
     }
 
     const getDateFormat = dateData => {
-        const date = new Date(dateData);
+        const date = new Date(dateData.replace(/\s+/g, 'T').concat('.000+00:00'));
         const day = date.getDate();
         const month =
             date.getMonth() + 1 < 10
