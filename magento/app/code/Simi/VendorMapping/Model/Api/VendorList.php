@@ -147,16 +147,14 @@ class VendorList implements VendorListInterface
      */
     protected function getLogoUrl($vendorId)
     {
-        $scopeConfig = $this->_configHelper->getVendorConfig(
+        $logo = $this->_configHelper->getVendorConfig(
             'general/store_information/logo',
             $vendorId
         );
-        $basePath = 'ves_vendors/logo/';
-        $path =  $basePath. $scopeConfig;
-        if ($scopeConfig && $this->checkIsFile($path)) {
+        $path =  'ves_vendors/attribute/logo/' . $logo;
+        if ($logo && $this->checkIsFile($path)) {
             return $this ->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA).$path;
         }
-
         return '';
     }
 
