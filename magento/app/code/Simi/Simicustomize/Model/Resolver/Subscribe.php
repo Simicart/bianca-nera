@@ -5,8 +5,6 @@ namespace Simi\Simicustomize\Model\Resolver;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-
-
 use Magento\Customer\Api\AccountManagementInterface as CustomerAccountManagement;
 use Magento\Customer\Model\Session;
 use Magento\Customer\Model\Url as CustomerUrl;
@@ -97,9 +95,7 @@ class Subscribe implements \Magento\Framework\GraphQl\Query\ResolverInterface
             $this->validateEmailAvailable($email);
     
             $subscriber = $this->_subscriberFactory->create()->loadByEmail($email);
-            if ($subscriber->getId()
-                && (int) $subscriber->getSubscriberStatus() === Subscriber::STATUS_SUBSCRIBED
-            ) {
+            if ($subscriber->isSubscribed()) {
                 throw new LocalizedException(
                     __('This email address is already subscribed.')
                 );

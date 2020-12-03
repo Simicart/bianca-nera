@@ -219,6 +219,7 @@ var DASHBOARD_CONFIG = {
 				"Product Suggestions":"اقتراحات المنتج",
 				"SEND VERIFICATION CODE":"إرسال رمز التحقق",
 				"Your email address is invalid. Please enter a valid address!":"عنوان البريد الإلكتروني الخاص بك غير صالح. يرجى إدخال عنوان صالح!",
+				"Send us a message":"أرسل لنا رسالة",
 				"Password confirmation":"تأكيد كلمة المرور",
 				"Email":"البريد الالكتروني",
 				"Email *":"البريد الإلكتروني *",
