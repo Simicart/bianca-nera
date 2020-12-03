@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect, useCallback} from 'react';
+import React, { useRef, useState } from 'react';
 import Identify from "src/simi/Helper/Identify";
 import { connect } from 'src/drivers';
 import { toggleMessages } from 'src/simi/Redux/actions/simiactions';
@@ -12,8 +12,8 @@ const Subscriber = props => {
     const emailInput = useRef('');
     const mutationRef = useRef('');
     const [invalid, setInvalid] = useState('');
-    const [errorEmail, setErrorEmail] = useState('defaultError');
     const [submited, setSubmited] = useState(false);
+    const [submitedVer, setSubmitedVer] = useState(1);
     const [waiting, setWaiting] = useState(false);
 
     const formAction = (e) => {
@@ -22,11 +22,6 @@ const Subscriber = props => {
             $(mutationRef.current).trigger('click');
         }
         setSubmited(true);
-    }
-
-    const mutationAction = (mutation) => {
-        mutation({variables: {email: emailInput.current.value}});
-        setWaiting(true);
     }
 
     const responseLoaded = (data) => {
@@ -45,18 +40,16 @@ const Subscriber = props => {
                     emailInput.current.value = ''; //reset form
                 }
             }
+            setSubmitedVer(submitedVer + 1);
         }
     }
 
     const validateForm = () => {
-        
         if (!validateEmail(emailInput.current.value)) {
             setInvalid('error invalid');
-            setErrorEmail('showError');
             return false;
         }
         setInvalid('');
-        setErrorEmail('defaultError');
         return true;
     }
 
@@ -69,7 +62,6 @@ const Subscriber = props => {
     const checkEmpty = () => {
         if(!validateEmpty(emailInput.current.value)){
             setInvalid('');
-            setErrorEmail('defaultError');
         }
     }
 
@@ -78,24 +70,28 @@ const Subscriber = props => {
     
     return (
         <React.Fragment>
-            <SimiMutation mutation={MUTATION_GRAPHQL}>
-                {(subscribeCall, { data }) => {
-                    if (data && data.subscribe && data.subscribe.message) {
+            <SimiMutation mutation={MUTATION_GRAPHQL} key={submitedVer}>
+                {(mutationApi, { loading, data }) => {
+                    if (!loading && data && data.subscribe && data.subscribe.message) {
                         responseLoaded(data);
+                        return null;
                     }
                     return (
-                        <button onClick={ (e) => mutationAction(subscribeCall)} ref={mutationRef} style={{display: 'none'}}/>
+                        <button onClick={e => {
+                            mutationApi({variables: {email: emailInput.current.value}});
+                            setWaiting(true);
+                        }} ref={mutationRef} style={{display: 'none'}}/>
                     )
                 }}
             </SimiMutation>
             <div className={classForm}>
                 <form className={props.formClassName} onSubmit={formAction}>
                     <label htmlFor="subcriber-email">{Identify.__('Email *')}</label>
-                    <input id="subcriber-email" onKeyUp={checkEmpty}  onChange={validateChange} ref={emailInput} name="email" className={`email ${invalid}`} />
+                    <input id="subcriber-email" onKeyUp={checkEmpty} onChange={validateChange} ref={emailInput} name="email" className={`email ${invalid}`} />
                     <button type="submit"><i className="icon-arrow-right icons"></i></button>
                 </form>
             </div>
-            <div className={`${errorEmail}`}>{Identify.__('Your email address is invalid. Please enter a valid address !')}</div>
+            <div className={`message ${invalid}`}>{Identify.__('Your email address is invalid. Please enter a valid address!')}</div>
             { waiting && <Loading/> }
         </React.Fragment>
     )

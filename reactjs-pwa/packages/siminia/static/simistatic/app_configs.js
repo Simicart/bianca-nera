@@ -218,7 +218,7 @@ var DASHBOARD_CONFIG = {
 				"No results found!":"لم يتم العثور على نتائج!",
 				"Product Suggestions":"اقتراحات المنتج",
 				"SEND VERIFICATION CODE":"إرسال رمز التحقق",
-				"Your email address is invalid. Please enter a valid address !":"عنوان البريد الإلكتروني الخاص بك غير صالح. يرجى إدخال عنوان صالح !",
+				"Your email address is invalid. Please enter a valid address!":"عنوان البريد الإلكتروني الخاص بك غير صالح. يرجى إدخال عنوان صالح!",
 				"Password confirmation":"تأكيد كلمة المرور",
 				"Email":"البريد الالكتروني",
 				"Email *":"البريد الإلكتروني *",

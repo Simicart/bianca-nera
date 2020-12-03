@@ -53,7 +53,7 @@ export const Simiquery = props => {
 export const SimiMutation = props => {
     return <Mutation {...props} >
         {
-            (mutationFunc, { data }) => {
+            (mutationFunc, { loading, data, error, called, client }) => {
                 const modedMutationFunc = mutInput => {
                     if(mutInput) {
                         const variables = mutInput.variables?mutInput.variables:{}
@@ -61,7 +61,7 @@ export const SimiMutation = props => {
                     }
                     return mutationFunc(mutInput)
                 }
-                return props.children(modedMutationFunc, {data})
+                return props.children(modedMutationFunc, {loading, data, error, called, client})
             }
         }
     </Mutation>

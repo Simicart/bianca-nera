@@ -385,18 +385,19 @@ $errorFormBgColor: #ece2e2;
             }
         }
     }
-    .defaultError {
-        display: none;
-    }
-    .showError {
+    .message {
         display: block;
-        color: $errorFormColor;
-        font-family: Gotham;
+        display: none;
+        font-family: 'Gotham Book';
         font-size: 10px;
         font-weight: 500;
         line-height: 10px;
         text-align: center;
         margin-top: 10px;
+        &.invalid {
+            display: block;
+            color: $errorFormColor;
+        }
     }
 }
 
@@ -410,7 +411,7 @@ $errorFormBgColor: #ece2e2;
         margin-bottom: 10px;
     }
     .footer-app {
-        .showError{
+        .message{
             left: 29px;
             font-size: 9px;
         }
@@ -434,7 +435,7 @@ $errorFormBgColor: #ece2e2;
         height: auto;
     }
     .footer-app {
-        .showError{
+        .message {
             left: 45px;
             font-size: 8px;
         }
@@ -454,7 +455,7 @@ $errorFormBgColor: #ece2e2;
         }
     }
     .footer-app {
-        .showError{
+        .message{
             left: 49px;
             font-size: 10px;
         }
@@ -471,7 +472,7 @@ $errorFormBgColor: #ece2e2;
 
 @media(max-width: 425px){
     .footer-app {
-        .showError{
+        .message{
             font-size: 9px;
         }
     }
@@ -524,7 +525,7 @@ $errorFormBgColor: #ece2e2;
 
 @media(max-width: 320px){
     .footer-app {
-        .showError{
+        .message{
             font-size: 7px;
         }
     }
