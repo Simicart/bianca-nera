@@ -30,7 +30,7 @@ const Designers = props => {
 
     let vendors = useMemo(()=>{
         let _data = [];
-        data && data.forEach((item, index)=>{
+        data && data instanceof Array && data.forEach((item, index)=>{
             if (index < limitItem && item.logo) {
                 item.url = `/designers/${item.vendor_id}.html`;
                 item.image = item.logo;
