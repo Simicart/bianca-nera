@@ -74,6 +74,9 @@ class Vendor extends \Simi\Simiconnector\Helper\Data
     public function getHomeVendorsConfig(){
         $config = $this->scopeConfig->getValue('simiconnector/home/vendors', ScopeInterface::SCOPE_STORE);
         $serializer = $this->simiObjectManager->get('Magento\Framework\Serialize\SerializerInterface');
-        return $serializer->unserialize($config);
+        if ($config) {
+            return $serializer->unserialize($config);
+        }
+        return [];
     }
 }
