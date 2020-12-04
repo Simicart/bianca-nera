@@ -136,6 +136,19 @@ class VendorList implements VendorListInterface
                 $offset = $parameters[self::OFFSET];
             }
             $this->_collection->setPageSize($offset + $limit);
+
+            // limit by home config if param home = 1 is present
+            if (isset($parameters['home']) && $parameters['home'] == '1') {
+                $vendorIds = $this->vendorHelper->getHomeVendorsConfig();
+                $rows = array_values($vendorIds);
+                $ids = [];
+                foreach($rows as $row) {
+                    $ids[] = $row['id'];
+                }
+                if (!empty($ids)) {
+                    $this->_collection->addFieldToFilter('vendor_id', array('FINSET', $ids));
+                }
+            }
         }
     }
 

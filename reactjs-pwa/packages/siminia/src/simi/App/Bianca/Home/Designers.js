@@ -1,17 +1,17 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Identify from "src/simi/Helper/Identify";
 import {cateUrlSuffix} from 'src/simi/Helper/Url';
 import Scroller from "./Scroller";
 import {smoothScrollToView} from 'src/simi/Helper/Behavior';
+import { sendRequest } from 'src/simi/Network/RestMagento';
 
 const $ = window.$;
 
 const Designers = props => {
     const { history, isPhone} = props;
-    const storeConfig = Identify.getStoreConfig() || {};
-    const {simiStoreConfig} = storeConfig || {};
-    const {config} = simiStoreConfig || {};
-    const {vendor_list: data} = config || {};
+    const [ data, setData ] = useState();
+
+    const limitItem = 18;
 
     const slideSettings = {
         chevronWidth: isPhone ? 16 : 54,
@@ -21,18 +21,25 @@ const Designers = props => {
         gutter: isPhone ? 12.5 : 16
     }
 
-    let newData = [];
-    if (data) {
-        data.forEach((item, index)=>{
-            if (index < 18 && item.logo) {
+    // Get vendor list data
+    useEffect(()=>{
+        sendRequest(`/rest/V1/simiconnector/vendors`, (data)=>{
+            setData(data);
+        }, 'GET', {limit: limitItem, home: 1});
+    }, []);
+
+    let vendors = useMemo(()=>{
+        let _data = [];
+        data && data.forEach((item, index)=>{
+            if (index < limitItem && item.logo) {
                 item.url = `/designers/${item.vendor_id}.html`;
                 item.image = item.logo;
                 item.alt = item.logo && item.logo.split('/').pop().split('.')[0].replace(/[_-]/g, ' ');
-                newData.push(item);
+                _data.push(item);
             }
-            return false;
         });
-    }
+        return _data;
+    }, [data]);
 
     const onClickItem = () => {
         smoothScrollToView($('#siminia-main-page'), 350);
@@ -53,24 +60,26 @@ const Designers = props => {
 
     let startItemIndex = 0;
     if (Identify.isRtl()) {
-        newData.reverse();
-        startItemIndex = (newData.length - 1)
+        vendors.reverse();
+        startItemIndex = (vendors.length - 1)
     }
 
     return (
-        <div className={`brand-slider ${isPhone ? 'phone-view':''}`}>
-            { data && 
-                <div className="title-box">
-                    <h3 className="title">{Identify.__('Shop By Designers')}</h3>
-                </div>
-            }
-            <Scroller data={newData} 
-                initItemIndex={startItemIndex} 
-                lastItems={lastItems} 
-                slideSettings={slideSettings} 
-                isPhone={isPhone} history={history} 
-                onClickItem={onClickItem}
-            />
+        <div className={`shop-by-designers-wrap ${isPhone ? 'mobile' : ''}`}>
+            <div className={`brand-slider ${isPhone ? 'phone-view':''}`}>
+                { data && 
+                    <div className="title-box">
+                        <h3 className="title">{Identify.__('Shop By Designers')}</h3>
+                    </div>
+                }
+                <Scroller data={vendors} 
+                    initItemIndex={startItemIndex} 
+                    lastItems={lastItems} 
+                    slideSettings={slideSettings} 
+                    isPhone={isPhone} history={history} 
+                    onClickItem={onClickItem}
+                />
+            </div>
         </div>
     );
 }

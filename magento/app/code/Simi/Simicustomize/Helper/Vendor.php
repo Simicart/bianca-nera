@@ -2,6 +2,7 @@
 
 namespace Simi\Simicustomize\Helper;
 
+use Magento\Store\Model\ScopeInterface;
 
 class Vendor extends \Simi\Simiconnector\Helper\Data
 {
@@ -65,5 +66,14 @@ class Vendor extends \Simi\Simiconnector\Helper\Data
         if (!$id) return '';
         $vendorHelper = $this->simiObjectManager->get('Vnecoms\Vendors\Helper\Data');
         return $vendorHelper->getVendorStoreName($id);
+    }
+
+    /**
+     * Get vendor IDs saved in configuration
+     */
+    public function getHomeVendorsConfig(){
+        $config = $this->scopeConfig->getValue('simiconnector/home/vendors', ScopeInterface::SCOPE_STORE);
+        $serializer = $this->simiObjectManager->get('Magento\Framework\Serialize\SerializerInterface');
+        return $serializer->unserialize($config);
     }
 }

@@ -16,6 +16,7 @@ import Instagram from './Instagram';
 import TitleHelper from 'src/simi/Helper/TitleHelper';
 // import Chats from 'src/simi/App/Bianca/BaseComponents/Chats';
 import LazyLoad from 'react-lazyload';
+import Skeleton from 'react-loading-skeleton';
 require('./home.scss');
 
 if (getOS() === 'MacOS') require('./home-ios.scss');
@@ -85,10 +86,9 @@ const Home = props => {
             {/* <div className={`new-collections-wrap ${isPhone ? 'mobile':''}`}>
                 <Newcollections data={data} history={history} isPhone={isPhone}/>
             </div> */}
-            <LazyLoad placeholder={<LoadingSpiner />}>
-                <div className={`shop-by-designers-wrap ${isPhone ? 'mobile' : ''}`}>
-                    <Designers history={history} isPhone={isPhone} />
-                </div>
+            <LazyLoad placeholder={<div className="container"><Skeleton height={isPhone ? 153 :214} style={{width: '100%'}}/></div>} 
+                height={isPhone ? 153 :214} offset={50} once={true}>
+                <Designers history={history} isPhone={isPhone} />
             </LazyLoad>
             {
                 (instagram && instagram.enabled === '1' && instagram.userid) ?
