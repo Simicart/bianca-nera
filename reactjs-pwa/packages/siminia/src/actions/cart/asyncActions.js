@@ -155,7 +155,7 @@ export const addItemToCart = (payload = {}) => {
     };
 };
 
-export const updateItemInCart = (payload = {}, targetItemId) => {
+export const updateItemInCart = (payload = {}, targetItemId, callback = ()=>{}) => {
     const { item, quantity } = payload;
     const writingImageToCache = writeImageToCache(item);
 
@@ -199,6 +199,8 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
                     quantity
                 })
             );
+
+            callback(response);
         } catch (error) {
             hideFogLoading()  // Fix hide loading when error
             const { response, noCartId } = error;
@@ -225,6 +227,8 @@ export const updateItemInCart = (payload = {}, targetItemId) => {
                     await dispatch(addItemToCart(payload));
                 }
             }
+
+            callback(error);
         }
 
         // await dispatch(getCartDetails({ forceRefresh: true }));

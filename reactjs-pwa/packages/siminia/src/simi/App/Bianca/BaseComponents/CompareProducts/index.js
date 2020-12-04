@@ -7,7 +7,7 @@ import { addToCart as simiAddToCart } from 'src/simi/Model/Cart';
 import { Colorbtn } from 'src/simi/BaseComponents/Button';
 import {showToastMessage} from 'src/simi/Helper/Message';
 import { productUrlSuffix } from 'src/simi/Helper/Url';
-import Loading from 'src/simi/BaseComponents/Loading';
+// import Loading from 'src/simi/BaseComponents/Loading';
 import { getCartDetails } from 'src/actions/cart';
 import { connect } from 'src/drivers';
 

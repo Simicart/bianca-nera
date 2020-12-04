@@ -24,6 +24,7 @@ import { Link } from 'react-router-dom';
 import Coupon from 'src/simi/App/Bianca/BaseComponents/Coupon';
 import GiftVoucher from 'src/simi/App/Bianca/Cart/Components/GiftVoucher';
 import { toggleMessages } from 'src/simi/Redux/actions/simiactions';
+import { showToastMessage } from 'src/simi/Helper/Message';
 import { removeItemFromCart } from 'src/simi/Model/Cart';
 import {
     showFogLoading,
@@ -111,7 +112,11 @@ class MiniCart extends Component {
             item,
             quantity
         };
-        this.props.updateItemInCart(payload, item.item_id)
+        this.props.updateItemInCart(payload, item.item_id, (response)=>{
+            if (response && response.message) {
+                showToastMessage(response.message);
+            }
+        })
     }
 
     removeFromCart(item) {
