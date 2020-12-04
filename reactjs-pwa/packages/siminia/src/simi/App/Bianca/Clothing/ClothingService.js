@@ -13,10 +13,7 @@ import {validateEmail, validateTelephone, validateNumber} from 'src/simi/Helper/
 import {showFogLoading, hideFogLoading} from 'src/simi/BaseComponents/Loading/GlobalLoading';
 import CrossIcon from 'src/simi/App/Bianca/BaseComponents/Icon/Cross';
 
-
 require('./ClothingService.scss');
-
-const $ = window.$;
 
 const ClothingService = (props) => {
 
@@ -124,6 +121,13 @@ const ClothingService = (props) => {
         let error = false;
         for(let name in dataValidate){
             if (validate(name, dataValidate[name], true) === 'error') {
+                if (name === 'service') {
+                    const input = document.querySelector('.service-type.error');
+                    input && input.scrollIntoView(false); // focus to error
+                } else {
+                    const input = document.querySelector(`input[name="${name}"]`);
+                    input && input.focus(); // focus to error
+                }
                 error = true;
                 break;
             }
@@ -206,7 +210,9 @@ const ClothingService = (props) => {
                         <div className="form-row">
                             <label htmlFor="phone">{Identify.__('Phone Number')}<span>*</span></label>
                             <div className={`form-input ${validate('phone', ['empty'])}`}>
-                                <input value={formData['phone']} onChange={(e) => onChangeInput('phone', e.target.value)} id="phone" name="phone" placeholder={Identify.__(`Phone number`)}/>
+                                <input value={formData['phone']} onChange={(e) => onChangeInput('phone', e.target.value)} id="phone" name="phone" placeholder={Identify.__(`Phone number`)}
+                                    type="number" pattern="[0-9]"
+                                />
                             </div>
                         </div>
                         <div className="form-row">
@@ -236,7 +242,9 @@ const ClothingService = (props) => {
                         <div className="form-row">
                             <label htmlFor="qty">{Identify.__('Quantity')}<span>*</span></label>
                             <div className={`form-input ${validate('qty', ['empty'])}`}>
-                                <input value={formData['qty']} onChange={(e) => onChangeInput('qty', e.target.value)} id="qty" name="qty" placeholder={Identify.__(`Quantity`)}/>
+                                <input value={formData['qty']} onChange={(e) => onChangeInput('qty', e.target.value)} id="qty" name="qty" placeholder={Identify.__(`Quantity`)}
+                                    type="number" pattern="[0-9]"
+                                />
                             </div>
                         </div>
                         <div className="form-row">
@@ -252,7 +260,10 @@ const ClothingService = (props) => {
                                 {Object.values(formData.files).length < 4 &&
                                     <div className="upload-file">
                                         <label htmlFor="service-files">{Identify.__('Choose file')}</label>
-                                        <input onChange={() => selectedFile('service-files')} id={`service-files`} style={{display: 'none'}} name="files" type="file" accept=".gif,.jpg,.jpeg,.png,.doc,.docx,audio/*,video/*,image/*,text/xml,text/html,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                                        <input onChange={() => selectedFile('service-files')} id={`service-files`} style={{display: 'none'}} name="files" type="file" 
+                                            accept=".jpg,.jpeg,.png" 
+                                            // accept=".gif,.jpg,.jpeg,.png,.doc,.docx,audio/*,video/*,image/*,text/xml,text/html,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+                                        />
                                     </div>
                                 }
                                 {Object.values(formData.files).length > 0 && 
