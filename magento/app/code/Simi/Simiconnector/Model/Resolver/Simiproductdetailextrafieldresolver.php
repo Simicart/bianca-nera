@@ -127,19 +127,19 @@ class Simiproductdetailextrafieldresolver implements ResolverInterface
                 $isSalable = $productModel->getIsSalable();
 
                 // if is configurable product then check with collect all children product
-                if ($productModel->getTypeId() == 'configurable') {
-                    $_children = $productModel->getTypeInstance()->getUsedProducts($productModel);
-                    $salableQty = 0;
-                    foreach ($_children as $child){
-                        $salableQty += $this->productSalableQty->execute($child->getSku(), $stockId);
-                        if ($salableQty > 0) break;
-                    }
-                } else {
-                    $salableQty = $this->productSalableQty->execute($productModel->getSku(), $stockId);
-                }
-                if ($salableQty <= 0) {
-                    $isSalable = false;
-                }
+                // if ($productModel->getTypeId() == 'configurable') {
+                //     $_children = $productModel->getTypeInstance()->getUsedProducts($productModel);
+                //     $salableQty = 0;
+                //     foreach ($_children as $child){
+                //         $salableQty += $this->productSalableQty->execute($child->getSku(), $stockId);
+                //         if ($salableQty > 0) break;
+                //     }
+                // } else {
+                //     $salableQty = $this->productSalableQty->execute($productModel->getSku(), $stockId);
+                // }
+                // if ($salableQty <= 0) {
+                //     $isSalable = false;
+                // }
 
                 $this->extraFields = array(
                     // 'attribute_values' => $productModel->load($productId)->toArray(), // Optimize speed

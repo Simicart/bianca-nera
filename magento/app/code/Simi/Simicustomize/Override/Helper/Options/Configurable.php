@@ -172,33 +172,54 @@ class Configurable extends \Simi\Simiconnector\Helper\Options\Configurable
     }
 
     /**
-     * Get Allowed Products
+     * Get Allowed Products, all this is simple product
      *
      * @return \Magento\Catalog\Model\Product[]
      */
     public function getAllowProducts()
     {
-        $product = $this->getProduct();
+        $product = $this->getProduct(); // configurable product
         if ($product && $product->getId()) {
             if (!isset($this->allowProducts[$product->getId()])) {
                 $products = [];
                 $catalogProductHelper = $this->simiObjectManager->get('\Magento\Catalog\Helper\Product');
                 $skipSaleableCheck = $catalogProductHelper->getSkipSaleableCheck();
-                // $product = $this->getProduct();
-                $allProducts = $product->getTypeInstance()->getUsedProducts($product, null);
-                $stockState = $this->simiObjectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
-                foreach ($allProducts as $childProduct) {
-                    // Optimize speed
-                    // Replace magento to check saleable for child product in a confugurable product
-                    $stockQty = $stockState->getStockQty($childProduct->getId(), $childProduct->getStore()->getWebsiteId());
-                    if ($stockQty <= 0) {
-                        $childProduct->setData('is_salable', false);
+                // $allProducts = $product->getTypeInstance()->getUsedProducts($product, null);
+                // $stockState = $this->simiObjectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
+                // foreach ($allProducts as $childProduct) {
+                //     // Optimize speed
+                //     // Replace magento to check saleable for child product in a confugurable product
+                //     $stockQty = $stockState->getStockQty($childProduct->getId(), $childProduct->getStore()->getWebsiteId());
+                //     if ($stockQty <= 0) {
+                //         $childProduct->setData('is_salable', false);
+                //     }
+                //     // End
+                //     if ($childProduct->isSaleable() || $skipSaleableCheck) {
+                //         $products[] = $childProduct;
+                //     }
+                // }
+
+                $productTypeInstance = $product->getTypeInstance();
+                $collection = $productTypeInstance->getUsedProductCollection($product);
+                // $collection->addStoreFilter($productTypeInstance->getStoreFilter($product));
+                $collection->addStoreFilter($this->storeManager->getStore());
+
+                foreach ($collection as $childProduct) {
+                    // if ($childProduct->isSaleable() || $skipSaleableCheck) {
+                    //     $products[] = $childProduct;
+                    // }
+                    $childProduct->load($childProduct->getId()); // load to get extension data
+                    $extension = $childProduct->getExtensionAttributes();
+                    $stockQty = 0;
+                    if ($extension) {
+                        $stockItem = $childProduct->getExtensionAttributes()->getStockItem();
+                        $stockQty = $stockItem->getQty();
                     }
-                    // End
-                    if ($childProduct->isSaleable() || $skipSaleableCheck) {
+                    if ($stockQty > 0 || $skipSaleableCheck) {
                         $products[] = $childProduct;
                     }
                 }
+
                 $this->allowProducts[$product->getId()] = $products;
             }
             return $this->allowProducts[$product->getId()];
