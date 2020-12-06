@@ -66,6 +66,13 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
             'customer.entity_id=vendor_user.customer_id',
             ['firstname'=>'firstname','lastname'=>'lastname','middlename'=>'middlename','email'=>'email', 'web_id' => 'website_id', 'store_id' => 'store_id']
         );
+
+        // Simi customize add logo
+        $this->getSelect()->join(
+            ['config'=>$this->getTable('ves_vendor_config')],
+            'config.vendor_id=vendor_user.vendor_id AND config.path = "general/store_information/logo" AND config.store_id = 0',
+            ['logo' => 'value']
+        );
         return $this;
     }
 }

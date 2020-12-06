@@ -68,13 +68,54 @@ class Attributes extends Generic
         $fieldset = $form->addFieldset('fieldset_'.$fset->getId(), ['legend' => $fset->getTitle(),'class' => 'fieldset-wide']);
         $fieldset->addType('file', 'Vnecoms\Vendors\Block\Adminhtml\Form\Element\File');
         $fieldset->addType('image', 'Vnecoms\Vendors\Block\Adminhtml\Form\Element\Image');
+        $fieldset->addType('image_view', 'Vnecoms\Vendors\Block\Adminhtml\Form\Element\ImageView');
         $fieldset->addType('boolean', 'Vnecoms\Vendors\Block\Adminhtml\Form\Element\Boolean');
         
         $this->_eventManager->dispatch('ves_vendors_vendor_tab_info_prepare_before', ['tab'=>$this,'form'=>$form,'fieldset'=>$fieldset]);
         
         $om = \Magento\Framework\App\ObjectManager::getInstance();
+
+        // Simi customize add logo, banner fieldset as view only
+        if ($fset->getFieldsetId() == 1) { // fieldset id = 1 is default vendors value from the beginning installed
+            $fieldset->addField(
+                'logo', 'image_view',
+                [
+                    'name' => 'vendor_data[logo]',
+                    'label' => __('Logo'),
+                    'class' => 'logo',
+                    'required' => 0,
+                    'disabled' => 1,
+                    'note' => '',
+                ]
+            );
+            $fieldset->addField(
+                'banner', 'image_view',
+                [
+                    'name' => 'vendor_data[banner]',
+                    'label' => __('Banner'),
+                    'class' => 'banner',
+                    'required' => 0,
+                    'disabled' => 1,
+                    'note' => '',
+                ]
+            );
+            $fieldset->addField(
+                'company', 'text',
+                [
+                    'name' => 'vendor_data[company]',
+                    'label' => __('Company'),
+                    'class' => '',
+                    'required' => 0,
+                    'note' => ''
+                ]
+            );
+        }
         
         foreach ($fset->getAttributes() as $attribute) {
+            // Simi customize move this attribute to general tab
+            if ($attribute->getAttributeCode() == 'banner') continue;
+            if ($attribute->getAttributeCode() == 'company') continue;
+
             if (($inputType = $attribute->getFrontendInput()) && !in_array(
                 $attribute->getAttributeCode(),
                 $this->_excludeAttributes
