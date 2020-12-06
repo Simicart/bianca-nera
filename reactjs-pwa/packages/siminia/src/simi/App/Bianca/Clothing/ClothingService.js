@@ -211,7 +211,7 @@ const ClothingService = (props) => {
                             <label htmlFor="phone">{Identify.__('Phone Number')}<span>*</span></label>
                             <div className={`form-input ${validate('phone', ['empty'])}`}>
                                 <input value={formData['phone']} onChange={(e) => onChangeInput('phone', e.target.value)} id="phone" name="phone" placeholder={Identify.__(`Phone number`)}
-                                    type="number" pattern="[0-9]"
+                                    type="number" pattern="[0–9]"
                                 />
                             </div>
                         </div>
