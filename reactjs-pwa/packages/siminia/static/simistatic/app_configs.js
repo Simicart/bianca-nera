@@ -170,7 +170,7 @@ var DASHBOARD_CONFIG = {
 				"Type Of Service":"نوع الخدمة",
 				"Email Address":"عنوان البريد الإلكتروني",
 				"Please fill in the form below for a quote.":"يرجى ملء النموذج أدناه للحصول على عرض أسعار.",
-				"CLOTHING ALTERATIONS":"تصليح الملابس",
+				"CLOTHING ALTERATIONS":"تعديلات",
 				"ALTERATION FORM":"نموذج التعديل",
 				"City - Country":"مدينة بلد",
 				"Type Of Product":"نوع المنتج",
