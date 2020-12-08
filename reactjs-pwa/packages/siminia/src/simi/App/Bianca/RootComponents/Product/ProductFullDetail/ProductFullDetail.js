@@ -195,7 +195,7 @@ class ProductFullDetail extends Component {
                         }) || []
                         if (callback) callback(this.stores);
                     }
-                });
+                }, 'GET', {limit: 9999});
             }
         } else {
             sendRequest('/rest/V1/simiconnector/storelocations', (data) => {
@@ -207,7 +207,7 @@ class ProductFullDetail extends Component {
                     }) || []
                     if (callback) callback(this.stores);
                 }
-            });
+            }, 'GET', {limit: 9999});
         }
         return this.stores;
     }
