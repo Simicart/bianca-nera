@@ -89,10 +89,10 @@ class Navigation extends React.Component{
             rootCateChildren = rootCateChildren.sort(function(a, b){
                 return a.position - b.position
             });
-            menuItems = rootCateChildren.map((item, index) => {
+            rootCateChildren.map((item, index) => {
                 var isActive = window.location.pathname.indexOf(item.url_path) === 1 ? 'active':'';
                 
-                if(!item.include_in_menu){
+                if(item.include_in_menu !== 1){
                     return null
                 }
                 if (!item.name)
@@ -103,7 +103,7 @@ class Navigation extends React.Component{
                         state: {}
                     }
                     const navItemContainerId = `nav-item-container-${item.id}`
-                    return (
+                    menuItems.push(
                         <div
                             key={index} 
                             id={navItemContainerId}
@@ -142,7 +142,7 @@ class Navigation extends React.Component{
                         </div>
                     )
                 } else {
-                    return (
+                    menuItems.push(
                         <Link 
                             className={classes["nav-item"]+' '+isActive}
                             key={index} 

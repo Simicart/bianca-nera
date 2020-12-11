@@ -22,8 +22,6 @@ const Navigation = props => {
     //if not logged in or out of session, clear the old things
     const simiSessId = Identify.getDataFromStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID)
     if (!isSignedIn && simiSessId) {
-        console.log('logged out or out of session')
-        console.log(currentUser)
         Identify.storeDataToStoreage(Identify.LOCAL_STOREAGE, Constants.SIMI_SESS_ID, null)
     }
 

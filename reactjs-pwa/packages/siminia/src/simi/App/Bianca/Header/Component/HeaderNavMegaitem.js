@@ -14,6 +14,7 @@ const NavMegaitem = props => {
         if (rootItem.children) {
             const childCats = rootItem.children.map((item, index) => {
                 if (!item.name) return '';
+                if (item.include_in_menu !== 1) return '';
                 let subChildLevel2 = [];
                 if (item.children) {
                     subChildLevel2 = item.children
