@@ -5,7 +5,7 @@ namespace Simi\Simiocean\Controller\Index;
 use Magento\Framework\App\Action\Context;
 
 
-class Invoice extends \Magento\Framework\App\Action\Action
+class InvoiceCancel extends \Magento\Framework\App\Action\Action
 {
     protected $helper;
     protected $objectManager;
@@ -22,8 +22,8 @@ class Invoice extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         echo '<pre>';
-        $invoiceNo = $this->objectManager->get('\Simi\Simiocean\Model\Service\Invoice')->syncPush();
-        $invoice = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Invoice')->getInvoice($invoiceNo); // 37000248
+        $invoiceNo = $this->objectManager->get('\Simi\Simiocean\Model\Service\Invoice')->syncCancel();
+        $invoice = $this->objectManager->get('\Simi\Simiocean\Model\Ocean\Invoice')->getInvoice($invoiceNo);
         var_dump($invoice);
         exit;
     }

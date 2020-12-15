@@ -8,7 +8,7 @@ namespace Simi\Simiocean\Model\Service;
 
 class Invoice extends \Magento\Framework\Model\AbstractModel
 {
-    const LIMIT = 100;
+    const LIMIT = 10;
     
     /**
      * @var \Magento\Store\Model\StoreManagerInterface,
@@ -103,7 +103,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
             $result = '';
             try{
                 $customerId = $this->getOceanCustomerId($oInvoice->getMcustomerId());
-                $total = 0.0;
+                $totalFinal = 0.0;
                 $totalVal = 0.0;
                 $totalDiscount = 0.0;
                 $totalQty = 0;
@@ -125,57 +125,76 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 }
                 $items = $invoice->getItems(); /** @var \Magento\Sales\Api\Data\InvoiceItemInterface[] */
                 $parentInvoiceItems = [];
+                $oceanItems = [];
                 foreach($items as $item){
-                    // For configurable product (or ocean parent product)
                     if ($this->isOceanProduct($item->getProductId())) {
-                        $baseDiscountAmount = max((float) $item->getBaseDiscountAmount(), 0);
-                        $baseDiscount = min($baseDiscountAmount, $item->getBaseRowTotal()); //this discount from parent item
-                        if (isset($parentOrderItems[$item->getOrderItemId()])) {
-                            $parentBaseDiscount[$item->getOrderItemId()] = $baseDiscount;
-                            $parentInvoiceItems[$item->getOrderItemId()] = $item;
-                        }
-                        $totalDiscount += $baseDiscount;
-                        $total += ((float) $item->getBaseRowTotal() - (float) $baseDiscount);
-                        $totalVal += (float) $item->getBaseRowTotal();
-                    }
-                    // For simple product
-                    $oProductData = $this->getOceanProductData($item->getProductId());
-                    if (isset($oProductData['sku']) && isset($oProductData['barcode'])) {
-                        $qty = $item->getQty();
-                        $totalQty += $qty;
-                        $baseDiscountAmount = max((float) $item->getBaseDiscountAmount(), 0);
-                        $baseDiscount = min($baseDiscountAmount, $item->getBaseRowTotal());
-                        $total += ((float) $item->getBaseRowTotal() - (float) $baseDiscount);
-                        $discountVal = 0.0;
-                        $price = 0.0;
-                        $currentPrice = 0.0;
-                        $finalPrice = 0.0;
-                        if (isset($parentOrderItemIds[$item->getOrderItemId()])) {
-                            $parentOrderItemId = $parentOrderItemIds[$item->getOrderItemId()];
-                            if (isset($parentBaseDiscount[$parentOrderItemId])) {
-                                $discountVal = max($baseDiscount, $parentBaseDiscount[$parentOrderItemId]);
+                        $skuBarcode = explode('_', $item->getSku());
+                        if (count($skuBarcode) == 2) {
+                            list ($sku, $barcode) = $skuBarcode;
+
+                            $baseDiscount = max((float) $item->getBaseDiscountAmount(), 0);
+                            $baseDiscount = min($baseDiscount, $item->getBaseRowTotal());
+
+                            $price = 0.0;
+                            $currentPrice = 0.0;
+                            $finalPrice = 0.0;
+
+                            // For configurable product (or ocean parent product)
+                            if (isset($parentOrderItems[$item->getOrderItemId()])) {
+                                $parentBaseDiscount[$item->getOrderItemId()] = $baseDiscount; //this discount from parent item
+                                $parentInvoiceItems[$item->getOrderItemId()] = $item;
+
+                                $oceanItems[$item->getSku()] = [
+                                    'SKU' => (string) $sku,
+                                    'BarCode' => (string) $barcode,
+                                    'IsOutput' => true,
+                                    'Quantity' => (int) $item->getQty(),
+                                    'DiscountVal' => (float) $baseDiscount,
+                                    'Price' => max($price, (float) $item->getBasePrice()),
+                                    'CurrentPrice' => max($currentPrice, (float) $item->getBasePrice()),
+                                    'FinalPrice' => max($finalPrice, (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                ];
+                                $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());
+                                continue;
                             }
-                            if (isset($parentInvoiceItems[$parentOrderItemId])) {
-                                $parentItem = $parentInvoiceItems[$parentOrderItemId];
-                                $price = (float) $parentItem->getBasePrice();
-                                $currentPrice = (float) $parentItem->getBasePrice();
-                                $finalPrice = (float) $parentItem->getBaseRowTotal() - $discountVal;
+
+                            if (isset($oceanItems[$item->getSku()])) {
+                                $oItem = $oceanItems[$item->getSku()];
+                                $oceanItems[$item->getSku()] = [
+                                    'SKU' => $oItem['SKU'],
+                                    'BarCode' => $oItem['BarCode'],
+                                    'IsOutput' => $oItem['IsOutput'],
+                                    'Quantity' => $oItem['Quantity'],
+                                    'DiscountVal' => $oItem['DiscountVal'] + (float) $item->getBaseDiscountAmount(),
+                                    'Price' => $oItem['Price'],
+                                    'CurrentPrice' => $oItem['CurrentPrice'],
+                                    'FinalPrice' => max($finalPrice, $oItem['FinalPrice'] + (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                ];
+                                $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());
+                            } else {
+                                $oceanItems[$item->getSku()] = [
+                                    'SKU' => (string) $sku,
+                                    'BarCode' => (string) $barcode,
+                                    'IsOutput' => true,
+                                    'Quantity' => (int) $item->getQty(),
+                                    'DiscountVal' => (float) $baseDiscount,
+                                    'Price' => max($price, (float) $item->getBasePrice()),
+                                    'CurrentPrice' => max($currentPrice, (float) $item->getBasePrice()),
+                                    'FinalPrice' => max($finalPrice, (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                ];
+                                $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());
                             }
+
+                            $oItem = $oceanItems[$item->getSku()];
+
+                            $totalQty += $oItem['Quantity'];
+                            $totalDiscount += $oItem['DiscountVal'];
+                            $totalFinal = $totalVal - $totalDiscount;
                         }
-                        $totalDiscount += $baseDiscount;
-                        $totalVal += (float) $item->getBaseRowTotal();
-                        $invoiceItems[] = array(
-                            'SKU' => (string) $oProductData['sku'],
-                            'BarCode' => (string) $oProductData['barcode'],
-                            'IsOutput' => true,
-                            'Quantity' => (int) $qty,
-                            'DiscountVal' => (float) $discountVal,
-                            'Price' => max($price, (float) $item->getBasePrice()),
-                            'CurrentPrice' => max($currentPrice, (float) $item->getBasePrice()),
-                            'FinalPrice' => max($finalPrice, (float) $item->getBaseRowTotal()),
-                        );
                     }
                 }
+
+                $invoiceItems = array_values($oceanItems);
 
                 if (empty($invoiceItems)) {
                     // This request push invoice does not has the ocean product item
@@ -205,7 +224,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                     'Notes' =>  'Order #'.$orderId . ' ' . $oInvoice->getNotes(),
                     'TotalDiscount' => abs($totalDiscount),
                     'TotalVal' => $totalVal,
-                    'FinalValue' => $total,
+                    'FinalValue' => $totalFinal,
                     'TotalQty' => (int) $totalQty,
                     'IsCustomerPoint' => $customerId ? true : false,
                     'Tax' => (float) $oInvoice->getTax(),
@@ -229,14 +248,14 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                             $data['SalesInvoicePayments'] = array(array(
                                 "PaymentTypeID" => $payType['PaymentTypeID'],
                                 // "ApprovalNo" => "021722022921",
-                                "Value" => $total
+                                "Value" => $totalFinal
                             ));
                         }
                     }
                 }
 
                 $oInvoice->setCustomerId($customerId);
-                $oInvoice->setTotal($total);
+                $oInvoice->setTotal($totalFinal);
                 $oInvoice->setItemsQty($totalQty);
                 $oInvoice->setHit($oInvoice->getHit() + 1);
 
@@ -266,6 +285,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                     $oInvoice->save();
                     $isSyncSuccess = true;
                     $hasSyncSuccess = true;
+                    return $invoiceNo;
                 }catch(\Exception $e){
                     $this->logger->debug(array(
                         'Warning! Save ocean invoice failed. InvoiceNo: '.$invoiceNo, 
@@ -304,7 +324,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
             $result = '';
             try{
                 $customerId = $this->getOceanCustomerId($cInvoice->getMcustomerId());
-                $total = 0.0;
+                $totalFinal = 0.0;
                 $totalVal = 0.0;
                 $totalQty = 0;
                 $totalDiscount = 0.0;
@@ -312,71 +332,91 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 $invoiceItems = array();
                 $creditmemo = $this->creditmemoRepository->get($cInvoice->getCreditmemoId());
                 $order = $creditmemo->getOrder();
-                $items = $order->getItems(); /** @var \Magento\Sales\Api\Data\InvoiceItemInterface[] */
-                $parentItems = array();
 
                 $parentBaseDiscount = [];
-
+                $parentOrderItems = [];
+                $parentOrderItemIds = [];
+                $items = $order->getItems(); /** @var \Magento\Sales\Api\Data\InvoiceItemInterface[] */
                 foreach($items as $item){
-                    // Add parent item array
                     if (!$item->getParentItemId()) {
-                        $parentItems[$item->getId()] = $item;
+                        $parentOrderItems[$item->getId()] = $item;
+                    } else {
+                        $parentOrderItemIds[$item->getId()] = $item->getParentItemId();
                     }
-                    // For configurable product
+                }
+                $parentInvoiceItems = [];
+                $oceanItems = [];
+
+                $items = $creditmemo->getItems();
+                foreach($items as $item){
                     if ($this->isOceanProduct($item->getProductId())) {
-                        $baseDiscountAmount = max((float) $item->getBaseDiscountAmount(), 0);
-                        $baseDiscount = min($baseDiscountAmount, $item->getBaseRowTotal()); //this discount from parent item
-                        
-                        if (!$item->getParentItemId()) {
-                            $parentBaseDiscount[$item->getId()] = $baseDiscount;
-                        }
-                        $totalDiscount += (float) $baseDiscount;
-                        $totalVal += (float) $item->getBaseRowTotal();
-                        $total += ((float) $item->getBaseRowTotal() - (float) $baseDiscount);
-                    }
-                    // For simple product
-                    $oProductData = $this->getOceanProductData($item->getProductId());
-                    if (isset($oProductData['sku']) && isset($oProductData['barcode'])) {
-                        $qty = $item->getQtyInvoiced();
-                        $totalQty += $qty;
+                        $skuBarcode = explode('_', $item->getSku());
+                        if (count($skuBarcode) == 2) {
+                            list ($sku, $barcode) = $skuBarcode;
 
-                        $discountVal = 0.0;
-                        $price          = $item->getBasePrice();
-                        $currentPrice   = $item->getBasePrice();
-                        $finalPrice     = $item->getBaseRowTotal();
-                        if ($item->getParentItemId() && isset($parentItems[$item->getParentItemId()])) {
-                            $parentItem = $parentItems[$item->getParentItemId()];
-                            $price          = $parentItem->getBasePrice();
-                            $currentPrice   = $parentItem->getBasePrice();
-                            $finalPrice     = $parentItem->getBaseRowTotal();
-                            if (isset($parentBaseDiscount[$item->getParentItemId()])) {
-                                $discountVal = (float) $parentBaseDiscount[$item->getParentItemId()];
+                            $baseDiscount = max((float) $item->getBaseDiscountAmount(), 0);
+                            $baseDiscount = min($baseDiscount, $item->getBaseRowTotal());
+
+                            $price = 0.0;
+                            $currentPrice = 0.0;
+                            $finalPrice = 0.0;
+
+                            // For configurable product (or ocean parent product)
+                            if (isset($parentOrderItems[$item->getOrderItemId()])) {
+                                $parentBaseDiscount[$item->getOrderItemId()] = $baseDiscount; //this discount from parent item
+                                $parentInvoiceItems[$item->getOrderItemId()] = $item;
+
+                                $oceanItems[$item->getSku()] = [
+                                    'SKU' => (string) $sku,
+                                    'BarCode' => (string) $barcode,
+                                    'IsOutput' => true,
+                                    'Quantity' => (int) $item->getQty(),
+                                    'DiscountVal' => (float) $baseDiscount,
+                                    'Price' => max($price, (float) $item->getBasePrice()),
+                                    'CurrentPrice' => max($currentPrice, (float) $item->getBasePrice()),
+                                    'FinalPrice' => max($finalPrice, (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                ];
+                                $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());
+                                continue;
                             }
-                        }
 
-                        $baseDiscountAmount = max((float) $item->getBaseDiscountAmount(), 0);
-                        $baseDiscount = min($baseDiscountAmount, $item->getBaseRowTotal());
-                        if (!$item->getParentItemId()) {
-                            $parentBaseDiscount[$item->getId()] = $baseDiscount;
-                        }
-                        $totalDiscount += (float) $baseDiscount;
-                        $totalVal += (float) $item->getBaseRowTotal();
-                        $total += ((float) $item->getBaseRowTotal() - (float) $baseDiscount);
+                            if (isset($oceanItems[$item->getSku()])) {
+                                $oItem = $oceanItems[$item->getSku()];
+                                $oceanItems[$item->getSku()] = [
+                                    'SKU' => $oItem['SKU'],
+                                    'BarCode' => $oItem['BarCode'],
+                                    'IsOutput' => $oItem['IsOutput'],
+                                    'Quantity' => $oItem['Quantity'],
+                                    'DiscountVal' => $oItem['DiscountVal'] + (float) $item->getBaseDiscountAmount(),
+                                    'Price' => $oItem['Price'],
+                                    'CurrentPrice' => $oItem['CurrentPrice'],
+                                    'FinalPrice' => max($finalPrice, $oItem['FinalPrice'] + (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                ];
+                                $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());
+                            } else {
+                                $oceanItems[$item->getSku()] = [
+                                    'SKU' => (string) $sku,
+                                    'BarCode' => (string) $barcode,
+                                    'IsOutput' => true,
+                                    'Quantity' => (int) $item->getQty(),
+                                    'DiscountVal' => (float) $baseDiscount,
+                                    'Price' => max($price, (float) $item->getBasePrice()),
+                                    'CurrentPrice' => max($currentPrice, (float) $item->getBasePrice()),
+                                    'FinalPrice' => max($finalPrice, (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                ];
+                                $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());
+                            }
 
-                        $invoiceItems[] = array(
-                            'SKU' => (string) $oProductData['sku'],
-                            'BarCode' => (string) $oProductData['barcode'],
-                            'IsOutput' => false, // you should pass the[ReturnCash] property. And in the details make the [IsOutput] = false
-                            'Quantity' => (int) $qty,
-                            'DiscountVal' => (float) $discountVal,
-                            'Price' => (float) $price,
-                            'CurrentPrice' => (float) $currentPrice,
-                            'FinalPrice' => (float) $finalPrice - (float) $discountVal,
-                        );
+                            $oItem = $oceanItems[$item->getSku()];
+
+                            $totalQty += $oItem['Quantity'];
+                            $totalDiscount += $oItem['DiscountVal'];
+                            $totalFinal = $totalVal - $totalDiscount;
+                        }
                     }
                 }
 
-                $total = min($total, (float)$cInvoice->getTotal()); // creditmemo baseGrandTotal
+                $invoiceItems = array_values($oceanItems);
 
                 if (empty($invoiceItems)) {
                     // This request push invoice does not has the ocean product item
@@ -410,8 +450,8 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                     'Notes' =>  $notes,
                     'TotalDiscount' => (float) -abs($totalDiscount),
                     'TotalVal' => (float) -$totalVal,
-                    'FinalValue' => (float) -$total,
-                    'ReturnCash' => (float) -$total,
+                    'FinalValue' => (float) -$totalFinal,
+                    'ReturnCash' => (float) -$totalFinal,
                     'TotalQty' => (int) -$totalQty,
                     'IsCustomerPoint' => $customerId ? true : false,
                     'Tax' => (float) $cInvoice->getTax(),
@@ -450,6 +490,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                     $cInvoice->save();
                     $isSyncSuccess = true;
                     $hasSyncSuccess = true;
+                    return $invoiceNo;
                 }catch(\Exception $e){
                     $this->logger->debug(array(
                         'Warning! Save ocean invoice failed. InvoiceNo: '.$invoiceNo, 
@@ -544,7 +585,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
      * @param int $productId
      * @return string|boolean
      */
-    protected function getOceanProductBarcode($productId){
+    /* protected function getOceanProductBarcode($productId){
         if ($productId) {
             $connection = $this->oceanProductResource->getConnection();
             $bind = ['product_id' => $productId];
@@ -556,14 +597,14 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
             return $connection->fetchOne($select, $bind);
         }
         return false;
-    }
+    } */
 
     /**
      * Get ocean product data by product id
      * @param int $productId
      * @return object|false
      */
-    protected function getOceanProductData($productId){
+    /* protected function getOceanProductData($productId){
         if ($productId) {
             $connection = $this->oceanProductResource->getConnection();
             $bind = ['product_id' => $productId];
@@ -576,13 +617,13 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
             return $connection->fetchRow($select, $bind);
         }
         return false;
-    }
+    } */
     
     /**
      * Check is parent ocean product
      * @return boolean
      */
-    protected function isOceanProduct($productId){
+    /* protected function isOceanProduct($productId){
         if ($productId) {
             $connection = $this->oceanProductResource->getConnection();
             $bind = ['product_id' => $productId];
@@ -593,6 +634,51 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 ->where('barcode IS NOT NULL')
                 ->limit(1);
             return (bool) $connection->fetchOne($select, $bind);
+        }
+        return false;
+    } */
+    /**
+     * Check is ocean product
+     * @return boolean
+     */
+    protected function isOceanProduct($productId){
+        if ($productId) {
+            $resource = $this->oceanInvoice->getResource();
+            $connection = $this->oceanProductResource->getConnection();
+            $bind = ['product_id' => $productId];
+            $select = $connection->select()
+                ->from(
+                    ['v' => $resource->getTable('catalog_product_entity_int')],
+                    "value"
+                )
+                ->joinLeft(
+                    ['e' => $resource->getTable('catalog_product_entity')],
+                    'v.entity_id = e.entity_id AND v.store_id = 0',
+                    "entity_id"
+                )
+                ->joinLeft(
+                    ['a' => $resource->getTable('eav_attribute')],
+                    'a.attribute_id = v.attribute_id',
+                    ""
+                )
+                ->where('e.entity_id = :product_id')
+                ->where('a.attribute_code = "is_ocean"')
+                ->where('v.value = 1')
+                ->limit(1);
+            return (bool) $connection->fetchOne($select, $bind);
+        }
+        return false;
+    }
+
+    /**
+     * Check order has an ocean item
+     */
+    public function hasOceanItem($order){
+        $items = $order->getItems(); /** @var \Magento\Sales\Api\Data\InvoiceItemInterface[] */
+        foreach($items as $item){
+            if ($this->isOceanProduct($item->getProductId())) {
+                return true;
+            }
         }
         return false;
     }

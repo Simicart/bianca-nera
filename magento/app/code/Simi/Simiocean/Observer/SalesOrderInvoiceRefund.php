@@ -11,15 +11,18 @@ use Magento\Framework\Event\Observer;
 class SalesOrderInvoiceRefund implements \Magento\Framework\Event\ObserverInterface
 {
     protected $oceanInvoiceCancelFactory;
+    protected $invoiceService;
 
     /** @var \Simi\Simiocean\Model\Logger */
     protected $logger;
 
     public function __construct(
         \Simi\Simiocean\Model\InvoiceCancelFactory $oceanInvoiceCancelFactory,
+        \Simi\Simiocean\Model\Service\Invoice $invoiceService,
         \Simi\Simiocean\Model\Logger $logger
     ){
         $this->oceanInvoiceCancelFactory = $oceanInvoiceCancelFactory;
+        $this->invoiceService = $invoiceService;
         $this->logger              = $logger;
     }
 
@@ -30,6 +33,8 @@ class SalesOrderInvoiceRefund implements \Magento\Framework\Event\ObserverInterf
 
         try{
             $order = $creditmemo->getOrder();
+            if (!$this->invoiceService->hasOceanItem($order)) return;
+
             $oceanInvoice = $this->oceanInvoiceCancelFactory->create();
             $datetime = gmdate('Y-m-d H:i:s');
             $oceanInvoice->setData(

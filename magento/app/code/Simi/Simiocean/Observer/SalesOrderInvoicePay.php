@@ -11,15 +11,18 @@ use Magento\Framework\Event\Observer;
 class SalesOrderInvoicePay implements \Magento\Framework\Event\ObserverInterface
 {
     protected $oceanInvoiceFactory;
+    protected $invoiceService;
 
     /** @var \Simi\Simiocean\Model\Logger */
     protected $logger;
 
     public function __construct(
         \Simi\Simiocean\Model\InvoiceFactory $oceanInvoiceFactory,
+        \Simi\Simiocean\Model\Service\Invoice $invoiceService,
         \Simi\Simiocean\Model\Logger $logger
     ){
         $this->oceanInvoiceFactory = $oceanInvoiceFactory;
+        $this->invoiceService = $invoiceService;
         $this->logger              = $logger;
     }
 
@@ -28,6 +31,8 @@ class SalesOrderInvoicePay implements \Magento\Framework\Event\ObserverInterface
         $invoice = $observer->getEvent()->getInvoice();
         if ($invoice->getState() != \Magento\Sales\Model\Order\Invoice::STATE_PAID) return;
         $order = $invoice->getOrder();
+        if (!$this->invoiceService->hasOceanItem($order)) return;
+
         $items = $invoice->getItems(); /** @var \Magento\Sales\Api\Data\InvoiceItemInterface[] */
         // $itemIds = array();
         // $itemIdsQty = array();

@@ -36,6 +36,8 @@ class Productsync
 
     public function syncPull()
     {
+        return false;
+
         if ($this->config->isSyncEnabled()) {
             $this->productService->syncPull();
             $this->logger->debug(array('Cron: Product sync success!'));
@@ -45,6 +47,8 @@ class Productsync
 
     public function syncPullUpdate()
     {
+        return false;
+        
         if ($this->config->isSyncEnabled()) {
             $this->productService->syncUpdatePull();
             $this->logger->debug(array('Cron: Product sync pull update success!'));

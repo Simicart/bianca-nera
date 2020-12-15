@@ -32,6 +32,7 @@ class Category
 
     public function syncPull()
     {
+        return false;
         if ($this->config->isSyncEnabled()) {
             try{
                 $this->categoryService->syncFromOcean();
