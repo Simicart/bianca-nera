@@ -17,6 +17,7 @@ require('./SpecialCartItem.scss')
 const getVendorName = (vendorId) => {
     const storeConfig = Identify.getStoreConfig()
     const vendorList = storeConfig.simiStoreConfig.config.vendor_list;
+    if (!vendorList) return '';
     const vendorName = vendorList.find(vendor => {
         return vendor.entity_id === vendorId; //entity_id is Vendor ID in vendor model
     })

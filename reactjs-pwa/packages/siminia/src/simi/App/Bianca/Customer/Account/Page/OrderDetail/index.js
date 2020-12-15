@@ -179,13 +179,15 @@ const Detail = (props) => {
                 if (item.vendor_id !== 'default' && storeConfig) {
                     try {
                         const vendorList = storeConfig.simiStoreConfig.config.vendor_list;
-                        const vendor = vendorList.find(vendor => {
-                            return vendor.entity_id === item.vendor_id
-                        })
-                        if (vendor && vendor.firstname) vendorName = `${vendor.firstname}`;
-                        if (vendor && vendor.lastname) vendorName = `${vendorName} ${vendor.lastname}`;
-                        const {profile} = vendor || {}
-                        vendorName = profile && profile.store_name || vendorName;
+                        if (vendorList) {
+                            const vendor = vendorList.find(vendor => {
+                                return vendor.entity_id === item.vendor_id
+                            })
+                            if (vendor && vendor.firstname) vendorName = `${vendor.firstname}`;
+                            if (vendor && vendor.lastname) vendorName = `${vendorName} ${vendor.lastname}`;
+                            const {profile} = vendor || {}
+                            vendorName = profile && profile.store_name || vendorName;
+                        }
                     } catch (err) { }
                 }
                 

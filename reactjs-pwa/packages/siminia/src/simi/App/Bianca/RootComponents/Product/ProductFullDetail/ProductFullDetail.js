@@ -793,6 +793,7 @@ class ProductFullDetail extends Component {
             const configs = Identify.getStoreConfig();
             if (configs && configs.simiStoreConfig && configs.simiStoreConfig.config && configs.simiStoreConfig.config.vendor_list) {
                 const vendorList = configs.simiStoreConfig.config.vendor_list;
+                if (!vendorList) return '';
                 const vendor = vendorList.find((vendor) => {
                     return parseInt(vendor.entity_id) === parseInt(attribute_values.vendor_id);
                 });

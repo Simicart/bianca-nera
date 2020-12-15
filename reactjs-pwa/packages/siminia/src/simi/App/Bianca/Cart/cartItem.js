@@ -64,6 +64,7 @@ const CartItem = props => {
         let vendorList;
         if(storeConfig){
             vendorList = storeConfig.simiStoreConfig.config.vendor_list;
+            if (!vendorList) return '';
             const vendor = vendorList.find(vendor => {
                 if(vendorId === 'default'){
                     return null;
