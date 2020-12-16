@@ -95,7 +95,19 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
         $oceanInvoices = $this->getInvoiceSync($size);
         $isSyncSuccess = true;
         $hasSyncSuccess = false;
-        $paymentTypes = false;
+        $paymentTypes = [];
+        
+        // Get ocean payment types
+        try{
+            $payments = $this->invoiceApi->getPayment();
+            foreach($payments as $pType){
+                $typeName = $pType['PaymentTypeEnName'] ?? '';
+                if ($typeName) {
+                    $paymentTypes[$typeName] = $pType;
+                }
+            }
+        }catch(\Exception $e){}
+
         foreach($oceanInvoices as $oInvoice){
             if (!$oInvoice->getInvoiceId()) {
                 continue;
@@ -233,21 +245,30 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
 
                 // Add ocean payment type (Optional)
                 if (!$paymentMethod->isOffline()) {
-                    if (!$paymentTypes) {
-                        $paymentTypes = $this->invoiceApi->getPayment();
-                    }
-                    if (is_array($paymentTypes) && count($paymentTypes)) {
-                        $payType = false;
-                        foreach($paymentTypes as $pType){
-                            if (isset($pType['PaymentTypeEnName']) && strpos($pType['PaymentTypeEnName'], 'VISA') !== false) {
-                                $payType = $pType;
-                                break;
+                    if ($paymentTypes && is_array($paymentTypes) && !empty($paymentTypes)) {
+                        if ($paymentMethod->getCode() === 'simiknet' && isset($paymentTypes['K-NET'])) {
+                            $data['SalesInvoicePayments'] = array(array(
+                                "PaymentTypeID" => $paymentTypes['K-NET']['PaymentTypeID'],
+                                "Value" => $totalFinal
+                            ));
+                        } elseif (isset($paymentTypes['VISA'])) {
+                            if (isset($paymentTypes['VISA']['PaymentTypeID'])) {
+                                $data['SalesInvoicePayments'] = array(array(
+                                    "PaymentTypeID" => $paymentTypes['VISA']['PaymentTypeID'],
+                                    // "ApprovalNo" => "021722022921",
+                                    "Value" => $totalFinal
+                                ));
                             }
                         }
-                        if ($payType && is_array($payType) && isset($payType['PaymentTypeID'])) {
+                    }
+                }
+                
+                // Fallback to Cash payment method
+                if(!isset($data['SalesInvoicePayments'])){
+                    if ($paymentTypes && is_array($paymentTypes) && !empty($paymentTypes)) {
+                        if (isset($paymentTypes['Cash']['PaymentTypeID'])) {
                             $data['SalesInvoicePayments'] = array(array(
-                                "PaymentTypeID" => $payType['PaymentTypeID'],
-                                // "ApprovalNo" => "021722022921",
+                                "PaymentTypeID" => $paymentTypes['Cash']['PaymentTypeID'],
                                 "Value" => $totalFinal
                             ));
                         }
@@ -317,6 +338,19 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
         $canceledInvoices = $this->getCanceledInvoice($size);
         $isSyncSuccess = true;
         $hasSyncSuccess = false;
+        $paymentTypes = [];
+        
+        // Get ocean payment types
+        try{
+            $payments = $this->invoiceApi->getPayment();
+            foreach($payments as $pType){
+                $typeName = $pType['PaymentTypeEnName'] ?? '';
+                if ($typeName) {
+                    $paymentTypes[$typeName] = $pType;
+                }
+            }
+        }catch(\Exception $e){}
+        
         foreach($canceledInvoices as $cInvoice){
             if (!$cInvoice->getCreditmemoId()) {
                 continue;
@@ -460,6 +494,38 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                     'Tax' => (float) $cInvoice->getTax(),
                     'SalesInvoiceItems' => $invoiceItems,
                 );
+
+                // Add ocean payment type (Optional)
+                if (!$paymentMethod->isOffline()) {
+                    if ($paymentTypes && is_array($paymentTypes) && !empty($paymentTypes)) {
+                        if ($paymentMethod->getCode() === 'simiknet' && isset($paymentTypes['K-NET'])) {
+                            $data['SalesInvoicePayments'] = array(array(
+                                "PaymentTypeID" => $paymentTypes['K-NET']['PaymentTypeID'],
+                                "Value" => $totalFinal
+                            ));
+                        } elseif (isset($paymentTypes['VISA'])) {
+                            if (isset($paymentTypes['VISA']['PaymentTypeID'])) {
+                                $data['SalesInvoicePayments'] = array(array(
+                                    "PaymentTypeID" => $paymentTypes['VISA']['PaymentTypeID'],
+                                    // "ApprovalNo" => "021722022921",
+                                    "Value" => $totalFinal
+                                ));
+                            }
+                        }
+                    }
+                }
+                
+                // Fallback to Cash payment method
+                if(!isset($data['SalesInvoicePayments'])){
+                    if ($paymentTypes && is_array($paymentTypes) && !empty($paymentTypes)) {
+                        if (isset($paymentTypes['Cash']['PaymentTypeID'])) {
+                            $data['SalesInvoicePayments'] = array(array(
+                                "PaymentTypeID" => $paymentTypes['Cash']['PaymentTypeID'],
+                                "Value" => $totalFinal
+                            ));
+                        }
+                    }
+                }
 
                 $cInvoice->setCustomerId($customerId);
                 // $cInvoice->setTotal($total); // total already set from observer
