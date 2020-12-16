@@ -366,7 +366,8 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                 $invoiceItems = array();
                 $creditmemo = $this->creditmemoRepository->get($cInvoice->getCreditmemoId());
                 $order = $creditmemo->getOrder();
-
+                $payment = $order->getPayment();
+                $paymentMethod = $payment->getMethodInstance(); // to check is online
                 $parentBaseDiscount = [];
                 $parentOrderItems = [];
                 $parentOrderItemIds = [];
