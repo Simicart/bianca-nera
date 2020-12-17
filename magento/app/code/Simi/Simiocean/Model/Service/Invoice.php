@@ -404,12 +404,12 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                                 $oceanItems[$item->getSku()] = [
                                     'SKU' => (string) $sku,
                                     'BarCode' => (string) $barcode,
-                                    'IsOutput' => true,
-                                    'Quantity' => - (int) $item->getQty(),
-                                    'DiscountVal' => - (float) $baseDiscount,
-                                    'Price' => - max($price, (float) $item->getBasePrice()),
-                                    'CurrentPrice' => - max($currentPrice, (float) $item->getBasePrice()),
-                                    'FinalPrice' => - max($finalPrice, (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                    'IsOutput' => false, // for cancel invoice is false
+                                    'Quantity' => (int) $item->getQty(),
+                                    'DiscountVal' => (float) $baseDiscount,
+                                    'Price' => max($price, (float) $item->getBasePrice()),
+                                    'CurrentPrice' => max($currentPrice, (float) $item->getBasePrice()),
+                                    'FinalPrice' => max($finalPrice, (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
                                 ];
 
                                 $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());
@@ -423,10 +423,10 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                                     'BarCode' => $oItem['BarCode'],
                                     'IsOutput' => $oItem['IsOutput'],
                                     'Quantity' => $oItem['Quantity'],
-                                    'DiscountVal' => - (abs($oItem['DiscountVal']) + (float) $item->getBaseDiscountAmount()),
+                                    'DiscountVal' => $oItem['DiscountVal'] + (float) $item->getBaseDiscountAmount(),
                                     'Price' => $oItem['Price'],
                                     'CurrentPrice' => $oItem['CurrentPrice'],
-                                    'FinalPrice' => - max($finalPrice, abs($oItem['FinalPrice']) + (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                    'FinalPrice' => max($finalPrice, $oItem['FinalPrice'] + (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
                                 ];
 
                                 $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());
@@ -434,12 +434,12 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                                 $oceanItems[$item->getSku()] = [
                                     'SKU' => (string) $sku,
                                     'BarCode' => (string) $barcode,
-                                    'IsOutput' => true,
-                                    'Quantity' => - (int) $item->getQty(),
-                                    'DiscountVal' => - (float) $baseDiscount,
-                                    'Price' => - max($price, (float) $item->getBasePrice()),
-                                    'CurrentPrice' => - max($currentPrice, (float) $item->getBasePrice()),
-                                    'FinalPrice' => - max($finalPrice, (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
+                                    'IsOutput' => false,
+                                    'Quantity' => (int) $item->getQty(),
+                                    'DiscountVal' => (float) $baseDiscount,
+                                    'Price' => max($price, (float) $item->getBasePrice()),
+                                    'CurrentPrice' => max($currentPrice, (float) $item->getBasePrice()),
+                                    'FinalPrice' => max($finalPrice, (float) $item->getBaseRowTotalInclTax() - (float) $baseDiscount),
                                 ];
 
                                 $totalVal += max(0.0, (float) $item->getBaseRowTotalInclTax());

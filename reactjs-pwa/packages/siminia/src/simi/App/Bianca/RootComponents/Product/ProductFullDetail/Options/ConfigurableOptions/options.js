@@ -114,6 +114,9 @@ class Options extends Component {
         }
         return options.map(option => {
             //filter option values for color
+            if(option.attribute_code === 'size' && option.values){ // sorting
+                option.values.sort((a, b) => parseInt(a.label) > parseInt(b.label) ? 1 : -1 );
+            }
             let _option = {...option}
             /* if(_option.attribute_code === 'color' && instockColors.length){
                 _option.values = _option.values.filter((value) => instockColors.includes(value.value_index));
