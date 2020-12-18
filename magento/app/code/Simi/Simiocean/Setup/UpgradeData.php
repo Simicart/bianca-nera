@@ -80,5 +80,29 @@ class UpgradeData implements UpgradeDataInterface
                 )
             );
         }
+
+        /** Update vendor entity attribute */
+        if ($context->getVersion() && version_compare($context->getVersion(), '1.0.5', '<')) {
+            $this->eavSetup->addAttribute(
+                \Vnecoms\Vendors\Model\Vendor::ENTITY,
+                'ocean_brand_id',
+                [
+                    'type' => 'int',
+                    'nullable'  => true,
+                    'length'    =>  10,
+                    'comment'   => 'Ocean BrandID as magento vendor_id',
+                    'label'     => 'Ocean BrandID',
+                    'visible'                    => false,
+                    'required'                   => false,
+                    'user_defined'               => false,
+                    'searchable'                 => false,
+                    'filterable'                 => false,
+                    'comparable'                 => false,
+                    'visible_on_front'           => false,
+                    'visible_in_advanced_search' => false,
+                    'is_html_allowed_on_front'   => false,
+                ]
+            );
+        }
     }
 }

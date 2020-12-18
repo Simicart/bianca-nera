@@ -59,4 +59,13 @@ class Productsync
 
         return true;
     }
+
+    public function syncPullUpdateCustom()
+    {
+        if ($this->config->isSyncEnabled()) {
+            $this->productService->syncUpdatePullCustom();
+            // $this->logger->debug(array('Cron: Product sync pull update success!'));
+        }
+        return true;
+    }
 }

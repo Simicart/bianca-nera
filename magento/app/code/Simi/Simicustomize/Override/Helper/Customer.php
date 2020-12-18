@@ -128,9 +128,11 @@ class Customer extends \Simi\Simiconnector\Helper\Customer
             ->setFirstname($data->firstname)
             ->setLastname($data->lastname)
             ->setEmail($data->email);
-        $subData = (object) $data->vendor_data;
-        if (isset($subData->telephone) && $subData->telephone) {
-            $customer->setCustomAttribute('mobilenumber', $subData->telephone);
+        if (isset($data->vendor_data)) {
+            $subData = (object) $data->vendor_data;
+            if (isset($subData->telephone) && $subData->telephone) {
+                $customer->setCustomAttribute('mobilenumber', $subData->telephone);
+            }
         }
         $this->simiObjectManager->get('Simi\Simicustomize\Override\Helper\Customer')->applyDataToCustomer($customer, $data);
 

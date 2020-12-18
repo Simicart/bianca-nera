@@ -23,6 +23,8 @@ use Magento\Framework\Reflection\MethodsMap;
 use Simi\Simiocean\Api\Data\ProductInterface as SimioceanProductInterface;
 use Simi\Simiocean\Model\ProductFactory as SimioceanProductFactory;
 use Simi\Simiocean\Model\ResourceModel\Product as SimioceanProductResourceModel;
+use Simi\Simiocean\Model\SyncTable\Type;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class Product extends \Magento\Framework\Model\AbstractModel
 {
@@ -33,6 +35,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
     protected $colorMapping;
     protected $sizeMapping;
     protected $brandMapping;
+    protected $vendorMapping;
 
     protected $messages = []; // message texts
 
@@ -160,6 +163,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
         \Simi\Simiocean\Model\Product\ColorMapping $colorMapping,
         \Simi\Simiocean\Model\Product\SizeMapping $sizeMapping,
         \Simi\Simiocean\Model\Product\BrandMapping $brandMapping,
+        \Simi\Simiocean\Model\Product\VendorMapping $vendorMapping,
         \Simi\Simiocean\Model\Service\Category $categoryService, 
         \Simi\Simiocean\Model\SyncTable $syncTable,
         \Simi\Simiocean\Model\SyncTableFactory $syncTableFactory,
@@ -199,6 +203,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $this->colorMapping = $colorMapping;
         $this->sizeMapping = $sizeMapping;
         $this->brandMapping = $brandMapping;
+        $this->vendorMapping = $vendorMapping;
         $this->syncTable = $syncTable;
         $this->syncTableFactory = $syncTableFactory;
         $this->simioceanProductFactory = $simioceanProductFactory;
@@ -657,6 +662,192 @@ class Product extends \Magento\Framework\Model\AbstractModel
             $lastSyncTable->setUpdatedTo($dateToGmt);
             $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
             $lastSyncTable->save();
+            return $hasUpdate;
+        } else {
+            if ($lastSyncTable->getId()){
+                $lastSyncTable->setRecordNumber(0);
+                $lastSyncTable->save();
+            }
+            $this->logger->debug(array(
+                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                'Server: '.$oProducts
+            ));
+        }
+        return false;
+    }
+
+    /**
+     * Sync product updated from ocean to website
+     * Only for Brand -> Designer, Fabric -> Brand
+     */
+    public function syncUpdatePullCustom(){
+        $page = 1;
+        $size = self::LIMIT;
+        $lastDays = 1; // 1 day ago from now
+
+        if ($this->config->getProductSyncNumber() != null) {
+            $size = (int)$this->config->getProductSyncNumber();
+        }
+        // Get time and page number from last synced
+        $timeFrom = 'now';
+        $timeTo = 'now';
+        $lastSyncTable = $this->syncTable->getLastSyncByTime(Type::TYPE_PRODUCT_UPDATE_CUSTOM);
+        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
+            if ($lastSyncTable->getRecordNumber() > 0) {
+                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
+                $timeTo = $lastSyncTable->getUpdatedTo();
+                $timeFrom = $lastSyncTable->getUpdatedFrom();
+            } else {
+                $timeFrom = $lastSyncTable->getUpdatedTo();
+            }
+        }
+
+        // ToDate
+        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
+        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
+        $dateToParam = $dateTo->getTimestamp();
+
+        // FromDate
+        $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
+        if ($timeFrom == 'now') {
+            $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
+        }
+        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
+            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
+        }
+        $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
+        $dateFromParam = $dateFrom->getTimestamp();
+
+        try{
+            $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
+        }catch(\Exception $e){
+            $this->logger->debug(array(
+                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                $e->getMessage()
+            ));
+            return false;
+        }
+
+        // testing
+        // $oProducts = $this->productApi->getProductSku('20132005'); // Get products from ocean with sku
+
+        if (is_array($oProducts)) {
+            $hasUpdate = false;
+            $records = count($oProducts);
+            $oceanConfigurable = array();
+
+            foreach ($oProducts as $oProduct) {
+                if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
+                    && $oProduct['SKU'] && $oProduct['BarCode']
+                ) {
+                    $magentoSku = $oProduct['SKU'].'_'.$oProduct['BarCode'];
+                    $oceanObject = $this->dataObjectFactory->create();
+                    $oceanObject->setData($oProduct);
+                    
+                    try {
+                        $product = $this->productRepository->get($magentoSku, true);
+                        
+                        $needSave = false;
+
+                        // sync brand
+                        $brandId = $this->brandMapping->getMatchingBrand(
+                            $oceanObject->getData('FabricEnName'), 
+                            $oceanObject->getData('FabricArName')
+                        );
+                        if ($product->getBrand() != $brandId) {
+                            $product->setBrand($brandId);
+                            $product->setCustomAttribute('brand', $brandId);
+                            $needSave = true;
+                        }
+
+                        // sync vendor (designer)
+                        $vendorId = $this->vendorMapping->getMatching(
+                            $oceanObject->getData('BrandID'), 
+                            $oceanObject->getData('BrandEnName'),
+                            $oceanObject->getData('BrandArName')
+                        );
+
+                        if ($product->getVendorId() != $vendorId) {
+                            $product->setVendorId($vendorId);
+                            $needSave = true;
+                        }
+
+                        if ($needSave) {
+                            $product->setStoreId(0);
+                            $product->save();
+                            // $this->productRepository->save($product);
+                        }
+
+                        $oceanConfigurable[$oProduct['SKU']] = $oceanObject;
+
+                        $hasUpdate = true;
+
+                    } catch (NoSuchEntityException $e) {
+                        continue;
+                    } catch (\Exception $e) {
+                        $this->logger->debug($e->getMessage());
+                        continue;
+                    }
+                }
+            }
+
+            // Update configurable product
+            if (!empty($oceanConfigurable)) {
+                $storeId = (int)$this->storeManager->getStore()->getId();
+                foreach ($oceanConfigurable as $sku => $oceanObject) {
+                    if ($product = $this->getProductExists($sku, true, $storeId)) {
+                        try {
+                        
+                            $needSave = false;
+
+                            // Update brand
+                            $brandId = $this->brandMapping->getMatchingBrand(
+                                $oceanObject->getData('FabricEnName'), 
+                                $oceanObject->getData('FabricArName')
+                            );
+                            if ($product->getBrand() != $brandId) {
+                                $product->setBrand($brandId);
+                                $product->setCustomAttribute('brand', $brandId);
+                                $needSave = true;
+                            }
+
+                            // Update vendor
+                            $vendorId = $this->vendorMapping->getMatching(
+                                $oceanObject->getData('BrandID'), 
+                                $oceanObject->getData('BrandEnName'),
+                                $oceanObject->getData('BrandArName')
+                            );
+                            if ($product->getVendorId() != $vendorId) {
+                                $product->setVendorId($vendorId);
+                                $needSave = true;
+                            }
+
+                            if ($needSave) {
+                                $product->setStoreId(0);
+                                $product->save();
+                                // $this->productRepository->save($product);
+                            }
+
+                            $hasUpdate = true;
+
+                        } catch (\Exception $e) {
+                            $this->logger->debug($e->getMessage());
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            $lastSyncTable->setId(null);
+            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_CUSTOM);
+            $lastSyncTable->setPageNum($page);
+            $lastSyncTable->setPageSize($size);
+            $lastSyncTable->setRecordNumber($records);
+            $lastSyncTable->setUpdatedFrom($dateFromGmt);
+            $lastSyncTable->setUpdatedTo($dateToGmt);
+            $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
+            $lastSyncTable->save();
+            
             return $hasUpdate;
         } else {
             if ($lastSyncTable->getId()){

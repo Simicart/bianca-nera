@@ -23,7 +23,7 @@ class Update extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         echo '<pre>';
-        $data = $this->serviceProduct->syncUpdatePull();
+        $data = $this->serviceProduct->syncUpdatePullCustom();
         var_dump($data);
         exit;
     }
