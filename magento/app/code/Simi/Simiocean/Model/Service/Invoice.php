@@ -72,13 +72,7 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
         parent::__construct($context, $registry);
     }
 
-
-    public function testpayment(){
-        $payments = $this->invoiceApi->getPayment();
-        var_dump($payments);die;
-        return true;
-    }
-
+    
     public function process(){
         return true;
     }
@@ -341,15 +335,15 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
         $paymentTypes = [];
         
         // Get ocean payment types
-        try{
-            $payments = $this->invoiceApi->getPayment();
-            foreach($payments as $pType){
-                $typeName = $pType['PaymentTypeEnName'] ?? '';
-                if ($typeName) {
-                    $paymentTypes[$typeName] = $pType;
-                }
-            }
-        }catch(\Exception $e){}
+        // try{
+        //     $payments = $this->invoiceApi->getPayment();
+        //     foreach($payments as $pType){
+        //         $typeName = $pType['PaymentTypeEnName'] ?? '';
+        //         if ($typeName) {
+        //             $paymentTypes[$typeName] = $pType;
+        //         }
+        //     }
+        // }catch(\Exception $e){}
         
         foreach($canceledInvoices as $cInvoice){
             if (!$cInvoice->getCreditmemoId()) {
@@ -495,38 +489,6 @@ class Invoice extends \Magento\Framework\Model\AbstractModel
                     'Tax' => (float) $cInvoice->getTax(),
                     'SalesInvoiceItems' => $invoiceItems,
                 );
-
-                // Add ocean payment type (Optional)
-                if (!$paymentMethod->isOffline()) {
-                    if ($paymentTypes && is_array($paymentTypes) && !empty($paymentTypes)) {
-                        if ($paymentMethod->getCode() === 'simiknet' && isset($paymentTypes['K-NET'])) {
-                            $data['SalesInvoicePayments'] = array(array(
-                                "PaymentTypeID" => $paymentTypes['K-NET']['PaymentTypeID'],
-                                "Value" => $totalFinal
-                            ));
-                        } elseif (isset($paymentTypes['VISA'])) {
-                            if (isset($paymentTypes['VISA']['PaymentTypeID'])) {
-                                $data['SalesInvoicePayments'] = array(array(
-                                    "PaymentTypeID" => $paymentTypes['VISA']['PaymentTypeID'],
-                                    // "ApprovalNo" => "021722022921",
-                                    "Value" => $totalFinal
-                                ));
-                            }
-                        }
-                    }
-                }
-                
-                // Fallback to Cash payment method
-                if(!isset($data['SalesInvoicePayments'])){
-                    if ($paymentTypes && is_array($paymentTypes) && !empty($paymentTypes)) {
-                        if (isset($paymentTypes['Cash']['PaymentTypeID'])) {
-                            $data['SalesInvoicePayments'] = array(array(
-                                "PaymentTypeID" => $paymentTypes['Cash']['PaymentTypeID'],
-                                "Value" => $totalFinal
-                            ));
-                        }
-                    }
-                }
 
                 $cInvoice->setCustomerId($customerId);
                 // $cInvoice->setTotal($total); // total already set from observer
