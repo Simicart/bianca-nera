@@ -61,6 +61,18 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
             ],
             9
         );
+
+        $this->buttonList->add(
+            'simivendor_forcelogin',
+            [
+                'label' => __('Force Login'),
+                'onclick' => 'window.open(\'' . $this->getUrl(
+                    'simivendor/vendor/forcelogin',
+                    ['id' => $vendor->getCustomer()->getId()]
+                ) . '\')',
+            ],
+            9
+        );
         
         $this->buttonList->add(
             'save_and_continue_edit',
