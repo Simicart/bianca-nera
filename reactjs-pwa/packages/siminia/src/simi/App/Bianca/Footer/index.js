@@ -196,7 +196,7 @@ const Footer = (props) => {
 										</Link>
 									</div>
 									<div className="brands">
-										<img src="/images/brand-logos.png" alt="brands" />
+										<img src="/icons/bianca_nera_ov.svg" alt="brands" />
 									</div>
 								</div>
 							</div>
