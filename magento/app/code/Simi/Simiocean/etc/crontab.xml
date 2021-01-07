@@ -9,10 +9,10 @@
     <group id="simiocean_product">
         <!-- <job name="simi_simiocean_product_category" instance="Simi\Simiocean\Cron\Category" method="syncPull">
             <schedule>*/30 * * * *</schedule>
-        </job>
-        <job name="simi_simiocean_product_sync" instance="Simi\Simiocean\Cron\Productsync" method="syncPull">
-            <config_path>simiocean/cron/product_pull</config_path>
         </job> -->
+        <job name="simi_simiocean_product_sync_stock" instance="Simi\Simiocean\Cron\Productsync" method="syncUpdateStock">
+            <config_path>simiocean/cron/product_pull</config_path>
+        </job>
         <job name="simi_simiocean_product_sync_update" instance="Simi\Simiocean\Cron\Productsync" method="syncPullUpdateCustom">
             <config_path>simiocean/cron/product_pull</config_path>
         </job>

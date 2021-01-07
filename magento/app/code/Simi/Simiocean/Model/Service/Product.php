@@ -677,8 +677,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Sync product updated from ocean to website
-     * Only for Brand -> Designer, Fabric -> Brand
+     * Sync pull: update changeds data
+     * Note: Brand -> Designer, Fabric -> Brand, all other data
      */
     public function syncUpdatePullCustom(){
         $page = 1;
@@ -730,6 +730,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
 
         // testing
         // $oProducts = $this->productApi->getProductSku('20132005'); // Get products from ocean with sku
+        // var_dump($oProducts);die;
 
         if (is_array($oProducts)) {
             $hasUpdate = false;
@@ -745,40 +746,48 @@ class Product extends \Magento\Framework\Model\AbstractModel
                     $oceanObject->setData($oProduct);
                     
                     try {
-                        $product = $this->productRepository->get($magentoSku, true);
-                        
-                        $needSave = false;
+                        $productData = $this->convertProductData($oProduct); //convert data array to product object model
+                        $productData->setSku($magentoSku);
+                        $productData->setName($productData->getName().'-'. $oceanObject->getData('ColorEnName') .'-'.$oceanObject->getData('SizeName'));
+                        $productData->setUrlKey(str_replace(' ', '-', strtolower($productData->getName())).'-'.$oceanObject->getData('BarCode'));
+
+                        // $product = $this->productRepository->get($magentoSku, true);
 
                         // sync brand
                         $brandId = $this->brandMapping->getMatchingBrand(
+                            $oceanObject->getData('FabricID'),
                             $oceanObject->getData('FabricEnName'), 
                             $oceanObject->getData('FabricArName')
                         );
-                        if ($product->getBrand() != $brandId) {
-                            $product->setBrand($brandId);
-                            $product->setCustomAttribute('brand', $brandId);
-                            $needSave = true;
-                        }
-
+                        $productData->setBrand($brandId);
+                        $productData->setCustomAttribute('brand', $brandId);
                         // sync vendor (designer)
                         $vendorId = $this->vendorMapping->getMatching(
                             $oceanObject->getData('BrandID'), 
                             $oceanObject->getData('BrandEnName'),
                             $oceanObject->getData('BrandArName')
                         );
+                        $productData->setVendorId($vendorId);
 
-                        if ($product->getVendorId() != $vendorId) {
-                            $product->setVendorId($vendorId);
-                            $needSave = true;
+                        if ($product = $this->updateProduct($productData)) {
+                            try{
+                                // save product Arab store
+                                if ($this->config->getArStore() != null 
+                                    && isset($oProduct['ProductArName']) && $oProduct['ProductArName']) 
+                                {
+                                    $arStoreIds = explode(',', $this->config->getArStore());
+                                    $product->setName($oProduct['ProductArName'].'-'.$oceanObject->getData('ColorArName').'-'.$oceanObject->getData('SizeName'));
+                                    foreach($arStoreIds as $storeId){
+                                        $product->setStoreId($storeId);
+                                        $product->save();
+                                    }
+                                }
+                            }catch(\Exception $e){}
                         }
 
-                        if ($needSave) {
-                            $product->setStoreId(0);
-                            $product->save();
-                            // $this->productRepository->save($product);
-                        }
-
-                        $oceanConfigurable[$oProduct['SKU']] = $oceanObject;
+                        $productData->setName($oProduct['ProductEnName'] ?? ''); // pass ocean data
+                        $productData->setArName($oProduct['ProductArName'] ?? '');
+                        $oceanConfigurable[$oProduct['SKU']] = $productData;
 
                         $hasUpdate = true;
 
@@ -794,47 +803,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
             // Update configurable product
             if (!empty($oceanConfigurable)) {
                 $storeId = (int)$this->storeManager->getStore()->getId();
-                foreach ($oceanConfigurable as $sku => $oceanObject) {
-                    if ($product = $this->getProductExists($sku, true, $storeId)) {
-                        try {
-                        
-                            $needSave = false;
-
-                            // Update brand
-                            $brandId = $this->brandMapping->getMatchingBrand(
-                                $oceanObject->getData('FabricEnName'), 
-                                $oceanObject->getData('FabricArName')
-                            );
-                            if ($product->getBrand() != $brandId) {
-                                $product->setBrand($brandId);
-                                $product->setCustomAttribute('brand', $brandId);
-                                $needSave = true;
-                            }
-
-                            // Update vendor
-                            $vendorId = $this->vendorMapping->getMatching(
-                                $oceanObject->getData('BrandID'), 
-                                $oceanObject->getData('BrandEnName'),
-                                $oceanObject->getData('BrandArName')
-                            );
-                            if ($product->getVendorId() != $vendorId) {
-                                $product->setVendorId($vendorId);
-                                $needSave = true;
-                            }
-
-                            if ($needSave) {
-                                $product->setStoreId(0);
-                                $product->save();
-                                // $this->productRepository->save($product);
-                            }
-
-                            $hasUpdate = true;
-
-                        } catch (\Exception $e) {
-                            $this->logger->debug($e->getMessage());
-                            continue;
-                        }
-                    }
+                foreach ($oceanConfigurable as $sku => $productData) {
+                    $this->updateConfigurableProduct($sku, $productData, $productData->getArName());
                 }
             }
 
@@ -863,7 +833,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Sync pull product from ocean to website
+     * Update stock qty from Ocean
      */
     public function syncUpdateStock(){
         $page = 1;
@@ -912,6 +882,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
             ));
             return false;
         }
+
+        // var_dump($oProducts);die; // testing
 
         if (is_array($oProducts)) {
             $configurables = array();
@@ -1070,12 +1042,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $productModel->setSize($this->sizeMapping->getMatchingSize(
             $dataObject->getSizeName()
         ));
-        $productModel->setBrand($this->brandMapping->getMatchingBrand(
-            $dataObject->getBrandEnName(), $dataObject->getBrandArName()
-        ));
         $productModel->setCustomAttribute('color', $productModel->getColor());
         $productModel->setCustomAttribute('size', $productModel->getSize());
-        $productModel->setCustomAttribute('brand', $productModel->getBrand());
 
         if (!(int)$productModel->getSpecialPrice()) {
             $productModel->setSpecialPrice(''); //reset special price
@@ -1230,6 +1198,109 @@ class Product extends \Magento\Framework\Model\AbstractModel
             );
             $this->logger->debug(array('Save configurable product error: '.$e->getMessage(), $data));
             return false;
+        }
+        return false;
+    }
+
+    /**
+     * Update configurable product to magento
+     * @param ProductInterface $productModel
+     * @param string|array $associatedProductIds
+     * @param string $arName in Arabic name
+     * @return bool
+     */
+    protected function updateConfigurableProduct($sku, $productModel, $arName = ''){
+        if ($savedProduct = $this->getProductExists($sku)) {
+            $id = $savedProduct->getId();
+            // $savedProduct->setTypeId('configurable');
+            // $savedProduct->setStockData(
+            //     array(
+            //         'use_config_manage_stock' => 1,
+            //         'manage_stock' => 1, // manage stock
+            //         'is_in_stock' => 1, // Stock Availability of product
+            //         'qty' => 999 // qty of product
+            //     )
+            // );
+            
+            try{
+                $dateTime = gmdate("Y-m-d H:i:s");
+                /**
+                 * @var $productModel ProductInterface 
+                 * @return \Magento\Catalog\Api\Data\ProductInterface
+                 */
+                $productModel->setIsOcean(1);
+                
+                // Update data to existing product
+                $data = $this->dataObjectProcessor->buildOutputDataArray($productModel, ProductInterface::class);
+                $allowed = array(
+                    'name' => 1,
+                    'price' => 1
+                );
+                $filtered = array_filter(
+                    $data,
+                    function ($key) use ($allowed) { // N.b. $val, $key not $key, $val
+                        return isset($allowed[$key]) && ($allowed[$key] === 1);
+                    },
+                    ARRAY_FILTER_USE_KEY
+                );
+                $this->dataObjectHelper->populateWithArray($savedProduct, $filtered, ProductInterface::class);
+
+                $savedProduct->setId($id);
+                $savedProduct->setSku($sku);
+
+                $extensionAttributes = $data['extension_attributes'] ?? array();
+                $categoryLinks = $extensionAttributes['category_links'] ?? array();
+                $categoryIds = [];
+                foreach($categoryLinks as $cate){
+                    $categoryIds[] = $cate['category_id'];
+                }
+                try{
+                    if (!empty($categoryIds)) { // need update true category
+                        $this->linkManagement->assignProductToCategories($sku, $categoryIds);
+                    }
+                } catch (\Exception $e) {}
+
+                if (class_exists('\Vnecoms\VendorsProduct\Model\Source\Approval')) {
+                    $savedProduct->setApproval(\Vnecoms\VendorsProduct\Model\Source\Approval::STATUS_APPROVED);//Vnecoms attribute
+                }
+
+                $savedProduct->setUpdatedAt($dateTime);
+                $savedProduct->setDescription($productModel->getDescription());
+                $savedProduct->setBrand($productModel->getBrand());
+                $savedProduct->setVendorId($productModel->getVendorId());
+                $savedProduct->setStoreId(0);
+                
+                $savedProduct->setCanSaveConfigurableAttributes(true);
+                $configurableAttributesData = $this->productTypeConfigurable->getConfigurableAttributesAsArray($savedProduct);
+                $savedProduct->setConfigurableAttributesData($configurableAttributesData);
+                $savedProduct->save();
+    
+                // save product for Arab store
+                try{
+                    if ($this->config->getArStore() != null) {
+                        $backupProduct = clone $savedProduct;
+                        $arStoreIds = explode(',', $this->config->getArStore());
+                        $savedProduct->setName($arName);
+                        foreach($arStoreIds as $storeId){
+                            $savedProduct->setStoreId($storeId);
+                            $savedProduct->save();
+                        }
+                        $savedProduct = $backupProduct;
+                    }
+                }catch(\Exception $e){}
+    
+                return $savedProduct;
+
+            } catch(\Exception $e) {
+                $data = array(
+                    'name' => $productModel->getName(),
+                    'sku' => $productModel->getSku(),
+                    'size' => $productModel->getSize(),
+                    'color' => $productModel->getColor(),
+                    'brand' => $productModel->getBrand()
+                );
+                $this->logger->debug(array('Save configurable product error: '.$e->getMessage(), $data));
+            }
         }
         return false;
     }

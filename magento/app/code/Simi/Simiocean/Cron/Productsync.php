@@ -68,4 +68,13 @@ class Productsync
         }
         return true;
     }
+
+    public function syncUpdateStock()
+    {
+        if ($this->config->isSyncEnabled()) {
+            $this->productService->syncUpdateStock();
+            // $this->logger->debug(array('Cron: Product sync update stock success!'));
+        }
+        return true;
+    }
 }
