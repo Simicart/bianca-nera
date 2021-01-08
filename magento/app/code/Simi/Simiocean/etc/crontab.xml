@@ -7,14 +7,16 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="simiocean_product">
-        <!-- <job name="simi_simiocean_product_category" instance="Simi\Simiocean\Cron\Category" method="syncPull">
-            <schedule>*/30 * * * *</schedule>
-        </job> -->
         <job name="simi_simiocean_product_sync_stock" instance="Simi\Simiocean\Cron\Productsync" method="syncUpdateStock">
             <config_path>simiocean/cron/product_pull</config_path>
         </job>
         <job name="simi_simiocean_product_sync_update" instance="Simi\Simiocean\Cron\Productsync" method="syncPullUpdateCustom">
             <config_path>simiocean/cron/product_pull</config_path>
+        </job>
+    </group>
+    <group id="simiocean_category">
+        <job name="simi_simiocean_category" instance="Simi\Simiocean\Cron\Category" method="syncUpdate">
+            <schedule>*/5 * * * *</schedule>
         </job>
     </group>
     <group id="simiocean_customer">

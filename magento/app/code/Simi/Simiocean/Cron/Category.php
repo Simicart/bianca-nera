@@ -30,6 +30,17 @@ class Category
         $this->categoryService   = $categoryService;
     }
 
+    public function syncUpdate()
+    {
+        if ($this->config->isSyncEnabled()) {
+            try{
+                $this->categoryService->pullUpdate();
+            } catch (\Exception $e) {
+                $this->logger->debug(array('Cron: Category pull run error.', $e->getMessage()));
+            }
+        }
+    }
+
     public function syncPull()
     {
         return false;
