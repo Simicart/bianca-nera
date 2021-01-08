@@ -217,6 +217,304 @@ class Product extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Sync pull: update changeds data
+     * Note: Brand -> Designer, Fabric -> Brand, all other data
+     */
+    public function syncUpdatePullCustom(){
+        $page = 1;
+        $size = self::LIMIT;
+        $lastDays = 1; // 1 day ago from now
+
+        if ($this->config->getProductSyncNumber() != null) {
+            $size = (int)$this->config->getProductSyncNumber();
+        }
+        // Get time and page number from last synced
+        $timeFrom = 'now';
+        $timeTo = 'now';
+        $lastSyncTable = $this->syncTable->getLastSyncByTime(Type::TYPE_PRODUCT_UPDATE_CUSTOM);
+        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
+            if ($lastSyncTable->getRecordNumber() > 0) {
+                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
+                $timeTo = $lastSyncTable->getUpdatedTo();
+                $timeFrom = $lastSyncTable->getUpdatedFrom();
+            } else {
+                $timeFrom = $lastSyncTable->getUpdatedTo();
+            }
+        }
+
+        // ToDate
+        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
+        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
+        $dateToParam = $dateTo->getTimestamp();
+
+        // FromDate
+        $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
+        if ($timeFrom == 'now') {
+            $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
+        }
+        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
+            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
+        }
+        $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
+        $dateFromParam = $dateFrom->getTimestamp();
+
+        try{
+            $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
+        }catch(\Exception $e){
+            $this->logger->debug(array(
+                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                $e->getMessage()
+            ));
+            return false;
+        }
+
+        // testing
+        // $oProducts = $this->productApi->getProductSku('20132005'); // Get products from ocean with sku
+        // $oProducts = $this->productApi->getProductSku('20180009'); // new
+        // var_dump($oProducts);die;
+
+        if (is_array($oProducts)) {
+            $hasUpdate = false;
+            $records = count($oProducts);
+            $oceanConfigurable = array();
+            foreach ($oProducts as $oProduct) {
+
+                if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
+                    && $oProduct['SKU'] && $oProduct['BarCode']
+                ) {
+                    $magentoSku = $oProduct['SKU'].'_'.$oProduct['BarCode'];
+                    $oceanObject = $this->dataObjectFactory->create();
+                    $oceanObject->setData($oProduct);
+                    
+                    try {
+                        $productData = $this->convertProductData($oProduct); //convert data array to product object model
+                        $productData->setSku($magentoSku);
+                        $productData->setName($productData->getName().'-'. $oceanObject->getData('ColorEnName') .'-'.$oceanObject->getData('SizeName'));
+                        $productData->setUrlKey(str_replace(' ', '-', strtolower($productData->getName())).'-'.$oceanObject->getData('BarCode'));
+
+                        // $product = $this->productRepository->get($magentoSku, true);
+
+                        // sync brand
+                        $brandId = $this->brandMapping->getMatchingBrand(
+                            $oceanObject->getData('FabricID'),
+                            $oceanObject->getData('FabricEnName'), 
+                            $oceanObject->getData('FabricArName')
+                        );
+                        $productData->setBrand($brandId);
+                        $productData->setCustomAttribute('brand', $brandId);
+                        // sync vendor (designer)
+                        $vendorId = $this->vendorMapping->getMatching(
+                            $oceanObject->getData('BrandID'), 
+                            $oceanObject->getData('BrandEnName'),
+                            $oceanObject->getData('BrandArName')
+                        );
+                        $productData->setVendorId($vendorId);
+
+                        // Add to config product data before save simple product cause NoSuchEntityException
+                        $productData->setName($oProduct['ProductEnName'] ?? ''); // pass ocean data
+                        $productData->setArName($oProduct['ProductArName'] ?? '');
+                        $oceanConfigurable[$oProduct['SKU']] = array(
+                            'product_data' => $productData,
+                            'ocean_data' => $oProduct
+                        );
+
+                        if ($product = $this->updateProduct($productData)) {
+                            try{
+                                // save product Arab store
+                                if ($this->config->getArStore() != null 
+                                    && isset($oProduct['ProductArName']) && $oProduct['ProductArName']) 
+                                {
+                                    $arStoreIds = explode(',', $this->config->getArStore());
+                                    $product->setName($oProduct['ProductArName'].'-'.$oceanObject->getData('ColorArName').'-'.$oceanObject->getData('SizeName'));
+                                    foreach($arStoreIds as $storeId){
+                                        $product->setStoreId($storeId);
+                                        $product->save();
+                                    }
+                                }
+                            }catch(\Exception $e){}
+
+                            // Assign product to category
+                            try{
+                                if ($categoryId = $this->categoryService->getMagentoCategoryId($oProduct['SubcategoryId'], $oProduct['CategoryId'])) {
+                                    $this->linkManagement->assignProductToCategories($product->getSku(), array($categoryId));
+                                }
+                            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                            } catch (\Exception $e) {
+                            }
+                        }
+
+                        $hasUpdate = true;
+
+                    } catch (NoSuchEntityException $e) {
+                        continue;
+                    } catch (\Exception $e) {
+                        $this->logger->debug($e->getMessage());
+                        continue;
+                    }
+                }
+            }
+
+            // Update configurable product
+            if (!empty($oceanConfigurable)) {
+                $storeId = (int)$this->storeManager->getStore()->getId();
+                foreach ($oceanConfigurable as $sku => $configData) {
+                    $productData = $configData['product_data'];
+                    $oProduct = $configData['ocean_data'];
+                    $configProduct = $this->updateConfigurableProduct($sku, $productData, $productData->getArName());
+                    if ($configProduct) {
+                        // Assign product to category
+                        try{
+                            if ($categoryId = $this->categoryService->getMagentoCategoryId($oProduct['SubcategoryId'], $oProduct['CategoryId'])) {
+                                $this->linkManagement->assignProductToCategories($configProduct->getSku(), array($categoryId));
+                            }
+                        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                        } catch (\Exception $e) {
+                        }
+                    }
+                }
+            }
+
+            $lastSyncTable->setId(null);
+            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_CUSTOM);
+            $lastSyncTable->setPageNum($page);
+            $lastSyncTable->setPageSize($size);
+            $lastSyncTable->setRecordNumber($records);
+            $lastSyncTable->setUpdatedFrom($dateFromGmt);
+            $lastSyncTable->setUpdatedTo($dateToGmt);
+            $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
+            $lastSyncTable->save();
+            
+            return $hasUpdate;
+        } else {
+            if ($lastSyncTable->getId()){
+                $lastSyncTable->setRecordNumber(0);
+                $lastSyncTable->save();
+            }
+            $this->logger->debug(array(
+                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                'Server: '.$oProducts
+            ));
+        }
+        return false;
+    }
+
+    /**
+     * Update stock qty from Ocean
+     */
+    public function syncUpdateStock(){
+        $page = 1;
+        $size = self::LIMIT;
+        $lastDays = 1; // 1 day ago from now
+
+        if ($this->config->getProductSyncNumber() != null) {
+            $size = (int)$this->config->getProductSyncNumber();
+        }
+        // Get time and page number from last synced
+        $timeFrom = 'now';
+        $timeTo = 'now';
+        $lastSyncTable = $this->syncTable->getLastSyncByTime(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_STOCK);
+        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
+            if ($lastSyncTable->getRecordNumber() > 0) {
+                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
+                $timeTo = $lastSyncTable->getUpdatedTo();
+                $timeFrom = $lastSyncTable->getUpdatedFrom();
+            } else {
+                $timeFrom = $lastSyncTable->getUpdatedTo();
+            }
+        }
+
+        // ToDate
+        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
+        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
+        $dateToParam = $dateTo->getTimestamp();
+
+        // FromDate
+        $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
+        if ($timeFrom == 'now') {
+            $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
+        }
+        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
+            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
+        }
+        $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
+        $dateFromParam = $dateFrom->getTimestamp();
+
+        try{
+            $oProducts = $this->productApi->getProductStockUpdate($dateFromParam, $dateToParam, $page, $size);
+        }catch(\Exception $e){
+            $this->logger->debug(array(
+                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                $e->getMessage()
+            ));
+            return false;
+        }
+
+        // var_dump($oProducts);die; // testing
+
+        if (is_array($oProducts)) {
+            $configurables = array();
+            $hasUpdate = false;
+            $records = count($oProducts);
+            foreach($oProducts as $oProduct){
+                if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
+                    && $oProduct['SKU'] && $oProduct['BarCode']
+                ) {
+                    $productSku = $oProduct['SKU'].'_'.$oProduct['BarCode'];
+                    $product = $this->getProductExists($productSku);
+                    if ($product && isset($oProduct['StockQuantity'])) {
+                        // Not prorected for loop update
+                        $product->setStockData(
+                            array(
+                                'use_config_manage_stock' => 1,
+                                'manage_stock' => 1, // manage stock
+                                'is_in_stock' => ((int) $oProduct['StockQuantity'] > 0) ? 1 : 0, // Stock Availability of product
+                                'qty' => (int) $oProduct['StockQuantity'] // qty of product
+                            )
+                        );
+                        $product->save();
+                        // save product Arab store
+                        try{
+                            if ($this->config->getArStore() != null){
+                                $arStoreIds = explode(',', $this->config->getArStore());
+                                foreach($arStoreIds as $storeId){
+                                    $product->setStoreId($storeId);
+                                    $product->save();
+                                }
+                            }
+                        }catch(\Exception $e){}
+
+                        $hasUpdate = true;
+                    }
+                }
+            }
+
+            $lastSyncTable->setId(null);
+            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_STOCK);
+            $lastSyncTable->setPageNum($page);
+            $lastSyncTable->setPageSize($size);
+            $lastSyncTable->setRecordNumber($records);
+            $lastSyncTable->setUpdatedFrom($dateFromGmt);
+            $lastSyncTable->setUpdatedTo($dateToGmt);
+            $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
+            $lastSyncTable->save();
+            return $hasUpdate;
+        } else {
+            if ($lastSyncTable->getId()){
+                $lastSyncTable->setRecordNumber(0);
+                $lastSyncTable->save();
+            }
+            $this->logger->debug(array(
+                'Error: Get ocean products updated stock error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
+                'Server: '.$oProducts
+            ));
+        }
+        return false;
+    }
+
+
+    /* Old methods bellow */
+
+    /**
      * Sync pull products in processing
      */
     public function syncPull(){
@@ -677,275 +975,6 @@ class Product extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Sync pull: update changeds data
-     * Note: Brand -> Designer, Fabric -> Brand, all other data
-     */
-    public function syncUpdatePullCustom(){
-        $page = 1;
-        $size = self::LIMIT;
-        $lastDays = 1; // 1 day ago from now
-
-        if ($this->config->getProductSyncNumber() != null) {
-            $size = (int)$this->config->getProductSyncNumber();
-        }
-        // Get time and page number from last synced
-        $timeFrom = 'now';
-        $timeTo = 'now';
-        $lastSyncTable = $this->syncTable->getLastSyncByTime(Type::TYPE_PRODUCT_UPDATE_CUSTOM);
-        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
-            if ($lastSyncTable->getRecordNumber() > 0) {
-                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
-                $timeTo = $lastSyncTable->getUpdatedTo();
-                $timeFrom = $lastSyncTable->getUpdatedFrom();
-            } else {
-                $timeFrom = $lastSyncTable->getUpdatedTo();
-            }
-        }
-
-        // ToDate
-        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
-        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
-        $dateToParam = $dateTo->getTimestamp();
-
-        // FromDate
-        $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
-        if ($timeFrom == 'now') {
-            $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
-        }
-        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
-            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
-        }
-        $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
-        $dateFromParam = $dateFrom->getTimestamp();
-
-        try{
-            $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
-        }catch(\Exception $e){
-            $this->logger->debug(array(
-                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
-                $e->getMessage()
-            ));
-            return false;
-        }
-
-        // testing
-        // $oProducts = $this->productApi->getProductSku('20132005'); // Get products from ocean with sku
-        // var_dump($oProducts);die;
-
-        if (is_array($oProducts)) {
-            $hasUpdate = false;
-            $records = count($oProducts);
-            $oceanConfigurable = array();
-
-            foreach ($oProducts as $oProduct) {
-                if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
-                    && $oProduct['SKU'] && $oProduct['BarCode']
-                ) {
-                    $magentoSku = $oProduct['SKU'].'_'.$oProduct['BarCode'];
-                    $oceanObject = $this->dataObjectFactory->create();
-                    $oceanObject->setData($oProduct);
-                    
-                    try {
-                        $productData = $this->convertProductData($oProduct); //convert data array to product object model
-                        $productData->setSku($magentoSku);
-                        $productData->setName($productData->getName().'-'. $oceanObject->getData('ColorEnName') .'-'.$oceanObject->getData('SizeName'));
-                        $productData->setUrlKey(str_replace(' ', '-', strtolower($productData->getName())).'-'.$oceanObject->getData('BarCode'));
-
-                        // $product = $this->productRepository->get($magentoSku, true);
-
-                        // sync brand
-                        $brandId = $this->brandMapping->getMatchingBrand(
-                            $oceanObject->getData('FabricID'),
-                            $oceanObject->getData('FabricEnName'), 
-                            $oceanObject->getData('FabricArName')
-                        );
-                        $productData->setBrand($brandId);
-                        $productData->setCustomAttribute('brand', $brandId);
-                        // sync vendor (designer)
-                        $vendorId = $this->vendorMapping->getMatching(
-                            $oceanObject->getData('BrandID'), 
-                            $oceanObject->getData('BrandEnName'),
-                            $oceanObject->getData('BrandArName')
-                        );
-                        $productData->setVendorId($vendorId);
-
-                        if ($product = $this->updateProduct($productData)) {
-                            try{
-                                // save product Arab store
-                                if ($this->config->getArStore() != null 
-                                    && isset($oProduct['ProductArName']) && $oProduct['ProductArName']) 
-                                {
-                                    $arStoreIds = explode(',', $this->config->getArStore());
-                                    $product->setName($oProduct['ProductArName'].'-'.$oceanObject->getData('ColorArName').'-'.$oceanObject->getData('SizeName'));
-                                    foreach($arStoreIds as $storeId){
-                                        $product->setStoreId($storeId);
-                                        $product->save();
-                                    }
-                                }
-                            }catch(\Exception $e){}
-                        }
-
-                        $productData->setName($oProduct['ProductEnName'] ?? ''); // pass ocean data
-                        $productData->setArName($oProduct['ProductArName'] ?? '');
-                        $oceanConfigurable[$oProduct['SKU']] = $productData;
-
-                        $hasUpdate = true;
-
-                    } catch (NoSuchEntityException $e) {
-                        continue;
-                    } catch (\Exception $e) {
-                        $this->logger->debug($e->getMessage());
-                        continue;
-                    }
-                }
-            }
-
-            // Update configurable product
-            if (!empty($oceanConfigurable)) {
-                $storeId = (int)$this->storeManager->getStore()->getId();
-                foreach ($oceanConfigurable as $sku => $productData) {
-                    $this->updateConfigurableProduct($sku, $productData, $productData->getArName());
-                }
-            }
-
-            $lastSyncTable->setId(null);
-            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_CUSTOM);
-            $lastSyncTable->setPageNum($page);
-            $lastSyncTable->setPageSize($size);
-            $lastSyncTable->setRecordNumber($records);
-            $lastSyncTable->setUpdatedFrom($dateFromGmt);
-            $lastSyncTable->setUpdatedTo($dateToGmt);
-            $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
-            $lastSyncTable->save();
-            
-            return $hasUpdate;
-        } else {
-            if ($lastSyncTable->getId()){
-                $lastSyncTable->setRecordNumber(0);
-                $lastSyncTable->save();
-            }
-            $this->logger->debug(array(
-                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
-                'Server: '.$oProducts
-            ));
-        }
-        return false;
-    }
-
-    /**
-     * Update stock qty from Ocean
-     */
-    public function syncUpdateStock(){
-        $page = 1;
-        $size = self::LIMIT;
-        $lastDays = 1; // 1 day ago from now
-
-        if ($this->config->getProductSyncNumber() != null) {
-            $size = (int)$this->config->getProductSyncNumber();
-        }
-        // Get time and page number from last synced
-        $timeFrom = 'now';
-        $timeTo = 'now';
-        $lastSyncTable = $this->syncTable->getLastSyncByTime(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_STOCK);
-        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
-            if ($lastSyncTable->getRecordNumber() > 0) {
-                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
-                $timeTo = $lastSyncTable->getUpdatedTo();
-                $timeFrom = $lastSyncTable->getUpdatedFrom();
-            } else {
-                $timeFrom = $lastSyncTable->getUpdatedTo();
-            }
-        }
-
-        // ToDate
-        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
-        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
-        $dateToParam = $dateTo->getTimestamp();
-
-        // FromDate
-        $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
-        if ($timeFrom == 'now') {
-            $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
-        }
-        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
-            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
-        }
-        $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
-        $dateFromParam = $dateFrom->getTimestamp();
-
-        try{
-            $oProducts = $this->productApi->getProductStockUpdate($dateFromParam, $dateToParam, $page, $size);
-        }catch(\Exception $e){
-            $this->logger->debug(array(
-                'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
-                $e->getMessage()
-            ));
-            return false;
-        }
-
-        // var_dump($oProducts);die; // testing
-
-        if (is_array($oProducts)) {
-            $configurables = array();
-            $hasUpdate = false;
-            $records = count($oProducts);
-            foreach($oProducts as $oProduct){
-                if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
-                    && $oProduct['SKU'] && $oProduct['BarCode']
-                ) {
-                    $productSku = $oProduct['SKU'].'_'.$oProduct['BarCode'];
-                    $product = $this->getProductExists($productSku);
-                    if ($product && isset($oProduct['StockQuantity'])) {
-                        // Not prorected for loop update
-                        $product->setStockData(
-                            array(
-                                'use_config_manage_stock' => 1,
-                                'manage_stock' => 1, // manage stock
-                                'is_in_stock' => ((int) $oProduct['StockQuantity'] > 0) ? 1 : 0, // Stock Availability of product
-                                'qty' => (int) $oProduct['StockQuantity'] // qty of product
-                            )
-                        );
-                        $product->save();
-                        // save product Arab store
-                        try{
-                            if ($this->config->getArStore() != null){
-                                $arStoreIds = explode(',', $this->config->getArStore());
-                                foreach($arStoreIds as $storeId){
-                                    $product->setStoreId($storeId);
-                                    $product->save();
-                                }
-                            }
-                        }catch(\Exception $e){}
-
-                        $hasUpdate = true;
-                    }
-                }
-            }
-
-            $lastSyncTable->setId(null);
-            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_STOCK);
-            $lastSyncTable->setPageNum($page);
-            $lastSyncTable->setPageSize($size);
-            $lastSyncTable->setRecordNumber($records);
-            $lastSyncTable->setUpdatedFrom($dateFromGmt);
-            $lastSyncTable->setUpdatedTo($dateToGmt);
-            $lastSyncTable->setCreatedAt(gmdate('Y-m-d H:i:s'));
-            $lastSyncTable->save();
-            return $hasUpdate;
-        } else {
-            if ($lastSyncTable->getId()){
-                $lastSyncTable->setRecordNumber(0);
-                $lastSyncTable->save();
-            }
-            $this->logger->debug(array(
-                'Error: Get ocean products updated stock error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
-                'Server: '.$oProducts
-            ));
-        }
-        return false;
-    }
-
-    /**
      * Get simple product ids created
      * @param string $sku of parent product
      * @return array
@@ -1207,7 +1236,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
      * @param ProductInterface $productModel
      * @param string|array $associatedProductIds
      * @param string $arName in Arabic name
-     * @return bool
+     * @return Catalog\Product\Model\Product|bool
      */
     protected function updateConfigurableProduct($sku, $productModel, $arName = ''){
         if ($savedProduct = $this->getProductExists($sku)) {

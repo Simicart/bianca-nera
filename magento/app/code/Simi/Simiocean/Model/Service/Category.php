@@ -70,6 +70,140 @@ class Category extends \Magento\Framework\Model\AbstractModel
         parent::__construct($context, $registry);
     }
 
+    /**
+     * Pull update category
+     */
+    public function pullUpdate(){
+        try {
+
+            $parentCates = $this->categoryApi->getCategory();
+            
+            if (is_array($parentCates)) {
+
+                $scopeConfig = $this->objectManager->get('Magento\Framework\App\Config');
+                $backupCategoryConfigFlat = $scopeConfig->getValue(
+                    \Magento\Catalog\Model\Indexer\Category\Flat\State::INDEXER_ENABLED_XML_PATH, 
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
+                $configWriter = $this->objectManager->get('Magento\Framework\App\Config\Storage\Writer');
+                $configWriter->save(\Magento\Catalog\Model\Indexer\Category\Flat\State::INDEXER_ENABLED_XML_PATH, 0);
+                $scopeConfig->clean();
+                $store = $this->storeManager->getStore();
+                foreach ($parentCates as $oCate) {
+                    if (isset($oCate['CategoryId'])) {
+                        $arStoreIds = '';
+                        if ($this->config->getArStore() != null) {
+                            $arStoreIds = explode(',', $this->config->getArStore());
+                        }
+
+                        $categoryId = '';
+
+                        // update parent category
+                        if (isset($oCate['MgentoCategoryID']) && $oCate['MgentoCategoryID']) {
+                            try{
+                                $category = $this->categoryRepository->get($oCate['MgentoCategoryID']);
+                                if ($category && $category->getId()) {
+                                    $categoryId = $category->getId();
+
+                                    // $category->setIsActive(true);
+                                    $category->setName($oCate['CategoryEnName'] ?? null);
+                                    $category->setUpdatedAt(gmdate('Y-m-d H:i:s'));
+                                    $category->save();
+                                    // set ArName for Ar store
+                                    if (is_array($arStoreIds)){
+                                        foreach($arStoreIds as $storeId){
+                                            try{
+                                                $category->setStoreId($storeId);
+                                                $category->setName($oCate['CategoryArName'] ?? null);
+                                                $category->setUrlKey(urlencode($oCate['CategoryEnName'] ?? ''));
+                                                $category->save();
+                                            }catch(\Exception $e){};
+                                        }
+                                    }
+
+                                    $tableCategory = $this->getOceanCategory($oCate['CategoryId']);
+                                    if (!$tableCategory) {
+                                        $tableCategory = $this->oceanCategoryFactory->create();
+                                    }
+                                    $tableCategory->setSyncTime(gmdate('Y-m-d H:i:s'));
+                                    $tableCategory->setCategoryEnName($oCate['CategoryEnName'] ?? null);
+                                    $tableCategory->setCategoryArName($oCate['CategoryArName'] ?? null);
+                                    $tableCategory->setParentId(0); //is parent category
+                                    $tableCategory->setCategoryId($oCate['CategoryId']); //ocean CategoryId
+                                    $tableCategory->setMagentoId($categoryId); //magento category id
+                                    $tableCategory->setDirection(\Simi\Simiocean\Model\Category::DIR_OCEAN_TO_WEB);
+                                    $tableCategory->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS);
+                                    $tableCategory->save();
+                                }
+                            }catch(\Exception $e){
+                            }
+                        }
+
+                        // update sub category
+                        $subCates = $this->categoryApi->getSubCategory($oCate['CategoryId']);
+                        if (is_array($subCates)) {
+                            foreach($subCates as $subCate){
+                                if(isset($subCate['MgentoCategoryID']) && $subCate['MgentoCategoryID']) {
+                                    try{
+                                        $subCategory = $this->categoryRepository->get($subCate['MgentoCategoryID']);
+                                        if ($subCategory && $subCategory->getId()) {
+                                            // $subCategory->setIsActive(true);
+                                            $subCategory->setName($subCate['SubcategoryEnName'] ?? null);
+                                            $subCategory->setUpdatedAt(gmdate('Y-m-d H:i:s'));
+                                            $subCategory->setParentId($categoryId); //set magento parent catetory id
+                                            $subCategory->save();
+                                            
+                                            if (is_array($arStoreIds)){
+                                                $tailUrlKey = '-'.$subCate['SubcategoryID'].'-'.$oCate['CategoryId'];
+                                                foreach($arStoreIds as $storeId){
+                                                    try{
+                                                        $subCategory->setStoreId($storeId);
+                                                        $subCategory->setName($subCate['SubcategoryArName'] ?? null);
+                                                        $subCategory->setUrlKey(urlencode($subCate['SubcategoryEnName'].$tailUrlKey ?? ''));
+                                                        $subCategory->save();
+                                                    }catch(\Exception $e){};
+                                                }
+                                            }
+
+                                            $tableSubCategory = $this->getOceanCategory($subCate['SubcategoryID'], $oCate['CategoryId']);
+                                            if (!$tableSubCategory) {
+                                                $tableSubCategory = $this->oceanCategoryFactory->create();
+                                            }
+                                            $tableSubCategory->setSyncTime(gmdate('Y-m-d H:i:s'));
+                                            $tableSubCategory->setCategoryArName($subCate['SubcategoryArName'] ?? null);
+                                            $tableSubCategory->setCategoryEnName($subCate['SubcategoryEnName'] ?? null);
+                                            $tableSubCategory->setCategoryId($subCate['SubcategoryID']); //ocean CategoryId
+                                            $tableSubCategory->setMagentoId($subCategory->getId()); //magento category id
+                                            $tableSubCategory->setParentId($oCate['CategoryId']); //Ocean sub category id
+                                            $tableSubCategory->setDirection(\Simi\Simiocean\Model\Category::DIR_OCEAN_TO_WEB);
+                                            $tableSubCategory->setStatus(\Simi\Simiocean\Model\SyncStatus::SUCCESS);
+                                            $tableSubCategory->save();
+                                        }
+                                    }catch(\Exception $e){
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                $configWriter->save(
+                    \Magento\Catalog\Model\Indexer\Category\Flat\State::INDEXER_ENABLED_XML_PATH, 
+                    $backupCategoryConfigFlat
+                );
+                $scopeConfig->clean();
+            } else {
+                throw new \Exception($parentCates);
+            }
+        } catch (\Exception $e) {
+            $this->logger->debug(array(
+                'Get categories error:',
+                $e->getMessage()
+            ));
+            return false;
+        }
+        return true;
+    }
+
     public function syncFromOcean(){
         try {
             $parentCates = $this->categoryApi->getCategory();

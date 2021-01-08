@@ -104,21 +104,21 @@ class VendorMapping extends OptionMapping
                         //     throw new \Exception(implode(", ", $errors));
                         // }
     
-                        $vendorModel->save();
+                        $newVendor = $vendorModel->save();
 
                         // Save vendor store config data
                         $configModel = $objectManager->create('Vnecoms\VendorsConfig\Model\Config');
                         $configModel->setData([
-                            'vendor_id' => $vendor->getId(),
+                            'vendor_id' => $newVendor->getId(),
                             'store_id' => 0,
                             'path' => 'general/store_information/name',
                             'value' => $storeName,
                         ]);
                         $configModel->save();
 
-                        $this->_cached[$id] = $vendorModel->getId();
+                        $this->_cached[$id] = $newVendor->getId();
 
-                        return $vendorModel->getId(); // id int
+                        return $newVendor->getId(); // id int
                     }
                 } catch(\Exception $e) {
                     throw new \Exception($e->getMessage());
