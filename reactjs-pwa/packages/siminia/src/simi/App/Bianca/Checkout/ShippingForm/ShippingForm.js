@@ -16,6 +16,8 @@ const ShippingForm = (props) => {
     const storage = new BrowserPersistence();
     const {
         availableShippingMethods,
+        simiCheckoutUpdating,
+        submitting,
         cancel,
         getCartDetails,
         submit,
@@ -108,7 +110,7 @@ const ShippingForm = (props) => {
                 // availableVendorsMethods
                 const { carrier_code, carrier_title, method_code, method_title, price_incl_tax } = shippingMethod;
                 // Ignore not is other method (is vendor flat rate method)
-                if (['vendor_multirate', 'vflatrate', 'freeshipping'].includes(carrier_code)) {
+                if (['vendor_multirate', 'vflatrate'].includes(carrier_code)) {
                     return false;
                 }
                 // Ignore invalid method
@@ -249,7 +251,7 @@ const ShippingForm = (props) => {
         handleSubmitOther(selecteds);
     }
     
-    if (!availableVendorsMethods || !availableVendorsMethods.length) {
+    if ((!availableOtherMethods || !availableOtherMethods.length) && (!availableVendorsMethods || !availableVendorsMethods.length)) {
         return <Loading />
     }
 

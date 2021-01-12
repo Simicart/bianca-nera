@@ -229,11 +229,12 @@ class Checkout extends Component {
     get checkoutInner() {
         const { props, cartCurrencyCode, btnPlaceOrder, userSignedIn, pageTitle, is_virtual, } = this;
         const { cart, checkout, directory, editOrder, submitShippingMethod, submitShippingAddress, submitOrder, submitPaymentMethod,
-            submitBillingAddress, user, simiSignedIn, toggleMessages, getCartDetails, history, beginCheckout } = props;
+            submitBillingAddress, user, simiSignedIn, toggleMessages, getCartDetails, history, beginCheckout, simiCheckoutUpdating } = props;
         const { shippingAddress, submitting, availableShippingMethods, shippingMethod, billingAddress, paymentData, paymentCode,
             invalidAddressMessage, isAddressInvalid, shippingTitle, editing } = checkout;
         const { paymentMethods } = cart;
         const stepProps = {
+            simiCheckoutUpdating,
             availableShippingMethods, billingAddress, cancelCheckout, cart, cartCurrencyCode, directory, editOrder, editing,
             hasPaymentMethod: !!paymentData && !isObjectEmpty(paymentData),
             hasShippingAddress: !!shippingAddress && !isObjectEmpty(shippingAddress),
