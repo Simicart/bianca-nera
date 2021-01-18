@@ -231,7 +231,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
         // Get time and page number from last synced
         $timeFrom = 'now';
         $timeTo = 'now';
-        $lastSyncTable = $this->syncTable->getLastSyncByTime(Type::TYPE_PRODUCT_UPDATE_CUSTOM);
+        $lastSyncTable = $this->syncTable->getLastSyncByTime(Type::TYPE_PRODUCT_UPDATE);
         if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
             if ($lastSyncTable->getRecordNumber() > 0) {
                 $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
@@ -375,7 +375,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
             }
 
             $lastSyncTable->setId(null);
-            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_CUSTOM);
+            $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE);
             $lastSyncTable->setPageNum($page);
             $lastSyncTable->setPageSize($size);
             $lastSyncTable->setRecordNumber($records);
