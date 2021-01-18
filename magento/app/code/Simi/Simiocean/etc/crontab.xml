@@ -14,7 +14,7 @@
             <config_path>simiocean/cron/product_pull</config_path>
         </job>
         <job name="simi_simiocean_product_sync_update_custom" instance="Simi\Simiocean\Cron\Productsync" method="syncPullUpdateCustom">
-            <config_path>simiocean/cron/product_pull</config_path>
+            <schedule>*/2 * * * *</schedule>
         </job>
     </group>
     <group id="simiocean_category">
