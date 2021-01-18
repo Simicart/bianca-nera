@@ -10,7 +10,10 @@
         <job name="simi_simiocean_product_sync_stock" instance="Simi\Simiocean\Cron\Productsync" method="syncUpdateStock">
             <config_path>simiocean/cron/product_pull</config_path>
         </job>
-        <job name="simi_simiocean_product_sync_update" instance="Simi\Simiocean\Cron\Productsync" method="syncPullUpdateCustom">
+        <job name="simi_simiocean_product_sync_update" instance="Simi\Simiocean\Cron\Productsync" method="syncPullUpdate">
+            <config_path>simiocean/cron/product_pull</config_path>
+        </job>
+        <job name="simi_simiocean_product_sync_update_custom" instance="Simi\Simiocean\Cron\Productsync" method="syncPullUpdateCustom">
             <config_path>simiocean/cron/product_pull</config_path>
         </job>
     </group>

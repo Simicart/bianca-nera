@@ -23,8 +23,9 @@ class VendorMapping extends OptionMapping
      */
     public function getMatching($id, $enName, $arName = ''){
         if ($id && $enName) {
-            if (isset($this->_cached[$id]) && $this->_cached[$id]) return $this->_cached[$id]; // if saved cache
+            $storeName = $arName ?: $enName;
 
+            if (isset($this->_cached[$id]) && $this->_cached[$id]) return $this->_cached[$id]; // if saved cache
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             if (class_exists('Vnecoms\Vendors\Model\Vendor')) {
                 $vendorModel = $objectManager->get('Vnecoms\Vendors\Model\Vendor');
@@ -43,8 +44,6 @@ class VendorMapping extends OptionMapping
                         $vendor = $collection->getFirstItem();
                     }
                     if ($vendor && $vendor->getId()) {
-                        $storeName = $arName ?: $enName;
-
                         // Save vendor store config data
                         if ($vendorHelper->getVendorStoreName($vendor->getId()) != $storeName) {
                             // $groupData = array(
@@ -83,8 +82,8 @@ class VendorMapping extends OptionMapping
                             ->setOceanBrandId($id);
                         $vendorModel->setGroupId($vendorHelper->getDefaultVendorGroup());
 
-                        $customerHelper = $objectManager->get('Simi\Simiconnector\Helper\Customer');
-                        $customer = $customerHelper->createCustomer([
+                        // $customerHelper = $objectManager->get('Simi\Simiconnector\Helper\Customer');
+                        $customer = $this->createCustomer([
                             'firstname' => $firstname,
                             'lastname' => $lastname,
                             'email' => $email,
@@ -121,10 +120,33 @@ class VendorMapping extends OptionMapping
                         return $newVendor->getId(); // id int
                     }
                 } catch(\Exception $e) {
-                    throw new \Exception($e->getMessage());
+                    // throw new \Exception($e->getMessage());
                 }
             }
         }
         return '';
+    }
+
+    protected function createCustomer($data){
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $data = (object) $data;
+        $customer = $objectManager->get('Magento\Customer\Api\Data\CustomerInterface')
+            ->setFirstname($data->firstname)
+            ->setLastname($data->lastname)
+            ->setEmail($data->email);
+        $password = null;
+        if (isset($data->password) && $data->password) {
+            $password = $data->password;
+        }
+        $encryptor = $objectManager->get('Magento\Framework\Encryption\EncryptorInterface');
+        $hash = $encryptor->getHash($password, true);
+        try {
+            // If customer exists existing hash will be used by Repository
+            $customerRepository = $objectManager->get('Magento\Customer\Api\CustomerRepositoryInterface');
+            $customer = $customerRepository->save($customer, $hash);
+        } catch (AlreadyExistsException $e) {
+        } catch (LocalizedException $e) {
+        }
+        return $customer;
     }
 }

@@ -220,7 +220,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
      * Sync pull: update changeds data
      * Note: Brand -> Designer, Fabric -> Brand, all other data
      */
-    public function syncUpdatePullCustom(){
+    public function syncUpdatePull(){
         $page = 1;
         $size = self::LIMIT;
         $lastDays = 1; // 1 day ago from now
@@ -394,6 +394,173 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 'Error: Get ocean products updated error. Page = '.$page.', Size = '.$size.', from = '.$dateFromGmt.', to = '.$dateToGmt, 
                 'Server: '.$oProducts
             ));
+        }
+        return false;
+    }
+
+    /**
+     * Sync pull:
+     * Note: Brand -> Designer, Fabric -> Brand
+     */
+    public function syncUpdatePullCustom(){
+        // Get time and page number from last synced
+        $lastSyncTable = $this->syncTable->getLastSyncByTime(Type::TYPE_PRODUCT_UPDATE_CUSTOM);
+        // get magento product is ocean product
+        $sku = '';
+        $productCollection = $this->productFactory->create()->getCollection();
+        $productCollection->addAttributeToFilter('is_ocean', true)
+            ->getSelect()->order('updated_at ASC')->limit(1);
+        if ($productCollection->getSize()) {
+            $magentoProductOcean = $productCollection->getFirstItem();
+            if ($magentoProductOcean && $magentoProductOcean->getSku()) {
+                $sku = $magentoProductOcean->getSku();
+                $sku = explode('_', $sku);
+                if (isset($sku[0])) {
+                    $sku = $sku[0];
+                    $updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
+                    $updatedAtToGmt = $updatedAt->format('Y-m-d H:i:s');
+                    $magentoProductOcean->setUpdatedAt($updatedAtToGmt); // save that updated
+                    $magentoProductOcean->save();
+                }
+            }
+        }
+
+        if ($sku) {
+
+            try{
+                $oProducts = $this->productApi->getProductSku($sku); // Get products from ocean with sku
+            }catch(\Exception $e){
+                $this->logger->debug(array(
+                    'Error: Get ocean products updated error. Sku = '.$sku, 
+                    $e->getMessage()
+                ));
+                return false;
+            }
+    
+            // testing
+            // $oProducts = $this->productApi->getProductSku('20132005'); // Get products from ocean with sku
+            // $oProducts = $this->productApi->getProductSku('20180009'); // new
+            // var_dump($oProducts);die;
+    
+            if (is_array($oProducts)) {
+                $hasUpdate = false;
+                $records = count($oProducts);
+                $oceanConfigurable = array();
+                foreach ($oProducts as $oProduct) {
+    
+                    if (isset($oProduct['SKU']) && isset($oProduct['BarCode'])
+                        && $oProduct['SKU'] && $oProduct['BarCode']
+                    ) {
+                        $magentoSku = $oProduct['SKU'].'_'.$oProduct['BarCode'];
+                        $oceanObject = $this->dataObjectFactory->create();
+                        $oceanObject->setData($oProduct);
+                        
+                        try {
+                            $productData = $this->convertProductData($oProduct); //convert data array to product object model
+                            $productData->setSku($magentoSku);
+                            $productData->setName($productData->getName().'-'. $oceanObject->getData('ColorEnName') .'-'.$oceanObject->getData('SizeName'));
+                            $productData->setUrlKey(str_replace(' ', '-', strtolower($productData->getName())).'-'.$oceanObject->getData('BarCode'));
+    
+                            // $product = $this->productRepository->get($magentoSku, true);
+    
+                            // sync brand
+                            $brandId = $this->brandMapping->getMatchingBrand(
+                                $oceanObject->getData('FabricID'),
+                                $oceanObject->getData('FabricEnName'), 
+                                $oceanObject->getData('FabricArName')
+                            );
+                            $productData->setBrand($brandId);
+                            $productData->setCustomAttribute('brand', $brandId);
+                            // sync vendor (designer)
+                            $vendorId = $this->vendorMapping->getMatching(
+                                $oceanObject->getData('BrandID'), 
+                                $oceanObject->getData('BrandEnName'),
+                                $oceanObject->getData('BrandArName')
+                            );
+                            $productData->setVendorId($vendorId);
+    
+                            // Add to config product data before save simple product cause NoSuchEntityException
+                            $productData->setName($oProduct['ProductEnName'] ?? ''); // pass ocean data
+                            $productData->setArName($oProduct['ProductArName'] ?? '');
+                            $oceanConfigurable[$oProduct['SKU']] = array(
+                                'product_data' => $productData,
+                                'ocean_data' => $oProduct
+                            );
+    
+                            if ($product = $this->updateProduct($productData)) {
+                                try{
+                                    // save product Arab store
+                                    if ($this->config->getArStore() != null 
+                                        && isset($oProduct['ProductArName']) && $oProduct['ProductArName']) 
+                                    {
+                                        $arStoreIds = explode(',', $this->config->getArStore());
+                                        $product->setName($oProduct['ProductArName'].'-'.$oceanObject->getData('ColorArName').'-'.$oceanObject->getData('SizeName'));
+                                        foreach($arStoreIds as $storeId){
+                                            $product->setStoreId($storeId);
+                                            $product->save();
+                                        }
+                                    }
+                                }catch(\Exception $e){
+                                }
+    
+                                // Assign product to category
+                                try{
+                                    if ($categoryId = $this->categoryService->getMagentoCategoryId($oProduct['SubcategoryId'], $oProduct['CategoryId'])) {
+                                        $this->linkManagement->assignProductToCategories($product->getSku(), array($categoryId));
+                                    }
+                                } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                                } catch (\Exception $e) {
+                                }
+                            }
+    
+                            $hasUpdate = true;
+    
+                        } catch (NoSuchEntityException $e) {
+                            continue;
+                        } catch (\Exception $e) {
+                            $this->logger->debug($e->getMessage());
+                            continue;
+                        }
+                    }
+                }
+    
+                // Update configurable product
+                if (!empty($oceanConfigurable)) {
+                    $storeId = (int)$this->storeManager->getStore()->getId();
+                    foreach ($oceanConfigurable as $sku => $configData) {
+                        $productData = $configData['product_data'];
+                        $oProduct = $configData['ocean_data'];
+                        $configProduct = $this->updateConfigurableProduct($sku, $productData, $productData->getArName());
+                        if ($configProduct) {
+                            // Assign product to category
+                            try{
+                                if ($categoryId = $this->categoryService->getMagentoCategoryId($oProduct['SubcategoryId'], $oProduct['CategoryId'])) {
+                                    $this->linkManagement->assignProductToCategories($configProduct->getSku(), array($categoryId));
+                                }
+                            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                            } catch (\Exception $e) {
+                            }
+                        }
+                    }
+                }
+                $gmtDate = gmdate('Y-m-d H:i:s');
+                $lastSyncTable->setId(null);
+                $lastSyncTable->setType(\Simi\Simiocean\Model\SyncTable\Type::TYPE_PRODUCT_UPDATE_CUSTOM);
+                $lastSyncTable->setPageNum(1);
+                $lastSyncTable->setPageSize(1);
+                $lastSyncTable->setRecordNumber($records);
+                $lastSyncTable->setUpdatedFrom($gmtDate);
+                $lastSyncTable->setUpdatedTo($gmtDate);
+                $lastSyncTable->setCreatedAt($gmtDate);
+                $lastSyncTable->save();
+                
+                return $hasUpdate;
+            } else {
+                if ($lastSyncTable->getId()){
+                    $lastSyncTable->setRecordNumber(0);
+                    $lastSyncTable->save();
+                }
+            }
         }
         return false;
     }
@@ -799,7 +966,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
     /**
      * Sync pull product from ocean to website
      */
-    public function syncUpdatePull(){
+    /* public function syncUpdatePull(){
         $page = 1;
         $size = self::LIMIT;
         $lastDays = 1; // 1 day ago from now
@@ -972,7 +1139,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
             ));
         }
         return false;
-    }
+    } */
 
     /**
      * Get simple product ids created
