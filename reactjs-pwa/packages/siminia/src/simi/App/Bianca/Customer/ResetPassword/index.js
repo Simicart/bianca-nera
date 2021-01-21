@@ -32,7 +32,7 @@ class ResetPassword extends React.Component {
 			showFogLoading();
 			if (!this.token) {
 				console.log('no token');
-				let msg = Identify.__('Your link reset password is invalid !');
+				let msg = Identify.__('Your link reset password is invalid!');
 				showToastMessage(msg);
 			} else {
 				console.log('have token : ' + this.token);
@@ -54,7 +54,7 @@ class ResetPassword extends React.Component {
 			} else {
 				hideFogLoading();
 				smoothScrollToView($('#id-message'));
-				let successMsg = Identify.__('Updated new password successfully !');
+				let successMsg = Identify.__('Updated new password successfully!');
 				// reset form
 				$('.form')[0].reset();
 				// clear user name and password save in local storage

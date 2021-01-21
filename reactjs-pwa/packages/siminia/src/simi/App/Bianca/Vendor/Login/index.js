@@ -108,7 +108,7 @@ class Login extends Component {
 			if (data.status && data.status === 'success' && data.customer_access_token && data.customer_identity) {
 				hideFogLoading();
 				smoothScrollToView($('#root'));
-				const message = Identify.__('Succesfully logged in. Waiting for redirect to dashboard !');
+				const message = Identify.__('Succesfully logged in. Waiting for redirect to dashboard!');
 				if (this.props.toggleMessages)
 					this.props.toggleMessages([{ type: 'success', message: message, auto_dismiss: true }]);
 				storage.removeItem('cartId');
@@ -125,7 +125,7 @@ class Login extends Component {
 				window.location.href = data.redirect_url;
 			} else {
 				hideFogLoading();
-				showToastMessage(Identify.__('Invalid login !'))
+				showToastMessage(Identify.__('Invalid login!'))
 			}
 		}
 	}
@@ -265,7 +265,7 @@ class Login extends Component {
 		} else {
 			showFogLoading();
 			smoothScrollToView($('#root'));
-			const message = Identify.__('Succesfully logged in. Waiting for redirect to dashboard !');
+			const message = Identify.__('Succesfully logged in. Waiting for redirect to dashboard!');
 			if (this.props.toggleMessages)
 				this.props.toggleMessages([{ type: 'success', message: message, auto_dismiss: true }]);
 			storage.removeItem('cartId');

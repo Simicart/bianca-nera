@@ -145,7 +145,7 @@ const Edit = props => {
             if (newPhoneNumber.length < 5) {
                 $('.row-edit-phone input').css('border', '1px solid #C53834');
                 $('.verify-opt-area-address #number_phone-invalid').css({ display: 'block' })
-                showToastMessage(Identify.__('Some fields are invalid !'))
+                showToastMessage(Identify.__('Some fields are invalid!'))
                 loading = false;
                 return null;
             } else {
@@ -157,7 +157,7 @@ const Edit = props => {
             if (phoneChange.length < 5) {
                 $('.verify-opt-area-address .custom-input').css('border', '1px solid #C53834');
                 $('.verify-opt-area-address .error-message').css({ display: 'block' })
-                showToastMessage(Identify.__('Some fields are invalid !'))
+                showToastMessage(Identify.__('Some fields are invalid!'))
                 loading = false;
                 return null;
             } else {
@@ -367,7 +367,7 @@ const Edit = props => {
                                             }
                                             props.dispatchEdit({ changeType: addressData.addressType, changeData: addressResult });
                                             if (props.toggleMessages) {
-                                                props.toggleMessages([{ type: 'success', message: Identify.__('Save address book successfully !'), auto_dismiss: true }])
+                                                props.toggleMessages([{ type: 'success', message: Identify.__('Save address book successfully!'), auto_dismiss: true }])
                                             }
                                         }
                                         return (

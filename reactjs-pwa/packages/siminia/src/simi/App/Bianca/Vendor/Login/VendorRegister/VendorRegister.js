@@ -275,7 +275,7 @@ const VendorRegister = (props) => {
 		hideFogLoading();
 		if (data && data.result && (data.result == "exist")) {
 			hideFogLoading();
-			showToastMessage(Identify.__('Already exist account with this phone number !'))
+			showToastMessage(Identify.__('Already exist account with this phone number!'))
 		} else {
 			// Always run here, allow exist phone number, only check real number phone.
 			hideFogLoading();

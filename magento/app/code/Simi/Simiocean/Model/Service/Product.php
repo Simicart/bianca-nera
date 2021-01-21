@@ -270,7 +270,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
 
         // testing
         // $oProducts = $this->productApi->getProductSku('20132005'); // Get products from ocean with sku
-        // $oProducts = $this->productApi->getProductSku('20180009'); // new
+        // $oProducts = $this->productApi->getProductSku('19121011'); // new
         // var_dump($oProducts);die;
 
         if (is_array($oProducts)) {
@@ -291,8 +291,6 @@ class Product extends \Magento\Framework\Model\AbstractModel
                         $productData->setSku($magentoSku);
                         $productData->setName($productData->getName().'-'. $oceanObject->getData('ColorEnName') .'-'.$oceanObject->getData('SizeName'));
                         $productData->setUrlKey(str_replace(' ', '-', strtolower($productData->getName())).'-'.$oceanObject->getData('BarCode'));
-
-                        // $product = $this->productRepository->get($magentoSku, true);
 
                         // sync brand
                         $brandId = $this->brandMapping->getMatchingBrand(
@@ -1470,12 +1468,37 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 $configurableAttributesData = $this->productTypeConfigurable->getConfigurableAttributesAsArray($savedProduct);
                 $savedProduct->setConfigurableAttributesData($configurableAttributesData);
                 $savedProduct->save();
+
+                $website = $this->storeManager->getWebsite();
+                $_storeIds = $website->getStoreIds();
+                $arStores = $this->config->getArStore();
+                $arStoreIds = explode(',', $arStores);
+
+                // Save other not ar store
+                foreach($_storeIds as $_storeId){
+                    if ($_storeId != 0 && !in_array($_storeId, $arStoreIds)) {
+                        $savedProduct->setStoreId((int)$_storeId);
+                        // $savedProduct->setName(false);// set use_default value for name
+                        // $savedProduct->addAttributeUpdate('name', false, $_storeId);
+                        $savedProduct->save();
+                        // Delete custom name in store view data
+                        $resource = $savedProduct->getResource();
+                        $connection = $resource->getConnection();
+                        $eavAttr = $resource->getTable('eav_attribute');
+                        $sql = "SELECT attribute_id FROM $eavAttr WHERE entity_type_id = 4 AND attribute_code = 'name'";
+                        $attributeId = $connection->fetchOne($sql);
+                        // var_dump($attributeId);die;
+                        $entityId = $savedProduct->getId();
+                        $varcharTable = $resource->getTable('catalog_product_entity_varchar');
+                        $sql = "DELETE FROM $varcharTable WHERE entity_id = $entityId AND store_id = $_storeId AND attribute_id = $attributeId";
+                        $connection->query($sql);
+                    }
+                }
     
                 // save product for Arab store
                 try{
-                    if ($this->config->getArStore() != null) {
+                    if (!empty($arStoreIds)) {
                         $backupProduct = clone $savedProduct;
-                        $arStoreIds = explode(',', $this->config->getArStore());
                         $savedProduct->setName($arName);
                         foreach($arStoreIds as $storeId){
                             $savedProduct->setStoreId($storeId);
@@ -1507,8 +1530,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
      * @return \Magento\Catalog\Model\Product|false
      */
     protected function updateProduct($productModel){
-        $storeId = (int)$this->storeManager->getStore()->getId();
-        if ($existingProduct = $this->getProductExists($productModel->getSku(), true, $storeId)) {
+        $store = (int)$this->storeManager->getStore()->getId();
+        if ($existingProduct = $this->getProductExists($productModel->getSku(), true, 0)) {
             try{
                 $productModel->setStockData(
                     array(
@@ -1548,8 +1571,11 @@ class Product extends \Magento\Framework\Model\AbstractModel
                     ->toNestedArray($productModel, [], \Magento\Catalog\Api\Data\ProductInterface::class);
                 $productDataArray = array_replace($productDataArray, $productModel->getData());
 
+                $website = $this->storeManager->getWebsite();
+                $_storeIds = $website->getStoreIds();
                 // unset($productDataArray['media_gallery']);
                 foreach ($productDataArray as $key => $value) {
+                    if (!$key || !$value) continue;
                     $existingProduct->setData($key, $value);
                 }
                 // if (isset($productDataArray['media_gallery'])) {
@@ -1558,11 +1584,31 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 if (!$existingProduct->getOptionsReadonly()) {
                     $existingProduct->setCanSaveCustomOptions(true);
                 }
+                $arStoreIds = [];
+                if ($this->config->getArStore() != null) {
+                    $arStoreIds = explode(',', $this->config->getArStore());
+                }
                 $existingProduct->setStoreId(0);
                 $existingProduct->save();
-                $store = $this->storeManager->getWebsite()->getDefaultStore();
-                $existingProduct->setStoreId((int)$store->getId() ?: $storeId);
-                $existingProduct->save();
+                foreach($_storeIds as $_storeId){
+                    if ($_storeId != 0 && !in_array($_storeId, $arStoreIds)) {
+                        $existingProduct->setStoreId((int)$_storeId);
+                        // $existingProduct->setName(false);// set use_default value for name
+                        // $existingProduct->addAttributeUpdate('name', false, $_storeId);
+                        $existingProduct->save();
+                        // Delete custom name in store view data
+                        $resource = $existingProduct->getResource();
+                        $connection = $resource->getConnection();
+                        $eavAttr = $resource->getTable('eav_attribute');
+                        $sql = "SELECT attribute_id FROM $eavAttr WHERE entity_type_id = 4 AND attribute_code = 'name'";
+                        $attributeId = $connection->fetchOne($sql);
+                        $entityId = $existingProduct->getId();
+                        $varcharTable = $resource->getTable('catalog_product_entity_varchar');
+                        $sql = "DELETE FROM $varcharTable WHERE entity_id = $entityId AND store_id = $_storeId AND attribute_id = $attributeId";
+                        $connection->query($sql);
+                    }
+                }
+                $existingProduct->setStoreId(0);
                 return $existingProduct;
             } catch(\Exception $e) {
                 $this->logger->debug(array('Save product error: '.$e->getMessage()));
