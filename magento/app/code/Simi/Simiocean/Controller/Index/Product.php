@@ -22,7 +22,26 @@ class Product extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         echo '<pre>';
-        
+        $productApi = $this->objectManager->get('Simi\Simiocean\Model\Ocean\Product');
+        $from = $this->getRequest()->getParam('from');
+        $to = $this->getRequest()->getParam('to');
+        $page = $this->getRequest()->getParam('page');
+        $size = $this->getRequest()->getParam('size');
+        if ($from && $to) {
+            $dateFrom = new \DateTime($from, new \DateTimeZone('UTC'));
+            $dateFromParam = $dateFrom->getTimestamp();
+            $dateTo = new \DateTime($to, new \DateTimeZone('UTC'));
+            $dateToParam = $dateTo->getTimestamp();
+            $products = $productApi->getProductFilter($dateFromParam, $dateToParam, $page ?? 1, $size ?? 10);
+            var_dump($from);
+            var_dump($to);
+            print_r($products);die;
+        }
+
+        $sku = $this->getRequest()->getParam('sku');
+        $products = $productApi->getProductSku($sku);
+        print_r($products);die;
+
         // $date = new \DateTime('0000-12-31', new \DateTimeZone('UTC'));
         // $date2 = new \DateTime('0001-01-01', new \DateTimeZone('UTC'));
         // var_dump($date < $date2);

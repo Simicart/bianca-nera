@@ -47,16 +47,13 @@ class Productsync
 
     public function syncPullUpdate()
     {
-        return false;
-        
         if ($this->config->isSyncEnabled()) {
             $this->productService->syncUpdatePull();
             $this->logger->debug(array('Cron: Product sync pull update success!'));
         }
         
         // Update product by skus before gmt date 2020-10-13 00:00:00 (changed name)
-        $this->productService->resyncAll();
-
+        // $this->productService->resyncAll();
         return true;
     }
 
