@@ -22,7 +22,7 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
                     $this->builderQuery    = $this->simiObjectManager
                         ->create('Magento\Customer\Model\Session')->getCustomer();
                     $this->RETURN_MESSAGE = $message = __(
-                        'If there is an account associated with %1 you will '
+                        'If there is an account associated with %s you will '
                             . 'receive an email with a link to reset your password.',
                         $email
                     );
@@ -39,7 +39,7 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
                     $customerData = $this->simiObjectManager->create('\Magento\Customer\Model\Customer');
                     $customerSearch = $customerData->getCollection()->addFieldToFilter("rp_token", $resetPasswordToken);
                     if (count($customerSearch) == 0) {
-                        throw new \Simi\Simiconnector\Helper\SimiException(__('Token expired or invalid !'), 4);
+                        throw new \Simi\Simiconnector\Helper\SimiException(__('Token expired or invalid!'), 4);
                     }
                     // If exist, create new password
                     $this->simiObjectManager
@@ -108,8 +108,7 @@ class Customers extends \Simi\Simiconnector\Model\Api\Customers
         if ($data['resourceid'] !== "sociallogin" && $data['resourceid'] !== "createpassword" && $data['resourceid'] !== "logout") {
             $customer              = $this->simiObjectManager->get('Simi\Simiconnector\Model\Customer')->register($data);
             $this->builderQuery    = $customer;
-            $this->RETURN_MESSAGE = __("Thank you for registering with "
-                . $this->storeManager->getStore()->getName() . " store");
+            $this->RETURN_MESSAGE = __("Thank you for registering with %s store", $this->storeManager->getStore()->getName());
         }
         if ($data['resourceid'] == "logout") {
             return true;

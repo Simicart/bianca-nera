@@ -75,7 +75,7 @@ class Customer extends \Simi\Simiconnector\Model\Customer
 
                                 $adapter->disconnect();
                             } else {
-                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login !'), 4);
+                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login!'), 4);
                             }
                         } catch (\Exception $e) {
                             throw new \Simi\Simiconnector\Helper\SimiException(__($e->getMessage()), 4);
@@ -99,7 +99,7 @@ class Customer extends \Simi\Simiconnector\Model\Customer
 
                                 $adapter->disconnect();
                             } else {
-                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login !'), 4);
+                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login!'), 4);
                             }
                         } catch (\Exception $e) {
                             throw new \Simi\Simiconnector\Helper\SimiException(__($e->getMessage()), 4);
@@ -126,14 +126,14 @@ class Customer extends \Simi\Simiconnector\Model\Customer
                                         'access_token_secret' => $data->accessTokenSecret
                                     ]);
                                 } else {
-                                    throw new \Simi\Simiconnector\Helper\SimiException(__('Twitter need access token secret !'), 4);
+                                    throw new \Simi\Simiconnector\Helper\SimiException(__('Twitter need access token secret!'), 4);
                                 }
 
                                 $userProfile = $adapter->getUserProfile();
 
                                 $adapter->disconnect();
                             } else {
-                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login !'), 4);
+                                throw new \Simi\Simiconnector\Helper\SimiException(__('Administrator need configure social login!'), 4);
                             }
                         } catch (\Exception $e) {
                             throw new \Simi\Simiconnector\Helper\SimiException(__($e->getMessage()), 4);
@@ -155,13 +155,13 @@ class Customer extends \Simi\Simiconnector\Model\Customer
                         $tokenModel->createCustomerToken($customer->getId());
                     } else {
                         // Not the same, show error
-                        throw new \Simi\Simiconnector\Helper\SimiException(__('Your account is Invalid !'), 4);
+                        throw new \Simi\Simiconnector\Helper\SimiException(__('Your account is Invalid!'), 4);
                     }
                 } else {
-                    throw new \Simi\Simiconnector\Helper\SimiException(__('Your account is not authenticated by ' . $data->providerId . ' !'), 4);
+                    throw new \Simi\Simiconnector\Helper\SimiException(__('Your account is not authenticated by %s', $data->providerId), 4);
                 }
             } else {
-                throw new \Simi\Simiconnector\Helper\SimiException(__('Invalid login !'), 4);
+                throw new \Simi\Simiconnector\Helper\SimiException(__('Invalid login!'), 4);
             }
         } else {
             // if (!$data->firstname) {
@@ -238,7 +238,7 @@ class Customer extends \Simi\Simiconnector\Model\Customer
                 ->addAttributeToFilter('mobilenumber', $data->telephone)
                 ->load();
             if (count($resultCollection) > 0) {
-                $message = __('Aready exist phone number !');
+                $message = __('Aready exist phone number!');
                 throw new \Simi\Simiconnector\Helper\SimiException(__($message), 4);
             } else {
                 $customer->setData('mobilenumber', $data->telephone);
@@ -270,7 +270,7 @@ class Customer extends \Simi\Simiconnector\Model\Customer
                 ->addFieldToFilter("website_id", $websiteid);
 
             if (count($customerSearch) > 0) {
-                throw new \Simi\Simiconnector\Helper\SimiException(__('Already exist account with this phone number !'), 4);
+                throw new \Simi\Simiconnector\Helper\SimiException(__('Already exist account with this phone number!'), 4);
             }
         }
 
