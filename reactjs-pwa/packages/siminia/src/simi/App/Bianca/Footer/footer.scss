@@ -230,6 +230,12 @@ $errorFormBgColor: #ece2e2;
                 background: #FFF;
                 margin-right: 8px;
             }
+            img{
+                max-width: 40px;
+                height: 24px;
+                margin-right: 8px;
+                background-color: #fff;
+            }
         }
     }
 
@@ -565,6 +571,10 @@ $errorFormBgColor: #ece2e2;
                 }
                 .card{
                     svg{
+                        margin-right: unset;
+                        margin-left: 8px;
+                    }
+                    img{
                         margin-right: unset;
                         margin-left: 8px;
                     }

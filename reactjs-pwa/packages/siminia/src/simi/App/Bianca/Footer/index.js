@@ -10,6 +10,9 @@ import { smoothScrollToView } from 'src/simi/Helper/Behavior';
 import LogoFooter from './Logo';
 import {Visa, MasterCard, Debit, Money, BankTransfer, GhostSnapchat} from './Icons';
 import { connect } from 'src/drivers';
+import LazyLoad from 'react-lazyload';
+import Skeleton from 'react-loading-skeleton';
+
 require('./footer.scss');
 
 const $ = window.$;
@@ -345,11 +348,17 @@ const Footer = (props) => {
 											</li>
 											<li>
 												<div className="card">
-													<Visa />
-													<MasterCard />
-													<Debit />
-													<Money />
-													<BankTransfer />
+													<LazyLoad placeholder={<Skeleton width={267} height={24}/>}>
+														<img src="images/bank/Knet.png" alt="Knet"/>
+														<img src="images/bank/visa.png" alt="Visa"/>
+														<MasterCard />
+														<img src="images/bank/paypal.png" alt="Paypal"/>
+														<img src="images/bank/COD.png" alt="COD"/>
+														{/* <Visa />
+														<Debit />
+														<Money />
+														<BankTransfer /> */}
+													</LazyLoad>
 												</div>
 											</li>
 										</ul>
@@ -381,11 +390,17 @@ const Footer = (props) => {
 														</li>
 														<li>
 															<div className="card">
-																<Visa />
-																<MasterCard />
-																<Debit />
-																<Money />
-																<BankTransfer />
+																<LazyLoad placeholder={<Skeleton width={267} height={24}/>}>
+																	<img src="images/bank/Knet.png" alt="Knet"/>
+																	<img src="images/bank/visa.png" alt="Visa"/>
+																	<MasterCard />
+																	<img src="images/bank/paypal.png" alt="Paypal"/>
+																	<img src="images/bank/COD.png" alt="COD"/>
+																	{/* <Visa />
+																	<Debit />
+																	<Money />
+																	<BankTransfer /> */}
+																</LazyLoad>
 															</div>
 														</li>
 													</ul>
