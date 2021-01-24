@@ -232,31 +232,38 @@ class Product extends \Magento\Framework\Model\AbstractModel
         $timeFrom = 'now';
         $timeTo = 'now';
         $lastSyncTable = $this->syncTable->getLastSyncByTime(Type::TYPE_PRODUCT_UPDATE);
-        if ($lastSyncTable->getId() && $lastSyncTable->getPageNum()) {
+        if ($lastSyncTable->getId()) {
             if ($lastSyncTable->getRecordNumber() > 0) {
-                $page = $lastSyncTable->getPageNum() + 1; //increment 1 page
-                $timeTo = $lastSyncTable->getUpdatedTo();
+                $page = (int) $lastSyncTable->getPageNum() + 1; //increment 1 page
                 $timeFrom = $lastSyncTable->getUpdatedFrom();
+                $timeTo = $lastSyncTable->getUpdatedTo();
             } else {
                 $timeFrom = $lastSyncTable->getUpdatedTo();
             }
         }
-
-        // ToDate
-        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
-        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
-        $dateToParam = $dateTo->getTimestamp();
 
         // FromDate
         $dateFrom = new \DateTime($timeFrom, new \DateTimeZone('UTC'));
         if ($timeFrom == 'now') {
             $dateFrom->setTimestamp($dateFrom->getTimestamp() - ($lastDays * 86400));
         }
-        if (($dateToParam - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
-            $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
+
+        // ToDate
+        $dateTo = new \DateTime($timeTo, new \DateTimeZone('UTC'));
+
+        if ($dateFrom->getTimestamp() > $dateTo->getTimestamp()) {
+            return false;
         }
+
+        if (($dateTo->getTimestamp() - $dateFrom->getTimestamp()) > ($lastDays * 86400)) {
+            // $dateFrom->setTimestamp($dateToParam - ($lastDays * 86400));
+            $dateTo->setTimestamp($dateFrom->getTimestamp() + ($lastDays * 86400));
+        }
+
         $dateFromGmt = $dateFrom->format('Y-m-d H:i:s');
         $dateFromParam = $dateFrom->getTimestamp();
+        $dateToGmt = $dateTo->format('Y-m-d H:i:s');
+        $dateToParam = $dateTo->getTimestamp();
 
         try{
             $oProducts = $this->productApi->getProductFilter($dateFromParam, $dateToParam, $page, $size);
@@ -269,8 +276,7 @@ class Product extends \Magento\Framework\Model\AbstractModel
         }
 
         // testing
-        // $oProducts = $this->productApi->getProductSku('20132005'); // Get products from ocean with sku
-        // $oProducts = $this->productApi->getProductSku('19121011'); // new
+        // $oProducts = $this->productApi->getProductSku('20127002'); // new
         // var_dump($oProducts);die;
 
         if (is_array($oProducts)) {
@@ -1487,7 +1493,6 @@ class Product extends \Magento\Framework\Model\AbstractModel
                         $eavAttr = $resource->getTable('eav_attribute');
                         $sql = "SELECT attribute_id FROM $eavAttr WHERE entity_type_id = 4 AND attribute_code = 'name'";
                         $attributeId = $connection->fetchOne($sql);
-                        // var_dump($attributeId);die;
                         $entityId = $savedProduct->getId();
                         $varcharTable = $resource->getTable('catalog_product_entity_varchar');
                         $sql = "DELETE FROM $varcharTable WHERE entity_id = $entityId AND store_id = $_storeId AND attribute_id = $attributeId";
