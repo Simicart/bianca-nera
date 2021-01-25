@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Simi. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/menu.xsd">
+    <menu>
+        <!-- simiocean setting -->
+        <add id="Simi_Simiocean::simiocean" title="Ocean ERP" module="Simi_Simiocean" sortOrder="1000" parent="Simi_Simiconnector::simiconnector" resource="Simi_Simiocean::simiocean"/>
+        <add id="Simi_Simiocean::settings" title="Settings" module="Simi_Simiocean" sortOrder="10" parent="Simi_Simiocean::simiocean" resource="Simi_Simiocean::configuration" action="adminhtml/system_config/edit/section/simiocean"/>
+    </menu>
+</config>

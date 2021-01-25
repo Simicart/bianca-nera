@@ -1,0 +1,59 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$request = $objectManager->get('Magento\Framework\App\Request\Http');
+$params = $request->getParams();
+$order = $objectManager->create('\Magento\Sales\Model\Order')->loadByIncrementId($params['trackid']);
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+$amount = round($order->getGrandTotal(), 3);
+$formattedPrice = $priceHelper->currency($amount, true, false);
+?>
+<div class="checkout-success">
+    <div class="page-title">
+        <h1><?php echo __('An error occurred in the process of payment') ?></h1>
+    </div>
+    <?php if ($order->getIncrementId()) : ?>
+        <p><?php echo __('Order #') . $order->getIncrementId() ?></p>
+    <?php endif ?>
+
+    <?php
+    $paymentID = isset($params['paymentid']) ? $params['paymentid'] : '';
+    $presult = isset($params['result']) ? $params['result'] : '';
+    $postdate = isset($params['postdate']) ? $params['postdate'] : '';
+    $tranid = isset($params['tranid']) ? $params['tranid'] : '';
+    $auth = isset($params['auth']) ? $params['auth'] : '';
+    $ref = isset($params['ref']) ? $params['ref'] : '';
+    $trackid = isset($params['trackid']) ? $params['trackid'] : '';
+
+    $message = '<h2>KNET Payment Details:</h2><br />';
+    if ($paymentID):
+        $message .= '<div><strong>PaymentID: </strong>' . $paymentID . "</div><br>";
+    endif;
+    if ($formattedPrice):
+        $message .= '<div><strong>Amount: </strong>' . $formattedPrice . "</div><br>";
+    endif;
+    if ($presult):
+        $message .= '<div><strong>Result: </strong>' . $presult . "</div><br>";
+    endif;
+    if ($postdate):
+        $message .= '<div><strong>PostDate: </strong>' . $postdate . "</div><br>";
+    endif;
+    if ($tranid):
+        $message .= '<div><strong>TranID: </strong>' . $tranid . "</div><br>";
+    endif;
+    if ($auth):
+        $message .= '<div><strong>Auth: </strong>' . $auth . "</div><br>";
+    endif;
+    if ($ref):
+        $message .= '<div><strong>Ref: </strong>' . $ref . "</div><br>";
+    endif;
+    if ($trackid):
+        $message .= '<div><strong>TrackID: </strong>' . $trackid . "</div><br>";
+    endif;
+    $message .= '<div><strong>Time: </strong>' . date('H:i:s') . "</div><br>";
+
+    echo $message;
+    ?>
+    <br>
+    <p><?php echo __('Click <a href="%1">here</a> to continue shopping.', $storeManager->getStore()->getBaseUrl()) ?></p>
+</div>
