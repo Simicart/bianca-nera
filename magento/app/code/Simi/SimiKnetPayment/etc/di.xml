@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Payment\Block\ConfigurableInfo" type="Simi\SimiKnetPayment\Block\Payment\Info"/>
-    <type name="Magento\Sales\Block\Adminhtml\Order\View">
-        <plugin name="sales_order_adminhtml_view_knet_button_plugin" type="Simi\SimiKnetPayment\Plugin\Sales\Block\Adminhtml\Order\View"/>
-    </type>
-</config>

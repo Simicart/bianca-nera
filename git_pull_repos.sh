@@ -47,7 +47,7 @@ if [ -d ./Server-Customization ]; then
     commitMessage="Client: $commitMessage. Server: $commitMessage2"
     popd
     # rm -rf ./magento/app/code
-    cp -rpf ./Server-Customization/app/code/* ./magento/app/code/
+    cp -rpf ./Server-Customization/app/code/* ./Store/app/code/
 else
     echo "No source ./Server-Customization"
 fi
