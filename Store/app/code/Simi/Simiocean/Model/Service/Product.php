@@ -279,6 +279,9 @@ class Product extends \Magento\Framework\Model\AbstractModel
         // $oProducts = $this->productApi->getProductSku('20127002'); // new
         // var_dump($oProducts);die;
 
+        // clear old log records
+        $this->syncTable->cleanLog(Type::TYPE_PRODUCT_UPDATE, 200);
+
         if (is_array($oProducts)) {
             $hasUpdate = false;
             $records = count($oProducts);
@@ -442,9 +445,11 @@ class Product extends \Magento\Framework\Model\AbstractModel
             }
     
             // testing
-            // $oProducts = $this->productApi->getProductSku('20132005'); // Get products from ocean with sku
             // $oProducts = $this->productApi->getProductSku('20180009'); // new
             // var_dump($oProducts);die;
+
+            // clear old log records
+            $this->syncTable->cleanLog(Type::TYPE_PRODUCT_UPDATE_CUSTOM, 200);
     
             if (is_array($oProducts)) {
                 $hasUpdate = false;
@@ -1475,14 +1480,14 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 $savedProduct->setConfigurableAttributesData($configurableAttributesData);
                 $savedProduct->save();
 
-                $website = $this->storeManager->getWebsite();
-                $_storeIds = $website->getStoreIds();
-                $arStores = $this->config->getArStore();
-                $arStoreIds = explode(',', $arStores);
-
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $storeRepository = $objectManager->get('Magento\Store\Api\StoreRepositoryInterface');
+                $stores = $storeRepository->getList();
+                $arStoreIds = explode(',', $this->config->getArStore() ?? '');
                 // Save other not ar store
-                foreach($_storeIds as $_storeId){
-                    if ($_storeId != 0 && !in_array($_storeId, $arStoreIds)) {
+                foreach($stores as $store){
+                    $_storeId = $store->getId();
+                    if ($_storeId != 0 && !in_array($_storeId, $arStoreIds) && $store->getCode() != 'vendors') {
                         $savedProduct->setStoreId((int)$_storeId);
                         // $savedProduct->setName(false);// set use_default value for name
                         // $savedProduct->addAttributeUpdate('name', false, $_storeId);
@@ -1576,8 +1581,8 @@ class Product extends \Magento\Framework\Model\AbstractModel
                     ->toNestedArray($productModel, [], \Magento\Catalog\Api\Data\ProductInterface::class);
                 $productDataArray = array_replace($productDataArray, $productModel->getData());
 
-                $website = $this->storeManager->getWebsite();
-                $_storeIds = $website->getStoreIds();
+                
+
                 // unset($productDataArray['media_gallery']);
                 foreach ($productDataArray as $key => $value) {
                     if (!$key || !$value) continue;
@@ -1589,14 +1594,16 @@ class Product extends \Magento\Framework\Model\AbstractModel
                 if (!$existingProduct->getOptionsReadonly()) {
                     $existingProduct->setCanSaveCustomOptions(true);
                 }
-                $arStoreIds = [];
-                if ($this->config->getArStore() != null) {
-                    $arStoreIds = explode(',', $this->config->getArStore());
-                }
                 $existingProduct->setStoreId(0);
                 $existingProduct->save();
-                foreach($_storeIds as $_storeId){
-                    if ($_storeId != 0 && !in_array($_storeId, $arStoreIds)) {
+
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $storeRepository = $objectManager->get('Magento\Store\Api\StoreRepositoryInterface');
+                $stores = $storeRepository->getList();
+                $arStoreIds = explode(',', $this->config->getArStore() ?? '');
+                foreach($stores as $store){
+                    $_storeId = $store->getId();
+                    if ($_storeId != 0 && !in_array($_storeId, $arStoreIds) && $store->getCode() != 'vendors') {
                         $existingProduct->setStoreId((int)$_storeId);
                         // $existingProduct->setName(false);// set use_default value for name
                         // $existingProduct->addAttributeUpdate('name', false, $_storeId);

@@ -79,4 +79,33 @@ class SyncTable extends AbstractModel
         }
         return $this;
     }
+
+    /**
+     * clear old sync log
+     * @param string $typeId
+     * @param string $preserve number
+     * @return boolean
+     */
+    public function cleanLog($typeId, $preserve = 100){
+        if (!$typeId) return false;
+        $collection = $this->getCollection();
+        $collection->addFieldToFilter('type', $typeId)
+            ->getSelect()
+                ->order('updated_from ASC')
+                ->limit($preserve);
+        if ($collection->getSize() > $preserve) {
+            $deleteRecords = $collection->getSize() - $preserve;
+            $i = 0;
+            foreach($collection as $item){
+                if ($i < $deleteRecords) {
+                    $item->delete();
+                } else {
+                    break;
+                }
+                $i++;
+            }
+            return true;
+        }
+        return false;
+    }
 }
