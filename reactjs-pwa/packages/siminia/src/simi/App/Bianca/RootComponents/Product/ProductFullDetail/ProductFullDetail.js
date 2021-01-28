@@ -134,7 +134,7 @@ class ProductFullDetail extends Component {
             const { brands } = config;
             const { is_salable } = product.simiExtraField || {};
             const { brand, url_key, pre_order } = extraAttributes;
-            const pBrand = brands.find((br)=>br.option_id === brand);
+            const pBrand = brands && brands.find((br)=>br.option_id === brand);
             const price = product.price && (product.price.minimalPrice || product.price.regularPrice) || {};
             const sellerName = this.getVendorStoreName();
             window.productDataStructure = {...window.productDataStructure,
