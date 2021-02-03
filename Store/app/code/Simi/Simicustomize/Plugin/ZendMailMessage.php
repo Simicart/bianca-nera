@@ -60,10 +60,12 @@ class ZendMailMessage extends \Magento\Framework\Mail\Message
         }
 
         // simi-add to force base 64 on mail to fix outlook email not able to read 8bit arab text
-        $parts = $body->getParts();
-        if (! empty($parts)) {
-            $part = array_shift($parts);
-            $part->setEncoding(Mime::ENCODING_BASE64);
+        if (is_object($body)) {
+            $parts = $body->getParts();
+            if (! empty($parts)) {
+                $part = array_shift($parts);
+                $part->setEncoding(Mime::ENCODING_BASE64);
+            }
         }
         //end simi
 
