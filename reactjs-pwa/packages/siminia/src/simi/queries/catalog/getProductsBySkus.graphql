@@ -6,7 +6,7 @@ query getProductsBySkus($currentPage: Int, $pageSize: Int, $stringSku: [String],
             id
             name
             sku
-            small_image {
+            simi_small_image {
                 url
                 label
                 __typename

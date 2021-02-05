@@ -2,6 +2,15 @@ type Mutation {
     subscribe(email: String!): Subscribe @resolver(class: "\\Simi\\Simicustomize\\Model\\Resolver\\Subscribe") @doc(description: "Subscribe email to magento subscribed list for guest.")
 }
 
+interface ProductInterface {
+    simi_small_image: SimiProductImage @doc(description: "Rewrite product image not resize. The relative path to the small image, which is used on catalog pages.") @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\ProductImage")
+}
+
+type SimiProductImage @doc(description: "Product image information. Contains image relative path, URL and label") {
+    url: String @resolver(class: "Simi\\Simicustomize\\Model\\Resolver\\Product\\ProductImage\\Url")
+    label: String @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\ProductImage\\Label")
+}
+
 type Subscribe {
     status: String
     message: String

@@ -22,7 +22,6 @@ query category($id: Int!, $currentPage: Int, $pageSize: Int, $stringId: String, 
         
         simi_filters {
             name
-            filter_items_count
             request_var
             filter_items_count
             filter_items {
@@ -44,7 +43,7 @@ query category($id: Int!, $currentPage: Int, $pageSize: Int, $stringId: String, 
             id
             name
             sku
-            small_image {
+            simi_small_image {
                 url
                 label
                 __typename

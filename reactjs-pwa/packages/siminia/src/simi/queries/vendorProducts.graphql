@@ -31,6 +31,11 @@ query vendorproducts($pageSize: Int, $currentPage: Int, $sort: ProductSortInput,
                 label
                 __typename
             }
+            simi_small_image {
+                url
+                label
+                __typename
+            }
             thumbnail {
                 url
                 label

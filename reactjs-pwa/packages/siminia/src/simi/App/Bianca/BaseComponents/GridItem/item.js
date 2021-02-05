@@ -257,7 +257,7 @@ class Griditem extends React.Component {
         const item = prepareProduct(props.item)
         const logo_url = logoUrl()
         if (!item) return '';
-        const { name, url_key, id, price, type_id, small_image } = item
+        const { name, url_key, id, price, type_id, simi_small_image: small_image } = item
         const product_url = `/${url_key}${productUrlSuffix()}`
         saveDataToUrl(product_url, item)
         const location = {
@@ -269,7 +269,8 @@ class Griditem extends React.Component {
         }
 
         // replace url path graphql/_view -> frontend/magento/luma
-        const _small_image = small_image && small_image.replace('/graphql/_view/', '/frontend/Magento/luma/') || '';
+        let _small_image = small_image.url || small_image;
+        _small_image = _small_image && _small_image.replace('/graphql/_view/', '/frontend/Magento/luma/') || '';
 
         const image = (
             <div

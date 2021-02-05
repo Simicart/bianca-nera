@@ -4,7 +4,6 @@ query productSearch($inputText: String, $currentPage: Int, $pageSize: Int, $cate
         total_count
         filters {
             name
-            filter_items_count
             request_var
             filter_items_count
             filter_items {
@@ -14,7 +13,6 @@ query productSearch($inputText: String, $currentPage: Int, $pageSize: Int, $cate
         }
         simi_filters {
             name
-            filter_items_count
             request_var
             filter_items_count
             filter_items {
@@ -33,7 +31,7 @@ query productSearch($inputText: String, $currentPage: Int, $pageSize: Int, $cate
             id
             name
             sku
-            small_image {
+            simi_small_image {
                 url
                 label
             }

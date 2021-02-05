@@ -6,7 +6,7 @@ query category($currentPage: Int, $pageSize: Int, $stringId: String, $sort: Prod
             id
             name
             sku
-            small_image {
+            simi_small_image {
                 url
                 label
                 __typename
