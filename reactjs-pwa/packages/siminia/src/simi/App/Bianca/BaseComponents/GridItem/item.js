@@ -269,7 +269,7 @@ class Griditem extends React.Component {
         }
 
         // replace url path graphql/_view -> frontend/magento/luma
-        let _small_image = small_image.url || small_image;
+        let _small_image = small_image && (small_image.url || small_image) || '';
         _small_image = _small_image && _small_image.replace('/graphql/_view/', '/frontend/Magento/luma/') || '';
 
         const image = (
