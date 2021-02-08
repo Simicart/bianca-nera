@@ -14,6 +14,10 @@ const Contact = (props) => {
         window.scrollTo(0, 0);
     });
 
+    const storeConfigData = Identify.getStoreConfig() || {};
+    const { storeConfig } = storeConfigData;
+    const banner = storeConfig && storeConfig.locale === 'ar_SA' ? '/images/contact_banner_ar_SA.jpg' : '/images/contact_banner.jpg';
+
     return (
         <div className="contact-page">
             {TitleHelper.renderMetaHeader({
@@ -25,7 +29,7 @@ const Contact = (props) => {
             <div className="container">
                 <div className="row row-banner">
                     <div className="col-xs-12">
-                        <img style={{width: '100%'}} src="/images/contact_banner.png" alt={Identify.__("Contact Us")}/>
+                        <img style={{width: '100%'}} src={banner} alt={Identify.__("Contact Us")}/>
                     </div>
                 </div>
                 <div className="row row-content">
