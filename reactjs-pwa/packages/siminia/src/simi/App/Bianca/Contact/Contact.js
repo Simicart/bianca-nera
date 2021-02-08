@@ -16,7 +16,7 @@ const Contact = (props) => {
 
     const storeConfigData = Identify.getStoreConfig() || {};
     const { storeConfig } = storeConfigData;
-    const banner = storeConfig && storeConfig.locale === 'ar_SA' ? '/images/contact_banner_ar_SA.jpg' : '/images/contact_banner.jpg';
+    const banner = storeConfig && storeConfig.locale === 'ar_KW' ? '/images/contact_banner_ar_KW.jpg' : '/images/contact_banner.jpg';
 
     return (
         <div className="contact-page">
