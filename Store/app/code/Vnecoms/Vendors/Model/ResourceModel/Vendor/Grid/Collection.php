@@ -68,11 +68,12 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
         );
 
         // Simi customize add logo
-        $this->getSelect()->join(
+        $this->getSelect()->joinLeft(
             ['config'=>$this->getTable('ves_vendor_config')],
             'config.vendor_id=vendor_user.vendor_id AND config.path = "general/store_information/logo" AND config.store_id = 0',
             ['logo' => 'value']
         );
+        
         return $this;
     }
 }
