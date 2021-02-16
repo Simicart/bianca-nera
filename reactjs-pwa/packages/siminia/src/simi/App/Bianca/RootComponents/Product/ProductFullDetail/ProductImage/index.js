@@ -187,7 +187,8 @@ class ProductImage extends React.Component {
         if (!varianImages) {
             return media_gallery_entries;
         }
-
+        
+        varianImages.reverse();
         const images = [
             ...varianImages,
             ...media_gallery_entries

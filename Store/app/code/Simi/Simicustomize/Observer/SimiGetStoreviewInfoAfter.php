@@ -60,11 +60,14 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 $brandsDetailsFromConfig = $serializer->unserialize($brandDetails);
                 if ($brandsDetailsFromConfig && is_array($brandsDetailsFromConfig)) {
                     foreach ($brandsDetailsFromConfig as $brandDetailsFromConfig) {
-                        if (isset($brandDetailsFromConfig['brand_title']) && isset($brandDetailsFromConfig['brand_description'])) {
-                            $descriptionArr[$brandDetailsFromConfig['brand_title']] = $brandDetailsFromConfig['brand_description'];
-                        }
-                        if (isset($brandDetailsFromConfig['brand_title']) && isset($brandDetailsFromConfig['brand_banner'])) {
-                            $brandBannerArr[$brandDetailsFromConfig['brand_title']] = $brandDetailsFromConfig['brand_banner'];
+                        if (isset($brandDetailsFromConfig['brand_title'])) {
+                            $brandTitle = strtoupper($brandDetailsFromConfig['brand_title']);
+                            if ($brandTitle && isset($brandDetailsFromConfig['brand_description'])) {
+                                $descriptionArr[$brandTitle] = $brandDetailsFromConfig['brand_description'];
+                            }
+                            if ($brandTitle && isset($brandDetailsFromConfig['brand_banner'])) {
+                                $brandBannerArr[$brandTitle] = $brandDetailsFromConfig['brand_banner'];
+                            }
                         }
                     }
                 }
@@ -88,7 +91,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                     )
                     ->where('attribute_id = ?', $brand->getAttributeId());
                 foreach($optionCollection as $option){
-                    $brandName = $option->getData('name');
+                    $brandName = strtoupper($option->getData('name'));
                     $brandDesc = isset($descriptionArr[$brandName])?$descriptionArr[$brandName]:'';
                     $brandBanner = isset($brandBannerArr[$brandName])?$brandBannerArr[$brandName]:'';
                     $object->storeviewInfo['brands'][] = [

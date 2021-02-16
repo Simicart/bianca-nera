@@ -54,6 +54,7 @@ class Tile extends Component {
 				</div>
 			);
 		}
+		if (label === 'false') return null;
 		return (
 			<div className="group-options">
 				<button {...restProps} className={className}>
