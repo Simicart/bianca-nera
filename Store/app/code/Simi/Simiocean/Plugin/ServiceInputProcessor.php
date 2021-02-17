@@ -31,6 +31,10 @@ class ServiceInputProcessor
                     'attribute_code' => 'approval',
                     'value' => '2' // for Approved
                 );
+                $inputArray['product']['custom_attributes'][] = array(
+                    'attribute_code' => 'is_admin_sell',
+                    'value' => 0 // for Approved
+                );
             }
         }
         return array($serviceClassName, $serviceMethodName, $inputArray);
