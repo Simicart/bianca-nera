@@ -22,7 +22,7 @@ class AccountDataProviderObserver implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $collection = $observer->getCollection();
-        $collection->getSelect()->join(['store_credit'=>$collection->getTable('ves_store_credit')], 'store_credit.customer_id=vendor_user.customer_id', ['credit']);
+        $collection->getSelect()->joinLeft(['store_credit'=>$collection->getTable('ves_store_credit')], 'store_credit.customer_id=vendor_user.customer_id', ['credit']);
         return $this;
     }
 }

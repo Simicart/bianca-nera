@@ -89,6 +89,12 @@ class VendorMapping extends OptionMapping
                             'email' => $email,
                             'password' => 'Biancanera1@3'
                         ]);
+                        
+                        // create credit account
+                        $creditAccountFactory = $objectManager->create('Vnecoms\Credit\Model\CreditFactory');
+                        $creditAccount = $creditAccountFactory->create();
+                        $creditAccount->loadByCustomerId($customer->getId()); // load to create credit account
+
                         $vendorModel->setCustomer($customer);
                         $vendorModel->setWebsiteId($customer->getWebsiteId());
 
