@@ -47,6 +47,7 @@ class ServiceInputProcessor
                 $logtable->setLogName('Create Attribute Option');
                 $logtable->setData('option1', 'products/attributes/{attributeCode}/options');
                 $logtable->setData('data', json_encode($inputArray));
+                $logtable->setData('created_at', gmdate('Y-m-d H:i:s'));
                 $logtable->save();
             }
         }
