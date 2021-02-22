@@ -33,8 +33,21 @@ class ServiceInputProcessor
                 );
                 $inputArray['product']['custom_attributes'][] = array(
                     'attribute_code' => 'is_admin_sell',
-                    'value' => 0 // for Approved
+                    'value' => '0' // for Approved
                 );
+            }
+        }
+        if ($serviceClassName == 'Magento\Catalog\Api\ProductAttributeOptionManagementInterface' &&
+            $serviceMethodName === 'add'
+        ) {
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $logtable = $objectManager->create('Simi\Simiocean\Model\Logtable');
+            // This code integrate with Ocean System, if other system need work together then check the ip address of something
+            if (isset($inputArray)) {
+                $logtable->setLogName('Create Attribute Option');
+                $logtable->setData('option1', 'products/attributes/{attributeCode}/options');
+                $logtable->setData('data', json_encode($inputArray));
+                $logtable->save();
             }
         }
         return array($serviceClassName, $serviceMethodName, $inputArray);

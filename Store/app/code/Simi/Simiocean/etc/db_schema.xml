@@ -184,4 +184,15 @@
             <column name="id"/>
         </constraint>
     </table>
+    <table name="simiocean_log" comment="Simiocean log table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Primary Id"/>
+        <column xsi:type="varchar" name="log_name" nullable="true" length="100" comment="Log name"/>
+        <column xsi:type="varchar" name="request" nullable="true" length="256" comment="Request URI"/>
+        <column xsi:type="varchar" name="option1" nullable="true" length="100" comment="Option 1"/>
+        <column xsi:type="varchar" name="option2" nullable="true" length="100" comment="Option 2"/>
+        <column xsi:type="text" name="data" nullable="true" comment="All data"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
 </schema>
