@@ -80,6 +80,11 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                 $optionCollection
                     ->getSelect()
                     ->joinLeft(
+                        ['adminval' => $optionCollection->getTable('eav_attribute_option_value')],
+                        'adminval.option_id = main_table.option_id AND adminval.store_id = 0',
+                        ['adminval.value AS admin_name']
+                    )
+                    ->joinLeft(
                         ['value_table' => $optionCollection->getTable('eav_attribute_option_value')],
                         'value_table.option_id = main_table.option_id AND value_table.store_id = '.$storeId,
                         ['value_table.value AS name']
@@ -91,7 +96,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                     )
                     ->where('attribute_id = ?', $brand->getAttributeId());
                 foreach($optionCollection as $option){
-                    $brandName = strtoupper($option->getData('name'));
+                    $brandName = strtoupper($option->getData('name') ?? $option->getData('admin_name'));
                     $brandDesc = isset($descriptionArr[$brandName])?$descriptionArr[$brandName]:'';
                     $brandBanner = isset($brandBannerArr[$brandName])?$brandBannerArr[$brandName]:'';
                     $object->storeviewInfo['brands'][] = [
@@ -99,7 +104,7 @@ class SimiGetStoreviewInfoAfter implements ObserverInterface {
                         'name' => $brandName,
                         'description' => $brandDesc,
                         'banner' => $brandBanner ? $this->urlBuilder->getBaseUrl().UrlInterface::URL_TYPE_MEDIA . '/' . $brandBanner : '',
-                        'image' => $this->swatchMediaHelper->getSwatchMediaUrl() . $option->getData('value'),
+                        'image' => $option->getData('value') ? $this->swatchMediaHelper->getSwatchMediaUrl() . $option->getData('value') : '',
                         'attribute_name' => $brand->getData('frontend_label'),
                         'attribute_code' => $brand->getData('attribute_code'),
                         'attribute_id' => $brand->getData('attribute_id'),
